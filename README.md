@@ -2,42 +2,18 @@ prepaid-cx-api.git
 
 ##  DOCKER BUILD
 ```sh
-tag : sit-0.0.1, sit-0.0.2, sit-0.0.3, sit-0.0.4
-
-mvn clean package
-docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.1.5 .
-docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.1.5
 ```
 
 ##  DEPLOYMENT
 ```sh
-kubectl proxy --kubeconfig /home/opc/.kube/config_prepaid_dev
-
-kubectl delete deployment prepaid-cx-membership-api-deployment --kubeconfig /home/opc/.kube/config_prepaid_dev
-kubectl create -f services.yaml --kubeconfig /home/opc/.kube/config_prepaid_dev
 ```
 
 ##  Changelog
 ```sh
-
 ```
 
 ##  JMS
 ```sh
-
-target:source
-kubectl port-forward svc/dev-queue-rabbitmq 15672:15672 --kubeconfig /home/opc/.kube/config_prepaid_dev
-kubectl port-forward --namespace rabbit svc/dev-queue-rabbitmq 5672:5672 --kubeconfig /home/opc/.kube/config_prepaid_dev
-
-
-kubectl scale statefulset dev-queue-rabbitmq --replicas 2 --namespace rabbit --kubeconfig /home/opc/.kube/config_prepaid_dev
-kubectl delete --force --grace-period 0 pod dev-queue-rabbitmq-0 --namespace rabbit --kubeconfig /home/opc/.kube/config_prepaid_dev
-
-kubectl scale statefulset dev-queue-rabbitmq --replicas 2 --namespace rabbit --kubeconfig /home/opc/.kube/config_prepaid_dev
-
-kubectl get pvc --namespace rabbit --kubeconfig /home/opc/.kube/config_prepaid_dev
-kubectl delete pvc  --namespace rabbit --kubeconfig /home/opc/.kube/config_prepaid_dev
-
 ```
 
 ## PREPAID_CX_PROV_APPLICATION ATP-DB 
