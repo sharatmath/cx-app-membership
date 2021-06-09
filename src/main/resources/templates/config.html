@@ -1,0 +1,1588 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>CONFIGURE PROVISIONING CAMPAIGN OFFER</title>
+    
+	<!-- 
+	<link th:rel="stylesheet" href="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/font-awesome/5.11.2/css/all.css"/>
+	<link th:rel="stylesheet" href="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css"/>
+	<link th:rel="stylesheet" href="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/select2-develop/dist/css/select2.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.css" integrity="sha512-ClXpwbczwauhl7XC16/EFu3grIlYTpqTYOwqwAi7rNSqxmTqCpE8VS3ovG+qi61GoxSLnuomxzFXDNcPV1hvCQ==" crossorigin="anonymous" />
+	<link th:rel="stylesheet" href="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/select2-bootstrap4-theme-master/dist/select2-bootstrap4.css"/>
+	-->	
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+	
+	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+  		<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+	</svg>
+	
+	<style>
+		body {font-family: Arial, Helvetica, sans-serif;}
+		
+		/* The Modal (background) */
+		.modal {
+		  display: none; /* Hidden by default */
+		  position: fixed; /* Stay in place */
+		  z-index: 1; /* Sit on top */
+		  padding-top: 0px; /* Location of the box */
+		  left: 0;
+		  top: 0;
+		  width: 100%; /* Full width */
+		  height: 100%; /* Full height */
+		  overflow: auto; /* Enable scroll if needed */
+		  /* background-color: rgb(0,0,0); */ /* Fallback color */
+		  /* background-color: rgba(0,0,0,0.0); */ /* Black w/ opacity */
+		}
+		
+		.modal-backdrop {
+		     background-color: rgba(0,0,0,.0001) !important;
+		}
+		
+		/* Modal Content */
+		.modal-content {
+		  background-color: #fefefe;
+		  margin: auto;
+		  padding: 20px;
+		  border: 1px solid #888;
+		  width: 80%;
+		}
+	
+		/* Important part */
+		.modal-dialog{
+		    overflow-y: initial !important
+		}
+		.modal-body{
+		    height: 80vh;
+		    overflow-y: auto;
+		}
+		
+		/* The Close Button */
+		.close {
+		  color: #aaaaaa;
+		  float: right;
+		  font-size: 28px;
+		  font-weight: bold;
+		}
+		
+		.close:hover,
+		.close:focus {
+		  color: #000;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+		
+		
+	</style>
+</head>
+<!-- <body onload="myFunction()"> -->
+
+
+
+<body>
+	<div class="container">
+		
+		    <div class="row">
+		        <div class="col-md-4 mt-3 card">
+		            <form  th:object="${offers}">  <!-- method="post" th:action="@{/saveconfiguration}" th:object="${offers}" -->
+		
+						<div class="form-group">
+							<h4 class="mt-3">CONFIGURE PROVISIONING CAMPAIGN OFFER</h4>
+						</div>
+		                
+		                <!-- 
+		                <div class="form-group">
+		                    <label for="offer">Offer Bucket Type</label>
+			                <select id="offerType" class="form-control" th:field="*{offerType}" th:required="required" onchange="resetBucket()">
+							    <option th:value="'OMS'" th:text="OMS"></option>
+							    <option th:value="'DA'" th:text="DA"></option>
+							</select>
+		                </div> 
+		                -->
+		                
+		                <div class="form-group">
+		                    <label for="offer">Offer Bucket : <span id="offerCodeId" th:text="*{offerBucketCode}"/></label>
+		                    <div class="form-group d-flex justify-content-between">
+			                    <select id="offerBucket" class="form-control" th:field="*{offerBucketId}" th:required="required" onchange="onChangeBucket()">
+			                        <option th:if="*{offerBucketId}" th:value="*{offerBucketId}" th:text="*{offerBucketCode}">-</option>
+			                        <option th:unless="*{offerBucketId}" value="">-</option>
+			                    </select>
+			                    <button type="button" class="btn btn-outline-secondary ml-2" id="addOfferBucket" onclick="createOfferBucket()">+</button>
+			                </div>
+		                </div>
+		                
+		                <div class="form-group">
+		                    <label for="offer">Campaign Offer : <span id="offerNameId" th:text="*{offerCampaignName}"/></label>
+		                    <div class="form-group d-flex justify-content-between">
+			                    <select id="offers" class="form-control" th:field="*{offerCampaignId}" th:required="required" onchange="onChangeOffer()">
+			                        <option th:if="*{offerCampaignId}" th:value="*{offerCampaignId}" th:text="*{offerCampaignName}">-</option>
+			                        <option th:unless="*{offerCampaignId}" value="">-</option>
+			                    </select>
+			                    <button type="button" class="btn btn-outline-secondary ml-2" id="addOfferCampaign" onclick="createOfferCampaign()">+</button>
+		                    </div>
+		                </div>
+		                
+		                <div class="form-group">
+		                    <input id="notification" type="checkbox" th:text="Notification" th:checked="*{notification}" onchange="onChangeNotification()"
+			                   th:value="*{notification}"
+			                   onclick="this.value = this.checked"/>
+		                </div>
+		                
+		                <!-- NEW for DROP 2 -->
+		                <div class="form-group d-flex justify-content-between mt-5 ml-3" >
+		                    <input id="audienceFilterCheckbox" type="checkbox" th:checked="*{audienceFilterCheckbox}" onchange="onChangeAudienceFilterCheckbox()"
+			                   th:value="*{audienceFilterCheckbox}"
+			                   onclick="this.value = this.checked"/>
+			                <select id="audienceFilter" class="form-control ml-2" th:field="*{audienceFilterId}" th:required="required" onchange=onChangeOffer() disabled>
+		                        <option th:if="*{audienceFilterId}" th:value="*{audienceFilterId}" th:text="*{audienceFilterName}">-</option>
+		                        <option th:unless="*{audienceFilterId}" value="">Select Audience Filter</option>
+		                    </select>
+		                    <button type="button" class="btn btn-outline-secondary ml-2" id="addAudienceFilter" onclick="onClickAudienceFilterCreation()">+</button>
+		                </div>
+		                
+		                <div class="form-group d-flex justify-content-between ml-3">
+		                    <input id="eligibilityCheckbox" type="checkbox" th:checked="*{eligibilityCheckbox}" onchange="onChangeEligibilityCheckbox()"
+			                   th:value="*{eligibilityCheckbox}"
+			                   onclick="this.value = this.checked"/>
+			                <select id="eligibility" class="form-control ml-2" th:field="*{eligibilityId}" th:required="required" onchange="onChangeOffer()" disabled>
+		                        <option th:if="*{eligibilityId}" th:value="*{eligibilityId}" th:text="*{eligibilityName}">-</option>
+		                        <option th:unless="*{eligibilityId}" value="">Select Eligibility</option>
+		                    </select>
+		                    <button type="button" class="btn btn-outline-secondary ml-2" id="addEligibility" onclick="onClickEligibilityCreation()">+</button>
+		                </div>
+		                
+		                <div class="form-group d-flex justify-content-between ml-3">
+		                    <input id="fulfillmentCheckbox" type="checkbox" th:checked="*{fulfillmentCheckbox}" onchange="onChangeFulfillmentCheckbox()"
+			                   th:value="*{fulfillmentCheckbox}"
+			                   onclick="this.value = this.checked"/>
+			                <select id="fulfillment" class="form-control ml-2" th:field="*{fulfillmentId}" th:required="required" onchange="onChangeOffer()" disabled>
+		                        <option th:if="*{fulfillmentId}" th:value="*{fulfillmentId}" th:text="*{fulfillmentName}">-</option>
+		                        <option th:unless="*{fulfillmentId}" value="">Select Fulfillment Policy</option>
+		                    </select>
+		                    <button type="button" class="btn btn-outline-secondary ml-2" id="addFulfillment" onclick="onClickFulfillmentCreation()">+</button>
+		                </div>
+		                
+		                <div class="form-group d-flex justify-content-between ml-3">
+		                    <input id="redemptionCheckbox" type="checkbox" th:checked="*{redemptionCheckbox}" onchange="onChangeRedemptionCheckbox()"
+			                   th:value="*{redemptionCheckbox}"
+			                   onclick="this.value = this.checked"/>
+			                <select id="redemption" class="form-control ml-2" th:field="*{redemptionId}" th:required="required" onchange="onChangeOffer()" disabled>
+		                        <option th:if="*{redemptionId}" th:value="*{redemptionId}" th:text="*{redemptionName}">-</option>
+		                        <option th:unless="*{redemptionId}" value="">Select Redemption Policy</option>
+		                    </select>
+		                    <button type="button" class="btn btn-outline-secondary ml-2" id="addRedemption" onclick="onClickRedemptionCreation()">+</button>
+		                </div>
+		                
+		                <!-- 				
+						<div class="form-group">
+							<label >INSTANCE ID : <span id="instanceId" th:text="${instanceId} ? ${instanceId} : ''"/></label></br>
+							<label >STATUS : <span id="statusId" th:text="${status} ? ${status} : 'UNCONFIGURED'"/></label></br>
+							<label >REQ ID : <span id="uuid" th:text="${uuid}"/></label>
+						</div>
+		 				-->
+		
+						
+		            </form>
+		            <!-- 
+		            <div class="form-group">
+				        <button class="btn btn-primary btn-block" id="saveAjax">SaveAjax</button>
+		            </div>
+		             -->
+		            <div class="form-group">
+				        <button class="btn btn-primary btn-block" id="save">Save</button>
+		            </div>
+		        </div>
+		        
+			    <div class="col-md-8 mt-3 card">
+			    
+			    	<div id="daDetail" style="display: none;">
+					    
+					    <div class="form-group">
+							<h5 class="mt-1">DA CAMPAIGN OFFERS</h5>
+						</div>
+							
+					    <div class="row mt-3">
+					    
+							<div class="col-md-6">
+							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Offer Name</label>
+								  <input type="text" class="form-control" id="daOfferNameId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Campaign Offer Description</label>
+								  <input type="text" class="form-control" id="daDescId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Value Unit</label>
+								  <input type="text" class="form-control" id="daValUnitId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Value to Deduct from MA</label>
+								  <input type="text" class="form-control" id="daDeductMaId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Start Date</label>
+								  <input type="text" class="form-control" id="daStartDateId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Action</label>
+								  <input type="text" class="form-control" id="daActionId" disabled readonly>
+								</div>
+								
+							</div>
+						    <div class="col-md-6">
+							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">DA Name</label>
+								  <input type="text" class="form-control" id="daNameId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Value</label>
+								  <input type="text" class="form-control" id="daValueId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Cap Value</label>
+								  <input type="text" class="form-control" id="daCapValueId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Validity (Days)</label>
+								  <input type="text" class="form-control" id="daValidId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">End Date</label>
+								  <input type="text" class="form-control" id="daEndDateId" disabled readonly>
+								</div>
+								
+							</div>
+					
+					    </div>
+				    </div>
+				    
+				    <div id="omsDetail" style="display: none;">
+					    
+					    <div class="form-group">
+							<h5 class="mt-2">OMS CAMPAIGN OFFERS</h5>
+						</div>
+							
+					    <div class="row mt-1">
+							
+							<div class="col-md-6">
+							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Offer Name</label>
+								  <input type="text" class="form-control" id="omsOfferNameId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Offer Type</label>
+								  <input type="text" class="form-control" id="omsOfferTypeId" disabled readonly>
+								</div>				
+								
+								<div id="timeBased" style="display: none;">								
+									<div class="row mt-1">
+										<div class="col-md-4">
+											<div class="mb-1">
+											  <label for="exampleFormControlInput1" class="form-label">Day</label>
+											  <input type="text" class="form-control" id="omsDayId" disabled readonly>
+											</div>		
+										</div>		
+										<div class="col-md-4">
+											<div class="mb-1">
+											  <label for="exampleFormControlInput1" class="form-label">Hour</label>
+											  <input type="text" class="form-control" id="omsHourId" disabled readonly>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="mb-1">
+											  <label for="exampleFormControlInput1" class="form-label">Minute</label>
+											  <input type="text" class="form-control" id="omsMinuteId" disabled readonly>
+											</div>	
+										</div>	
+									</div>
+								</div>
+																
+								<div id="accountBased1" style="display: none;">	
+									<div class="mb-1">
+									  <label for="exampleFormControlInput1" class="form-label">Validity</label>
+									  <input type="text" class="form-control" id="omsValidityId" disabled readonly>
+									</div>
+								</div>
+															
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Validity to Deduct from MA</label>
+								  <input type="text" class="form-control" id="omsDeductMaId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Threshold ID</label>
+								  <input type="text" class="form-control" id="omsThrId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Threshold Value Unit</label>
+								  <input type="text" class="form-control" id="omsThrValUnitId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">End Date</label>
+								  <input type="text" class="form-control" id="omsEndDateId" disabled readonly>
+								</div>
+																
+							</div>
+						    <div class="col-md-6">
+							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Offer ID</label>
+								  <input type="text" class="form-control" id="omsOfferIdId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Campaign Offer Description</label>
+								  <input type="text" class="form-control" id="omsDescId" disabled readonly>
+								</div>			
+								<div id="accountBased2" style="display: none;">				
+									<div class="mb-1">
+									  <label for="exampleFormControlInput1" class="form-label">Validity Unit</label>
+									  <input type="text" class="form-control" id="omsValidUnitId" disabled readonly>
+									</div>		
+								</div>					
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Counter ID</label>
+								  <input type="text" class="form-control" id="omsCntId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Threshold Value</label>
+								  <input type="text" class="form-control" id="omsThrValId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Start Date</label>
+								  <input type="text" class="form-control" id="omsStartDateId" disabled readonly>
+								</div>							
+								<div class="mb-1">
+								  <label for="exampleFormControlInput1" class="form-label">Action</label>
+								  <input type="text" class="form-control" id="omsActionId" disabled readonly>
+								</div>
+																
+							</div>
+					
+					    </div>
+				    </div>
+				    
+				    
+				    
+				    
+				    <!-- DROP 2 -->
+				    <div id="bucketCreation" style="display: none;">
+				    	<div class="form-group">
+							<h5 class="mt-1">CREATE AN OFFER BUCKET</h5>
+						</div>
+				    	
+				    	<div class="form-group">
+							<h6 class="mt-2">Please select a bucket type:</h6>
+						</div>
+						<!-- select id="offerTypeSelection" class="form-control" th:field="*{offerType}" th:required="required" onchange="onChangeOfferType()">
+						    <option th:value="DA" th:text="DA"></option>
+    						<option th:value="OMS" th:text="OMS"></option>
+						</select> -->
+						<select id="offerBucketTypeSelection" class="form-control" onchange="onChangeOfferBucketType()">
+						    <option disabled selected> -- select a bucket type -- </option>
+						    <option value="OMS">OMS</option>
+						    <option value="DA">DA</option>
+						</select>
+				    </div>
+		    	
+		    	
+		    		<div id="daBucketCreation" style="display: none;">
+		    			<form>
+							<div class="mt-3 mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Name</label>
+								<input type="text" class="form-control" id="daOfferNameIdForm" required>
+							</div>	
+													
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Description</label>
+								<input type="text" class="form-control" id="daOfferDescriptionForm" maxlength="200">
+							</div>
+		    			</form>
+		    			<div class="form-group row pull-right mt-4 mr-1">					    
+							<button class="btn btn-secondary mr-2" id="cancelDaBucketCreation" onclick="onClickCancel()">Cancel</button>
+							<button class="btn btn-primary" id="saveDaBucketCreation">Save</button>
+						</div> 
+		    		</div>
+
+
+		    		<div id="omsBucketCreation" style="display: none;">
+		    			<form>
+		    				
+								<div class="mt-3 mb-1">
+									<label for="exampleFormControlInput1" class="form-label">OMS Offer ID</label>
+									<input type="text" class="form-control" id="omsOfferNameIdForm" onchange="onChangeOmsId(this)" required>
+								</div>	
+														
+								<div class="mb-1">
+									<label for="exampleFormControlInput1" class="form-label">OMS Offer Type</label>
+									<select id="omsOfferTypeForm" class="form-control" required>
+									    <option disabled selected> -- select an offer type -- </option>
+									    <option value="time-based">Time-Based</option>
+									    <option value="account-based">Account-Based</option>
+									</select>
+								</div>
+								
+								<div class="mb-1">
+									<label for="exampleFormControlInput1" class="form-label">OMS Offer Description</label>
+									<input type="text" class="form-control" id="omsDescriptionForm" maxlength="200">
+								</div>	
+														
+								<div class="mb-1">
+									<label for="exampleFormControlInput1" class="form-label">Counter ID</label>
+									<input type="text" class="form-control" id="counterId" required>
+								</div>
+								
+								<div class="mb-1">
+									<label for="exampleFormControlInput1" class="form-label">Threshold ID</label>
+									<input type="text" class="form-control" id="thresholdId" required>
+								</div>	
+		    			</form>
+		    			
+		    			<div class="form-group row pull-right mt-4 mr-1">					    
+							<button class="btn btn-secondary mr-2" id="cancelOmsBucketCreation" onclick="onClickCancel()">Cancel</button>
+							<button class="btn btn-primary" id="saveOmsBucketCreation">Save</button>
+						</div> 
+		    		</div>
+		    		
+		    		
+		    		
+		    		
+				    <div id="offerCreation" style="display: none;">
+				    	<div class="form-group">
+							<h5 class="mt-1">CREATE A CAMPAIGN OFFER</h5>
+						</div>
+				    	
+				    	<div class="form-group">
+							<h6 class="mt-2">Please select an offer type:</h6>
+						</div>
+						<!-- select id="offerTypeSelection" class="form-control" th:field="*{offerType}" th:required="required" onchange="onChangeOfferType()">
+						    <option th:value="DA" th:text="DA"></option>
+    						<option th:value="OMS" th:text="OMS"></option>
+						</select> -->
+						<select id="offerCampaignTypeSelection" class="form-control" onchange="onChangeOfferCampaignType()">
+						    <option disabled selected> -- select an offer type -- </option>
+						    <option value="OMS">OMS</option>
+						    <option value="DA">DA</option>
+						</select>
+				    </div>
+				    
+				    
+				    <div id="daCampaignCreation" style="display: none;">
+							<form th:object="${offers}">
+						
+								<div class="row mt-3">
+						
+									<div class="col-md-6">
+						
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">Offer Name</label>
+											<input type="text" class="form-control" id="daOfferNameIdForm" >
+										</div>							
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">Campaign Offer Description</label>
+											<input type="text" class="form-control" id="daDescIdForm" maxlength="200">
+										</div>							
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">Value Unit</label>
+											<select id="daValUnitIdForm" class="form-control">
+											    <option value="AMOUNT">Amount in SGD</option>
+											    <option value="MB">Amount in MB</option>
+											    <option value="PERCENT_AMOUNT">% Top-Up Value in SGD</option>
+											    <option value="PERCENT_MB">% Top-Up Value in MB</option>
+											</select>
+										</div>							
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">Value to Deduct from MA</label>
+											<input type="number" min="0"  class="form-control" id="daDeductMaIdForm" value="0.00">
+										</div>							
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">Start Date</label>
+											<input type="date" class="form-control" id="daStartDateIdForm">
+										</div>							
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">Action</label>
+											<select id="daActionIdForm" class="form-control">
+											    <option value="EXTEND">Extend</option>
+											    <option value="RESET">Reset</option>
+											</select>
+										</div>
+						
+									</div>
+									
+									<div class="col-md-6">
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">DA Name</label>
+											<div class="row pl-3 pr-3">
+												<select id="daOfferBucket" data-width="100%" class="form-control" th:field="*{offerBucketId}" th:required="required" onchange="getOfferBucketDetail(this)">
+							                        <option th:if="*{offerBucketId}" th:value="*{offerBucketId}" th:text="*{offerBucketCode}">-</option>
+							                        <option th:unless="*{offerBucketId}" value="">-</option>
+							                    </select>
+						                    </div>
+										</div>							
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">Value</label>
+											<input type="number" min="0" step="1" class="form-control" id="daValueIdForm" value="0">
+										</div>							
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">Cap Value</label>
+											<input type="number" min="0" step="1" class="form-control" id="daCapValueIdForm" value="0">
+										</div>							
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">Validity (Days)</label>
+											<input type="number" min="0" step="1" class="form-control" id="daValidIdForm" value="0">
+										</div>							
+										<div class="form-group mb-1">
+											<label for="exampleFormControlInput1" class="form-label">End Date</label>
+											<input type="date" class="form-control" id="daEndDateIdForm">
+										</div>
+									</div>
+								</div>
+							</form>
+						<div class="form-group row pull-right mt-4 mr-1">					    
+							<button class="btn btn-secondary mr-2" id="cancelDaCampaignCreation" onclick="onClickCancel()">Cancel</button>
+							<button class="btn btn-primary" id="saveDaCampaignCreation">Save</button>
+						</div>  
+					</div>
+					
+					
+					<div id="omsCampaignCreation" style="display: none;">
+						<form th:object="${offers}">
+						
+							<div class="row mt-3">
+					
+								<div class="col-md-6">
+					
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Offer Name</label>
+										<input type="text" class="form-control" id="omsOfferNameIdForm">
+									</div>							
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Offer Type</label>
+										<input type="text" class="form-control" id="omsOfferTypeIdForm" readonly disabled>
+									</div>
+									
+									<div id="timeBasedForm" style="display: none;">								
+										<div class="row mt-1">
+											<div class="col-md-4">
+												<div class="mb-1">
+												  <label for="exampleFormControlInput1" class="form-label">Day</label>
+												  <input type="number" class="form-control" id="omsDayIdForm" >
+												</div>		
+											</div>		
+											<div class="col-md-4">
+												<div class="mb-1">
+												  <label for="exampleFormControlInput1" class="form-label">Hour</label>
+												  <input type="number" class="form-control" id="omsHourIdForm" >
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="mb-1">
+												  <label for="exampleFormControlInput1" class="form-label">Minute</label>
+												  <input type="number" class="form-control" id="omsMinuteIdForm">
+												</div>	
+											</div>	
+										</div>
+									</div>
+																	
+									<div id="accountBased1Form" style="display: none;">	
+										<div class="mb-1">
+										  <label for="exampleFormControlInput1" class="form-label">Validity</label>
+										  <input type="text" class="form-control" id="omsValidityIdForm" >
+										</div>
+									</div>						
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Validity to Deduct from MA</label>
+										<input type="number" min="0" class="form-control" id="omsDeductMaIdForm" value="0.00">
+									</div>							
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Threshold ID</label>
+										<input type="text" class="form-control" id="omsThrIdForm" disabled readonly>
+									</div>							
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Threshold Value Unit</label>
+										<select id="omsThrValUnitIdForm" class="form-control">
+										    <option value="AMOUNT">Amount in Minute</option>
+										    <option value="MB">Amount in MB</option>
+										    <option value="PERCENT_AMOUNT">% of Amount in Minute</option>
+										    <option value="PERCENT_MB">% of Amount in MB</option>
+										</select>
+									</div>							
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">End Date</label>
+										<input type="date" class="form-control" id="omsEndDateIdForm">
+									</div>
+					
+								</div>
+								
+								<div class="col-md-6">
+								
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Offer ID</label>
+										<div class="row pl-3 pr-3">
+											<select id="omsOfferBucket" data-width="100%" class="form-control" th:field="*{offerBucketId}" th:required="required" onchange="getOfferBucketDetail(this)">
+						                        <option th:if="*{offerBucketId}" th:value="*{offerBucketId}" th:text="*{offerBucketCode}">-</option>
+						                        <option th:unless="*{offerBucketId}" value="">-</option>
+						                    </select>
+										</div>
+									</div>							
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Campaign Offer Description</label>
+										<input type="text" class="form-control" id="omsDescIdForm" maxlength="200">
+									</div>					
+											
+									<div id="accountBased2" style="display: none;">				
+										<div class="mb-1">
+										  <label for="exampleFormControlInput1" class="form-label">Validity Unit</label>
+										  <input type="text" class="form-control" id="omsValidUnitIdForm">
+										</div>		
+									</div>		
+													
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Counter ID</label>
+										<input type="text" class="form-control" id="omsCntIdForm" readonly disabled>
+									</div>							
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Threshold Value</label>
+										<input type="number" min="0" step="1" class="form-control" id="omsThrValIdForm" value="0">
+									</div>							
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Start Date</label>
+										<input type="date" class="form-control" id="omsStartDateIdForm">
+									</div>	
+									<div class="mb-1">
+										<label for="exampleFormControlInput1" class="form-label">Action</label>
+										<select id="omsActionIdForm" class="form-control">
+										    <option value="EXTEND">Extend</option>
+										    <option value="RESET">Reset</option>
+										</select>
+									</div>
+					
+								</div>
+							</div>
+						</form>
+						
+						<div class="form-group row pull-right mt-4 mr-1">					    
+							<button class="btn btn-secondary mr-2" id="cancelOmsCampaignCreation" onclick="onClickCancel()">Cancel</button>
+							<button class="btn btn-primary" id="saveOmsCampaignCreation">Save</button>
+						</div>     
+					</div>
+		    	
+		    	
+		    	
+		    		
+		    		<div id="audienceFilterCreation" style="display: none;">
+		    			<div class="form-group">
+							<h5 class="mt-1">CREATE AN AUDIENCE FILTER</h5>
+						</div>
+						
+						<form>
+							<div class="mt-3 mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Filter Name</label>
+								<input type="text" class="form-control" id="audienceFilterNameForm" required>
+							</div>	
+													
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Filter Description</label>
+								<input type="text" class="form-control" id="audienceFilterDescriptionForm" maxlength="200">
+							</div>
+							
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Filter Function</label>
+								<select id="omsOfferType" class="form-control" required>
+								    <option disabled selected> -- select a function -- </option>
+								    <option value="time-based">hasDoneSinglePaidTopup</option>
+								    <option value="account-based">hasDone</option>
+								</select>
+							</div>
+							
+							
+							
+		    			</form>
+		    			<div class="form-group row pull-right mt-4 mr-1">					    
+							<button class="btn btn-secondary mr-2" id="cancelAudienceFilterCreation" onclick="onClickCancel()">Cancel</button>
+							<button class="btn btn-primary" id ="saveAudienceFilterCreation">Save</button>
+						</div> 
+		    		</div>
+		    		
+		    		
+		    		<div id="eligibilityCreation" style="display: none;">
+		    			<div class="form-group">
+							<h5 class="mt-1">CREATE AN ELIGIBILITY FILTER</h5>
+						</div>
+						
+						<form>
+							<div class="mt-3 mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Eligibility Filter Name</label>
+								<input type="text" class="form-control" id="eligibilityNameForm" required>
+							</div>	
+													
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Eligibility Filter Description</label>
+								<input type="text" class="form-control" id="eligibilityDescriptionForm" maxlength="200">
+							</div>
+							
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Eligibility Cap</label>
+								<input type="text" class="form-control" id="eligibilityCapForm">
+							</div>
+							
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Eligibility Frequency</label>
+								<div class="form-group d-flex justify-content-between">
+									<input type="number" class="form-control" id="redemptionFrequencyForm">
+									<span class="ml-3 col-2 ">Times in</span>
+									<input type="number" class="form-control " id="redemptionFrequencyTotalForm">
+									<span class="ml-3">days</span>
+								</div>
+							</div>
+								
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Offer List</label>
+								<select id="eligibilityOfferListForm" class="form-control" required>
+								    <option disabled selected> -- select offers -- </option>
+								    <option> </option>
+								</select>
+							</div>
+							
+							
+							
+		    			</form>
+		    			<div class="form-group row pull-right mt-4 mr-1">					    
+							<button class="btn btn-secondary mr-2" id="cancelEligibitlityCreation" onclick="onClickCancel()">Cancel</button>
+							<button class="btn btn-primary" id="saveEligibitlityCreation">Save</button>
+						</div> 
+		    		</div>
+		
+		    		
+		    		<div id="fulfillmentCreation" style="display: none;">
+		    			<div class="form-group">
+							<h5 class="mt-1">CREATE A FULFILLMENT POLICY</h5>
+						</div>
+						
+		    			<form>
+							<div class="mt-3 mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Fulfillment Policy Name</label>
+								<input type="text" class="form-control" id="fulfillmentNameForm">
+							</div>	
+													
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Fulfillment Policy Description</label>
+								<input type="text" class="form-control" id="fulfillmentDescriptionForm" maxlength="200">
+							</div>
+							
+							<div class="mb-1">
+								
+								<label for="exampleFormControlInput1" class="form-label">Event</label>
+								<div class="form-group row">
+									<div class="col-3">
+										<select id="fulfillmentEventForm" class="form-control">
+										    <option value="Topup">Top-Up</option>
+										    <option value="Usage">Usage</option>
+										</select>
+									</div>
+									<div id="exampleformcontrol" class="col" style="display: block;">
+										<input type="text" class="form-control" id="fulfillmentEventValueForm" placeholder="Value">
+									</div>
+								</div>
+							</div>	
+													
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Fulfillment Frequency</label>
+								<div class="form-group d-flex justify-content-between">
+									<input type="text" class="form-control" id="fulfillmentFrequencyForm" placeholder="Value">
+									<span class="ml-3">in</span>
+									<input type="text" class="form-control ml-3" id="fulfillmentFrequencyTotalForm" placeholder="Number of Days">
+									<span class="ml-3">day(s)</span>
+								</div>
+							</div>
+											
+							<div class="mb-1">
+								<div class="form-group row">
+									<div class="col-3">
+										<label for="exampleFormControlInput1" class="form-label">Fulfillment Period</label>
+										<select id="fulfillmentPeriodTypeForm" class="form-control" onchange="onChangeFulfillmentPeriodType()">
+										    <option value="days">Days</option>
+										    <option value="range">Range</option>
+										</select>
+									</div>
+									
+									<div id="fulfillmentDaysInput" style="display: block;" class="col">
+										<label for="exampleFormControlInput1" class="form-label">Number of Days</label>
+										<input type="text" class="form-control" id="fulfillmentPeriodDaysForm" placeholder="Value" >
+									</div>
+									
+									<div id="fulfillmentRangeInput" style="display: none;" class="col">
+										<div class="row">
+											<div class="col mb-1 mr-2">
+												<label for="exampleFormControlInput1" class="form-label">Start Date</label>
+												<input type="date" class="form-control" id="fulfillmentPeriodRangeStartForm">
+											</div>
+	
+											<div class="col mb-1">
+												<label for="exampleFormControlInput1" class="form-label">End Date</label>
+												<input type="date" class="form-control" id="fulfillmentPeriodRangeEndForm">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+																
+		    			</form>
+		    			
+		    			<div class="form-group row pull-right mt-4 mr-1">					    
+							<button class="btn btn-secondary mr-2" id="cancelFulfillmentCreation" onclick="onClickCancel()">Cancel</button>
+							<button class="btn btn-primary" id="saveFulfillmentCreation">Save</button>
+						</div> 
+		    		</div>
+		    		
+		    		
+		    		<div id="redemptionCreation" style="display: none;">
+		    			<div class="form-group">
+							<h5 class="mt-1">CREATE A REDEMPTION POLICY</h5>
+						</div>
+						
+		    			<form>
+							<div class="mt-3 mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Redemption Policy Name</label>
+								<input type="text" class="form-control" id="redemptionNameForm">
+							</div>	
+													
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Redemption Policy Description</label>
+								<input type="text" class="form-control" id="redemptionDescriptionForm" maxlength="200">
+							</div>
+							
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Redemption Cap</label>
+								<input type="text" class="form-control" id="redemptionCapForm">
+							</div>
+													
+							<div class="mb-1">
+								<label for="exampleFormControlInput1" class="form-label">Redemption Frequency</label>
+								<div class="form-group d-flex justify-content-between">
+									<input type="text" class="form-control" id="redemptionFrequencyForm" placeholder="Value" >
+									<span class="ml-3">in</span>
+									<input type="text" class="form-control ml-3" id="redemptionFrequencyTotalForm" placeholder="Number of Days" >
+									<span class="ml-3">day(s)</span>
+								</div>
+							</div>
+							
+							
+							<div class="mb-1">
+								<div class="form-group row">
+									<div class="col-3">
+										<label for="exampleFormControlInput1" class="form-label">Redemption Period</label>
+										<select id="redemptionPeriodTypeForm" class="form-control" onchange="onChangeRedemptionPeriodType()">
+										    <option value="days">Days</option>
+										    <option value="range">Range</option>
+										</select>
+									</div>
+									
+									<div id="redemptionDaysInput" class="col" style="display: block;">
+										<label for="exampleFormControlInput1" class="form-label">Number of Days</label>
+										<input type="text" class="form-control" id="redemptionPeriodDaysForm" placeholder="Value" >
+									</div>
+									
+									<div id="redemptionRangeInput" class="col" style="display: none;">
+										<div class="row">
+											<div class="col mb-1 mr-2">
+												<label for="exampleFormControlInput1" class="form-label">Start Date</label>
+												<input type="date" class="form-control" id="redemptionPeriodRangeStartForm">
+											</div>
+	
+											<div class="col mb-1">
+												<label for="exampleFormControlInput1" class="form-label">End Date</label>
+												<input type="date" class="form-control" id="redemptionPeriodRangeEndForm">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
+		    			</form>
+		    			
+		    			<div class="form-group row pull-right mt-4 mr-1">					    
+							<button class="btn btn-secondary mr-2" id="cancel" onclick="onClickCancel()">Cancel</button>
+							<button class="btn btn-primary" id="save">Save</button>
+						</div> 
+		    		</div>
+		    		
+		    	</div>
+			</div>
+		</div>
+		
+		
+		<div class="modal hide" id="successDialog" data-backdrop="static" data-keyboard="false">
+			<div class="modal-body">
+			    <div id="ajax_loader">
+					<div class="alert alert-success" role="alert">
+					Configuration saved...
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal hide" id="failedDialog" data-backdrop="static" data-keyboard="false">
+			<div class="modal-body">
+				<div id="ajax_loader">
+					<div class="alert alert-danger" role="alert">
+					This is a danger alert with
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+<!--
+<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/select2-develop/dist/js/select2.full.js"></script> 
+<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/jquery/jquery.min.js"></script>
+<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/popper.js/umd/popper.min.js"></script>
+<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/moment/moment.min.js"></script>
+<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js"></script>
+-->
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<script>
+	
+	var selectAudienceFilter = document.getElementById("audienceFilter");
+	var selectEligibility = document.getElementById("eligibility");
+	var selectFulfillment = document.getElementById("fulfillment");
+	var selectRedemption = document.getElementById("redemption");
+	
+	var btn = document.getElementById("save");
+	var daDetail = document.getElementById("daDetail");
+	var omsDetail = document.getElementById("omsDetail");
+	
+	/* 
+	var btnAjax = document.getElementById("saveAjax");	
+ 	*/
+ 	
+	function onChangeBucket() {
+		$('#offers').empty();
+		$('#offers').val(null);
+		btn.disabled = false;
+	}	
+	
+	function onChangeOffer() {
+		btn.disabled = false;
+		reloadOfferDetail();
+	}
+	
+	function onChangeNotification() {
+		btn.disabled = false;
+	}
+	
+	function onChangeAudienceFilterCheckbox() {
+		btn.disabled = false;
+		selectAudienceFilter.disabled = !selectAudienceFilter.disabled;
+	}
+	
+	function onChangeEligibilityCheckbox() {
+		btn.disabled = false;
+		selectEligibility.disabled = !selectEligibility.disabled;
+	}
+	
+	function onChangeFulfillmentCheckbox() {
+		btn.disabled = false;
+		selectFulfillment.disabled = !selectFulfillment.disabled;
+	}
+	
+	function onChangeRedemptionCheckbox() {
+		btn.disabled = false;
+		selectRedemption.disabled = !selectRedemption.disabled;
+	}
+	
+	function closeAlertDialog() {
+		$('#successDialog').modal('hide');
+		$('#failedDialog').modal('hide');
+	}
+	
+	window.onload = function()	{
+		console.log('page after load : ');
+		reloadOfferDetail();
+	}
+	
+	/* 
+	"startDate": $('#date1').val(),
+	"endDate": $('#date2').val(),
+    */
+    /* 
+    var request = { "instanceUuid" : $('#instanceId').text(),
+			"payload": {			        	  
+        	  "offerType": $('#offerType').val(),
+        	  "offerBucketId": $('#offerBucket').val(),
+        	  "offerBucketCode": $('#offerBucket option:selected').text(),
+        	  "offerCampaignId": $('#offers').val(),
+        	  "offerCampaignName": $('#offers option:selected').text()
+    } 
+	*/        	
+    /* 
+    var request = { "amsAction" : "save", "requestId" : $('#uuid').text(),
+					"payload": {			        	  
+		        	  "offerType": $('#offerType').val(),
+		        	  "offerBucketId": $('#offerBucket').val(),
+		        	  "offerBucketCode": $('#offerBucket option:selected').text(),
+		        	  "offerCampaignId": $('#offers').val(),
+		        	  "offerCampaignName": $('#offers option:selected').text()
+		        	}
+	}; 
+    */
+	/* 
+	btnAjax.onclick = function() {
+		btn.disabled = true;
+		$('#successDialog').modal();
+		daDetail.style.display = "none";
+		omsDetail.style.display = "none";
+		setTimeout(closeAlertDialog, 1000);
+	}
+	*/
+		
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+	// Listen response message from child window
+	eventer(messageEvent,function(e) {
+		console.log('parent received message!:  ',e.data);
+		var payload = JSON.parse(e.data.payload);
+
+    	$('#offerCodeId').text(payload.offerBucketCode);
+    	$('#offerNameId').text(payload.offerCampaignName);
+    	
+    	$('#statusId').text(e.data.configurationStatus);
+    	
+		$('#successDialog').modal();
+		setTimeout(closeAlertDialog, 1000);
+	},false);
+	
+	
+	// saving configuration
+	btn.onclick = function() {
+		btn.disabled = true;
+		console.log("offers "+$('#offers').val());
+		if($('#offers').val() != ""){
+			var message = {amsAction : "save", requestId : "save"};
+			var request = { "amsAction" : "save", "requestId" : "save",
+				"payload": {
+					/* 
+		        	"offerType": $('#offerType').val(),
+		        	 */
+		        	"offerBucketId": $('#offerBucket').val(),
+		        	"offerBucketCode": $('#offerBucket option:selected').text(),
+		        	"offerCampaignId": $('#offers').val(),
+		        	"offerCampaignName": $('#offers option:selected').text(),
+		        	"notification": $('#notification').val(),
+		    	}
+			};			
+			window.parent.postMessage(request,'*');
+		}
+	}
+	 
+</script>
+
+
+<script>
+
+	var daCampaignCreation = document.getElementById("daCampaignCreation");
+	var omsCampaignCreation = document.getElementById("omsCampaignCreation");
+	var offerCreation = document.getElementById("offerCreation");
+	var accountBased1 = document.getElementById("accountBased1");
+	var accountBased2 = document.getElementById("accountBased2");
+	
+	var daBucketCreation = document.getElementById("daBucketCreation");
+	var omsBucketCreation = document.getElementById("omsBucketCreation");
+	var bucketCreation = document.getElementById("bucketCreation");
+	
+	var fulfillmentCreation = document.getElementById("fulfillmentCreation");
+	var redemptionCreation = document.getElementById("redemptionCreation");
+	var audienceFilterCreation = document.getElementById("audienceFilterCreation");
+	var eligibilityCreation = document.getElementById("eligibilityCreation");
+	
+	/*
+	AJAX to get offer details
+	
+	https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/data/offerDetail
+	*/
+
+	function reloadOfferDetail() {
+		if($('#offers').val() != ""){	
+			$.ajax({
+		        url: 'http://localhost:8090/data/offerDetail',
+		        method: "GET",
+		        data: {
+		            	bucketName : $('#offerBucket option:selected').text(),
+		            	bucketOfferId : $('#offerBucket').val(),
+		            	campaignOfferId : $('#offers').val()
+		        },
+		        success: function(response){
+		        	console.log(response);
+		        	omsDetail.style.display = "none";
+		    		daDetail.style.display = "none";
+		    		
+		    		omsCampaignCreation.style.display = "none";
+		    		daCampaignCreation.style.display = "none";
+		    		offerCreation.style.display = "none";
+		    		
+		    		daBucketCreation.style.display = "none";
+		    		omsBucketCreation.style.display = "none";
+		    		bucketCreation.style.display = "none";
+		    		
+		    		fulfillmentCreation.style.display = "none";
+		    		redemptionCreation.style.display = "none";
+		    		
+		    		if(response.offerBucketType === 'OMS'){
+		    			omsDetail.style.display = "block";
+			        	$('#omsOfferNameId').val(response.offerName);
+			        	$('#omsOfferTypeId').val(response.offerType);
+			        	$('#omsDeductMaId').val(response.valueToDeductFromMa);
+			        	$('#omsThrId').val(response.thresholdId);
+			        	$('#omsThrValUnitId').val(response.thresholdValueUnit);
+			        	$('#omsEndDateId').val(response.endDate);
+			        	$('#omsOfferIdId').val(response.offerId);
+			        	$('#omsDescId').val(response.description);
+			        	$('#omsCntId').val(response.counterId);
+			        	$('#omsThrValId').val(response.thresholdValue);
+			        	$('#omsStartDateId').val(response.startDate);
+			        	$('#omsActionId').val(response.action);
+			        	
+						if(response.offerType === 'time-based'){
+							timeBased.style.display = "block";
+							accountBased1.style.display = "none";
+							accountBased2.style.display = "none";
+							
+							$('#omsDayId').val(response.day);
+				        	$('#omsHourId').val(response.hour);
+				        	$('#omsMinuteId').val(response.minute);
+						}else {
+							timeBased.style.display = "none";
+							accountBased1.style.display = "block";
+							accountBased2.style.display = "block";
+						
+							$('#omsValidityId').val(response.value);
+				        	$('#omsValidUnitId').val(response.valueUnit);
+						}
+		    		}
+					if(response.offerBucketType === 'DA'){
+			    		daDetail.style.display = "block";
+			        	$('#daOfferNameId').val(response.offerName);
+			        	$('#daDescId').val(response.description);
+			        	$('#daValUnitId').val(response.valueUnit);
+			        	$('#daDeductMaId').val(response.valueToDeductFromMa);
+			        	$('#daStartDateId').val(response.startDate);
+			        	$('#daActionId').val(response.action);
+			        	$('#daNameId').val(response.bucketName);
+			        	$('#daValueId').val(response.value);
+			        	$('#daCapValueId').val(response.valueCap);
+			        	$('#daValidId').val(response.valueValidityInDays);
+			        	$('#daEndDateId').val(response.endDate);
+		    		}
+		        }
+		    })
+		}		
+	}
+	
+	/* 
+	AJAX to get offer bucket list
+	
+	$('#pleaseWaitDialog').modal('hide'); 
+	offerName : $('#offers').val()  
+	minimumInputLength: 3,
+	https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/data/offerBucket
+	*/
+		
+	$("#offerBucket").select2({
+	    theme: "bootstrap4",
+	    ajax: {
+	        url: 'http://localhost:8090/data/offerBucket',
+	        dataType: 'json',
+	        delay: 250,
+	        data: function (params) {
+	            var query = {
+	            		/* 
+	            		offerType : $('#offerType').val(),
+	            		 */
+	            		search: params.term
+	                  }
+	            return query;
+	        },
+	        processResults: function (response) {
+	            return {
+	                results: response
+	            };
+	        },
+	        cache: true
+	    }
+	}); 
+	
+	/* 
+	AJAX to get offer campaign list
+	
+	https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/data/offerCampaign
+	*/
+	
+	$("#offers").select2({
+	    theme: "bootstrap4",
+	    ajax: {
+	        url: 'http://localhost:8090/data/offerCampaign',
+	        dataType: 'json',
+	        delay: 250,
+	        data: function (params) {
+	            var query = {
+	            		/* 
+	            		offerType : $('#offerType').val(),
+	            		 */
+	            		offerId : $('#offerBucket').val(),
+	            		search: params.term
+	                  }
+	            return query;
+	        },
+	        processResults: function (response) {
+	            return {
+	                results: response
+	            };
+	        },
+	        cache: true
+	    }
+	}); 
+	
+	
+	
+	
+
+	// FUNCTIONS for Offer Buckets
+	var offerCampaignTypeSelectionVal = "";
+	
+	$("#omsOfferBucket").select2({
+	    theme: "bootstrap4",
+	    ajax: {
+	        url: 'http://localhost:8090/data/offerBucket',
+	        dataType: 'json',
+	        delay: 250,
+	        data: function (params) {
+	        	let query;
+	        	offerCampaignTypeSelectionVal = offerCampaignTypeSelection.value.toLowerCase();
+	        	
+        		query = {
+	            		/* 
+	            		offerType : $('#offerType').val(),
+	            		 */
+	            		search: params.term,
+	            		offerType: offerCampaignTypeSelectionVal
+	                  }
+	            return query;
+	        },
+	        processResults: function (response) {
+	            return {
+	                results: response
+	            };
+	        },
+	        cache: true
+	    }
+	}); 
+	
+	$("#daOfferBucket").select2({
+	    theme: "bootstrap4",
+	    ajax: {
+	        url: 'http://localhost:8090/data/offerBucket',
+	        dataType: 'json',
+	        delay: 250,
+	        data: function (params) {
+	        	
+	        	let query;
+	        	offerCampaignTypeSelectionVal = offerCampaignTypeSelection.value.toLowerCase();
+	        	
+        		query = {
+	            		/* 
+	            		offerType : $('#offerType').val(),
+	            		 */
+        				search: params.term,
+	            		offerType: offerCampaignTypeSelectionVal
+	                  }
+	            return query;
+	        },
+	        processResults: function (response) {
+	            return {
+	                results: response
+	            };
+	        },
+	        cache: true
+	    }
+	}); 
+	
+	function getOfferBucketDetail(code) {	
+		$.ajax({
+	        url: 'http://localhost:8090/data/bucketDetail',
+	        method: "GET",
+	        data: {
+	        	bucketId : code.value
+            	
+	        },
+	        success: function(response){
+
+	        	console.log(offerCampaignTypeSelectionVal)
+	        	console.log(response.offerType)
+	        	
+	    		if(offerCampaignTypeSelectionVal === 'oms'){
+
+					document.getElementById("omsOfferTypeIdForm").value = response.offerType;
+					document.getElementById("omsCntIdForm").value = response.counterId;
+					document.getElementById("omsThrIdForm").value = response.thresholdId;
+					
+					let accountBased1Form = document.getElementById("accountBased1Form"); 	
+					let accountBased2Form = document.getElementById("accountBased2Form"); 	
+					let timeBasedForm = document.getElementById("timeBasedForm"); 	
+
+					if(response.offerType === 'time-based'){
+						timeBasedForm.style.display = "block";
+						accountBased1Form.style.display = "none";
+						accountBased2Form.style.display = "none";
+						console.log("time-based mode is on")
+						// $('#omsDayId').val(response.day);
+			        	// $('#omsHourId').val(response.hour);
+			        	// $('#omsMinuteId').val(response.minute);
+					}else {
+						timeBasedForm.style.display = "none";
+						accountBased1Form.style.display = "block";
+						accountBased2Form.style.display = "block";
+						console.log("time-based mode is off")
+						// $('#omsValidityId').val(response.value);
+			        	// $('#omsValidUnitId').val(response.valueUnit);
+					}
+	    		}
+				if(offerCampaignTypeSelectionVal === 'DA'){
+		    		daDetail.style.display = "block";
+		        	//$('#daOfferBucket').val(response.bucketName);
+	    		}
+	        }
+	    })
+	}
+	
+	function createOfferBucket() {
+		omsDetail.style.display = "none";
+		daDetail.style.display = "none";
+		
+		omsCampaignCreation.style.display = "none";
+		daCampaignCreation.style.display = "none";
+		offerCreation.style.display = "none";
+		
+		daBucketCreation.style.display = "none";
+		omsBucketCreation.style.display = "none";
+		bucketCreation.style.display = "block";
+		
+		fulfillmentCreation.style.display = "none";
+		redemptionCreation.style.display = "none";
+		audienceFilterCreation.style.display = "none";
+		eligibilityCreation.style.display = "none";
+	}
+	
+	function onChangeOfferBucketType() {
+		
+		var offerBucketTypeSelection = document.getElementById("offerBucketTypeSelection");
+		
+		if(offerBucketTypeSelection.value == "OMS") {
+			daBucketCreation.style.display = "none";
+			omsBucketCreation.style.display = "block";
+		} 
+		
+		if (offerBucketTypeSelection.value == "DA") {
+			daBucketCreation.style.display = "block";
+			omsBucketCreation.style.display = "none";
+		}
+		
+	}
+	
+	function onChangeOmsId(offerId) {
+		document.getElementById("counterId").value = offerId.value;
+		document.getElementById("thresholdId").value = offerId.value;
+	}
+	
+	
+	// FUNCTIONS for Offer Campaigns
+	function createOfferCampaign() {
+		
+		omsDetail.style.display = "none";
+		daDetail.style.display = "none";
+		
+		omsCampaignCreation.style.display = "none";
+		daCampaignCreation.style.display = "none";
+		offerCreation.style.display = "block";
+		
+		daBucketCreation.style.display = "none";
+		omsBucketCreation.style.display = "none";
+		bucketCreation.style.display = "none";
+		
+		fulfillmentCreation.style.display = "none";
+		redemptionCreation.style.display = "none";
+		audienceFilterCreation.style.display = "none";
+		eligibilityCreation.style.display = "none";
+	}
+
+	
+	function onChangeOfferCampaignType() {
+		var offerCampaignTypeSelection = document.getElementById("offerCampaignTypeSelection");
+		
+		if(offerCampaignTypeSelection.value == "OMS") {
+			omsCampaignCreation.style.display = "block";
+			daCampaignCreation.style.display = "none";
+			
+		} 
+		
+		if (offerCampaignTypeSelection.value == "DA") {
+			omsCampaignCreation.style.display = "none";
+			daCampaignCreation.style.display = "block";
+		}
+		
+	}
+	
+	// FUNCTIONS for Audience Filter
+	function onClickAudienceFilterCreation() {
+		omsDetail.style.display = "none";
+		daDetail.style.display = "none";
+		
+		omsCampaignCreation.style.display = "none";
+		daCampaignCreation.style.display = "none";
+		offerCreation.style.display = "none";
+		
+		daBucketCreation.style.display = "none";
+		omsBucketCreation.style.display = "none";
+		bucketCreation.style.display = "none";
+		
+		fulfillmentCreation.style.display = "none";
+		redemptionCreation.style.display = "none";
+		audienceFilterCreation.style.display = "block";
+		eligibilityCreation.style.display = "none";
+	}
+	
+	
+	// FUNCTIONS for Eligibility Filter
+	function onClickEligibilityCreation() {
+		omsDetail.style.display = "none";
+		daDetail.style.display = "none";
+		
+		omsCampaignCreation.style.display = "none";
+		daCampaignCreation.style.display = "none";
+		offerCreation.style.display = "none";
+		
+		daBucketCreation.style.display = "none";
+		omsBucketCreation.style.display = "none";
+		bucketCreation.style.display = "none";
+		
+		fulfillmentCreation.style.display = "none";
+		redemptionCreation.style.display = "none";
+		audienceFilterCreation.style.display = "none";
+		eligibilityCreation.style.display = "block";
+		
+	}
+	
+	
+	// FUNCTIONS for Fulfillment Policy
+	function onClickFulfillmentCreation() {
+		omsDetail.style.display = "none";
+		daDetail.style.display = "none";
+		
+		omsCampaignCreation.style.display = "none";
+		daCampaignCreation.style.display = "none";
+		offerCreation.style.display = "none";
+		
+		daBucketCreation.style.display = "none";
+		omsBucketCreation.style.display = "none";
+		bucketCreation.style.display = "none";
+		
+		fulfillmentCreation.style.display = "block";
+		redemptionCreation.style.display = "none";
+		audienceFilterCreation.style.display = "none";
+		eligibilityCreation.style.display = "none";
+	}
+	
+	function onChangeFulfillmentPeriodType() {
+		
+		if( document.getElementById("fulfillmentPeriodTypeForm").value == "days" ) {
+			document.getElementById("fulfillmentDaysInput").style.display = "block";
+			document.getElementById("fulfillmentRangeInput").style.display = "none";
+			
+		}
+		
+		if( document.getElementById("fulfillmentPeriodTypeForm").value == "range" ) {
+			document.getElementById("fulfillmentDaysInput").style.display = "none";
+			document.getElementById("fulfillmentRangeInput").style.display = "block";
+			
+		}
+	}
+	
+	
+	
+	// FUNCTIONS for Redemption Policy
+	function onClickRedemptionCreation() {
+		omsDetail.style.display = "none";
+		daDetail.style.display = "none";
+		
+		omsCampaignCreation.style.display = "none";
+		daCampaignCreation.style.display = "none";
+		offerCreation.style.display = "none";
+		
+		daBucketCreation.style.display = "none";
+		omsBucketCreation.style.display = "none";
+		bucketCreation.style.display = "none";
+		
+		fulfillmentCreation.style.display = "none";
+		redemptionCreation.style.display = "block";
+		audienceFilterCreation.style.display = "none";
+		eligibilityCreation.style.display = "none";
+	}
+	
+	function onChangeRedemptionPeriodType() {
+
+		if( document.getElementById("redemptionPeriodTypeForm").value == "days" ) {
+			document.getElementById("redemptionDaysInput").style.display = "block";
+			document.getElementById("redemptionRangeInput").style.display = "none";
+			
+		}
+		
+		if( document.getElementById("redemptionPeriodTypeForm").value == "range" ) {
+			document.getElementById("redemptionDaysInput").style.display = "none";
+			document.getElementById("redemptionRangeInput").style.display = "block";
+			
+		}
+	}
+	
+	
+	// FUNCTION for cancel button
+	function onClickCancel() {
+		omsDetail.style.display = "none";
+		daDetail.style.display = "none";
+		
+		omsCampaignCreation.style.display = "none";
+		daCampaignCreation.style.display = "none";
+		offerCreation.style.display = "none";
+		
+		daBucketCreation.style.display = "none";
+		omsBucketCreation.style.display = "none";
+		bucketCreation.style.display = "none";
+		
+		fulfillmentCreation.style.display = "none";
+		redemptionCreation.style.display = "none";
+		audienceFilterCreation.style.display = "none";
+		eligibilityCreation.style.display = "none";
+	}
+	
+</script>
+
+
+</body>
+</html>

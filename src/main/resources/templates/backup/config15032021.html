@@ -1,0 +1,348 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>CONFIGURE PROVISIONING CAMPAIGN OFFER</title>
+
+    <link th:rel="stylesheet" th:href="@{assets/select2-develop/dist/css/select2.css}"/>
+    <link th:rel="stylesheet" th:href="@{assets/select2-bootstrap4-theme-master/dist/select2-bootstrap4.css}"/>
+    
+	<link th:rel="stylesheet" th:href="@{/assets/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css}"/>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/5.11.2/css/all.css} "/>
+
+	<style>
+		body {font-family: Arial, Helvetica, sans-serif;}
+		
+		/* The Modal (background) */
+		.modal {
+		  display: none; /* Hidden by default */
+		  position: fixed; /* Stay in place */
+		  z-index: 1; /* Sit on top */
+		  padding-top: 100px; /* Location of the box */
+		  left: 0;
+		  top: 0;
+		  width: 100%; /* Full width */
+		  height: 100%; /* Full height */
+		  overflow: auto; /* Enable scroll if needed */
+		  background-color: rgb(0,0,0); /* Fallback color */
+		  background-color: rgba(0,0,0,0.0); /* Black w/ opacity */
+		}
+		
+		/* Modal Content */
+		.modal-content {
+		  background-color: #fefefe;
+		  margin: auto;
+		  padding: 20px;
+		  border: 1px solid #888;
+		  width: 80%;
+		}
+	
+		/* Important part */
+		.modal-dialog{
+		    overflow-y: initial !important
+		}
+		.modal-body{
+		    height: 80vh;
+		    overflow-y: auto;
+		}
+		
+		/* The Close Button */
+		.close {
+		  color: #aaaaaa;
+		  float: right;
+		  font-size: 28px;
+		  font-weight: bold;
+		}
+		
+		.close:hover,
+		.close:focus {
+		  color: #000;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+	</style>
+</head>
+<!-- <body onload="myFunction()"> -->
+
+<div class="container">
+
+	
+
+    <div class="row">
+        <div class="col-md-4 mt-5">
+            <form  th:object="${offers}">  <!-- method="post" th:action="@{/saveconfiguration}" th:object="${offers}" -->
+
+				<div class="form-group">
+					<h2 class="mt-5">CONFIGURE PROVISIONING CAMPAIGN OFFER</h2>
+				</div>
+
+				<div class="form-group">
+                    <label for="startdate">Start Date:</label>
+                    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"
+                               th:field="*{startDate}" id="date1" placeholder="-" th:required="required"/>
+                        <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="enddate">End Date:</label>
+                    <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2"
+                               th:field="*{endDate}" id="date2" placeholder="-" th:required="required"/>
+                        <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="offer">Master Offer</label>
+	                <select id="masteroffers" class="form-control" th:field="*{masterOffer}" th:required="required">
+					    <option th:value="'oms-time'" th:text="OMSTimebased"></option>
+					    <option th:value="'oms-account'" th:text="OMSAccountbased"></option>
+					    <option th:value="'da'" th:text="DA"></option>
+					</select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="offer">Offer : <span id="offerNameId" th:text="*{offerName}"/></label>
+                    <select id="offers" class="form-control" th:field="*{offerId}" th:required="required">
+                        <!-- <option th:if="*{offerId}" th:value="*{offerId}" th:text="*{offerName}">-</option>
+                        <option th:unless="*{offerId}" value="">-</option> -->
+                    </select>
+                </div>
+                
+                <!-- <div class="form-group">
+					<h2 class="mt-5">INPUT</h2>
+				</div> -->
+				
+				<!-- <div class="form-group">
+                    <label for="offer">Customer Id</label>
+                    <select id="custid" class="form-control" th:field="*{offerId}" >
+                        <option value="">-</option>
+                    </select>
+                </div>
+				
+				<div class="form-group">
+                    <label for="offer">Subscriber No</label>
+                    <select id="subsno" class="form-control" th:field="*{offerId}" >
+                        <option value="">-</option>
+                    </select>
+                </div>
+				
+				<div class="form-group">
+                    <label for="offer">Top Up Value</label>
+                    <select id="topupval" class="form-control" th:field="*{offerId}" >
+                        <option value="">-</option>
+                    </select>
+                </div> -->
+				
+				<!-- <div class="form-group">
+					<h2 class="mt-5">OUTPUT</h2>
+				</div> -->
+				
+				<div class="form-group">
+					<label >ID : <span id="instanceId" th:text="${instanceId} ? ${instanceId} : ''"/></label></br>
+					<label >STATUS : <span id="statusId" th:text="${status} ? ${status} : 'UNCONFIGURED'"/></label>
+				</div>
+
+
+				
+            </form>
+            <div class="form-group">
+		            <button class="btn btn-primary" id="save">Save</button>
+                </div>
+        </div>
+    </div>
+
+	<div class="modal hide" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
+	    <div class="modal-body">
+	        <div id="ajax_loader">
+	            <img th:src="@{/assets/giphy.gif}" style="display: block; margin-left: auto; margin-right: auto;">
+	        </div>
+	    </div>
+	</div>
+
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/moment/moment.min.js}"></script>
+<script th:src="@{/assets/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js}"></script>
+
+
+<!-- <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script> -->
+<script th:src="@{assets/select2-develop/dist/js/select2.full.js}"></script>
+
+
+<script>
+	$.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+	    icons: {
+	        time: 'far fa-clock',
+	        date: 'far fa-calendar',
+	        up: 'fas fa-arrow-up',
+	        down: 'fas fa-arrow-down',
+	        previous: 'fas fa-chevron-left',
+	        next: 'fas fa-chevron-right',
+	        today: 'far fa-calendar-check-o',
+	        clear: 'far fa-trash',
+	        close: 'far fa-times'
+    } });
+
+	$('#datetimepicker1').datetimepicker({
+        format: 'DD-MM-YYYY'
+    });
+    $('#datetimepicker2').datetimepicker({
+        format: 'DD-MM-YYYY'
+    });
+    
+</script>
+
+
+<script>
+	
+	 var btn = document.getElementById("save");	
+	 btn.onclick = function() {
+
+     	console.log("offers "+$('#offers').val());
+		if($('#date1').val() != "", $('#date2').val() != "", $('#offers').val() != ""){
+			$('#pleaseWaitDialog').modal();
+			$("#save").each(function( index, element ) {
+				  var request = { "instanceUuid" : $('#instanceId').text(),
+						"payload": {
+			        	  "startDate": $('#date1').val(),
+			        	  "endDate": $('#date2').val(),
+			        	  "masterOffer": $('#masteroffers').val(),
+			        	  "offerId": $('#offers').val(),
+			        	  "offerName": $('#offers option:selected').text()
+			        	}
+				  };
+				    $.ajax({
+				        url: '/saveconfiguration',
+				        method: "POST",
+		      	        data: JSON.stringify(request),
+		    	        contentType: "application/json; charset=utf-8",
+				        success: function(data){
+				        	console.log(data);
+				        	var payload = JSON.parse(data.payload);
+				        	console.log(payload.offer_id);
+
+				        	$('#statusId').text(data.configurationStatus);
+				        	$('#offerNameId').text(payload.offer_name);
+				        	$('#pleaseWaitDialog').modal('hide');
+				        }
+				    })
+				  });
+		} 
+	} 
+		/* $('#pleaseWaitDialog').modal('hide'); offerName : $('#offers').val() */
+			
+	$("#offers").select2({
+	    theme: "bootstrap4",
+	    minimumInputLength: 3,
+	    ajax: {
+	        url: '/data/offer',
+	        dataType: 'json',
+	        delay: 250,
+	        data: function (params) {
+	            var query = {
+	            		startDate : $('#date1').val(),
+	    	            endDate : $('#date2').val(),
+	    	            masterOffer : $('#masteroffers').val(),
+	            		search: params.term
+	                  }
+	            return query;
+	        },
+	        processResults: function (response) {
+	            return {
+	                results: response
+	            };
+	        },
+	        cache: true
+	    }
+	}); 
+	
+	$("#custid").select2({
+	    theme: "bootstrap4",
+	    /* minimumInputLength: 3, */
+	    ajax: {
+	        url: '/data/rsys/records',
+	        dataType: 'json',
+	        delay: 250,
+	        /* data: function (params) {
+	            var query = {
+	            		startDate : $('#date1').val(),
+	    	            endDate : $('#date2').val(),
+	    	            masterOffer : $('#masteroffers').val()
+	                  }
+	            return query;
+	        }, */
+	        processResults: function (response) {
+	            return {
+	                results: response
+	            };
+	        },
+	        cache: true
+	    }
+	}); 
+	
+	$("#subsno").select2({
+	    theme: "bootstrap4",
+	    /* minimumInputLength: 3, */
+	    ajax: {
+	        url: '/data/rsys/records',
+	        dataType: 'json',
+	        delay: 250,
+	        /* data: function (params) {
+	            var query = {
+	            		startDate : $('#date1').val(),
+	    	            endDate : $('#date2').val(),
+	    	            masterOffer : $('#masteroffers').val()
+	                  }
+	            return query;
+	        }, */
+	        processResults: function (response) {
+	            return {
+	                results: response
+	            };
+	        },
+	        cache: true
+	    }
+	}); 
+	
+	$("#topupval").select2({
+	    theme: "bootstrap4",
+	    /* minimumInputLength: 3, */
+	    ajax: {
+	        url: '/data/rsys/records',
+	        dataType: 'json',
+	        delay: 250,
+	        /* data: function (params) {
+	            var query = {
+	            		startDate : $('#date1').val(),
+	    	            endDate : $('#date2').val(),
+	    	            masterOffer : $('#masteroffers').val()
+	                  }
+	            return query;
+	        }, */
+	        processResults: function (response) {
+	            return {
+	                results: response
+	            };
+	        },
+	        cache: true
+	    }
+	});  
+	
+</script>
+
+
+</body>
+</html>

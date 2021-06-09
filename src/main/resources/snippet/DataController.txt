@@ -1,0 +1,122 @@
+	@GetMapping(value = "offerBucket")
+    public List<DataOffer> offerBucketList(
+    		@RequestParam(value = "offerType", required = false) String offerType, 
+    		@RequestParam(value = "search", required = false) String query) throws ParseException {
+		log.debug("offerType : {}",offerType);
+		log.debug("offerName : {}",query);
+		
+		if(offerType.isBlank()) {
+			return null;
+		}
+		
+		if (query == null || query.isEmpty()) {
+			if(offerType.equalsIgnoreCase("OMS")) {
+	            return offerService.listOmsOfferBucket()
+	            		.stream()
+	                    .map(this::mapOmsBucketToOffer)
+	                    .collect(Collectors.toList());
+			}else if(offerType.equalsIgnoreCase("DA")) {
+				return offerService.listDaOfferBucket()
+						.stream()
+						.map(this::mapDaBucketToOffer)
+						.collect(Collectors.toList());				
+			}
+        }
+		
+		if(offerType.equalsIgnoreCase("OMS")) {
+			return offerService.listOmsOfferBucket()
+					.stream()
+					.filter(p -> p.getCode().toLowerCase().contains(query))
+					.map(this::mapOmsBucketToOffer)
+					.collect(Collectors.toList());	
+			
+		}else if(offerType.equalsIgnoreCase("DA")) {
+			return offerService.listDaOfferBucket()
+					.stream()
+					.filter(p -> p.getCode().toLowerCase().contains(query))
+					.map(this::mapDaBucketToOffer)
+					.collect(Collectors.toList());
+			
+		}
+		
+		return null;
+    }
+	
+	@GetMapping(value = "offerCampaign")
+    public List<DataOffer> offerCampaignList(
+    		@RequestParam(value = "offerType", required = false) String offerType,
+    		@RequestParam(value = "offerId", required = false) String offerId,  
+    		@RequestParam(value = "search", required = false) String query) throws ParseException {
+		log.debug("offerType : {}",offerType);
+		log.debug("offerId : {}",offerId);
+		log.debug("offerName : {}",query);
+		
+		if(offerType.isBlank() || offerId.isBlank()) {
+			return null;
+		}
+		
+		if (query == null || query.isEmpty()) {
+			if(offerType.equalsIgnoreCase("OMS")) {
+				return offerService.listOmsOfferCampaign(Long.parseLong(offerId))
+						.stream()
+						.map(this::mapOmsCampaignToOffer)
+						.collect(Collectors.toList());	
+				
+			}else if(offerType.equalsIgnoreCase("DA")) {
+				return offerService.listDaOfferCampaign(Long.parseLong(offerId))
+						.stream()
+						.map(this::mapDaCampaignToOffer)
+						.collect(Collectors.toList());
+				
+			}
+        }
+		
+		if(offerType.equalsIgnoreCase("OMS")) {
+			return offerService.listOmsOfferCampaign(Long.parseLong(offerId))
+					.stream()
+					.filter(p -> p.getName().toLowerCase().contains(query))
+					.map(this::mapOmsCampaignToOffer)
+					.collect(Collectors.toList());	
+			
+		}else if(offerType.equalsIgnoreCase("DA")) {
+			return offerService.listDaOfferCampaign(Long.parseLong(offerId))
+					.stream()
+					.filter(p -> p.getName().toLowerCase().contains(query))
+					.map(this::mapDaCampaignToOffer)
+					.collect(Collectors.toList());
+			
+		}
+
+		return null;			
+    }
+	
+	private DataOffer mapOmsBucketToOffer(PrepaidOmsOfferBucket oms) {
+        return DataOffer.builder()
+                        .id(oms.getId())
+                        .text(oms.getCode())
+                        .slug(oms.getCode())
+                        .build();
+    }
+	private DataOffer mapOmsCampaignToOffer(PrepaidOmsOfferCampaign oms) {
+        return DataOffer.builder()
+                        .id(oms.getId())
+                        .text(oms.getName())
+                        .slug(oms.getName())
+                        .build();
+    }
+	
+	
+	private DataOffer mapDaBucketToOffer(PrepaidDaOfferBucket da) {
+        return DataOffer.builder()
+                        .id(da.getId())
+                        .text(da.getCode())
+                        .slug(da.getCode())
+                        .build();
+    }
+	private DataOffer mapDaCampaignToOffer(PrepaidDaOfferCampaign da) {
+        return DataOffer.builder()
+                        .id(da.getId())
+                        .text(da.getName())
+                        .slug(da.getName())
+                        .build();
+    }

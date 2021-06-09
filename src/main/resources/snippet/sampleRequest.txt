@@ -1,0 +1,77 @@
+{
+  "uuid": "0bc2dc9c-12e8-4449-bf25-b543cdb18308",
+  "instanceContext": {
+    "appId": "97d16835-90a8-43a6-9a96-dddeacfa9362",
+    "installId": "eb2121ee-7675-4c87-9b0a-a2502892cf8f",
+    "instanceId": "6d29ea86-c159-43da-aa8f-6982af322ab9",
+    "serviceId": "cc35bf58-049f-48cb-892b-42e1c30f899d",
+    "tenantId": "80578",
+    "productId": "6798e522-deb5-488f-bf22-c29e13254b8f",
+    "maxPushBatchSize": 10000,
+    "secret": "null",
+    "recordDefinition": {
+      "inputParameters": [
+        {
+          "name": "appcloud_row_correlation_id",
+          "dataType": "Text",
+          "width": 40,
+          "unique": true,
+          "required": true
+        },
+        {
+          "name": "CUSTOMER_ID_",
+          "dataType": "Text",
+          "width": 40,
+          "required": true,
+          "readOnly": true
+        }
+      ],
+      "outputParameters": [
+        {
+          "name": "appcloud_row_correlation_id",
+          "dataType": "Text",
+          "width": 40,
+          "unique": true,
+          "required": true
+        },
+        {
+          "name": "appcloud_row_status",
+          "dataType": "Text",
+          "width": 40,
+          "required": true,
+          "readOnly": true
+        },
+        {
+          "name": "appcloud_row_errormessage",
+          "dataType": "Text",
+          "width": 40,
+          "required": true,
+          "readOnly": true
+        }
+      ]
+    },
+    "maxBatchSize": 10000
+  },
+  "dataSet": {
+    "id": "311de298-e6d1-45d2-bed8-377f8226bdec",
+    "rows": [
+      [
+        "126400214588;268;1616473876",
+        "12345"
+      ]
+    ],
+    "size": 1
+  },
+  "productImportEndpoint": {
+    "url": "null",
+    "method": "POST",
+    "headers": {}
+  },
+  "onCompletionCallbackEndpoint": {
+    "url": "null",
+    "method": "PATCH",
+    "headers": {}
+  },
+  "maxPullPageSize": 10000,
+  "maxPushBatchSize": 10000
+}

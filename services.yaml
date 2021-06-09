@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prepaid-cx-membership-api-deployment
+spec:
+  selector:
+    matchLabels:
+      app: prepaid-cx-membership-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prepaid-cx-membership-api
+    spec:
+      containers:
+      - name: prepaid-cx-membership-api
+    # enter the path to your image, be sure to include the correct region prefix
+        image: fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "750m"
+          limits:
+            memory: "5000Mi"
+            cpu: "1500m"
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+     # imagePullSecrets:
+    # enter the name of the secret you created
+    #  - name: ocirsecret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prepaid-cx-membership-api-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: prepaid-cx-membership-api
