@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.dev.prepaid.InitData;
-import com.dev.prepaid.domain.nosql.PrepaidCxProvInvocations;
+import com.dev.prepaid.domain.PrepaidCxProvInvocations;
 import com.dev.prepaid.model.configuration.SaveConfigRequest;
 import com.dev.prepaid.model.configuration.SaveConfigResponse;
 import com.dev.prepaid.model.create.CreateResponse;
@@ -26,7 +26,7 @@ import com.dev.prepaid.model.invocation.InvocationResponseContent;
 import com.dev.prepaid.model.status.Info;
 import com.dev.prepaid.model.status.Service;
 import com.dev.prepaid.model.status.StatusResponse;
-import com.dev.prepaid.repository.nosql.PrepaidCxProvInvocationsRepository;
+import com.dev.prepaid.repository.PrepaidCxProvInvocationsRepository;
 import com.dev.prepaid.service.InvocationService;
 import com.dev.prepaid.service.PrepaidCxService;
 import com.dev.prepaid.util.AppUtil;
@@ -137,7 +137,7 @@ public class PrepaidController {
 					.status("ON_PROGRESS")
 					.input(GsonUtils.deserializeObjectToJSON(req))
 					.output("")
-					.createdBy("prov_invocations")
+//					.createdBy("prov_invocations")
 					.createdDate(new Date())
 					.build();
 			prepaidCxProvInvocationsRepository.save(prepaidCxProvInvocations);

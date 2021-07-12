@@ -1,4 +1,4 @@
-package com.dev.prepaid.domain.nosql;
+package com.dev.prepaid.domain;
 
 import java.util.Date;
 
@@ -11,32 +11,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "PREPAID_CX_PROV_INVOCATIONS")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrepaidCxProvInvocations {
-	@SerializedName("ID")
+	@Id
 	private String id; //request_id
-	@SerializedName("INSTANCE_ID")
 	private String instanceId;
-	@SerializedName("STATUS")
 	private String status;
-	@SerializedName("INPUT")
 	private String input;
-	@SerializedName("OUTPUT")
 	private String output;
-
-	@SerializedName("CREATED_BY")
-	private String createdBy;
-	@SerializedName("CREATED_DATE")
+//	private String createdBy;
 	private Date createdDate;
-	@SerializedName("LAST_MODIFIED_BY")
-	private String lastModifiedBy;
-	@SerializedName("LAST_MODIFIED_DATE")
 	private Date lastModifiedDate;
-	@SerializedName("DELETED_BY")
-	private String deletedBy;
-	@SerializedName("DELETED_DATE")
-	private Date deletedDate;
 }

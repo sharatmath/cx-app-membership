@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvocationRequest {
+public class InvocationRequest {	
 	private String uuid;
 	private InstanceContext instanceContext;
 	private DataSet dataSet;
