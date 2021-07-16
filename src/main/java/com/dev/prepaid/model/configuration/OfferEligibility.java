@@ -1,31 +1,34 @@
-package com.dev.prepaid.domain;
+package com.dev.prepaid.model.configuration;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
 
-@Entity
-@Table(name = "PREPAID_CX_OFFER_ELIGIBILITY")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrepaidCxOfferEligibility extends Auditable {
-    @Id
-    @Column(name = "OFFER_ELIGIBILITY_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String offerConfigId;
+public class OfferEligibility {
+    @SerializedName("isFrequencyOnly")
     private Boolean isFrequencyOnly;
+    @SerializedName("isFrequencyAndTime")
     private Boolean isFrequencyAndTime;
+    @SerializedName("frequency")
     private Long frequency;
+    @SerializedName("numberOfFrequency")
     private Integer numberOfFrequency;
+    @SerializedName("numberOfDays")
     private Integer numberOfDays;
+    @SerializedName("isOfferLevelCapOnly")
     private Boolean isOfferLevelCapOnly;
+    @SerializedName("isOfferLevelCapAndPeriod")
     private Boolean isOfferLevelCapAndPeriod;
+    @SerializedName("offerLevelCapValue")
     private Long offerLevelCapValue;
+    @SerializedName("offerLevelCapPeriodValue")
     private Long offerLevelCapPeriodValue;
+    @SerializedName("offerLevelCapPeriodDays")
     private Long offerLevelCapPeriodDays;
 }

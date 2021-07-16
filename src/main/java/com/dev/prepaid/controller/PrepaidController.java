@@ -3,6 +3,8 @@ package com.dev.prepaid.controller;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import com.dev.prepaid.model.configuration.OfferSelection;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,16 +98,20 @@ public class PrepaidController {
 	public SaveConfigResponse saveConfiguration(@RequestBody SaveConfigRequest request) throws Exception{ //Config config
 		log.info("saveconfiguration call");
 		log.info(GsonUtils.deserializeObjectToJSON(request));
-		
-		String offerBucketType = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(0);
-		String bucketOfferId = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(1);
-		
-		request.getPayload().setOfferType(offerBucketType);
-		request.getPayload().setOfferBucketId(bucketOfferId);
-		
-		prepaidCxService.appConfigurationAddEntity(request);
+
+//			String offerBucketType = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(0);
+//			String bucketOfferId = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(1);
+
+		request.getPayload().getOfferSelections().stream().forEach(o ->
+				o.setOfferBucketType(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(0))
+		);
+
+		request.getPayload().getOfferSelections().stream().forEach(o ->
+				o.setOfferBucketId(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(1))
+		);
+
 		log.debug(request.getPayload().toString());
-		
+		prepaidCxService.appConfigurationAddEntity(request);
 				
 		request.getPayload().setUuid(GUIDUtil.generateGUID());
 		SaveConfigResponse response = new SaveConfigResponse().builder()

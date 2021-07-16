@@ -62,8 +62,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/invoke",
 						
 //						"/**",
-//						"/saveconfiguration",
-//						"/configure",
+						"/saveconfiguration",
+						"/configure",
 						
 						"/assets/**",
 						"/h2-console/**",

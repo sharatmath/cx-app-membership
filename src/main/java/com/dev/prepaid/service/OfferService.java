@@ -2,10 +2,11 @@ package com.dev.prepaid.service;
 
 import java.util.List;
 
-import com.dev.prepaid.domain.PrepaidDaOfferBucket;
-import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
-import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
-import com.dev.prepaid.domain.PrepaidOmsOfferCampaign;
+import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.configuration.OfferEligibility;
+import com.dev.prepaid.model.configuration.OfferMonitoring;
+import com.dev.prepaid.model.configuration.OfferRedemption;
+import com.dev.prepaid.model.configuration.OfferSelection;
 
 
 public interface OfferService {
@@ -23,4 +24,9 @@ public interface OfferService {
 	public PrepaidDaOfferBucket getDaOfferBucketByCode(String code);
 	
 	public void evictAllCaches();
+
+	public List<PrepaidCxOfferSelection> getOfferSelection(String instanceId);
+	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId);
+	public PrepaidCxOfferMonitoring getOfferMonitoring(String instanceId);
+	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId);
 }

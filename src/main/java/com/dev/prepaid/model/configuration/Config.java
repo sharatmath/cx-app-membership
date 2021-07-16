@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,20 +22,21 @@ public class Config {
 //    private Date endDate;
 	
 	// DROP 1
-	@SerializedName("offerType")
-    private String offerType;
-	@SerializedName("offerBucketId")
-    private String offerBucketId;
-	@SerializedName("offerBucketCode")
-    private String offerBucketCode;
-	@SerializedName("offerCampaignId")
-    private Long offerCampaignId;
-	@SerializedName("offerCampaignName")
-    private String offerCampaignName;
-	
+	@SerializedName("offerSelections")
+	private List<OfferSelection> offerSelections;
+
+	@SerializedName("offerEligibility")
+	private OfferEligibility offerEligibility;
+
+	@SerializedName("offerMonitoring")
+	private OfferMonitoring offerMonitoring;
+
+	@SerializedName("offerRedemption")
+	private OfferRedemption offerRedemption;
+
 	@SerializedName("notification")
     private Boolean notification;
-	
+
 	// DROP 2
 	@SerializedName("audienceFilterCheckbox")
     private Boolean audienceFilterCheckbox;
@@ -85,5 +88,14 @@ public class Config {
 //	@SerializedName("omsStartDateId")
 //	@SerializedName("omsActionId")
 	
-	
+	//DROP 2 1
+	@SerializedName("programId")
+	private String programId;
+	@SerializedName("type")
+	private String provisionType;
+	@SerializedName("programName")
+	private String programName;
+
+
+
 }

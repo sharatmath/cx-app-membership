@@ -1,19 +1,20 @@
 package com.dev.prepaid.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.configuration.OfferEligibility;
+import com.dev.prepaid.model.configuration.OfferMonitoring;
+import com.dev.prepaid.model.configuration.OfferRedemption;
+import com.dev.prepaid.model.configuration.OfferSelection;
+import com.dev.prepaid.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import com.dev.prepaid.domain.PrepaidDaOfferBucket;
-import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
-import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
-import com.dev.prepaid.domain.PrepaidOmsOfferCampaign;
-import com.dev.prepaid.repository.PrepaidDaOfferBucketRepository;
-import com.dev.prepaid.repository.PrepaidDaOfferCampaignRepository;
-import com.dev.prepaid.repository.PrepaidOmsOfferBucketRepository;
-import com.dev.prepaid.repository.PrepaidOmsOfferCampaignRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -47,8 +48,17 @@ public class OfferServiceImpl implements OfferService {
 	private PrepaidDaOfferBucketRepository prepaidDaOfferBucketRepository;
 	@Autowired
 	private PrepaidDaOfferCampaignRepository prepaidDaOfferCampaignRepository;
-	
-		
+	@Autowired
+	private PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
+	@Autowired
+	private PrepaidCxOfferSelectionRepository prepaidCxOfferSelectionRepository;
+	@Autowired
+	private PrepaidCxOfferEligibilityRepository  prepaidCxOfferEligibilityRepository;
+	@Autowired
+	private PrepaidCxOfferMonitoringRepository prepaidCxOfferMonitoringRepository;
+	@Autowired
+	private PrepaidCxOfferRedemptionRepository prepaidCxOfferRedemptionRepository;
+
 	@Override
 	public void evictAllCaches() {
 		//clear caches
@@ -143,6 +153,40 @@ public class OfferServiceImpl implements OfferService {
 		return prepaidDaOfferBucketRepository.findOneByCode(code);
 	}
 
+	public List<PrepaidCxOfferSelection> getOfferSelection(String instanceId){
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			return prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
+		}
+		return null;
+	}
+	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId){
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			List<PrepaidCxOfferEligibility> list = prepaidCxOfferEligibilityRepository.findByOfferConfigId(offerConfig.get().getId());
+			if(list != null)
+				return list.get(0);
+		}
+		return new PrepaidCxOfferEligibility();
+	}
+	public PrepaidCxOfferMonitoring getOfferMonitoring(String instanceId){
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			List<PrepaidCxOfferMonitoring> list = prepaidCxOfferMonitoringRepository.findByOfferConfigId(offerConfig.get().getId());
+			if(list != null)
+				return  list.get(0);
+		}
+		return new PrepaidCxOfferMonitoring();
+	}
+	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId){
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			List<PrepaidCxOfferRedemption> list =  prepaidCxOfferRedemptionRepository.findByOfferConfigId(offerConfig.get().getId());
+			if(list != null)
+				return list.get(0);
+		}
+		return new PrepaidCxOfferRedemption();
+	}
 
 
 }

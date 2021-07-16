@@ -5,16 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.dev.prepaid.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dev.prepaid.domain.PrepaidDaOfferBucket;
-import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
-import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
-import com.dev.prepaid.domain.PrepaidOmsOfferCampaign;
 import com.dev.prepaid.model.DataOffer;
 import com.dev.prepaid.model.PrepaidBucketDetailDTO;
 import com.dev.prepaid.model.PrepaidCampaignOfferDetailDTO;
@@ -281,5 +278,20 @@ public class DataController {
 		offerService.evictAllCaches();
 	}
     		
-    		
+    @GetMapping(value = "offerSelection")
+	public List<PrepaidCxOfferSelection> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId){
+		return offerService.getOfferSelection(instanceId);
+	}
+	@GetMapping(value = "offerEligibility")
+	public PrepaidCxOfferEligibility getOfferEligibility(@RequestParam(value = "instanceId", required = false) String instanceId){
+		return offerService.getOfferEligibility(instanceId);
+	}
+	@GetMapping(value = "offerMonitoring")
+	public PrepaidCxOfferMonitoring getOfferMonitoring(@RequestParam(value = "instanceId", required = false) String instanceId){
+		return offerService.getOfferMonitoring(instanceId);
+	}
+	@GetMapping(value = "offerRedemption")
+	public PrepaidCxOfferRedemption getOfferRedemption(@RequestParam(value = "instanceId", required = false) String instanceId){
+		return offerService.getOfferRedemption(instanceId);
+	}
 }

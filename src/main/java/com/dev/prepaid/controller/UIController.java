@@ -93,13 +93,13 @@ public class UIController {
 			model.addAttribute("instanceId", instance.getInstanceId());
 			model.addAttribute("uuid", GUIDUtil.generateGUID());
 			model.addAttribute("offers", new Config().builder()
-					.offerType(instance.getCampaignOfferType())
-					
-					.offerBucketId(offerBucketId)
-					.offerBucketCode(offerBucketCode)				
-					.offerCampaignId(instance.getCampaignOfferId())
-					.offerCampaignName(offerCampaignName)
-					
+//					.offerType(instance.getCampaignOfferType())
+//
+//					.offerBucketId(offerBucketId)
+//					.offerBucketCode(offerBucketCode)
+//					.offerCampaignId(instance.getCampaignOfferId())
+//					.offerCampaignName(offerCampaignName)
+//					.offerSelections(instance)
 					.notification(instance.getNotification())
 					
 					.build());
