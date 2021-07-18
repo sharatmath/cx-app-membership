@@ -67,12 +67,14 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 	@Override
 	public void appCreateAddEntity(ServiceInstance serviceInstance) {
-		
+		log.debug("getInstallUuid {}  getUuid {}",
+				serviceInstance.getApplicationServiceInstall().getInstallUuid(),
+				serviceInstance.getApplicationServiceInstall().getApplication().getUuid());
 		PrepaidCxProvApplication prepaidCxProvApplication = prepaidCxProvApplicationRepository
 				.findOneByInstallIdAndAppIdAndUninstallDateIsNull
 				(serviceInstance.getApplicationServiceInstall().getInstallUuid(), 
 				 serviceInstance.getApplicationServiceInstall().getApplication().getUuid());
-		
+		log.debug("prepaidCxProvApplication {} ", prepaidCxProvApplication );
 		if(prepaidCxProvApplication == null) return; //return or throw exception
 		
 //		PrepaidCxProvInstances prepaidCxProvInstances = prepaidCxProvInstancesRepository
@@ -88,6 +90,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			PrepaidCxOfferConfig prepaidCxOfferConfig = PrepaidCxOfferConfig.builder()
 					.id(offerConfigId)
 					.instanceId(serviceInstance.getUuid())
+					.programId(serviceInstance.getAssetId())
+//					.programName(serviceInstance.getApplicationServiceInstall().getName())
+					.provisionType(serviceInstance.getAssetType())
 					.build();
 
 			prepaidCxOfferConfigRepository.save(prepaidCxOfferConfig);
@@ -171,10 +176,12 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		PrepaidCxOfferConfig prepaidCxOfferConfig = prepaidCxOfferConfigRepository.
 				findOneByInstanceIdAndDeletedDateIsNull(instanceUuid);
 
-		prepaidCxOfferConfig.setDeletedBy("-");
-		prepaidCxOfferConfig.setDeletedDate(new Date());
+		if(prepaidCxOfferConfig != null) {
+			prepaidCxOfferConfig.setDeletedBy("-");
+			prepaidCxOfferConfig.setDeletedDate(new Date());
 
-		prepaidCxOfferConfigRepository.save(prepaidCxOfferConfig);
+			prepaidCxOfferConfigRepository.save(prepaidCxOfferConfig);
+		}
 //		prepaidCxProvInstancesRepository.save(prepaidCxProvInstances);
 	}
 

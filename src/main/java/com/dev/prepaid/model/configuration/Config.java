@@ -38,33 +38,33 @@ public class Config {
     private Boolean notification;
 
 	// DROP 2
-	@SerializedName("audienceFilterCheckbox")
-    private Boolean audienceFilterCheckbox;
-	@SerializedName("audienceFilterId")
-    private String audienceFilterId;
-	@SerializedName("audienceFilterName")
-    private String audienceFilterName;
+//	@SerializedName("audienceFilterCheckbox")
+//    private Boolean audienceFilterCheckbox;
+//	@SerializedName("audienceFilterId")
+//    private String audienceFilterId;
+//	@SerializedName("audienceFilterName")
+//    private String audienceFilterName;
 	
-	@SerializedName("eligibilityCheckbox")
-    private Boolean eligibilityCheckbox;
-	@SerializedName("eligibilityId")
-    private String eligibilityId;
-	@SerializedName("eligibilityName")
-    private String eligibilityName;
+//	@SerializedName("eligibilityCheckbox")
+//    private Boolean eligibilityCheckbox;
+//	@SerializedName("eligibilityId")
+//    private String eligibilityId;
+//	@SerializedName("eligibilityName")
+//    private String eligibilityName;
+//
+//	@SerializedName("fulfillmentCheckbox")
+//    private Boolean fulfillmentCheckbox;
+//	@SerializedName("fulfillmentId")
+//    private String fulfillmentId;
+//	@SerializedName("fulfillmentName")
+//    private String fulfillmentName;
 	
-	@SerializedName("fulfillmentCheckbox")
-    private Boolean fulfillmentCheckbox;
-	@SerializedName("fulfillmentId")
-    private String fulfillmentId;
-	@SerializedName("fulfillmentName")
-    private String fulfillmentName;
-	
-	@SerializedName("redemptionCheckbox")
-    private Boolean redemptionCheckbox;
-	@SerializedName("redemptionId")
-    private String redemptionId;
-	@SerializedName("redemptionName")
-    private String redemptionName;
+//	@SerializedName("redemptionCheckbox")
+//    private Boolean redemptionCheckbox;
+//	@SerializedName("redemptionId")
+//    private String redemptionId;
+//	@SerializedName("redemptionName")
+//    private String redemptionName;
 	
 	@SerializedName("uuid")
     private String uuid;

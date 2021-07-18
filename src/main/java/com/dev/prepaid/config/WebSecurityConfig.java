@@ -63,6 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						
 //						"/**",
 						"/saveconfiguration",
+						"/create",
+						"/delete",
 						"/configure",
 						
 						"/assets/**",
