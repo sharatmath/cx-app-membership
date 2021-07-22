@@ -201,6 +201,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 				.offerConfigId(offerConfigId)
 				.isFrequencyOnly(false)
 				.isFrequencyAndTime(false)
+				.isOfferLevelCapOnly(false)
+				.isOfferLevelCapAndPeriod(false)
 				.build();
 
 		if(saveConfigRequest.getPayload().getOfferEligibility().getIsFrequencyOnly()){
@@ -209,13 +211,17 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		}
 		if(saveConfigRequest.getPayload().getOfferEligibility().getIsFrequencyAndTime()){
 			prepaidCxOfferEligibility.setIsOfferLevelCapAndPeriod(true);
+			prepaidCxOfferEligibility.setNumberOfFrequency(saveConfigRequest.getPayload().getOfferEligibility().getNumberOfFrequency());
+			prepaidCxOfferEligibility.setNumberOfDays(saveConfigRequest.getPayload().getOfferEligibility().getNumberOfDays());
 		}
 		if(saveConfigRequest.getPayload().getOfferEligibility().getIsOfferLevelCapOnly()){
 			prepaidCxOfferEligibility.setIsOfferLevelCapOnly(true);
 			prepaidCxOfferEligibility.setOfferLevelCapValue(Long.valueOf(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapValue()));
 		}else if(saveConfigRequest.getPayload().getOfferEligibility().getIsOfferLevelCapAndPeriod()){
 			prepaidCxOfferEligibility.setIsOfferLevelCapAndPeriod(true);
-			prepaidCxOfferEligibility.setOfferLevelCapPeriodValue(Long.valueOf(10));
+			prepaidCxOfferEligibility.setOfferLevelCapPeriodValue(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodValue());
+			prepaidCxOfferEligibility.setOfferLevelCapPeriodDays(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodDays());
+
 		}
 		prepaidCxOfferEligibilityRepository.save(prepaidCxOfferEligibility);
 	}

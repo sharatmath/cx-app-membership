@@ -3,8 +3,8 @@ prepaid-cx-api.git
 ##  DOCKER BUILD
 ```sh
 mvn clean package
-docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit .
-docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit
+docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-1.0.0 .
+docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-1.0.0
 ```
 
 ##  DEPLOYMENT

@@ -12,8 +12,8 @@ import com.dev.prepaid.util.JwtTokenUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@SpringBootTest
+//@Slf4j
+//@SpringBootTest
 class PrepaidApplicationTests {
 	
 	@Autowired
