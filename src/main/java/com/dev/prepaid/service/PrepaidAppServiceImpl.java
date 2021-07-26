@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dev.prepaid.repository.PrepaidOfferMembershipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,8 @@ public class PrepaidAppServiceImpl extends BaseRabbitTemplate implements Prepaid
 	@Autowired
 	private OfferService offerService;
 
+	@Autowired
+	PrepaidOfferMembershipRepository prepaidOfferMembershipRepository;
 	@Autowired
 	private PrepaidCxProvInvocationsRepository prepaidCxProvInvocationsRepository;
 	

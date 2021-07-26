@@ -51,4 +51,10 @@ public class OfferRedemption {
     private String smsKeyword;
     @SerializedName("smsKeywordValidityDays")
     private Integer smsKeywordValidityDays;
+
+    @SerializedName("totalRedemptionPeriodEvery")
+    private Integer totalRedemptionPeriodEvery;
+    @SerializedName("timePeriodEvery")
+    private Integer timePeriodEvery;
+
 }

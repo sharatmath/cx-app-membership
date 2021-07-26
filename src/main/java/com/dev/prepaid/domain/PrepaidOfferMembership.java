@@ -15,10 +15,12 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrepaidOfferMembership {
+public class PrepaidOfferMembership extends Auditable{
     @Id
     @Column(name = "OFFER_MEMBERSHIP_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqGen")
+    @SequenceGenerator(name = "seqGen", sequenceName = "OFFER_MEMBERSHIP_ID_SEQ", initialValue = 1)
     private Long id;
     private Long offerSelectionId;
     private String offerConfigId;

@@ -15,8 +15,8 @@ public class OfferSelection {
     private String offerBucketType;
     @SerializedName("offerBucketId")
     private String offerBucketId;
-    @SerializedName("offerBucketCode")
-    private String offerBucketCode;
+//    @SerializedName("offerBucketCode")
+//    private String offerBucketCode;
     @SerializedName("offerCampaignId")
     private Long offerCampaignId;
     @SerializedName("offerCampaignName")

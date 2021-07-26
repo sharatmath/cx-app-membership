@@ -163,27 +163,27 @@ public class OfferServiceImpl implements OfferService {
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
-			List<PrepaidCxOfferEligibility> list = prepaidCxOfferEligibilityRepository.findByOfferConfigId(offerConfig.get().getId());
-			if(list != null)
-				return list.get(0);
+			Optional<PrepaidCxOfferEligibility> opsFind = prepaidCxOfferEligibilityRepository.findByOfferConfigId(offerConfig.get().getId());
+			if(opsFind.isPresent())
+				return opsFind.get();
 		}
 		return new PrepaidCxOfferEligibility();
 	}
 	public PrepaidCxOfferMonitoring getOfferMonitoring(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
-			List<PrepaidCxOfferMonitoring> list = prepaidCxOfferMonitoringRepository.findByOfferConfigId(offerConfig.get().getId());
-			if(list != null)
-				return  list.get(0);
+			Optional<PrepaidCxOfferMonitoring> opsFind = prepaidCxOfferMonitoringRepository.findByOfferConfigId(offerConfig.get().getId());
+			if(opsFind.isPresent())
+				return  opsFind.get();
 		}
 		return new PrepaidCxOfferMonitoring();
 	}
 	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
-			List<PrepaidCxOfferRedemption> list =  prepaidCxOfferRedemptionRepository.findByOfferConfigId(offerConfig.get().getId());
-			if(list != null)
-				return list.get(0);
+			Optional<PrepaidCxOfferRedemption> opsFind =  prepaidCxOfferRedemptionRepository.findByOfferConfigId(offerConfig.get().getId());
+			if(opsFind.isPresent())
+				return opsFind.get();
 		}
 		return new PrepaidCxOfferRedemption();
 	}

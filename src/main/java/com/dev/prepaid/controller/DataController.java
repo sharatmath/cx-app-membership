@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.configuration.OfferSelection;
+import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +33,7 @@ public class DataController {
 	
 	@GetMapping(value = "offerDetail")
     public PrepaidCampaignOfferDetailDTO offerDetail(
-    		@RequestParam(value = "bucketName", required = false) String bucketName,
+//    		@RequestParam(value = "bucketName", required = false) String bucketName,
     		@RequestParam(value = "bucketOfferId", required = false) String bucketOfferId,
     		@RequestParam(value = "campaignOfferId", required = false) String campaignOfferId) throws Exception{
 		
@@ -61,17 +63,22 @@ public class DataController {
 					.startDate(DateUtil.dateToString(prepaidOmsOfferCampaign.getStartDate(), "yyyy-MMM-dd"))
 					.endDate(DateUtil.dateToString(prepaidOmsOfferCampaign.getEndDate(), "yyyy-MMM-dd"))
 					.action(prepaidOmsOfferCampaign.getAction())
+					.bucketName(prepaidOmsOfferBucket.getDescription())
+					.offerBucketId(offerBucketType.concat("|").concat(bucketOfferId))
+					.offerBucketType(offerBucketType)
+					.offerCampaignId(Long.valueOf(campaignOfferId))
+					.offerCampaignName(prepaidOmsOfferCampaign.getName())
 					.build();
 			
 
 		}
 		
 		if(offerBucketType.equalsIgnoreCase("DA")) {
+			PrepaidDaOfferBucket prepaidDaOfferBucket = offerService.getDaOfferBucket(Long.valueOf(bucketOfferId));
 			PrepaidDaOfferCampaign prepaidDaOfferCampaign = offerService.getDaOfferCampaign(Long.parseLong(campaignOfferId));
 			return PrepaidCampaignOfferDetailDTO.builder()
-					.offerBucketType(offerBucketType) //DA
 					.offerName(prepaidDaOfferCampaign.getName())
-					.bucketName(bucketName)
+					.bucketName(prepaidDaOfferBucket.getDescription())
 					.description(prepaidDaOfferCampaign.getDescription())
 					.value(prepaidDaOfferCampaign.getValue())
 					.valueUnit(prepaidDaOfferCampaign.getValueUnit())
@@ -81,6 +88,10 @@ public class DataController {
 					.startDate(DateUtil.dateToString(prepaidDaOfferCampaign.getStartDate(), "yyyy-MMM-dd"))
 					.endDate(DateUtil.dateToString(prepaidDaOfferCampaign.getEndDate(), "yyyy-MMM-dd"))
 					.action(prepaidDaOfferCampaign.getAction())
+					.offerBucketId(offerBucketType.concat("|").concat(bucketOfferId))
+					.offerBucketType(offerBucketType)
+					.offerCampaignId(Long.valueOf(campaignOfferId))
+					.offerCampaignName(prepaidDaOfferCampaign.getName())
 					.build();
 		}
 		
@@ -279,8 +290,21 @@ public class DataController {
 	}
     		
     @GetMapping(value = "offerSelection")
-	public List<PrepaidCxOfferSelection> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId){
-		return offerService.getOfferSelection(instanceId);
+	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
+		List<PrepaidCxOfferSelection>  data = offerService.getOfferSelection(instanceId);
+		for (PrepaidCxOfferSelection prepaidCxOfferSelection: data){
+			PrepaidCampaignOfferDetailDTO offerDetailDTO = offerDetail(
+					prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()),
+					String.valueOf(prepaidCxOfferSelection.getOfferId()));
+//			offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()));
+//			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
+//			offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferType());
+//			offerDetailDTO.setOfferCampaignId(Long.valueOf(prepaidCxOfferSelection.getOfferId()));
+
+			list.add(offerDetailDTO);
+		}
+		return  list;
 	}
 	@GetMapping(value = "offerEligibility")
 	public PrepaidCxOfferEligibility getOfferEligibility(@RequestParam(value = "instanceId", required = false) String instanceId){

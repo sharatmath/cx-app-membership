@@ -6,7 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PrepaidCxOfferRedemptionRepository extends CrudRepository<PrepaidCxOfferRedemption, Long> {
-    List<PrepaidCxOfferRedemption> findByOfferConfigId(@Param("offerConfigId") String offerConfigId);
+    Optional<PrepaidCxOfferRedemption> findByOfferConfigId(@Param("offerConfigId") String offerConfigId);
 }

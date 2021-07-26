@@ -92,7 +92,7 @@ public class Config {
 	@SerializedName("programId")
 	private String programId;
 	@SerializedName("type")
-	private String provisionType;
+	private String type;
 	@SerializedName("programName")
 	private String programName;
 

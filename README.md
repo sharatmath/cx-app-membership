@@ -2,17 +2,22 @@ prepaid-cx-api.git
 
 ##  DOCKER BUILD
 ```sh
-mvn clean package
-docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-1.0.0 .
-docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-1.0.0
+mvn clean package -DskipTests=true
+sudo docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.0.5 .
+sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.0.5
 ```
 
 ##  DEPLOYMENT
 ```sh
 kubectl proxy --kubeconfig /home/opc/.kube/config_prepaid_dev
-
+![img.png](img.png)
 kubectl delete deployment prepaid-cx-membership-api-deployment --kubeconfig /home/opc/.kube/config_prepaid_dev
 kubectl create -f services.yaml --kubeconfig /home/opc/.kube/config_prepaid_dev
+```
+
+## RUNNING
+```sh
+mvn clean package spring-boot:run -DskipTests=true
 ```
 
 ##  Changelog

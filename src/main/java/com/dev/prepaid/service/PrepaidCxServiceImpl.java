@@ -1,12 +1,14 @@
 package com.dev.prepaid.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.configuration.OfferSelection;
 import com.dev.prepaid.repository.*;
 import lombok.extern.slf4j.Slf4j;
+import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -136,7 +138,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		if(opsFind.isPresent()) {
 			opsFind.get().setProgramId(saveConfigRequest.getPayload().getProgramId());
 			opsFind.get().setProgramName(saveConfigRequest.getPayload().getProgramName());
-			opsFind.get().setProvisionType(saveConfigRequest.getPayload().getProvisionType());
+			opsFind.get().setProvisionType(saveConfigRequest.getPayload().getType());
 
 			prepaidCxOfferConfig = prepaidCxOfferConfigRepository.save(opsFind.get());
 
@@ -197,97 +199,153 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	}
 
 	private void saveOfferEligibility(String offerConfigId, SaveConfigRequest saveConfigRequest){
-		PrepaidCxOfferEligibility prepaidCxOfferEligibility = PrepaidCxOfferEligibility.builder()
-				.offerConfigId(offerConfigId)
-				.isFrequencyOnly(false)
-				.isFrequencyAndTime(false)
-				.isOfferLevelCapOnly(false)
-				.isOfferLevelCapAndPeriod(false)
-				.build();
+		PrepaidCxOfferEligibility prepaidCxOfferEligibility;
+		Optional<PrepaidCxOfferEligibility> optionalPrepaidCxOfferEligibility =  prepaidCxOfferEligibilityRepository.findByOfferConfigId(offerConfigId);
 
-		if(saveConfigRequest.getPayload().getOfferEligibility().getIsFrequencyOnly()){
-			prepaidCxOfferEligibility.setIsFrequencyOnly(true);
-			prepaidCxOfferEligibility.setFrequency(Long.valueOf(1));
-		}
-		if(saveConfigRequest.getPayload().getOfferEligibility().getIsFrequencyAndTime()){
-			prepaidCxOfferEligibility.setIsOfferLevelCapAndPeriod(true);
-			prepaidCxOfferEligibility.setNumberOfFrequency(saveConfigRequest.getPayload().getOfferEligibility().getNumberOfFrequency());
-			prepaidCxOfferEligibility.setNumberOfDays(saveConfigRequest.getPayload().getOfferEligibility().getNumberOfDays());
-		}
-		if(saveConfigRequest.getPayload().getOfferEligibility().getIsOfferLevelCapOnly()){
-			prepaidCxOfferEligibility.setIsOfferLevelCapOnly(true);
-			prepaidCxOfferEligibility.setOfferLevelCapValue(Long.valueOf(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapValue()));
-		}else if(saveConfigRequest.getPayload().getOfferEligibility().getIsOfferLevelCapAndPeriod()){
-			prepaidCxOfferEligibility.setIsOfferLevelCapAndPeriod(true);
-			prepaidCxOfferEligibility.setOfferLevelCapPeriodValue(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodValue());
-			prepaidCxOfferEligibility.setOfferLevelCapPeriodDays(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodDays());
+		if(optionalPrepaidCxOfferEligibility.isPresent()){
+			prepaidCxOfferEligibility = optionalPrepaidCxOfferEligibility.get();
 
+		}else {
+			prepaidCxOfferEligibility = PrepaidCxOfferEligibility.builder()
+					.offerConfigId(offerConfigId)
+					.build();
 		}
+		log.info("current {}",prepaidCxOfferEligibility);
+
+		prepaidCxOfferEligibility.setIsFrequencyOnly(saveConfigRequest.getPayload().getOfferEligibility().getIsFrequencyOnly());
+		prepaidCxOfferEligibility.setFrequency(saveConfigRequest.getPayload().getOfferEligibility().getFrequency());
+		prepaidCxOfferEligibility.setIsFrequencyAndTime(saveConfigRequest.getPayload().getOfferEligibility().getIsFrequencyAndTime());
+		prepaidCxOfferEligibility.setNumberOfFrequency(saveConfigRequest.getPayload().getOfferEligibility().getNumberOfFrequency());
+		prepaidCxOfferEligibility.setNumberOfDays(saveConfigRequest.getPayload().getOfferEligibility().getNumberOfDays());
+		prepaidCxOfferEligibility.setIsOfferLevelCapOnly(saveConfigRequest.getPayload().getOfferEligibility().getIsOfferLevelCapOnly());
+		prepaidCxOfferEligibility.setOfferLevelCapValue(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapValue());
+		prepaidCxOfferEligibility.setIsOfferLevelCapAndPeriod(saveConfigRequest.getPayload().getOfferEligibility().getIsOfferLevelCapAndPeriod());
+		prepaidCxOfferEligibility.setOfferLevelCapPeriodValue(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodValue());
+		prepaidCxOfferEligibility.setOfferLevelCapPeriodDays(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodDays());
 		prepaidCxOfferEligibilityRepository.save(prepaidCxOfferEligibility);
 	}
 
 	private void saveOfferSelection(String offerConfigId, SaveConfigRequest saveConfigRequest){
 		for(OfferSelection offerSelection: saveConfigRequest.getPayload().getOfferSelections()){
-			PrepaidCxOfferSelection prepaidCxOfferSelection = PrepaidCxOfferSelection.builder()
-					.offerConfigId(offerConfigId)
-					.offerBucketType(offerSelection.getOfferBucketType())
-					.offerBucketId(offerSelection.getOfferBucketId())
-					.offerType(offerSelection.getOfferCampaignName())
-					.offerId(String.valueOf(offerSelection.getOfferCampaignId()))
-					.build();
-
+			Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository.findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(
+					offerConfigId,
+					offerSelection.getOfferBucketType(),
+					offerSelection.getOfferBucketId(),
+					String.valueOf(offerSelection.getOfferCampaignId())
+			);
+			log.info("{}", opsFind);
+			PrepaidCxOfferSelection prepaidCxOfferSelection;
+			if(opsFind.isPresent()){
+				prepaidCxOfferSelection = opsFind.get();
+				prepaidCxOfferSelection.setOfferBucketId(offerSelection.getOfferBucketId());
+				prepaidCxOfferSelection.setOfferType(offerSelection.getOfferCampaignName());
+				prepaidCxOfferSelection.setOfferId(String.valueOf(offerSelection.getOfferCampaignId()));
+			}else {
+				prepaidCxOfferSelection = PrepaidCxOfferSelection.builder()
+						.offerConfigId(offerConfigId)
+						.offerBucketType(offerSelection.getOfferBucketType())
+						.offerBucketId(offerSelection.getOfferBucketId())
+						.offerType(offerSelection.getOfferCampaignName())
+						.offerId(String.valueOf(offerSelection.getOfferCampaignId()))
+						.build();
+			}
 			prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
 		}
 	}
 
-	private void saveOfferMonitoring(String offerConfigId, SaveConfigRequest saveConfigRequest){
-		PrepaidCxOfferMonitoring prepaidCxOfferMonitoring = PrepaidCxOfferMonitoring.builder()
-				.offerConfigId(offerConfigId)
-				.eventType(saveConfigRequest.getPayload().getOfferMonitoring().getEventType())
-				.usageServiceType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageServiceType())
-				.productPackage(saveConfigRequest.getPayload().getOfferMonitoring().getProductPackage())
-				.creditMethod(saveConfigRequest.getPayload().getOfferMonitoring().getCreditMethod())
-				.operatorId(saveConfigRequest.getPayload().getOfferMonitoring().getOperatorId())
-				.periodDays(saveConfigRequest.getPayload().getOfferMonitoring().getPeriodDays())
-				.periodEndDate(saveConfigRequest.getPayload().getOfferMonitoring().getPeriodEndDate())
-				.periodStartDate(saveConfigRequest.getPayload().getOfferMonitoring().getPeriodStartDate())
-				.topupCode(saveConfigRequest.getPayload().getOfferMonitoring().getTopupCode())
-				.usageType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageType())
-				.transactionValue(saveConfigRequest.getPayload().getOfferMonitoring().getTransactionValue())
-				.operatorValue(saveConfigRequest.getPayload().getOfferMonitoring().getOperatorValue())
-				.paidArpuOperator(saveConfigRequest.getPayload().getOfferMonitoring().getPaidArpuOperator())
-				.isMonitorDateRange(saveConfigRequest.getPayload().getOfferMonitoring().getIsMonitorDateRange())
-				.isMonitorSpecificPeriod(saveConfigRequest.getPayload().getOfferMonitoring().getIsMonitorSpecificPeriod())
-				.build();
-
+	private void saveOfferMonitoring(String offerConfigId, SaveConfigRequest saveConfigRequest) {
+		Optional<PrepaidCxOfferMonitoring> opsFind = prepaidCxOfferMonitoringRepository.findByOfferConfigId(offerConfigId);
+		PrepaidCxOfferMonitoring prepaidCxOfferMonitoring;
+		if (opsFind.isPresent()) {
+			prepaidCxOfferMonitoring = opsFind.get();
+			prepaidCxOfferMonitoring.setEventType(saveConfigRequest.getPayload().getOfferMonitoring().getEventType());
+			prepaidCxOfferMonitoring.setUsageServiceType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageServiceType());
+			prepaidCxOfferMonitoring.setProductPackage(saveConfigRequest.getPayload().getOfferMonitoring().getProductPackage());
+			prepaidCxOfferMonitoring.setCreditMethod(saveConfigRequest.getPayload().getOfferMonitoring().getCreditMethod());
+			prepaidCxOfferMonitoring.setOperatorId(saveConfigRequest.getPayload().getOfferMonitoring().getOperatorId());
+			prepaidCxOfferMonitoring.setPeriodDays(saveConfigRequest.getPayload().getOfferMonitoring().getPeriodDays());
+			prepaidCxOfferMonitoring.setPeriodEndDate(saveConfigRequest.getPayload().getOfferMonitoring().getPeriodEndDate());
+			prepaidCxOfferMonitoring.setPeriodStartDate(saveConfigRequest.getPayload().getOfferMonitoring().getPeriodStartDate());
+			prepaidCxOfferMonitoring.setTopupCode(saveConfigRequest.getPayload().getOfferMonitoring().getTopupCode());
+			prepaidCxOfferMonitoring.setUsageType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageType());
+			prepaidCxOfferMonitoring.setTransactionValue(saveConfigRequest.getPayload().getOfferMonitoring().getTransactionValue());
+			prepaidCxOfferMonitoring.setOperatorValue(saveConfigRequest.getPayload().getOfferMonitoring().getOperatorValue());
+			prepaidCxOfferMonitoring.setPaidArpuOperator(saveConfigRequest.getPayload().getOfferMonitoring().getPaidArpuOperator());
+			prepaidCxOfferMonitoring.setIsMonitorDateRange(saveConfigRequest.getPayload().getOfferMonitoring().getIsMonitorDateRange());
+			prepaidCxOfferMonitoring.setIsMonitorSpecificPeriod(saveConfigRequest.getPayload().getOfferMonitoring().getIsMonitorSpecificPeriod());
+		} else{
+			prepaidCxOfferMonitoring = PrepaidCxOfferMonitoring.builder()
+					.offerConfigId(offerConfigId)
+					.eventType(saveConfigRequest.getPayload().getOfferMonitoring().getEventType())
+					.usageServiceType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageServiceType())
+					.productPackage(saveConfigRequest.getPayload().getOfferMonitoring().getProductPackage())
+					.creditMethod(saveConfigRequest.getPayload().getOfferMonitoring().getCreditMethod())
+					.operatorId(saveConfigRequest.getPayload().getOfferMonitoring().getOperatorId())
+					.periodDays(saveConfigRequest.getPayload().getOfferMonitoring().getPeriodDays())
+					.periodEndDate(saveConfigRequest.getPayload().getOfferMonitoring().getPeriodEndDate())
+					.periodStartDate(saveConfigRequest.getPayload().getOfferMonitoring().getPeriodStartDate())
+					.topupCode(saveConfigRequest.getPayload().getOfferMonitoring().getTopupCode())
+					.usageType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageType())
+					.transactionValue(saveConfigRequest.getPayload().getOfferMonitoring().getTransactionValue())
+					.operatorValue(saveConfigRequest.getPayload().getOfferMonitoring().getOperatorValue())
+					.paidArpuOperator(saveConfigRequest.getPayload().getOfferMonitoring().getPaidArpuOperator())
+					.isMonitorDateRange(saveConfigRequest.getPayload().getOfferMonitoring().getIsMonitorDateRange())
+					.isMonitorSpecificPeriod(saveConfigRequest.getPayload().getOfferMonitoring().getIsMonitorSpecificPeriod())
+					.build();
+		}
 		prepaidCxOfferMonitoringRepository.save(prepaidCxOfferMonitoring);
 	}
 
 	private void saveOfferRedemption(String offerConfigId, SaveConfigRequest saveConfigRequest){
-		PrepaidCxOfferRedemption prepaidCxOfferRedemption = PrepaidCxOfferRedemption.builder()
-				.offerConfigId(offerConfigId)
-				.isRedemptionCapOnly(saveConfigRequest.getPayload().getOfferRedemption().getIsRedemptionCapOnly())
-				.redemptionCapValue(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionCapValue())
-				.isRedemptionCapAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRedemptionCapAndPeriod())
-				.totalRedemptionPeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodValue())
-				.isFrequencyOnly(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyOnly())
-				.isFrequencyAndTime(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyAndTime())
-				.frequencyValue(saveConfigRequest.getPayload().getOfferRedemption().getFrequencyValue())
-				.timePeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodValue())
-				.timePeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodType())
-				.totalRedemptionPeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodType())
-				.totalRecurringFrequency(saveConfigRequest.getPayload().getOfferRedemption().getTotalRecurringFrequency())
-				.isRecurringFrequencyAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod())
-				.recurringFrequencyValue(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyValue())
-				.recurringFrequencyPeriodType(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodType())
-				.recurringFrequencyPeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodValue())
-				.isRecurringFrequencyEachMonth(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyEachMonth())
-				.recurringFrequencyDayOfMonth(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyDayOfMonth())
-				.redemptionMethod(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionMethod())
-				.smsKeyword(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeyword())
-				.smsKeywordValidityDays(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeywordValidityDays())
-				.build();
-
+		Optional<PrepaidCxOfferRedemption> opsFind = prepaidCxOfferRedemptionRepository.findByOfferConfigId(offerConfigId);
+		PrepaidCxOfferRedemption prepaidCxOfferRedemption;
+		if(opsFind.isPresent()){
+			prepaidCxOfferRedemption = opsFind.get();
+			prepaidCxOfferRedemption.setIsRedemptionCapOnly(saveConfigRequest.getPayload().getOfferRedemption().getIsRedemptionCapOnly());
+			prepaidCxOfferRedemption.setRedemptionCapValue(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionCapValue());
+			prepaidCxOfferRedemption.setIsRedemptionCapAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRedemptionCapAndPeriod());
+			prepaidCxOfferRedemption.setTotalRedemptionPeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodValue());
+			prepaidCxOfferRedemption.setIsFrequencyOnly(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyOnly());
+			prepaidCxOfferRedemption.setIsFrequencyAndTime(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyAndTime());
+			prepaidCxOfferRedemption.setFrequencyValue(saveConfigRequest.getPayload().getOfferRedemption().getFrequencyValue());
+			prepaidCxOfferRedemption.setTimePeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodValue());
+			prepaidCxOfferRedemption.setTimePeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodType());
+			prepaidCxOfferRedemption.setTotalRedemptionPeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodType());
+			prepaidCxOfferRedemption.setTotalRecurringFrequency(saveConfigRequest.getPayload().getOfferRedemption().getTotalRecurringFrequency());
+			prepaidCxOfferRedemption.setIsRecurringFrequencyAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod());
+			prepaidCxOfferRedemption.setRecurringFrequencyValue(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyValue());
+			prepaidCxOfferRedemption.setRecurringFrequencyPeriodType(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodType());
+			prepaidCxOfferRedemption.setRecurringFrequencyPeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodValue());
+			prepaidCxOfferRedemption.setIsRecurringFrequencyEachMonth(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyEachMonth());
+			prepaidCxOfferRedemption.setRecurringFrequencyDayOfMonth(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyDayOfMonth());
+			prepaidCxOfferRedemption.setRedemptionMethod(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionMethod());
+			prepaidCxOfferRedemption.setSmsKeyword(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeyword());
+			prepaidCxOfferRedemption.setSmsKeywordValidityDays(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeywordValidityDays());
+		}else {
+			prepaidCxOfferRedemption = PrepaidCxOfferRedemption.builder()
+					.offerConfigId(offerConfigId)
+					.isRedemptionCapOnly(saveConfigRequest.getPayload().getOfferRedemption().getIsRedemptionCapOnly())
+					.redemptionCapValue(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionCapValue())
+					.isRedemptionCapAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRedemptionCapAndPeriod())
+					.totalRedemptionPeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodValue())
+					.isFrequencyOnly(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyOnly())
+					.isFrequencyAndTime(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyAndTime())
+					.frequencyValue(saveConfigRequest.getPayload().getOfferRedemption().getFrequencyValue())
+					.timePeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodValue())
+					.timePeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodType())
+					.totalRedemptionPeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodType())
+					.totalRecurringFrequency(saveConfigRequest.getPayload().getOfferRedemption().getTotalRecurringFrequency())
+					.isRecurringFrequencyAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod())
+					.recurringFrequencyValue(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyValue())
+					.recurringFrequencyPeriodType(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodType())
+					.recurringFrequencyPeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodValue())
+					.isRecurringFrequencyEachMonth(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyEachMonth())
+					.recurringFrequencyDayOfMonth(saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyDayOfMonth())
+					.redemptionMethod(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionMethod())
+					.smsKeyword(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeyword())
+					.smsKeywordValidityDays(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeywordValidityDays())
+					.build();
+		}
 		prepaidCxOfferRedemptionRepository.save(prepaidCxOfferRedemption);
 	}
 

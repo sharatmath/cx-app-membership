@@ -155,7 +155,7 @@ public class PrepaidController {
 				// Async
 				// Export DataSet rows from Product
 				// exportProcessAndImportData(invocation, serviceInvocationDto);
-				invocationService.exportProcessAndImportData(req);
+//				invocationService.exportProcessAndImportData(req);
 			} else {
 				// Async
 				// Process data and Import data to Product
