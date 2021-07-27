@@ -2,28 +2,81 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>CONFIGURE PROVISIONING CAMPAIGN OFFER</title>
-    
-	<!-- 
-	<link th:rel="stylesheet" href="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/font-awesome/5.11.2/css/all.css"/>
-	<link th:rel="stylesheet" href="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css"/>
-	<link th:rel="stylesheet" href="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/select2-develop/dist/css/select2.css"/>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.css" integrity="sha512-ClXpwbczwauhl7XC16/EFu3grIlYTpqTYOwqwAi7rNSqxmTqCpE8VS3ovG+qi61GoxSLnuomxzFXDNcPV1hvCQ==" crossorigin="anonymous" />
-	<link th:rel="stylesheet" href="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/select2-bootstrap4-theme-master/dist/select2-bootstrap4.css"/>
-	-->	
-	
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>CONFIGURE PROVISIONING MEMBERSHIP</title>
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
-	
-	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-  		<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-	</svg>
-	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
+
 	<style>
+		.card-header {
+			background-color: #ed1a3d !important;
+			color: white !important;
+		}
+
+		/*Accordion Custom BEGIN*/
+		#main {
+			margin: 50px 0;
+		}
+
+		#main #faq .card {
+			margin-bottom: 30px;
+			border: 0;
+		}
+
+		#main #faq .card .card-header {
+			border: 0;
+			-webkit-box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+			box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+			border-radius: 2px;
+			padding: 0;
+		}
+
+		#main #faq .card .card-header .btn-header-link {
+			color: #fff;
+			display: block;
+			text-align: left;
+			background: #FFE472;
+			color: #222;
+			padding: 20px;
+		}
+
+		#main #faq .card .card-header .btn-header-link:after {
+			content: "\f107";
+			font-family: 'Font Awesome 5 Free';
+			font-weight: 900;
+			float: right;
+		}
+
+		#main #faq .card .card-header .btn-header-link.collapsed {
+			background: #A541BB;
+			color: #fff;
+		}
+
+		#main #faq .card .card-header .btn-header-link.collapsed:after {
+			content: "\f106";
+		}
+
+		#main #faq .card .collapsing {
+			background: #FFE472;
+			line-height: 30px;
+		}
+
+		#main #faq .card .collapse {
+			border: 0;
+		}
+
+		#main #faq .card .collapse.show {
+			background: #FFE472;
+			line-height: 30px;
+			color: #222;
+		}
+		/*Accordion Custom END*/
+
 		body {font-family: Arial, Helvetica, sans-serif;}
-		
+
 		/* The Modal (background) */
 		.modal {
 		  display: none; /* Hidden by default */
@@ -38,11 +91,11 @@
 		  /* background-color: rgb(0,0,0); */ /* Fallback color */
 		  /* background-color: rgba(0,0,0,0.0); */ /* Black w/ opacity */
 		}
-		
+
 		.modal-backdrop {
 		     background-color: rgba(0,0,0,.0001) !important;
 		}
-		
+
 		/* Modal Content */
 		.modal-content {
 		  background-color: #fefefe;
@@ -51,7 +104,7 @@
 		  border: 1px solid #888;
 		  width: 80%;
 		}
-	
+
 		/* Important part */
 		.modal-dialog{
 		    overflow-y: initial !important
@@ -60,7 +113,7 @@
 		    height: 80vh;
 		    overflow-y: auto;
 		}
-		
+
 		/* The Close Button */
 		.close {
 		  color: #aaaaaa;
@@ -68,1521 +121,973 @@
 		  font-size: 28px;
 		  font-weight: bold;
 		}
-		
+
 		.close:hover,
 		.close:focus {
 		  color: #000;
 		  text-decoration: none;
 		  cursor: pointer;
 		}
-		
-		
+
+		.toggle-title {
+			cursor: pointer !important;
+		}
+
+		/*Select2 Custom*/
+		span.select2-selection.select2-selection--single{
+			min-width: 120px !important;
+		}
+		.select2-container {
+			margin: 5px !important;
+		}
+
 	</style>
 </head>
-<!-- <body onload="myFunction()"> -->
 
+<body><br>
+<div class="container" x-data="{...configureMembership(), ...jQuery()}" x-init="[offerBucketDropdown(), campaignOfferDropdown(), getOfferSelection(), eligibilityPolicy(), monitoringPolicy(), redemptionPolicy()]">
+	<div class="row">
+		<div class="col-md-12 mt-12 card">
 
+				<div class="form-group">
+					<h4 class="mt-3"><img src="https://cdn1.singteldigital.com/content/dam/singtel/online-draft/singtel_logo_coloured.png" style="max-height: 64px;"> CONFIGURE PROVISIONING MEMBERSHIP</h4>
+				</div>
 
-<body>
-	<div class="container">
-		
-		    <div class="row">
-		        <div class="col-md-4 mt-3 card">
-		            <form  th:object="${offers}">  <!-- method="post" th:action="@{/saveconfiguration}" th:object="${offers}" -->
-		
-						<div class="form-group">
-							<h4 class="mt-3">CONFIGURE PROVISIONING CAMPAIGN OFFER</h4>
-						</div>
-		                
-		                <!-- 
-		                <div class="form-group">
-		                    <label for="offer">Offer Bucket Type</label>
-			                <select id="offerType" class="form-control" th:field="*{offerType}" th:required="required" onchange="resetBucket()">
-							    <option th:value="'OMS'" th:text="OMS"></option>
-							    <option th:value="'DA'" th:text="DA"></option>
-							</select>
-		                </div> 
-		                -->
-		                
-		                <div class="form-group">
-		                    <label for="offer">Offer Bucket : <span id="offerCodeId" th:text="*{offerBucketCode}"/></label>
-		                    <div class="form-group d-flex justify-content-between">
-			                    <select id="offerBucket" class="form-control" th:field="*{offerBucketId}" th:required="required" onchange="onChangeBucket()">
-			                        <option th:if="*{offerBucketId}" th:value="*{offerBucketId}" th:text="*{offerBucketCode}">-</option>
-			                        <option th:unless="*{offerBucketId}" value="">-</option>
-			                    </select>
-			                    <button type="button" class="btn btn-outline-secondary ml-2" id="addOfferBucket" onclick="createOfferBucket()">+</button>
-			                </div>
-		                </div>
-		                
-		                <div class="form-group">
-		                    <label for="offer">Campaign Offer : <span id="offerNameId" th:text="*{offerCampaignName}"/></label>
-		                    <div class="form-group d-flex justify-content-between">
-			                    <select id="offers" class="form-control" th:field="*{offerCampaignId}" th:required="required" onchange="onChangeOffer()">
-			                        <option th:if="*{offerCampaignId}" th:value="*{offerCampaignId}" th:text="*{offerCampaignName}">-</option>
-			                        <option th:unless="*{offerCampaignId}" value="">-</option>
-			                    </select>
-			                    <button type="button" class="btn btn-outline-secondary ml-2" id="addOfferCampaign" onclick="createOfferCampaign()">+</button>
-		                    </div>
-		                </div>
-		                
-		                <div class="form-group">
-		                    <input id="notification" type="checkbox" th:text="Notification" th:checked="*{notification}" onchange="onChangeNotification()"
-			                   th:value="*{notification}"
-			                   onclick="this.value = this.checked"/>
-		                </div>
-		                
-		                <!-- NEW for DROP 2 -->
-		                <div class="form-group d-flex justify-content-between mt-5 ml-3" >
-		                    <input id="audienceFilterCheckbox" type="checkbox" th:checked="*{audienceFilterCheckbox}" onchange="onChangeAudienceFilterCheckbox()"
-			                   th:value="*{audienceFilterCheckbox}"
-			                   onclick="this.value = this.checked"/>
-			                <select id="audienceFilter" class="form-control ml-2" th:field="*{audienceFilterId}" th:required="required" onchange=onChangeOffer() disabled>
-		                        <option th:if="*{audienceFilterId}" th:value="*{audienceFilterId}" th:text="*{audienceFilterName}">-</option>
-		                        <option th:unless="*{audienceFilterId}" value="">Select Audience Filter</option>
-		                    </select>
-		                    <button type="button" class="btn btn-outline-secondary ml-2" id="addAudienceFilter" onclick="onClickAudienceFilterCreation()">+</button>
-		                </div>
-		                
-		                <div class="form-group d-flex justify-content-between ml-3">
-		                    <input id="eligibilityCheckbox" type="checkbox" th:checked="*{eligibilityCheckbox}" onchange="onChangeEligibilityCheckbox()"
-			                   th:value="*{eligibilityCheckbox}"
-			                   onclick="this.value = this.checked"/>
-			                <select id="eligibility" class="form-control ml-2" th:field="*{eligibilityId}" th:required="required" onchange="onChangeOffer()" disabled>
-		                        <option th:if="*{eligibilityId}" th:value="*{eligibilityId}" th:text="*{eligibilityName}">-</option>
-		                        <option th:unless="*{eligibilityId}" value="">Select Eligibility</option>
-		                    </select>
-		                    <button type="button" class="btn btn-outline-secondary ml-2" id="addEligibility" onclick="onClickEligibilityCreation()">+</button>
-		                </div>
-		                
-		                <div class="form-group d-flex justify-content-between ml-3">
-		                    <input id="fulfillmentCheckbox" type="checkbox" th:checked="*{fulfillmentCheckbox}" onchange="onChangeFulfillmentCheckbox()"
-			                   th:value="*{fulfillmentCheckbox}"
-			                   onclick="this.value = this.checked"/>
-			                <select id="fulfillment" class="form-control ml-2" th:field="*{fulfillmentId}" th:required="required" onchange="onChangeOffer()" disabled>
-		                        <option th:if="*{fulfillmentId}" th:value="*{fulfillmentId}" th:text="*{fulfillmentName}">-</option>
-		                        <option th:unless="*{fulfillmentId}" value="">Select Fulfillment Policy</option>
-		                    </select>
-		                    <button type="button" class="btn btn-outline-secondary ml-2" id="addFulfillment" onclick="onClickFulfillmentCreation()">+</button>
-		                </div>
-		                
-		                <div class="form-group d-flex justify-content-between ml-3">
-		                    <input id="redemptionCheckbox" type="checkbox" th:checked="*{redemptionCheckbox}" onchange="onChangeRedemptionCheckbox()"
-			                   th:value="*{redemptionCheckbox}"
-			                   onclick="this.value = this.checked"/>
-			                <select id="redemption" class="form-control ml-2" th:field="*{redemptionId}" th:required="required" onchange="onChangeOffer()" disabled>
-		                        <option th:if="*{redemptionId}" th:value="*{redemptionId}" th:text="*{redemptionName}">-</option>
-		                        <option th:unless="*{redemptionId}" value="">Select Redemption Policy</option>
-		                    </select>
-		                    <button type="button" class="btn btn-outline-secondary ml-2" id="addRedemption" onclick="onClickRedemptionCreation()">+</button>
-		                </div>
-		                
-		                <!-- 				
-						<div class="form-group">
-							<label >INSTANCE ID : <span id="instanceId" th:text="${instanceId} ? ${instanceId} : ''"/></label></br>
-							<label >STATUS : <span id="statusId" th:text="${status} ? ${status} : 'UNCONFIGURED'"/></label></br>
-							<label >REQ ID : <span id="uuid" th:text="${uuid}"/></label>
-						</div>
-		 				-->
-		
-						
-		            </form>
-		            <!-- 
-		            <div class="form-group">
-				        <button class="btn btn-primary btn-block" id="saveAjax">SaveAjax</button>
-		            </div>
-		             -->
-		            <div class="form-group">
-				        <button class="btn btn-primary btn-block" id="save">Save</button>
-		            </div>
-		        </div>
-		        
-			    <div class="col-md-8 mt-3 card">
-			    
-			    	<div id="daDetail" style="display: none;">
-					    
-					    <div class="form-group">
-							<h5 class="mt-1">DA CAMPAIGN OFFERS</h5>
-						</div>
-							
-					    <div class="row mt-3">
-					    
-							<div class="col-md-6">
-							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Offer Name</label>
-								  <input type="text" class="form-control" id="daOfferNameId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Campaign Offer Description</label>
-								  <input type="text" class="form-control" id="daDescId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Value Unit</label>
-								  <input type="text" class="form-control" id="daValUnitId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Value to Deduct from MA</label>
-								  <input type="text" class="form-control" id="daDeductMaId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Start Date</label>
-								  <input type="text" class="form-control" id="daStartDateId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Action</label>
-								  <input type="text" class="form-control" id="daActionId" disabled readonly>
-								</div>
-								
-							</div>
-						    <div class="col-md-6">
-							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">DA Name</label>
-								  <input type="text" class="form-control" id="daNameId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Value</label>
-								  <input type="text" class="form-control" id="daValueId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Cap Value</label>
-								  <input type="text" class="form-control" id="daCapValueId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Validity (Days)</label>
-								  <input type="text" class="form-control" id="daValidId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">End Date</label>
-								  <input type="text" class="form-control" id="daEndDateId" disabled readonly>
-								</div>
-								
-							</div>
-					
-					    </div>
-				    </div>
-				    
-				    <div id="omsDetail" style="display: none;">
-					    
-					    <div class="form-group">
-							<h5 class="mt-2">OMS CAMPAIGN OFFERS</h5>
-						</div>
-							
-					    <div class="row mt-1">
-							
-							<div class="col-md-6">
-							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Offer Name</label>
-								  <input type="text" class="form-control" id="omsOfferNameId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Offer Type</label>
-								  <input type="text" class="form-control" id="omsOfferTypeId" disabled readonly>
-								</div>				
-								
-								<div id="timeBased" style="display: none;">								
-									<div class="row mt-1">
-										<div class="col-md-4">
-											<div class="mb-1">
-											  <label for="exampleFormControlInput1" class="form-label">Day</label>
-											  <input type="text" class="form-control" id="omsDayId" disabled readonly>
-											</div>		
-										</div>		
-										<div class="col-md-4">
-											<div class="mb-1">
-											  <label for="exampleFormControlInput1" class="form-label">Hour</label>
-											  <input type="text" class="form-control" id="omsHourId" disabled readonly>
-											</div>
-										</div>
-										<div class="col-md-4">
-											<div class="mb-1">
-											  <label for="exampleFormControlInput1" class="form-label">Minute</label>
-											  <input type="text" class="form-control" id="omsMinuteId" disabled readonly>
-											</div>	
-										</div>	
-									</div>
-								</div>
-																
-								<div id="accountBased1" style="display: none;">	
-									<div class="mb-1">
-									  <label for="exampleFormControlInput1" class="form-label">Validity</label>
-									  <input type="text" class="form-control" id="omsValidityId" disabled readonly>
-									</div>
-								</div>
-															
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Validity to Deduct from MA</label>
-								  <input type="text" class="form-control" id="omsDeductMaId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Threshold ID</label>
-								  <input type="text" class="form-control" id="omsThrId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Threshold Value Unit</label>
-								  <input type="text" class="form-control" id="omsThrValUnitId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">End Date</label>
-								  <input type="text" class="form-control" id="omsEndDateId" disabled readonly>
-								</div>
-																
-							</div>
-						    <div class="col-md-6">
-							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Offer ID</label>
-								  <input type="text" class="form-control" id="omsOfferIdId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Campaign Offer Description</label>
-								  <input type="text" class="form-control" id="omsDescId" disabled readonly>
-								</div>			
-								<div id="accountBased2" style="display: none;">				
-									<div class="mb-1">
-									  <label for="exampleFormControlInput1" class="form-label">Validity Unit</label>
-									  <input type="text" class="form-control" id="omsValidUnitId" disabled readonly>
-									</div>		
-								</div>					
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Counter ID</label>
-								  <input type="text" class="form-control" id="omsCntId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Threshold Value</label>
-								  <input type="text" class="form-control" id="omsThrValId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Start Date</label>
-								  <input type="text" class="form-control" id="omsStartDateId" disabled readonly>
-								</div>							
-								<div class="mb-1">
-								  <label for="exampleFormControlInput1" class="form-label">Action</label>
-								  <input type="text" class="form-control" id="omsActionId" disabled readonly>
-								</div>
-																
-							</div>
-					
-					    </div>
-				    </div>
-				    
-				    
-				    
-				    
-				    <!-- DROP 2 -->
-				    <div id="bucketCreation" style="display: none;">
-				    	<div class="form-group">
-							<h5 class="mt-1">CREATE AN OFFER BUCKET</h5>
-						</div>
-				    	
-				    	<div class="form-group">
-							<h6 class="mt-2">Please select a bucket type:</h6>
-						</div>
-						<!-- select id="offerTypeSelection" class="form-control" th:field="*{offerType}" th:required="required" onchange="onChangeOfferType()">
-						    <option th:value="DA" th:text="DA"></option>
-    						<option th:value="OMS" th:text="OMS"></option>
-						</select> -->
-						<select id="offerBucketTypeSelection" class="form-control" onchange="onChangeOfferBucketType()">
-						    <option disabled selected> -- select a bucket type -- </option>
-						    <option value="OMS">OMS</option>
-						    <option value="DA">DA</option>
+				<div class="form-group">
+					<label for="typeData">Type : </label>
+					<div class="form-group d-flex justify-content-between">
+						<select id="typeData" class="form-control">
+							<option value="directProvisioning">Direct Provisioning</option>
+							<option value="offerMonitoringWithAssignment">Offer Monitoring with Offer Assignment</option>
+							<option value="offerMonitoring">Offer Monitoring Only</option>
 						</select>
-				    </div>
-		    	
-		    	
-		    		<div id="daBucketCreation" style="display: none;">
-		    			<form>
-							<div class="mt-3 mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Name</label>
-								<input type="text" class="form-control" id="daOfferNameIdForm" required>
-							</div>	
-													
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Description</label>
-								<input type="text" class="form-control" id="daOfferDescriptionForm" maxlength="200">
-							</div>
-		    			</form>
-		    			<div class="form-group row pull-right mt-4 mr-1">					    
-							<button class="btn btn-secondary mr-2" id="cancelDaBucketCreation" onclick="onClickCancel()">Cancel</button>
-							<button class="btn btn-primary" id="saveDaBucketCreation">Save</button>
-						</div> 
-		    		</div>
-
-
-		    		<div id="omsBucketCreation" style="display: none;">
-		    			<form>
-		    				
-								<div class="mt-3 mb-1">
-									<label for="exampleFormControlInput1" class="form-label">OMS Offer ID</label>
-									<input type="text" class="form-control" id="omsOfferNameIdForm" onchange="onChangeOmsId(this)" required>
-								</div>	
-														
-								<div class="mb-1">
-									<label for="exampleFormControlInput1" class="form-label">OMS Offer Type</label>
-									<select id="omsOfferTypeForm" class="form-control" required>
-									    <option disabled selected> -- select an offer type -- </option>
-									    <option value="time-based">Time-Based</option>
-									    <option value="account-based">Account-Based</option>
-									</select>
-								</div>
-								
-								<div class="mb-1">
-									<label for="exampleFormControlInput1" class="form-label">OMS Offer Description</label>
-									<input type="text" class="form-control" id="omsDescriptionForm" maxlength="200">
-								</div>	
-														
-								<div class="mb-1">
-									<label for="exampleFormControlInput1" class="form-label">Counter ID</label>
-									<input type="text" class="form-control" id="counterId" required>
-								</div>
-								
-								<div class="mb-1">
-									<label for="exampleFormControlInput1" class="form-label">Threshold ID</label>
-									<input type="text" class="form-control" id="thresholdId" required>
-								</div>	
-		    			</form>
-		    			
-		    			<div class="form-group row pull-right mt-4 mr-1">					    
-							<button class="btn btn-secondary mr-2" id="cancelOmsBucketCreation" onclick="onClickCancel()">Cancel</button>
-							<button class="btn btn-primary" id="saveOmsBucketCreation">Save</button>
-						</div> 
-		    		</div>
-		    		
-		    		
-		    		
-		    		
-				    <div id="offerCreation" style="display: none;">
-				    	<div class="form-group">
-							<h5 class="mt-1">CREATE A CAMPAIGN OFFER</h5>
-						</div>
-				    	
-				    	<div class="form-group">
-							<h6 class="mt-2">Please select an offer type:</h6>
-						</div>
-						<!-- select id="offerTypeSelection" class="form-control" th:field="*{offerType}" th:required="required" onchange="onChangeOfferType()">
-						    <option th:value="DA" th:text="DA"></option>
-    						<option th:value="OMS" th:text="OMS"></option>
-						</select> -->
-						<select id="offerCampaignTypeSelection" class="form-control" onchange="onChangeOfferCampaignType()">
-						    <option disabled selected> -- select an offer type -- </option>
-						    <option value="OMS">OMS</option>
-						    <option value="DA">DA</option>
-						</select>
-				    </div>
-				    
-				    
-				    <div id="daCampaignCreation" style="display: none;">
-							<form th:object="${offers}">
-						
-								<div class="row mt-3">
-						
-									<div class="col-md-6">
-						
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">Offer Name</label>
-											<input type="text" class="form-control" id="daOfferNameIdForm" >
-										</div>							
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">Campaign Offer Description</label>
-											<input type="text" class="form-control" id="daDescIdForm" maxlength="200">
-										</div>							
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">Value Unit</label>
-											<select id="daValUnitIdForm" class="form-control">
-											    <option value="AMOUNT">Amount in SGD</option>
-											    <option value="MB">Amount in MB</option>
-											    <option value="PERCENT_AMOUNT">% Top-Up Value in SGD</option>
-											    <option value="PERCENT_MB">% Top-Up Value in MB</option>
-											</select>
-										</div>							
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">Value to Deduct from MA</label>
-											<input type="number" min="0"  class="form-control" id="daDeductMaIdForm" value="0.00">
-										</div>							
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">Start Date</label>
-											<input type="date" class="form-control" id="daStartDateIdForm">
-										</div>							
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">Action</label>
-											<select id="daActionIdForm" class="form-control">
-											    <option value="EXTEND">Extend</option>
-											    <option value="RESET">Reset</option>
-											</select>
-										</div>
-						
-									</div>
-									
-									<div class="col-md-6">
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">DA Name</label>
-											<div class="row pl-3 pr-3">
-												<select id="daOfferBucket" data-width="100%" class="form-control" th:field="*{offerBucketId}" th:required="required" onchange="getOfferBucketDetail(this)">
-							                        <option th:if="*{offerBucketId}" th:value="*{offerBucketId}" th:text="*{offerBucketCode}">-</option>
-							                        <option th:unless="*{offerBucketId}" value="">-</option>
-							                    </select>
-						                    </div>
-										</div>							
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">Value</label>
-											<input type="number" min="0" step="1" class="form-control" id="daValueIdForm" value="0">
-										</div>							
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">Cap Value</label>
-											<input type="number" min="0" step="1" class="form-control" id="daCapValueIdForm" value="0">
-										</div>							
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">Validity (Days)</label>
-											<input type="number" min="0" step="1" class="form-control" id="daValidIdForm" value="0">
-										</div>							
-										<div class="form-group mb-1">
-											<label for="exampleFormControlInput1" class="form-label">End Date</label>
-											<input type="date" class="form-control" id="daEndDateIdForm">
-										</div>
-									</div>
-								</div>
-							</form>
-						<div class="form-group row pull-right mt-4 mr-1">					    
-							<button class="btn btn-secondary mr-2" id="cancelDaCampaignCreation" onclick="onClickCancel()">Cancel</button>
-							<button class="btn btn-primary" id="saveDaCampaignCreation">Save</button>
-						</div>  
-					</div>
-					
-					
-					<div id="omsCampaignCreation" style="display: none;">
-						<form th:object="${offers}">
-						
-							<div class="row mt-3">
-					
-								<div class="col-md-6">
-					
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Offer Name</label>
-										<input type="text" class="form-control" id="omsOfferNameIdForm">
-									</div>							
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Offer Type</label>
-										<input type="text" class="form-control" id="omsOfferTypeIdForm" readonly disabled>
-									</div>
-									
-									<div id="timeBasedForm" style="display: none;">								
-										<div class="row mt-1">
-											<div class="col-md-4">
-												<div class="mb-1">
-												  <label for="exampleFormControlInput1" class="form-label">Day</label>
-												  <input type="number" class="form-control" id="omsDayIdForm" >
-												</div>		
-											</div>		
-											<div class="col-md-4">
-												<div class="mb-1">
-												  <label for="exampleFormControlInput1" class="form-label">Hour</label>
-												  <input type="number" class="form-control" id="omsHourIdForm" >
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="mb-1">
-												  <label for="exampleFormControlInput1" class="form-label">Minute</label>
-												  <input type="number" class="form-control" id="omsMinuteIdForm">
-												</div>	
-											</div>	
-										</div>
-									</div>
-																	
-									<div id="accountBased1Form" style="display: none;">	
-										<div class="mb-1">
-										  <label for="exampleFormControlInput1" class="form-label">Validity</label>
-										  <input type="text" class="form-control" id="omsValidityIdForm" >
-										</div>
-									</div>						
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Validity to Deduct from MA</label>
-										<input type="number" min="0" class="form-control" id="omsDeductMaIdForm" value="0.00">
-									</div>							
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Threshold ID</label>
-										<input type="text" class="form-control" id="omsThrIdForm" disabled readonly>
-									</div>							
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Threshold Value Unit</label>
-										<select id="omsThrValUnitIdForm" class="form-control">
-										    <option value="AMOUNT">Amount in Minute</option>
-										    <option value="MB">Amount in MB</option>
-										    <option value="PERCENT_AMOUNT">% of Amount in Minute</option>
-										    <option value="PERCENT_MB">% of Amount in MB</option>
-										</select>
-									</div>							
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">End Date</label>
-										<input type="date" class="form-control" id="omsEndDateIdForm">
-									</div>
-					
-								</div>
-								
-								<div class="col-md-6">
-								
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Offer ID</label>
-										<div class="row pl-3 pr-3">
-											<select id="omsOfferBucket" data-width="100%" class="form-control" th:field="*{offerBucketId}" th:required="required" onchange="getOfferBucketDetail(this)">
-						                        <option th:if="*{offerBucketId}" th:value="*{offerBucketId}" th:text="*{offerBucketCode}">-</option>
-						                        <option th:unless="*{offerBucketId}" value="">-</option>
-						                    </select>
-										</div>
-									</div>							
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Campaign Offer Description</label>
-										<input type="text" class="form-control" id="omsDescIdForm" maxlength="200">
-									</div>					
-											
-									<div id="accountBased2" style="display: none;">				
-										<div class="mb-1">
-										  <label for="exampleFormControlInput1" class="form-label">Validity Unit</label>
-										  <input type="text" class="form-control" id="omsValidUnitIdForm">
-										</div>		
-									</div>		
-													
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Counter ID</label>
-										<input type="text" class="form-control" id="omsCntIdForm" readonly disabled>
-									</div>							
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Threshold Value</label>
-										<input type="number" min="0" step="1" class="form-control" id="omsThrValIdForm" value="0">
-									</div>							
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Start Date</label>
-										<input type="date" class="form-control" id="omsStartDateIdForm">
-									</div>	
-									<div class="mb-1">
-										<label for="exampleFormControlInput1" class="form-label">Action</label>
-										<select id="omsActionIdForm" class="form-control">
-										    <option value="EXTEND">Extend</option>
-										    <option value="RESET">Reset</option>
-										</select>
-									</div>
-					
-								</div>
-							</div>
-						</form>
-						
-						<div class="form-group row pull-right mt-4 mr-1">					    
-							<button class="btn btn-secondary mr-2" id="cancelOmsCampaignCreation" onclick="onClickCancel()">Cancel</button>
-							<button class="btn btn-primary" id="saveOmsCampaignCreation">Save</button>
-						</div>     
-					</div>
-		    	
-		    	
-		    	
-		    		
-		    		<div id="audienceFilterCreation" style="display: none;">
-		    			<div class="form-group">
-							<h5 class="mt-1">CREATE AN AUDIENCE FILTER</h5>
-						</div>
-						
-						<form>
-							<div class="mt-3 mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Filter Name</label>
-								<input type="text" class="form-control" id="audienceFilterNameForm" required>
-							</div>	
-													
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Filter Description</label>
-								<input type="text" class="form-control" id="audienceFilterDescriptionForm" maxlength="200">
-							</div>
-							
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Filter Function</label>
-								<select id="omsOfferType" class="form-control" required>
-								    <option disabled selected> -- select a function -- </option>
-								    <option value="time-based">hasDoneSinglePaidTopup</option>
-								    <option value="account-based">hasDone</option>
-								</select>
-							</div>
-							
-							
-							
-		    			</form>
-		    			<div class="form-group row pull-right mt-4 mr-1">					    
-							<button class="btn btn-secondary mr-2" id="cancelAudienceFilterCreation" onclick="onClickCancel()">Cancel</button>
-							<button class="btn btn-primary" id ="saveAudienceFilterCreation">Save</button>
-						</div> 
-		    		</div>
-		    		
-		    		
-		    		<div id="eligibilityCreation" style="display: none;">
-		    			<div class="form-group">
-							<h5 class="mt-1">CREATE AN ELIGIBILITY FILTER</h5>
-						</div>
-						
-						<form>
-							<div class="mt-3 mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Eligibility Filter Name</label>
-								<input type="text" class="form-control" id="eligibilityNameForm" required>
-							</div>	
-													
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Eligibility Filter Description</label>
-								<input type="text" class="form-control" id="eligibilityDescriptionForm" maxlength="200">
-							</div>
-							
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Eligibility Cap</label>
-								<input type="text" class="form-control" id="eligibilityCapForm">
-							</div>
-							
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Eligibility Frequency</label>
-								<div class="form-group d-flex justify-content-between">
-									<input type="number" class="form-control" id="redemptionFrequencyForm">
-									<span class="ml-3 col-2 ">Times in</span>
-									<input type="number" class="form-control " id="redemptionFrequencyTotalForm">
-									<span class="ml-3">days</span>
-								</div>
-							</div>
-								
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Offer List</label>
-								<select id="eligibilityOfferListForm" class="form-control" required>
-								    <option disabled selected> -- select offers -- </option>
-								    <option> </option>
-								</select>
-							</div>
-							
-							
-							
-		    			</form>
-		    			<div class="form-group row pull-right mt-4 mr-1">					    
-							<button class="btn btn-secondary mr-2" id="cancelEligibitlityCreation" onclick="onClickCancel()">Cancel</button>
-							<button class="btn btn-primary" id="saveEligibitlityCreation">Save</button>
-						</div> 
-		    		</div>
-		
-		    		
-		    		<div id="fulfillmentCreation" style="display: none;">
-		    			<div class="form-group">
-							<h5 class="mt-1">CREATE A FULFILLMENT POLICY</h5>
-						</div>
-						
-		    			<form>
-							<div class="mt-3 mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Fulfillment Policy Name</label>
-								<input type="text" class="form-control" id="fulfillmentNameForm">
-							</div>	
-													
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Fulfillment Policy Description</label>
-								<input type="text" class="form-control" id="fulfillmentDescriptionForm" maxlength="200">
-							</div>
-							
-							<div class="mb-1">
-								
-								<label for="exampleFormControlInput1" class="form-label">Event</label>
-								<div class="form-group row">
-									<div class="col-3">
-										<select id="fulfillmentEventForm" class="form-control">
-										    <option value="Topup">Top-Up</option>
-										    <option value="Usage">Usage</option>
-										</select>
-									</div>
-									<div id="exampleformcontrol" class="col" style="display: block;">
-										<input type="text" class="form-control" id="fulfillmentEventValueForm" placeholder="Value">
-									</div>
-								</div>
-							</div>	
-													
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Fulfillment Frequency</label>
-								<div class="form-group d-flex justify-content-between">
-									<input type="text" class="form-control" id="fulfillmentFrequencyForm" placeholder="Value">
-									<span class="ml-3">in</span>
-									<input type="text" class="form-control ml-3" id="fulfillmentFrequencyTotalForm" placeholder="Number of Days">
-									<span class="ml-3">day(s)</span>
-								</div>
-							</div>
-											
-							<div class="mb-1">
-								<div class="form-group row">
-									<div class="col-3">
-										<label for="exampleFormControlInput1" class="form-label">Fulfillment Period</label>
-										<select id="fulfillmentPeriodTypeForm" class="form-control" onchange="onChangeFulfillmentPeriodType()">
-										    <option value="days">Days</option>
-										    <option value="range">Range</option>
-										</select>
-									</div>
-									
-									<div id="fulfillmentDaysInput" style="display: block;" class="col">
-										<label for="exampleFormControlInput1" class="form-label">Number of Days</label>
-										<input type="text" class="form-control" id="fulfillmentPeriodDaysForm" placeholder="Value" >
-									</div>
-									
-									<div id="fulfillmentRangeInput" style="display: none;" class="col">
-										<div class="row">
-											<div class="col mb-1 mr-2">
-												<label for="exampleFormControlInput1" class="form-label">Start Date</label>
-												<input type="date" class="form-control" id="fulfillmentPeriodRangeStartForm">
-											</div>
-	
-											<div class="col mb-1">
-												<label for="exampleFormControlInput1" class="form-label">End Date</label>
-												<input type="date" class="form-control" id="fulfillmentPeriodRangeEndForm">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-																
-		    			</form>
-		    			
-		    			<div class="form-group row pull-right mt-4 mr-1">					    
-							<button class="btn btn-secondary mr-2" id="cancelFulfillmentCreation" onclick="onClickCancel()">Cancel</button>
-							<button class="btn btn-primary" id="saveFulfillmentCreation">Save</button>
-						</div> 
-		    		</div>
-		    		
-		    		
-		    		<div id="redemptionCreation" style="display: none;">
-		    			<div class="form-group">
-							<h5 class="mt-1">CREATE A REDEMPTION POLICY</h5>
-						</div>
-						
-		    			<form>
-							<div class="mt-3 mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Redemption Policy Name</label>
-								<input type="text" class="form-control" id="redemptionNameForm">
-							</div>	
-													
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Redemption Policy Description</label>
-								<input type="text" class="form-control" id="redemptionDescriptionForm" maxlength="200">
-							</div>
-							
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Redemption Cap</label>
-								<input type="text" class="form-control" id="redemptionCapForm">
-							</div>
-													
-							<div class="mb-1">
-								<label for="exampleFormControlInput1" class="form-label">Redemption Frequency</label>
-								<div class="form-group d-flex justify-content-between">
-									<input type="text" class="form-control" id="redemptionFrequencyForm" placeholder="Value" >
-									<span class="ml-3">in</span>
-									<input type="text" class="form-control ml-3" id="redemptionFrequencyTotalForm" placeholder="Number of Days" >
-									<span class="ml-3">day(s)</span>
-								</div>
-							</div>
-							
-							
-							<div class="mb-1">
-								<div class="form-group row">
-									<div class="col-3">
-										<label for="exampleFormControlInput1" class="form-label">Redemption Period</label>
-										<select id="redemptionPeriodTypeForm" class="form-control" onchange="onChangeRedemptionPeriodType()">
-										    <option value="days">Days</option>
-										    <option value="range">Range</option>
-										</select>
-									</div>
-									
-									<div id="redemptionDaysInput" class="col" style="display: block;">
-										<label for="exampleFormControlInput1" class="form-label">Number of Days</label>
-										<input type="text" class="form-control" id="redemptionPeriodDaysForm" placeholder="Value" >
-									</div>
-									
-									<div id="redemptionRangeInput" class="col" style="display: none;">
-										<div class="row">
-											<div class="col mb-1 mr-2">
-												<label for="exampleFormControlInput1" class="form-label">Start Date</label>
-												<input type="date" class="form-control" id="redemptionPeriodRangeStartForm">
-											</div>
-	
-											<div class="col mb-1">
-												<label for="exampleFormControlInput1" class="form-label">End Date</label>
-												<input type="date" class="form-control" id="redemptionPeriodRangeEndForm">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							
-							
-		    			</form>
-		    			
-		    			<div class="form-group row pull-right mt-4 mr-1">					    
-							<button class="btn btn-secondary mr-2" id="cancel" onclick="onClickCancel()">Cancel</button>
-							<button class="btn btn-primary" id="save">Save</button>
-						</div> 
-		    		</div>
-		    		
-		    	</div>
-			</div>
-		</div>
-		
-		
-		<div class="modal hide" id="successDialog" data-backdrop="static" data-keyboard="false">
-			<div class="modal-body">
-			    <div id="ajax_loader">
-					<div class="alert alert-success" role="alert">
-					Configuration saved...
 					</div>
 				</div>
-			</div>
-		</div>
-		
-		<div class="modal hide" id="failedDialog" data-backdrop="static" data-keyboard="false">
-			<div class="modal-body">
-				<div id="ajax_loader">
-					<div class="alert alert-danger" role="alert">
-					This is a danger alert with
+
+				<div class="accordion DPForm" id="directProvisioning">
+					<div class="card">
+						<div class="card-header" id="headingOne">
+							<div id="offerSelectionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseOne"><h5><i class="fa fa-plus"></i> Offer Selection - Required</h5></div>
+						</div>
+						<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#directProvisioning">
+							<div class="card-body">
+									<div>
+									<div>
+										<form class="form-inline">
+											<label for="offerBucket" class="my-1 mr-2">Offer Bucket</label>
+											<select id="offerBucket" x-ref="selectBucket" class="custom-select my-1 mr-sm-2 col-sm-4" >
+												<option>Choose...</option>
+												<template x-for="offerList in offerBucketList">
+													<option x-model="offerList.id"><span x-text="offerList.text"></span></option>
+												</template>
+											</select>
+											<label class="my-1 mr-2" for="offersCampaign">Campaign Offer :</label>
+											<select id="offersCampaign" x-ref="selectCampaign" class="custom-select my-1 mr-sm-2 col-sm-4">
+												<option>Choose...</option>
+												<template x-for="campaignList in campaignOfferList">
+													<option x-model="campaignList.id"><span x-text="campaignList.text"></span></option>
+												</template>
+											</select>
+											<button type="button" class="btn btn-primary my-1 add-direct-prov" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+											</button>
+										</form>
+										<hr>
+										<div id="main">
+											<div class="container" id="campaignDetailList">
+												<template x-for="(offer, index) in offers">
+													<div class="accordion" id="faq">
+														<div class="offerSelectionTemplate">
+															<button type="submit" class="btn btn-warning my-1" @click="removeOffer(index)"><i class="fas fa-minus-circle"></i> Remove</button>
+															<div class="row-flex">
+																<div class="card">
+																	<div class="card-header" id="offerSelection1">	<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" :data-target="'#faq1' + index" aria-expanded="true" aria-controls="faq1"><b><span x-text="offer.offerName"></span></b></a>
+																	</div>
+																	<div :id="'faq1' + index" class="panel-collapse collapse" aria-labelledby="offerSelection1" data-parent="#faq">
+																		<div class="card-body">
+																			<div class="form-row">
+																				<div class="col-md-6 mb-3">
+																					<label :for="'campaignOfferName' + index">Campaign Offer Name</label>
+																					<input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
+																				</div>
+																				<div class="col-md-6 mb-3">
+																					<label :for="'daName' + index">DA Name</label>
+																					<input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+																				</div>
+																			</div>
+																			<div class="form-row">
+																				<div class="col-md-6 mb-3">
+																					<label :for="'campaignOfferDesc' + index">Campaign Offer Description</label>
+																					<input type="text" class="form-control" :id="'campaignOfferDesc' + index" x-model="offer.description" disabled>
+																				</div>
+																				<div class="col-md-6 mb-3">
+																					<label :for="'validity' + index">Validity</label>
+																					<input type="text" class="form-control" :id="'validity' + index" x-model="offer.validity" disabled>
+																				</div>
+																			</div>
+																			<div class="form-row">
+																				<div class="col-md-6 mb-3">
+																					<label :for="'value' + index">Value</label>
+																					<input type="text" class="form-control" :id="'value' + index" x-model="offer.value" disabled>
+																				</div>
+																				<div class="col-md-6 mb-3">
+																					<label :for="'valueUnit' + index">Value Unit</label>
+																					<input type="text" class="form-control" :id="'valueUnit' + index" x-model="offer.valueUnit" disabled>
+																				</div>
+																			</div>
+																			<div class="form-row">
+																				<div class="col-md-6 mb-3">
+																					<label :for="'capValue' + index">CAP Value</label>
+																					<input type="text" class="form-control" :id="'capValue' + index" x-model="offer.valueCap" disabled>
+																				</div>
+																				<div class="col-md-6 mb-3">
+																					<label :for="'valueToDeduct' + index">Value to Deduct from MA</label>
+																					<input type="text" class="form-control" :id="'valueToDeduct' + index" x-model="offer.valueToDeductFromMa" disabled>
+																				</div>
+																			</div>
+																			<div class="form-row">
+																				<div class="col-md-6 mb-3">
+																					<label :for="'startDate' + index">Start Date</label>
+																					<input type="text" class="form-control" :id="'startDate' + index" x-model="offer.startDate" disabled>
+																				</div>
+																				<div class="col-md-6 mb-3">
+																					<label :for="'endDate' + index">End Date</label>
+																					<input type="text" class="form-control" :id="'endDate' + index" x-model="offer.endDate" disabled>
+																				</div>
+																			</div>
+																			<div class="form-row">
+																				<div class="col-md-6 mb-3">
+																					<label :for="'action' + index">Action</label>
+																					<input type="text" class="form-control" :id="'action' + index" x-model="offer.action" disabled>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</template>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header" id="headingTwo">
+							<div id="advancedFilterAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseTwo"><h5><i class="fa fa-plus"></i> Advanced Filter - Optional</h5></div>
+						</div>
+						<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#directProvisioning">
+							<div class="card-body">
+								<p>Advanced Filter</p>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header" id="headingThree">
+							<div id="eligibilityPolicyAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseThree"><h5><i class="fa fa-plus"></i> Eligibility Policy - Optional</h5></div>
+						</div>
+						<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#directProvisioning">
+							<div class="card-body">
+								<b>Subscriber Offer Eligibility - For Configured Offer</b><br><br>
+								<template x-if="eligibilityData">
+                                    <div>
+                                        <form class="form-inline">
+                                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                                                <input type="checkbox" class="custom-control-input" id="frequencyOnly" x-model="eligibilityData.isFrequencyOnly">
+                                                <label class="custom-control-label" for="frequencyOnly">Frequency Only</label>
+                                            </div>
+                                            <label class="sr-only" for="inputFrequency">Name</label>
+                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputFrequency" x-model="eligibilityData.frequency">
+                                        </form>
+                                        <form class="form-inline">
+                                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                                                <input type="checkbox" class="custom-control-input" id="frequencyTimePeriod" x-model="eligibilityData.isFrequencyAndTime">
+                                                <label class="custom-control-label" for="frequencyTimePeriod">Frequency and Time Period</label>
+                                            </div>
+                                            <label class="sr-only" for="inputFrequencyTimePeriod">Name</label>
+                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> in &nbsp;
+
+                                            <label class="sr-only" for="inputFrequencyIn">Name</label>
+                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
+                                        </form><br><br>
+                                        <div id="subsOfferEligibilityForm">
+                                            <b>Subscriber Offer Eligibility - For Configured Offer</b><br><br>
+                                            <div class="form-group row">
+                                                <label for="isOfferLevelCapOnly" class="col-sm-4 col-form-label col-form-label-sm">Offer Level Cap (Max Number of Subscriber Who Can Receive This Offer)
+                                                </label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="isOfferLevelCapOnly" name="radioSubscriberOffer" class="custom-control-input" :value="true" x-model="eligibilityData.isOfferLevelCapOnly">
+                                                        <label class="custom-control-label" for="isOfferLevelCapOnly"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control form-control-sm" id="offerLevelCapValue" x-model="eligibilityData.offerLevelCapValue">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label col-form-label-sm">Offer Level Cap and Period
+                                                </label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="isOfferLevelCapAndPeriod" name="radioSubscriberOffer" class="custom-control-input" :value="true" x-model="eligibilityData.isOfferLevelCapAndPeriod">
+                                                        <label class="custom-control-label" for="isOfferLevelCapAndPeriod"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <label class="sr-only" for="offerLevelCapPeriodValue">Name</label>
+                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodValue" x-model="eligibilityData.offerLevelCapPeriodValue">
+                                                </div>
+                                                <label class="col-sm-1 col-form-label col-form-label-sm">in Every</label>
+                                                <div class="col-sm-2">
+                                                    <label class="sr-only" for="offerLevelCapPeriodDays">Name</label>
+                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodDays" x-model="eligibilityData.offerLevelCapPeriodDays">
+                                                </div>
+                                                <p>Days</p>
+                                            </div>
+                                        </div><br>
+                                    </div>
+								</template>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header" id="headingFour">
+							<div id="fulfillmentAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseFour"><h5><i class="fa fa-plus"></i> Fullfilment Monitoring Policy - Not Applicable</h5></div>
+						</div>
+						<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#directProvisioning">
+                            <div class="card-body">
+                                <template x-if="monitoringData">
+                                    <div>
+                                        <div class="form-group">
+                                            <label for="eventTypeData">Event Type : </label>
+                                            <div class="form-group d-flex justify-content-between">
+                                                <select id="eventTypeData" class="form-control" x-model="eventTypeData">
+                                                    <option value="Top-Up">Top-Up</option>
+                                                    <option value="Usage">Usage</option>
+                                                    <option value="ARPU">ARPU</option>
+                                                </select>
+                                            </div><span x-text="monitoringData.eventTypeData"></span>
+                                        </div>
+                                        <hr>
+                                        <template x-if="eventTypeData === 'Top-Up'">
+                                            <div class="eventTypeFulfillmentMonitoring" id="topUpForm">
+                                                <div class="mb-3 row">
+                                                    <label for="creditMethod" class="col-sm-2 col-form-label">Credit Method</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="creditMethod" x-model="monitoringData.creditMethod">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="productPackage" class="col-sm-2 col-form-label">Product Package</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="productPackage">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="usageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="usageServiceType">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="operators" class="col-sm-2 col-form-label">Operators</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="operators">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="topUpValueOperators" class="form-control">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="topUpValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpCode" class="col-sm-2 col-form-label">Top Up Code</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="topUpCode">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="eventTypeData === 'Usage'">
+                                            <div class="eventTypeFulfillmentMonitoring" id="usageForm">
+                                                <div class="mb-3 row">
+                                                    <label for="creditMethod" class="col-sm-2 col-form-label">Usage Service Type</label>
+                                                    <div class="col-sm-10">
+                                                        <select id="usageServiceTypeDropdown" class="form-control">
+                                                            <option value="voice">Voice</option>
+                                                            <option value="data">Data</option>
+                                                            <option value="SMS">SMS</option>
+                                                            <option value="IDD">IDD</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="productPackage" class="col-sm-2 col-form-label">Usage Type</label>
+                                                    <div class="col-sm-10">
+                                                        <select id="usageTypeDropdown" class="form-control">
+                                                            <option value="VOICE_COUNT">VOICE_COUNT</option>
+                                                            <option value="VOICE_MINS">VOICE_MINS</option>
+                                                            <option value="VOICE_AMOUNT">VOICE_AMOUNT</option>
+                                                            <option value="VOICE_OFFNET_COUNT">VOICE_OFFNET_COUNT</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Usage</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="usageOperatorsDropdown" class="form-control">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <select id="usageValueDropdown" class="form-control">
+                                                            <option value="GB">GB</option>
+                                                            <option value="Mins">Mins</option>
+                                                            <option value="Count">Count</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="eventTypeData === 'ARPU'">
+                                            <div class="eventTypeFulfillmentMonitoring" id="ARPUForm">
+                                                <div class="mb-3 row">
+                                                    <label for="creditMethod" class="col-sm-2 col-form-label">Credit Method</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="creditMethodARPU">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="productPackage" class="col-sm-2 col-form-label">Product Package</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="productPackageARPU">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="usageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="usageServiceTypeARPU">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="operators" class="col-sm-2 col-form-label">Operators</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="operatorsARPU">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpCode" class="col-sm-2 col-form-label">Top Up Code</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="topUpCodeARPU">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="topUpValueOperatorsARPU" class="form-control">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="ARPUValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Paid ARPU Top-UP</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="paidARPUTopUpValueOperators" class="form-control">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="paidARPUValue">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <div id="monitoringFulfillmentPeriod">
+                                            <b>Monitoring Fulfillment Period:</b><br><br>
+                                            <div class="form-group row">
+                                                <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label-sm">
+                                                    Monitor Specified Period
+                                                </label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio" x-init="$watch('isFrequencyOnly', value => console.log(value))">
+                                                        <input type="radio" id="isRedemptionCapOnly" name="radioMonitoringSpecified" class="custom-control-input" :value="true" x-model="redemptionData.isRedemptionCapOnly">
+                                                        <label class="custom-control-label" for="isRedemptionCapOnly"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <div class="row">
+                                                        <div class="col-sm-2">
+                                                            Start Date
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group date" data-provide="datepicker">
+                                                                <input type="text" class="form-control" id="start-date">
+                                                                <div class="input-group-addon">
+                                                                    <span class="glyphicon glyphicon-th"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            End Date
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group date" data-provide="datepicker">
+                                                                <input type="text" class="form-control" id="end-date">
+                                                                <div class="input-group-addon">
+                                                                    <span class="glyphicon glyphicon-th"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label-sm">Monitor Period
+                                                </label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="isRedemptionCapAndPeriod" name="radioMonitoringSpecified" class="custom-control-input" :value="true" x-model="redemptionData.isRedemptionCapAndPeriod">
+                                                        <label class="custom-control-label" for="isRedemptionCapAndPeriod"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" id="periodValue">
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select id="monitorPeriodDropdown" class="form-control">
+                                                                <option value="month">Month</option>
+                                                                <option value="days">Days</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header" id="headingFive">
+							<div id="redemptionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseFive"><h5><i class="fa fa-plus"></i> Redemption Policy - Required</h5></div>
+						</div>
+						<div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#directProvisioning">
+							<div class="card-body">
+                                <template x-if="redemptionData">
+                                    <div>
+                                        <div id="redemptionCapForm">
+                                            <b>Total Redemption Cap</b><br><br>
+                                            <div class="form-group row">
+                                                <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label-sm">
+                                                    Total Number of Redemption
+                                                </label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio" x-init="$watch('isFrequencyOnly', value => console.log(value))">
+                                                        <input type="radio" id="isRedemptionCapOnlyID" name="radioTotalRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isRedemptionCapOnly">
+                                                        <label class="custom-control-label" for="isRedemptionCapOnlyID"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control form-control-sm" id="redemptionCapValue" x-model="redemptionData.redemptionCapValue">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label-sm">Redemption and Time Period
+                                                </label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="isRedemptionCapAndPeriodID" name="radioTotalRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isRedemptionCapAndPeriod">
+                                                        <label class="custom-control-label" for="isRedemptionCapAndPeriodID"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <label class="sr-only" for="totalRedemptionPeriodValue">Name</label>
+                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="totalRedemptionPeriodValue" x-model="redemptionData.totalRedemptionPeriodValue">
+                                                </div>
+                                                <label class="col-sm-1 col-form-label col-form-label-sm">in Every</label>
+                                                <div class="col-sm-2">
+                                                    <label class="sr-only" for="timePeriodValueEvery">Name</label>
+                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValueEvery" x-model="redemptionData.totalRedemptionPeriodEvery">
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <select class="form-control mb-2 mr-sm-2" x-model="redemptionData.totalRedemptionPeriodType">
+                                                        <option value="Days">Days</option>
+                                                        <option value="Month">Month</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div id="subscriberRedemptionCapForm">
+                                            <b>Subscriber Redemption Cap</b><br><br>
+                                            <div class="form-group row">
+                                                <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label-sm">
+                                                    Frequency Only
+                                                </label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="isFrequencyOnlyID" name="radioSubscriberRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isFrequencyOnly">
+                                                        <label class="custom-control-label" for="isFrequencyOnlyID"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control form-control-sm" id="frequencyValue" x-model="redemptionData.frequencyValue">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label-sm">
+                                                    Frequency and Time Period
+                                                </label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="isFrequencyAndTime" name="radioSubscriberRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isFrequencyAndTime">
+                                                        <label class="custom-control-label" for="isFrequencyAndTime"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <label class="sr-only" for="timePeriodValue">Name</label>
+                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue" x-model="redemptionData.timePeriodValue">
+                                                </div>
+                                                <label class="col-sm-1 col-form-label col-form-label-sm">in Every</label>
+                                                <div class="col-sm-2">
+                                                    <label class="sr-only" for="timePeriodValue2">Name</label>
+                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue2" x-model="redemptionData.timePeriodEvery">
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <select class="form-control mb-2 mr-sm-2" x-model="redemptionData.timePeriodType">
+                                                        <option value="Days">Days</option>
+                                                        <option value="Month">Month</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div id="recurringRedemptionCapForm">
+                                            <b>Recurring Redemption</b><br><br>
+                                            <div class="form-group row">
+                                                <label for="totalRecurringFrequency" class="col-sm-2 col-form-label col-form-label-sm">Total Frequency</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control form-control-sm" id="totalRecurringFrequency" x-model="redemptionData.totalRecurringFrequency">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label-sm">Recurring Frequency</label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="radioRecurringRedemptionID" name="radioRecurringRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isRecurringFrequencyAndPeriod">
+                                                        <label class="custom-control-label" for="radioRecurringRedemptionID"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <label class="sr-only" for="inputRecFreqDP">Name</label>
+                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
+                                                </div>
+                                                <label class="col-sm-1 col-form-label col-form-label-sm">in Every</label>
+                                                <div class="col-sm-2">
+                                                    <label class="sr-only" for="inputRecFreqDPIn">Name</label>
+                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
+                                                </div>
+                                                <div class="col-sm-2"> Day
+<!--                                                    <label class="sr-only" for="recFreqDaysOrMonth"></label>-->
+<!--                                                    <select class="form-control mb-2 mr-sm-2" id="recFreqDaysOrMonth">-->
+<!--                                                        <option value="Days">Days</option>-->
+<!--                                                        <option value="Month">Month</option>-->
+<!--                                                    </select>-->
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label-sm"></label>
+                                                <div class="col-sm-1">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="isRecurringFrequencyEachMonthID" name="radioRecurringRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isRecurringFrequencyEachMonth">
+                                                        <label class="custom-control-label" for="isRecurringFrequencyEachMonthID"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <label class="sr-only" for="dayRecFreq">Day</label>
+                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                </div>
+                                                <label class="col-sm-2 col-form-label col-form-label-sm">of Each Month</label>
+                                            </div>
+                                        </div><br>
+                                        <div id="redemptionMethodForm">
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label-sm"><b>Redemption Method</b></label>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control mb-2 mr-sm-2" id="redemptionAutoOrManual" x-model="redemptionMethod">
+                                                        <option value="AutoRedemption">Auto Redemption</option>
+                                                        <option value="ManualRedemption">Manual Redemption</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <template x-if="redemptionMethod === 'ManualRedemption'">
+                                                <div class="manualRedemptionSelection">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 col-form-label col-form-label-sm">Keyword</label>
+                                                    <div class="col-sm-2">
+                                                        <label class="sr-only" for="inputKeywordDP">Name</label>
+                                                        <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordDP" x-model="redemptionData.smsKeyword">
+                                                    </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label-sm">Keyword Validity</label>
+                                                    <div class="col-sm-2">
+                                                        <label class="sr-only" for="inputKeywordValidityDP">Name</label>
+                                                        <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordValidityDP" x-model="redemptionData.smsKeywordValidityDays">
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        Days
+<!--                                                        <label class="sr-only" for="keywordValDaysOrMonth"></label>-->
+<!--                                                        <select class="form-control mb-2 mr-sm-2" id="keywordValDaysOrMonth">-->
+<!--                                                            <option value="Days">Days</option>-->
+<!--                                                            <option value="Month">Month</option>-->
+<!--                                                        </select>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+							</div>
+						</div>
 					</div>
 				</div>
+
+			<br>
+			<div class="form-group">
+				<button class="btn btn-primary btn-block" id="saveConfiguration" @click="saveConfiguration()"><i class="fas fa-save"></i> Save</button>
 			</div>
+
 		</div>
-
-
-
-<!--
-<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/bootstrap/js/bootstrap.min.js"></script>
-<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/select2-develop/dist/js/select2.full.js"></script> 
-<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/jquery/jquery.min.js"></script>
-<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/webjars/popper.js/umd/popper.min.js"></script>
-<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/moment/moment.min.js"></script>
-<script src="https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/assets/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js"></script>
--->
-
+	</div><br><br>
+	<div class="form-group" style="visibility: hidden">
+		<label>Message : <span id="instanceId" th:text="${instanceId}" /></label>
+	</div>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+<!--jQUERY BEGIN-->
 <script>
-	
-	var selectAudienceFilter = document.getElementById("audienceFilter");
-	var selectEligibility = document.getElementById("eligibility");
-	var selectFulfillment = document.getElementById("fulfillment");
-	var selectRedemption = document.getElementById("redemption");
-	
-	var btn = document.getElementById("save");
-	var daDetail = document.getElementById("daDetail");
-	var omsDetail = document.getElementById("omsDetail");
-	
-	/* 
-	var btnAjax = document.getElementById("saveAjax");	
- 	*/
- 	
-	function onChangeBucket() {
-		$('#offers').empty();
-		$('#offers').val(null);
-		btn.disabled = false;
-	}	
-	
-	function onChangeOffer() {
-		btn.disabled = false;
-		reloadOfferDetail();
-	}
-	
-	function onChangeNotification() {
-		btn.disabled = false;
-	}
-	
-	function onChangeAudienceFilterCheckbox() {
-		btn.disabled = false;
-		selectAudienceFilter.disabled = !selectAudienceFilter.disabled;
-	}
-	
-	function onChangeEligibilityCheckbox() {
-		btn.disabled = false;
-		selectEligibility.disabled = !selectEligibility.disabled;
-	}
-	
-	function onChangeFulfillmentCheckbox() {
-		btn.disabled = false;
-		selectFulfillment.disabled = !selectFulfillment.disabled;
-	}
-	
-	function onChangeRedemptionCheckbox() {
-		btn.disabled = false;
-		selectRedemption.disabled = !selectRedemption.disabled;
-	}
-	
-	function closeAlertDialog() {
-		$('#successDialog').modal('hide');
-		$('#failedDialog').modal('hide');
-	}
-	
-	window.onload = function()	{
-		console.log('page after load : ');
-		reloadOfferDetail();
-	}
-	
-	/* 
-	"startDate": $('#date1').val(),
-	"endDate": $('#date2').val(),
-    */
-    /* 
-    var request = { "instanceUuid" : $('#instanceId').text(),
-			"payload": {			        	  
-        	  "offerType": $('#offerType').val(),
-        	  "offerBucketId": $('#offerBucket').val(),
-        	  "offerBucketCode": $('#offerBucket option:selected').text(),
-        	  "offerCampaignId": $('#offers').val(),
-        	  "offerCampaignName": $('#offers option:selected').text()
-    } 
-	*/        	
-    /* 
-    var request = { "amsAction" : "save", "requestId" : $('#uuid').text(),
-					"payload": {			        	  
-		        	  "offerType": $('#offerType').val(),
-		        	  "offerBucketId": $('#offerBucket').val(),
-		        	  "offerBucketCode": $('#offerBucket option:selected').text(),
-		        	  "offerCampaignId": $('#offers').val(),
-		        	  "offerCampaignName": $('#offers option:selected').text()
-		        	}
-	}; 
-    */
-	/* 
-	btnAjax.onclick = function() {
-		btn.disabled = true;
-		$('#successDialog').modal();
-		daDetail.style.display = "none";
-		omsDetail.style.display = "none";
-		setTimeout(closeAlertDialog, 1000);
-	}
-	*/
-		
-	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-	var eventer = window[eventMethod];
-	var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+    function jQuery() {
+        $(document).ready(function(){
+            $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
+            $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
+            $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
+            $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Fullfilment Monitoring Policy - Not Applicable</h5>");
+            $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
 
-	// Listen response message from child window
-	eventer(messageEvent,function(e) {
-		console.log('parent received message!:  ',e.data);
-		var payload = JSON.parse(e.data.payload);
+            $('#typeData').on('change', function() {
 
-    	$('#offerCodeId').text(payload.offerBucketCode);
-    	$('#offerNameId').text(payload.offerCampaignName);
-    	
-    	$('#statusId').text(e.data.configurationStatus);
-    	
-		$('#successDialog').modal();
-		setTimeout(closeAlertDialog, 1000);
-	},false);
-	
-	
-	// saving configuration
-	btn.onclick = function() {
-		btn.disabled = true;
-		console.log("offers "+$('#offers').val());
-		if($('#offers').val() != ""){
-			var message = {amsAction : "save", requestId : "save"};
-			var request = { "amsAction" : "save", "requestId" : "save",
-				"payload": {
-					/* 
-		        	"offerType": $('#offerType').val(),
-		        	 */
-		        	"offerBucketId": $('#offerBucket').val(),
-		        	"offerBucketCode": $('#offerBucket option:selected').text(),
-		        	"offerCampaignId": $('#offers').val(),
-		        	"offerCampaignName": $('#offers option:selected').text(),
-		        	"notification": $('#notification').val(),
-		    	}
-			};			
-			window.parent.postMessage(request,'*');
-		}
-	}
-	 
+                if (this.value == 'directProvisioning')
+                {
+                    $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
+                    $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
+                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
+                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Fullfilment Monitoring Policy - Not Applicable</h5>");
+                    $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
+                }
+                if (this.value == 'offerMonitoringWithAssignment')
+                {
+                    $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
+                    $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
+                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
+                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Fullfilment Monitoring Policy - Required</h5>");
+                    $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
+                }
+                if (this.value == 'offerMonitoring')
+                {
+                    $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Not Applicable</h5>");
+                    $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
+                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Not Applicable</h5>");
+                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Fullfilment Monitoring Policy - Required</h5>");
+                    $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Not Applicable</h5>");
+                }
+            });
+        });
+        // Type Provisioning Dropdown END
+
+        // Plus Minus Icon for Accordion BEGIN
+        $(document).ready(function(){
+            // Add minus icon for collapse element which is open by default
+            $(".collapse.show").each(function(){
+                $(this).prev(".card-header").find(".fa").addClass("fa-minus").removeClass("fa-plus");
+            });
+
+            // Toggle plus minus icon on show hide of collapse element
+            $(".collapse").on('show.bs.collapse', function(){
+                $(this).prev(".card-header").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+            }).on('hide.bs.collapse', function(){
+                $(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
+            });
+        });
+        // Plus Minus Icon for Accordion END
+
+        // Event Fulfillment Monitoring Policy Dropdown BEGIN
+        $(document).ready(function(){
+            $("#topUpForm").show();
+            $("#usageForm").hide();
+            $("#ARPUForm").hide();
+
+            $('#eventTypeData').on('change', function() {
+                $(".eventTypeFulfillmentMonitoring").hide();
+
+                if (this.value == 'Top-Up')
+                {
+                    $("#topUpForm").show();
+                }
+                if (this.value == 'Usage')
+                {
+                    $("#usageForm").show();
+                }
+                if (this.value == 'ARPU')
+                {
+                    $("#ARPUForm").show();
+                }
+            });
+        });
+        // Event Fulfillment Monitoring Policy Dropdown END
+
+        // Redemption Policy - Redemption Method Dropdown BEGIN
+        $(document).ready(function(){
+            $(".manualRedemptionSelection").hide();
+
+            $('#redemptionAutoOrManual').on('change', function() {
+                $(".manualRedemptionSelection").hide();
+
+                if (this.value == 'AutoRedemption')
+                {
+                    $(".manualRedemptionSelection").hide();
+                }
+                if (this.value == 'ManualRedemption')
+                {
+                    $(".manualRedemptionSelection").show();
+                }
+            });
+        });
+        // Redemption Policy - Redemption Method Dropdown END
+    }
 </script>
+<!--jQUERY END-->
 
-
+<!--AlpineJS BEGIN-->
 <script>
+	const INSTANCE_ID_PROD = $("#instanceId").text();
+	const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
+	const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
+	const DEV_URL = 'http://130.61.15.242/data/';
 
-	var daCampaignCreation = document.getElementById("daCampaignCreation");
-	var omsCampaignCreation = document.getElementById("omsCampaignCreation");
-	var offerCreation = document.getElementById("offerCreation");
-	var accountBased1 = document.getElementById("accountBased1");
-	var accountBased2 = document.getElementById("accountBased2");
-	
-	var daBucketCreation = document.getElementById("daBucketCreation");
-	var omsBucketCreation = document.getElementById("omsBucketCreation");
-	var bucketCreation = document.getElementById("bucketCreation");
-	
-	var fulfillmentCreation = document.getElementById("fulfillmentCreation");
-	var redemptionCreation = document.getElementById("redemptionCreation");
-	var audienceFilterCreation = document.getElementById("audienceFilterCreation");
-	var eligibilityCreation = document.getElementById("eligibilityCreation");
-	
-	/*
-	AJAX to get offer details
-	
-	https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/data/offerDetail
-	*/
+	function configureMembership() {
+		return {
+			offers: [],
+			offerBucketList: [],
+			campaignOfferList: [],
+			selectedBucket: null,
+			selectedBucketLabel: null,
+			selectedCampaign: null,
+			configureMembership: null,
+			eligibilityData: null,
+			monitoringData: null,
+            redemptionData: null,
+			isLoading: false,
+            eventTypeData: 'Top-Up',
+            redemptionMethod: 'AutoRedemption',
+			addNewData() {
+				this.isLoading = true;
+				fetch(PROD_URL + `offerDetail?bucketOfferId=${this.selectedBucket}&campaignOfferId=${this.selectedCampaign}`)
+					.then(res => res.json())
+					.then(data => {
+						this.offers.push(data)
+					})
+					.catch(error => console.log(error))
+					.finally()
+			},
+			offerBucketDropdown() {
+				this.select2 = $(this.$refs.selectBucket).select2();
+				this.select2.on("select2:select", (event) => {
+					this.selectedBucket = event.target.value;
+					this.selectedBucketLabel = event.target.label;
+				});
+				this.$watch("selectedBucket", (value) => {
+					this.campaignOfferDropdown();
+				});
+				this.isLoading = true;
+				fetch(PROD_URL + `offerBucket`)
+					.then(res => res.json())
+					.then(data => {
+						this.offerBucketList = data
+					})
+					.catch(error => console.log(error))
+					.finally(() => this.isLoading = false)
+			},
+			campaignOfferDropdown() {
+				this.isLoading = true;
+				this.select2 = $(this.$refs.selectCampaign).select2();
+				this.select2.on("select2:select", (event) => {
+					this.selectedCampaign = event.target.value;
+				});
+				this.$watch("selectedCampaign", (value) => {
+					this.select2.val(value).trigger("change");
+				});
+				if (this.selectedBucket != null) {
+					fetch(PROD_URL + `offerCampaign?offerId=${this.selectedBucket}`)
+						.then(res => res.json())
+						.then(data => {
+							this.campaignOfferList = data
+						})
+						.catch(error => console.log(error))
+						.finally(() => this.isLoading = false)
+				}
+			},
+			removeOffer(index) {
+				this.offers.splice(index, 1)
+			},
+			getOfferSelection() {
+				fetch(PROD_URL + `offerSelection?instanceId=${INSTANCE_ID}`)
+					.then(res => res.json())
+					.then(data => {
+						this.offers = data
+					})
+					.catch(error => console.log(error))
+					.finally()
+			},
+			eligibilityPolicy() {
+				fetch(PROD_URL + `offerEligibility?instanceId=${INSTANCE_ID}`)
+					.then(res => res.json())
+					.then(data => {
+						this.eligibilityData = data
+					})
+					.catch(error => console.log(error))
+					.finally()
+			},
+			monitoringPolicy() {
+				fetch(PROD_URL + `offerMonitoring?instanceId=${INSTANCE_ID}`)
+					.then(res => res.json())
+					.then(data => {
+						this.monitoringData = data
+					})
+					.catch(error => console.log(error))
+					.finally()
+			},
+            redemptionPolicy() {
+                fetch(PROD_URL + `offerRedemption?instanceId=${INSTANCE_ID}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        this.redemptionData = data
+                    })
+                    .catch(error => console.log(error))
+                    .finally()
+            },
+            saveConfiguration() {
+                var message = { amsAction : "save", requestId : "save" };
+                var request = { "amsAction" : "save", "requestId" : "save",
+                    "payload": {
+                        "type": "Direct Provisioning",
+                        "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
+                            return {
+                                offerBucketId: item.offerBucketId,
+                                offerBucketType: item.offerBucketType,
+                                offerCampaignId: item.offerCampaignId,
+                                offerCampaignName: item.offerCampaignName
+                            }
+                        }),
+                        "offerEligibility": {
+                            "isFrequencyOnly": this.eligibilityData.isFrequencyOnly,
+                            "isFrequencyAndTime": this.eligibilityData.isFrequencyAndTime,
+                            "frequency": this.eligibilityData.frequency,
+                            "numberOfDays": this.eligibilityData.numberOfDays,
+                            "isOfferLevelCapOnly": this.eligibilityData.isOfferLevelCapOnly,
+                            "isOfferLevelCapAndPeriod": this.eligibilityData.isOfferLevelCapAndPeriod,
+                            "offerLevelCapValue": this.eligibilityData.offerLevelCapValue,
+                            "offerLevelCapPeriodValue": this.eligibilityData.offerLevelCapPeriodValue
+                        },
+                        "offerMonitoring": {
+                            "eventType": "",
+                            "usageServiceType": "",
+                            "productPackage": "",
+                            "creditMethod": "",
+                            "operatorId": "",
+                            "periodDays": "",
+                            "periodStartDate": "",
+                            "periodEndDate": "",
+                            "topupCode": "",
+                            "usageType": "",
+                            "transactionValue": "",
+                            "operatorValue": "",
+                            "paidArpuOperator": "",
+                            "paidArpuValue": "",
+                            "isMonitorDateRange": "",
+                            "isMonitorSpecificPeriod": ""
+                        },
+                        "offerRedemption": {
+                            "isRedemptionCapOnly": this.redemptionData.isRedemptionCapOnly,
+                            "redemptionCapValue": this.redemptionData.redemptionCapValue,
+                            "isRedemptionCapAndPeriod": this.redemptionData.isRedemptionCapAndPeriod,
+                            "totalRedemptionPeriodValue": this.redemptionData.totalRedemptionPeriodValue,
+                            "isFrequencyOnly": this.redemptionData.isFrequencyOnly,
+                            "isFrequencyAndTime": this.redemptionData.isFrequencyAndTime,
+                            "frequencyValue": this.redemptionData.frequencyValue,
+                            "timePeriodValue": this.redemptionData.timePeriodValue,
+                            "timePeriodType": this.redemptionData.timePeriodType,
+                            "totalRedemptionPeriodType": this.redemptionData.totalRedemptionPeriodType,
+                            "totalRecurringFrequency": this.redemptionData.totalRecurringFrequency,
+                            "isRecurringFrequencyAndPeriod": this.redemptionData.isRecurringFrequencyAndPeriod,
+                            "recurringFrequencyValue": this.redemptionData.recurringFrequencyValue,
+                            "recurringFrequencyPeriodType": this.redemptionData.recurringFrequencyPeriodType,
+                            "recurringFrequencyPeriodValue": this.redemptionData.recurringFrequencyPeriodValue,
+                            "isRecurringFrequencyEachMonth": this.redemptionData.isRecurringFrequencyEachMonth,
+                            "recurringFrequencyDayOfMonth": this.redemptionData.recurringFrequencyDayOfMonth,
+                            "redemptionMethod": this.redemptionData.redemptionMethod,
+                            "smsKeyword": this.redemptionData.smsKeyword,
+                            "smsKeywordValidityDays": this.redemptionData.smsKeywordValidityDays
+                        }
 
-	function reloadOfferDetail() {
-		if($('#offers').val() != ""){	
-			$.ajax({
-		        url: 'http://localhost:8090/data/offerDetail',
-		        method: "GET",
-		        data: {
-		            	bucketName : $('#offerBucket option:selected').text(),
-		            	bucketOfferId : $('#offerBucket').val(),
-		            	campaignOfferId : $('#offers').val()
-		        },
-		        success: function(response){
-		        	console.log(response);
-		        	omsDetail.style.display = "none";
-		    		daDetail.style.display = "none";
-		    		
-		    		omsCampaignCreation.style.display = "none";
-		    		daCampaignCreation.style.display = "none";
-		    		offerCreation.style.display = "none";
-		    		
-		    		daBucketCreation.style.display = "none";
-		    		omsBucketCreation.style.display = "none";
-		    		bucketCreation.style.display = "none";
-		    		
-		    		fulfillmentCreation.style.display = "none";
-		    		redemptionCreation.style.display = "none";
-		    		
-		    		if(response.offerBucketType === 'OMS'){
-		    			omsDetail.style.display = "block";
-			        	$('#omsOfferNameId').val(response.offerName);
-			        	$('#omsOfferTypeId').val(response.offerType);
-			        	$('#omsDeductMaId').val(response.valueToDeductFromMa);
-			        	$('#omsThrId').val(response.thresholdId);
-			        	$('#omsThrValUnitId').val(response.thresholdValueUnit);
-			        	$('#omsEndDateId').val(response.endDate);
-			        	$('#omsOfferIdId').val(response.offerId);
-			        	$('#omsDescId').val(response.description);
-			        	$('#omsCntId').val(response.counterId);
-			        	$('#omsThrValId').val(response.thresholdValue);
-			        	$('#omsStartDateId').val(response.startDate);
-			        	$('#omsActionId').val(response.action);
-			        	
-						if(response.offerType === 'time-based'){
-							timeBased.style.display = "block";
-							accountBased1.style.display = "none";
-							accountBased2.style.display = "none";
-							
-							$('#omsDayId').val(response.day);
-				        	$('#omsHourId').val(response.hour);
-				        	$('#omsMinuteId').val(response.minute);
-						}else {
-							timeBased.style.display = "none";
-							accountBased1.style.display = "block";
-							accountBased2.style.display = "block";
-						
-							$('#omsValidityId').val(response.value);
-				        	$('#omsValidUnitId').val(response.valueUnit);
-						}
-		    		}
-					if(response.offerBucketType === 'DA'){
-			    		daDetail.style.display = "block";
-			        	$('#daOfferNameId').val(response.offerName);
-			        	$('#daDescId').val(response.description);
-			        	$('#daValUnitId').val(response.valueUnit);
-			        	$('#daDeductMaId').val(response.valueToDeductFromMa);
-			        	$('#daStartDateId').val(response.startDate);
-			        	$('#daActionId').val(response.action);
-			        	$('#daNameId').val(response.bucketName);
-			        	$('#daValueId').val(response.value);
-			        	$('#daCapValueId').val(response.valueCap);
-			        	$('#daValidId').val(response.valueValidityInDays);
-			        	$('#daEndDateId').val(response.endDate);
-		    		}
-		        }
-		    })
-		}		
-	}
-	
-	/* 
-	AJAX to get offer bucket list
-	
-	$('#pleaseWaitDialog').modal('hide'); 
-	offerName : $('#offers').val()  
-	minimumInputLength: 3,
-	https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/data/offerBucket
-	*/
-		
-	$("#offerBucket").select2({
-	    theme: "bootstrap4",
-	    ajax: {
-	        url: 'http://localhost:8090/data/offerBucket',
-	        dataType: 'json',
-	        delay: 250,
-	        data: function (params) {
-	            var query = {
-	            		/* 
-	            		offerType : $('#offerType').val(),
-	            		 */
-	            		search: params.term
-	                  }
-	            return query;
-	        },
-	        processResults: function (response) {
-	            return {
-	                results: response
-	            };
-	        },
-	        cache: true
-	    }
-	}); 
-	
-	/* 
-	AJAX to get offer campaign list
-	
-	https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev/data/offerCampaign
-	*/
-	
-	$("#offers").select2({
-	    theme: "bootstrap4",
-	    ajax: {
-	        url: 'http://localhost:8090/data/offerCampaign',
-	        dataType: 'json',
-	        delay: 250,
-	        data: function (params) {
-	            var query = {
-	            		/* 
-	            		offerType : $('#offerType').val(),
-	            		 */
-	            		offerId : $('#offerBucket').val(),
-	            		search: params.term
-	                  }
-	            return query;
-	        },
-	        processResults: function (response) {
-	            return {
-	                results: response
-	            };
-	        },
-	        cache: true
-	    }
-	}); 
-	
-	
-	
-	
-
-	// FUNCTIONS for Offer Buckets
-	var offerCampaignTypeSelectionVal = "";
-	
-	$("#omsOfferBucket").select2({
-	    theme: "bootstrap4",
-	    ajax: {
-	        url: 'http://localhost:8090/data/offerBucket',
-	        dataType: 'json',
-	        delay: 250,
-	        data: function (params) {
-	        	let query;
-	        	offerCampaignTypeSelectionVal = offerCampaignTypeSelection.value.toLowerCase();
-	        	
-        		query = {
-	            		/* 
-	            		offerType : $('#offerType').val(),
-	            		 */
-	            		search: params.term,
-	            		offerType: offerCampaignTypeSelectionVal
-	                  }
-	            return query;
-	        },
-	        processResults: function (response) {
-	            return {
-	                results: response
-	            };
-	        },
-	        cache: true
-	    }
-	}); 
-	
-	$("#daOfferBucket").select2({
-	    theme: "bootstrap4",
-	    ajax: {
-	        url: 'http://localhost:8090/data/offerBucket',
-	        dataType: 'json',
-	        delay: 250,
-	        data: function (params) {
-	        	
-	        	let query;
-	        	offerCampaignTypeSelectionVal = offerCampaignTypeSelection.value.toLowerCase();
-	        	
-        		query = {
-	            		/* 
-	            		offerType : $('#offerType').val(),
-	            		 */
-        				search: params.term,
-	            		offerType: offerCampaignTypeSelectionVal
-	                  }
-	            return query;
-	        },
-	        processResults: function (response) {
-	            return {
-	                results: response
-	            };
-	        },
-	        cache: true
-	    }
-	}); 
-	
-	function getOfferBucketDetail(code) {	
-		$.ajax({
-	        url: 'http://localhost:8090/data/bucketDetail',
-	        method: "GET",
-	        data: {
-	        	bucketId : code.value
-            	
-	        },
-	        success: function(response){
-
-	        	console.log(offerCampaignTypeSelectionVal)
-	        	console.log(response.offerType)
-	        	
-	    		if(offerCampaignTypeSelectionVal === 'oms'){
-
-					document.getElementById("omsOfferTypeIdForm").value = response.offerType;
-					document.getElementById("omsCntIdForm").value = response.counterId;
-					document.getElementById("omsThrIdForm").value = response.thresholdId;
-					
-					let accountBased1Form = document.getElementById("accountBased1Form"); 	
-					let accountBased2Form = document.getElementById("accountBased2Form"); 	
-					let timeBasedForm = document.getElementById("timeBasedForm"); 	
-
-					if(response.offerType === 'time-based'){
-						timeBasedForm.style.display = "block";
-						accountBased1Form.style.display = "none";
-						accountBased2Form.style.display = "none";
-						console.log("time-based mode is on")
-						// $('#omsDayId').val(response.day);
-			        	// $('#omsHourId').val(response.hour);
-			        	// $('#omsMinuteId').val(response.minute);
-					}else {
-						timeBasedForm.style.display = "none";
-						accountBased1Form.style.display = "block";
-						accountBased2Form.style.display = "block";
-						console.log("time-based mode is off")
-						// $('#omsValidityId').val(response.value);
-			        	// $('#omsValidUnitId').val(response.valueUnit);
-					}
-	    		}
-				if(offerCampaignTypeSelectionVal === 'DA'){
-		    		daDetail.style.display = "block";
-		        	//$('#daOfferBucket').val(response.bucketName);
-	    		}
-	        }
-	    })
-	}
-	
-	function createOfferBucket() {
-		omsDetail.style.display = "none";
-		daDetail.style.display = "none";
-		
-		omsCampaignCreation.style.display = "none";
-		daCampaignCreation.style.display = "none";
-		offerCreation.style.display = "none";
-		
-		daBucketCreation.style.display = "none";
-		omsBucketCreation.style.display = "none";
-		bucketCreation.style.display = "block";
-		
-		fulfillmentCreation.style.display = "none";
-		redemptionCreation.style.display = "none";
-		audienceFilterCreation.style.display = "none";
-		eligibilityCreation.style.display = "none";
-	}
-	
-	function onChangeOfferBucketType() {
-		
-		var offerBucketTypeSelection = document.getElementById("offerBucketTypeSelection");
-		
-		if(offerBucketTypeSelection.value == "OMS") {
-			daBucketCreation.style.display = "none";
-			omsBucketCreation.style.display = "block";
-		} 
-		
-		if (offerBucketTypeSelection.value == "DA") {
-			daBucketCreation.style.display = "block";
-			omsBucketCreation.style.display = "none";
-		}
-		
-	}
-	
-	function onChangeOmsId(offerId) {
-		document.getElementById("counterId").value = offerId.value;
-		document.getElementById("thresholdId").value = offerId.value;
-	}
-	
-	
-	// FUNCTIONS for Offer Campaigns
-	function createOfferCampaign() {
-		
-		omsDetail.style.display = "none";
-		daDetail.style.display = "none";
-		
-		omsCampaignCreation.style.display = "none";
-		daCampaignCreation.style.display = "none";
-		offerCreation.style.display = "block";
-		
-		daBucketCreation.style.display = "none";
-		omsBucketCreation.style.display = "none";
-		bucketCreation.style.display = "none";
-		
-		fulfillmentCreation.style.display = "none";
-		redemptionCreation.style.display = "none";
-		audienceFilterCreation.style.display = "none";
-		eligibilityCreation.style.display = "none";
+                    },
+                    "notification": "true"
+                };
+                console.log(request);
+                window.parent.postMessage(request,'*');
+            },
+		};
 	}
 
-	
-	function onChangeOfferCampaignType() {
-		var offerCampaignTypeSelection = document.getElementById("offerCampaignTypeSelection");
-		
-		if(offerCampaignTypeSelection.value == "OMS") {
-			omsCampaignCreation.style.display = "block";
-			daCampaignCreation.style.display = "none";
-			
-		} 
-		
-		if (offerCampaignTypeSelection.value == "DA") {
-			omsCampaignCreation.style.display = "none";
-			daCampaignCreation.style.display = "block";
-		}
-		
-	}
-	
-	// FUNCTIONS for Audience Filter
-	function onClickAudienceFilterCreation() {
-		omsDetail.style.display = "none";
-		daDetail.style.display = "none";
-		
-		omsCampaignCreation.style.display = "none";
-		daCampaignCreation.style.display = "none";
-		offerCreation.style.display = "none";
-		
-		daBucketCreation.style.display = "none";
-		omsBucketCreation.style.display = "none";
-		bucketCreation.style.display = "none";
-		
-		fulfillmentCreation.style.display = "none";
-		redemptionCreation.style.display = "none";
-		audienceFilterCreation.style.display = "block";
-		eligibilityCreation.style.display = "none";
-	}
-	
-	
-	// FUNCTIONS for Eligibility Filter
-	function onClickEligibilityCreation() {
-		omsDetail.style.display = "none";
-		daDetail.style.display = "none";
-		
-		omsCampaignCreation.style.display = "none";
-		daCampaignCreation.style.display = "none";
-		offerCreation.style.display = "none";
-		
-		daBucketCreation.style.display = "none";
-		omsBucketCreation.style.display = "none";
-		bucketCreation.style.display = "none";
-		
-		fulfillmentCreation.style.display = "none";
-		redemptionCreation.style.display = "none";
-		audienceFilterCreation.style.display = "none";
-		eligibilityCreation.style.display = "block";
-		
-	}
-	
-	
-	// FUNCTIONS for Fulfillment Policy
-	function onClickFulfillmentCreation() {
-		omsDetail.style.display = "none";
-		daDetail.style.display = "none";
-		
-		omsCampaignCreation.style.display = "none";
-		daCampaignCreation.style.display = "none";
-		offerCreation.style.display = "none";
-		
-		daBucketCreation.style.display = "none";
-		omsBucketCreation.style.display = "none";
-		bucketCreation.style.display = "none";
-		
-		fulfillmentCreation.style.display = "block";
-		redemptionCreation.style.display = "none";
-		audienceFilterCreation.style.display = "none";
-		eligibilityCreation.style.display = "none";
-	}
-	
-	function onChangeFulfillmentPeriodType() {
-		
-		if( document.getElementById("fulfillmentPeriodTypeForm").value == "days" ) {
-			document.getElementById("fulfillmentDaysInput").style.display = "block";
-			document.getElementById("fulfillmentRangeInput").style.display = "none";
-			
-		}
-		
-		if( document.getElementById("fulfillmentPeriodTypeForm").value == "range" ) {
-			document.getElementById("fulfillmentDaysInput").style.display = "none";
-			document.getElementById("fulfillmentRangeInput").style.display = "block";
-			
-		}
-	}
-	
-	
-	
-	// FUNCTIONS for Redemption Policy
-	function onClickRedemptionCreation() {
-		omsDetail.style.display = "none";
-		daDetail.style.display = "none";
-		
-		omsCampaignCreation.style.display = "none";
-		daCampaignCreation.style.display = "none";
-		offerCreation.style.display = "none";
-		
-		daBucketCreation.style.display = "none";
-		omsBucketCreation.style.display = "none";
-		bucketCreation.style.display = "none";
-		
-		fulfillmentCreation.style.display = "none";
-		redemptionCreation.style.display = "block";
-		audienceFilterCreation.style.display = "none";
-		eligibilityCreation.style.display = "none";
-	}
-	
-	function onChangeRedemptionPeriodType() {
-
-		if( document.getElementById("redemptionPeriodTypeForm").value == "days" ) {
-			document.getElementById("redemptionDaysInput").style.display = "block";
-			document.getElementById("redemptionRangeInput").style.display = "none";
-			
-		}
-		
-		if( document.getElementById("redemptionPeriodTypeForm").value == "range" ) {
-			document.getElementById("redemptionDaysInput").style.display = "none";
-			document.getElementById("redemptionRangeInput").style.display = "block";
-			
-		}
-	}
-	
-	
-	// FUNCTION for cancel button
-	function onClickCancel() {
-		omsDetail.style.display = "none";
-		daDetail.style.display = "none";
-		
-		omsCampaignCreation.style.display = "none";
-		daCampaignCreation.style.display = "none";
-		offerCreation.style.display = "none";
-		
-		daBucketCreation.style.display = "none";
-		omsBucketCreation.style.display = "none";
-		bucketCreation.style.display = "none";
-		
-		fulfillmentCreation.style.display = "none";
-		redemptionCreation.style.display = "none";
-		audienceFilterCreation.style.display = "none";
-		eligibilityCreation.style.display = "none";
-	}
-	
 </script>
-
+<!--AlpineJS END-->
 
 </body>
 </html>
