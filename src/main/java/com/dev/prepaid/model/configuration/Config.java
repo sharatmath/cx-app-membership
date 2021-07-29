@@ -34,6 +34,9 @@ public class Config {
 	@SerializedName("offerRedemption")
 	private OfferRedemption offerRedemption;
 
+	@SerializedName("offerFulfilment")
+	private OfferFulfilment OfferFulfilment;
+
 	@SerializedName("notification")
     private Boolean notification;
 

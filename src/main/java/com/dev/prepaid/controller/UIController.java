@@ -2,6 +2,8 @@ package com.dev.prepaid.controller;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.dev.prepaid.domain.*;
+import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,16 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.dev.prepaid.domain.PrepaidCxProvInstances;
-import com.dev.prepaid.domain.PrepaidDaOfferBucket;
-import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
-import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
-import com.dev.prepaid.domain.PrepaidOmsOfferCampaign;
 import com.dev.prepaid.model.configuration.Config;
 import com.dev.prepaid.model.configuration.ServiceInstanceConfiguration;
-import com.dev.prepaid.repository.PrepaidCxProvInstancesRepository;
 import com.dev.prepaid.service.OfferService;
-import com.dev.prepaid.util.GUIDUtil;
 import com.dev.prepaid.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 
