@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.dev.prepaid.model.configuration.Config;
 import com.dev.prepaid.model.configuration.ServiceInstanceConfiguration;
+import com.dev.prepaid.repository.PrepaidCxProvInstancesRepository;
 import com.dev.prepaid.service.OfferService;
+import com.dev.prepaid.util.GUIDUtil;
 import com.dev.prepaid.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,7 +68,7 @@ public class UIController {
 			
 			log.debug("id : {}", serviceInstance.getUuid());
 			
-
+	
 //			if(instance.getCampaignOfferType() != null && instance.getCampaignOfferType().equalsIgnoreCase("oms")) {
 //				PrepaidOmsOfferCampaign offer = offerService.getOmsOfferCampaign(instance.getCampaignOfferId());
 //				PrepaidOmsOfferBucket bucket = offerService.getOmsOfferBucket(offer.getOfferId());
