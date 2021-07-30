@@ -1,0 +1,78 @@
+{
+  "instanceUuid": "63483226-49f3-48a2-8720-4f4c47021e32",
+  "payload": {
+    "notification": true,
+    "offerEligibility": {
+      "frequency": 1,
+      "isFrequencyAndTime": true,
+      "isFrequencyOnly": true,
+      "isOfferLevelCapAndPeriod": false,
+      "isOfferLevelCapOnly": true,
+      "numberOfDays": 2,
+      "numberOfFrequency": 3,
+      "offerLevelCapPeriodDays": 0,
+      "offerLevelCapPeriodValue": 0,
+      "offerLevelCapValue": 1
+    },
+    "offerMonitoring": {
+      "eventType": "ARPU",
+      "arpu": "100",
+      "arpuCreditMethod": "string",
+      "arpuOperators": "string",
+      "arpuOperatorsValue": "string",
+      "arpuPaidOperators": "string",
+      "arpuPaidTopUp": "string",
+      "arpuProductPackage": "string",
+      "arpuTopUpCode": "string",
+      "arpuUsageServiceType": "string",
+      "monitorEndDate": "2021-07-30T04:37:31.849Z",
+      "monitorPeriod": 0,
+      "monitorPeriodDayMonth": "string",
+      "monitorPeriodRadio": true,
+      "monitorSpecifiedPeriodRadio": true,
+      "monitorStartDate": "2021-07-30T04:37:31.849Z"
+    },
+    "offerRedemption": {
+      "frequencyValue": 0,
+      "isFrequencyAndTime": true,
+      "isFrequencyOnly": true,
+      "isRecurringFrequencyAndPeriod": true,
+      "isRecurringFrequencyEachMonth": true,
+      "isRedemptionCapAndPeriod": true,
+      "isRedemptionCapOnly": true,
+      "recurringFrequencyDayOfMonth": 0,
+      "recurringFrequencyPeriodType": "string",
+      "recurringFrequencyPeriodValue": 0,
+      "recurringFrequencyValue": 0,
+      "redemptionCapValue": 0,
+      "redemptionMethod": "string",
+      "smsKeyword": "string",
+      "smsKeywordValidityDays": 0,
+      "timePeriodType": "string",
+      "timePeriodValue": 0,
+      "totalRecurringFrequency": 0,
+      "totalRedemptionPeriodType": "string",
+      "totalRedemptionPeriodValue": 0
+    },
+    "offerSelections": [
+      {
+        "offerBucketCode": "string",
+        "offerBucketId": "OMS|261",
+        "offerBucketType": "string",
+        "offerCampaignId": 401,
+        "offerCampaignName": "Test"
+      },
+      {
+        "offerBucketCode": "string",
+        "offerBucketId": "DA|1",
+        "offerBucketType": "string",
+        "offerCampaignId": 241,
+        "offerCampaignName": "Test"
+      }
+    ],
+    "programId": "string",
+    "programName": "string",
+    "type": "string",
+    "uuid": "string"
+  }
+}

@@ -29,13 +29,10 @@ public class Config {
 	private OfferEligibility offerEligibility;
 
 	@SerializedName("offerMonitoring")
-	private OfferMonitoring offerMonitoring;
+	private OfferFulfilment offerMonitoring;
 
 	@SerializedName("offerRedemption")
 	private OfferRedemption offerRedemption;
-
-	@SerializedName("offerFulfilment")
-	private OfferFulfilment OfferFulfilment;
 
 	@SerializedName("notification")
     private Boolean notification;

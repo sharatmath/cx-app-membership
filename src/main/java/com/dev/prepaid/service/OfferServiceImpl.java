@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dev.prepaid.domain.*;
-import com.dev.prepaid.model.configuration.OfferEligibility;
-import com.dev.prepaid.model.configuration.OfferMonitoring;
-import com.dev.prepaid.model.configuration.OfferRedemption;
-import com.dev.prepaid.model.configuration.OfferSelection;
+import com.dev.prepaid.model.configuration.*;
 import com.dev.prepaid.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -169,14 +166,57 @@ public class OfferServiceImpl implements OfferService {
 		}
 		return new PrepaidCxOfferEligibility();
 	}
-	public PrepaidCxOfferMonitoring getOfferMonitoring(String instanceId){
+	public OfferFulfilment getOfferMonitoring(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
-		if(offerConfig.isPresent()){
+		OfferFulfilment offerFulfilment = new OfferFulfilment();
+		if(offerConfig.isPresent()) {
 			Optional<PrepaidCxOfferMonitoring> opsFind = prepaidCxOfferMonitoringRepository.findByOfferConfigId(offerConfig.get().getId());
-			if(opsFind.isPresent())
-				return  opsFind.get();
+			if (opsFind.isPresent()) {
+				PrepaidCxOfferMonitoring prepaidCxOfferMonitoring = opsFind.get();
+				offerFulfilment.setEventType(prepaidCxOfferMonitoring.getEventType());
+				//monitoring
+				if(prepaidCxOfferMonitoring.getPeriodEndDate() != null &&
+					prepaidCxOfferMonitoring.getPeriodStartDate() != null ) {
+					offerFulfilment.setMonitorSpecifiedPeriodRadio(true);
+					offerFulfilment.setMonitorStartDate(prepaidCxOfferMonitoring.getPeriodStartDate());
+					offerFulfilment.setMonitorEndDate(prepaidCxOfferMonitoring.getPeriodEndDate());
+				}
+				if(prepaidCxOfferMonitoring.getPeriod() != null &&
+					prepaidCxOfferMonitoring.getPeriodDays() != null) {
+					offerFulfilment.setMonitorPeriodRadio(true);
+					offerFulfilment.setMonitorPeriod(prepaidCxOfferMonitoring.getPeriodDays());
+					offerFulfilment.setMonitorPeriodDayMonth(prepaidCxOfferMonitoring.getPeriod());
+				}
+
+				if ("Top-Up".equals(prepaidCxOfferMonitoring.getEventType())) {
+					offerFulfilment.setTopUpCreditMethod(prepaidCxOfferMonitoring.getCreditMethod());
+					offerFulfilment.setTopUpProductPackage(prepaidCxOfferMonitoring.getProductPackage());
+					offerFulfilment.setTopUpUsageServiceType(prepaidCxOfferMonitoring.getUsageServiceType());
+					offerFulfilment.setTopUpOperator(prepaidCxOfferMonitoring.getOperatorId());
+					offerFulfilment.setTopUpValueOperator(prepaidCxOfferMonitoring.getOperatorValue());
+					offerFulfilment.setTopUpTransactionValue(String.valueOf(prepaidCxOfferMonitoring.getTransactionValue()));
+					offerFulfilment.setTopUpCode(prepaidCxOfferMonitoring.getTopupCode());
+					return offerFulfilment;
+				} else if("ARPU".equals(prepaidCxOfferMonitoring.getEventType())){
+					offerFulfilment.setArpuCreditMethod(prepaidCxOfferMonitoring.getCreditMethod());
+					offerFulfilment.setArpuProductPackage(prepaidCxOfferMonitoring.getProductPackage());
+					offerFulfilment.setArpuUsageServiceType(prepaidCxOfferMonitoring.getUsageServiceType());
+					offerFulfilment.setArpuOperators(prepaidCxOfferMonitoring.getOperatorId());
+					offerFulfilment.setArpuOperatorsValue (prepaidCxOfferMonitoring.getOperatorValue());
+					offerFulfilment.setArpu(String.valueOf(prepaidCxOfferMonitoring.getTransactionValue()));
+					offerFulfilment.setArpuPaidOperators(prepaidCxOfferMonitoring.getPaidArpuOperator());
+					offerFulfilment.setArpuTopUpCode(String.valueOf(prepaidCxOfferMonitoring.getPaidArpuValue()));
+					return offerFulfilment;
+				}else if("Usage".equals(prepaidCxOfferMonitoring.getEventType())){
+					offerFulfilment.setUsageServiceType(prepaidCxOfferMonitoring.getUsageServiceType());
+					offerFulfilment.setUsageType(prepaidCxOfferMonitoring.getUsageType());
+					offerFulfilment.setUsageOperator(prepaidCxOfferMonitoring.getOperatorValue());
+					offerFulfilment.setUsageValue(String.valueOf(prepaidCxOfferMonitoring.getTransactionValue()));
+					return  offerFulfilment;
+				}
+			}
 		}
-		return new PrepaidCxOfferMonitoring();
+		return offerFulfilment;
 	}
 	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
@@ -187,6 +227,5 @@ public class OfferServiceImpl implements OfferService {
 		}
 		return new PrepaidCxOfferRedemption();
 	}
-
 
 }

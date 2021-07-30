@@ -25,6 +25,7 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private String productPackage;
     private String creditMethod;
     private String operatorId;
+    private String period;
     private Integer periodDays;
     private Date periodStartDate;
     private Date periodEndDate;
