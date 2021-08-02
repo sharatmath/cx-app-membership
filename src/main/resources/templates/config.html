@@ -10,11 +10,19 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
 
+    <link rel="shortcut icon" href="https://www.singtel.com/content/dam/singtel/Standard/favicon.ico" type="image/vnd.microsoft.icon"/>
+
 	<style>
 		.card-header {
-			background-color: #ed1a3d !important;
-			color: white !important;
+            background-color: #4d3c57 !important;
+            color: white !important;
+            background-image: url(https://static.cdn.responsys.net/i8/21B000389.02/suite/suite/build/production/Suite/resources/uif/theme-alta/images/textured_bg.svg?v=21B000389.02);
 		}
+
+        .card-header:hover {
+            background-color: #4d3c57 !important;
+            color: white !important;
+        }
 
 		/*Accordion Custom BEGIN*/
 		#main {
@@ -38,7 +46,7 @@
 			color: #fff;
 			display: block;
 			text-align: left;
-			background: #FFE472;
+			background: #8e9cb7;
 			color: #222;
 			padding: 20px;
 		}
@@ -51,7 +59,7 @@
 		}
 
 		#main #faq .card .card-header .btn-header-link.collapsed {
-			background: #A541BB;
+			background: #da7200 !important;
 			color: #fff;
 		}
 
@@ -60,7 +68,7 @@
 		}
 
 		#main #faq .card .collapsing {
-			background: #FFE472;
+			background: #8e9cb7;
 			line-height: 30px;
 		}
 
@@ -69,7 +77,7 @@
 		}
 
 		#main #faq .card .collapse.show {
-			background: #FFE472;
+			background: #8e9cb7;
 			line-height: 30px;
 			color: #222;
 		}
@@ -141,6 +149,12 @@
 			margin: 5px !important;
 		}
 
+        .btn-singtel {
+            color: #fff !important;
+            background-color: #da7200 !important;
+            border-color: #da7200 !important;
+        }
+
 	</style>
 </head>
 
@@ -150,13 +164,13 @@
 		<div class="col-md-12 mt-12 card">
 
 				<div class="form-group">
-					<h4 class="mt-3"><img src="https://cdn1.singteldigital.com/content/dam/singtel/online-draft/singtel_logo_coloured.png" style="max-height: 64px;"> CONFIGURE PROVISIONING MEMBERSHIP</h4>
+					<h4 class="mt-3"><img src="https://cdn1.singteldigital.com/content/dam/singtel/online-draft/singtel_logo_coloured.png" style="max-height: 64px;"> Configure Provisioning Membership</h4>
 				</div>
 
 				<div class="form-group">
 					<label for="typeData">Type : </label>
 					<div class="form-group d-flex justify-content-between">
-						<select id="typeData" class="form-control">
+						<select id="typeData" class="form-control" x-model="type">
 							<option value="directProvisioning">Direct Provisioning</option>
 							<option value="offerMonitoringWithAssignment">Offer Monitoring with Offer Assignment</option>
 							<option value="offerMonitoring">Offer Monitoring Only</option>
@@ -188,7 +202,7 @@
 													<option x-model="campaignList.id"><span x-text="campaignList.text"></span></option>
 												</template>
 											</select>
-											<button type="button" class="btn btn-primary my-1 add-direct-prov" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+											<button type="button" class="btn btn-singtel my-1 add-direct-prov" @click="addNewData()"><i class="fas fa-plus-circle"></i>
 											</button>
 										</form>
 										<hr>
@@ -197,71 +211,77 @@
 												<template x-for="(offer, index) in offers">
 													<div class="accordion" id="faq">
 														<div class="offerSelectionTemplate">
-															<button type="submit" class="btn btn-warning my-1" @click="removeOffer(index)"><i class="fas fa-minus-circle"></i> Remove</button>
 															<div class="row-flex">
 																<div class="card">
-																	<div class="card-header" id="offerSelection1">	<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" :data-target="'#faq1' + index" aria-expanded="true" aria-controls="faq1"><b><span x-text="offer.offerName"></span></b></a>
-																	</div>
-																	<div :id="'faq1' + index" class="panel-collapse collapse" aria-labelledby="offerSelection1" data-parent="#faq">
-																		<div class="card-body">
-																			<div class="form-row">
-																				<div class="col-md-6 mb-3">
-																					<label :for="'campaignOfferName' + index">Campaign Offer Name</label>
-																					<input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
-																				</div>
-																				<div class="col-md-6 mb-3">
-																					<label :for="'daName' + index">DA Name</label>
-																					<input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
-																				</div>
-																			</div>
-																			<div class="form-row">
-																				<div class="col-md-6 mb-3">
-																					<label :for="'campaignOfferDesc' + index">Campaign Offer Description</label>
-																					<input type="text" class="form-control" :id="'campaignOfferDesc' + index" x-model="offer.description" disabled>
-																				</div>
-																				<div class="col-md-6 mb-3">
-																					<label :for="'validity' + index">Validity</label>
-																					<input type="text" class="form-control" :id="'validity' + index" x-model="offer.validity" disabled>
-																				</div>
-																			</div>
-																			<div class="form-row">
-																				<div class="col-md-6 mb-3">
-																					<label :for="'value' + index">Value</label>
-																					<input type="text" class="form-control" :id="'value' + index" x-model="offer.value" disabled>
-																				</div>
-																				<div class="col-md-6 mb-3">
-																					<label :for="'valueUnit' + index">Value Unit</label>
-																					<input type="text" class="form-control" :id="'valueUnit' + index" x-model="offer.valueUnit" disabled>
-																				</div>
-																			</div>
-																			<div class="form-row">
-																				<div class="col-md-6 mb-3">
-																					<label :for="'capValue' + index">CAP Value</label>
-																					<input type="text" class="form-control" :id="'capValue' + index" x-model="offer.valueCap" disabled>
-																				</div>
-																				<div class="col-md-6 mb-3">
-																					<label :for="'valueToDeduct' + index">Value to Deduct from MA</label>
-																					<input type="text" class="form-control" :id="'valueToDeduct' + index" x-model="offer.valueToDeductFromMa" disabled>
-																				</div>
-																			</div>
-																			<div class="form-row">
-																				<div class="col-md-6 mb-3">
-																					<label :for="'startDate' + index">Start Date</label>
-																					<input type="text" class="form-control" :id="'startDate' + index" x-model="offer.startDate" disabled>
-																				</div>
-																				<div class="col-md-6 mb-3">
-																					<label :for="'endDate' + index">End Date</label>
-																					<input type="text" class="form-control" :id="'endDate' + index" x-model="offer.endDate" disabled>
-																				</div>
-																			</div>
-																			<div class="form-row">
-																				<div class="col-md-6 mb-3">
-																					<label :for="'action' + index">Action</label>
-																					<input type="text" class="form-control" :id="'action' + index" x-model="offer.action" disabled>
-																				</div>
-																			</div>
-																		</div>
-																	</div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-11">
+                                                                            <div class="card-header" id="offerSelection1">	<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" :data-target="'#faq1' + index" aria-expanded="true" aria-controls="faq1"><b><span x-text="offer.offerName"></span></b></a>
+                                                                            </div>
+                                                                            <div :id="'faq1' + index" class="panel-collapse collapse" aria-labelledby="offerSelection1" data-parent="#faq">
+                                                                                <div class="card-body">
+                                                                                    <div class="form-row">
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'campaignOfferName' + index">Campaign Offer Name</label>
+                                                                                            <input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
+                                                                                        </div>
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'daName' + index">DA Name</label>
+                                                                                            <input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-row">
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'campaignOfferDesc' + index">Campaign Offer Description</label>
+                                                                                            <input type="text" class="form-control" :id="'campaignOfferDesc' + index" x-model="offer.description" disabled>
+                                                                                        </div>
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'validity' + index">Validity</label>
+                                                                                            <input type="text" class="form-control" :id="'validity' + index" x-model="offer.validity" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-row">
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'value' + index">Value</label>
+                                                                                            <input type="text" class="form-control" :id="'value' + index" x-model="offer.value" disabled>
+                                                                                        </div>
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'valueUnit' + index">Value Unit</label>
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" x-model="offer.valueUnit" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-row">
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'capValue' + index">CAP Value</label>
+                                                                                            <input type="text" class="form-control" :id="'capValue' + index" x-model="offer.valueCap" disabled>
+                                                                                        </div>
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'valueToDeduct' + index">Value to Deduct from MA</label>
+                                                                                            <input type="text" class="form-control" :id="'valueToDeduct' + index" x-model="offer.valueToDeductFromMa" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-row">
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'startDate' + index">Start Date</label>
+                                                                                            <input type="text" class="form-control" :id="'startDate' + index" x-model="offer.startDate" disabled>
+                                                                                        </div>
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'endDate' + index">End Date</label>
+                                                                                            <input type="text" class="form-control" :id="'endDate' + index" x-model="offer.endDate" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-row">
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                            <label :for="'action' + index">Action</label>
+                                                                                            <input type="text" class="form-control" :id="'action' + index" x-model="offer.action" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-1">
+                                                                            <button type="submit" class="btn btn-danger my-1" @click="removeOffer(index)"><i class="fas fa-minus-circle"></i></button>
+                                                                        </div>
+                                                                    </div>
 																</div>
 															</div>
 														</div>
@@ -319,7 +339,7 @@
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isOfferLevelCapOnly" name="radioSubscriberOffer" class="custom-control-input" :value="true" x-model="eligibilityData.isOfferLevelCapOnly">
+                                                        <input type="radio" id="isOfferLevelCapOnly" name="radioSubscriberOffer" class="custom-control-input" :checked="eligibilityData.isOfferLevelCapOnly + '' == 'true'" :value="true">
                                                         <label class="custom-control-label" for="isOfferLevelCapOnly"></label>
                                                     </div>
                                                 </div>
@@ -332,7 +352,7 @@
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isOfferLevelCapAndPeriod" name="radioSubscriberOffer" class="custom-control-input" :value="true" x-model="eligibilityData.isOfferLevelCapAndPeriod">
+                                                        <input type="radio" id="isOfferLevelCapAndPeriod" name="radioSubscriberOffer" class="custom-control-input" :checked="eligibilityData.isOfferLevelCapAndPeriod + '' == 'true'" :value="true">
                                                         <label class="custom-control-label" for="isOfferLevelCapAndPeriod"></label>
                                                     </div>
                                                 </div>
@@ -369,39 +389,39 @@
                                                     <option value="Usage">Usage</option>
                                                     <option value="ARPU">ARPU</option>
                                                 </select>
-                                            </div><span x-text="monitoringData.eventTypeData"></span>
+                                            </div>
                                         </div>
                                         <hr>
                                         <template x-if="eventTypeData === 'Top-Up'">
                                             <div class="eventTypeFulfillmentMonitoring" id="topUpForm">
                                                 <div class="mb-3 row">
-                                                    <label for="creditMethod" class="col-sm-2 col-form-label">Credit Method</label>
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="creditMethod" x-model="monitoringData.creditMethod">
+                                                        <input type="text" class="form-control" id="topupCreditMethod" x-model="monitoringData.topUpCreditMethod">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="productPackage" class="col-sm-2 col-form-label">Product Package</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="productPackage">
+                                                        <input type="text" class="form-control" id="productPackage" x-model="monitoringData.topUpProductPackage">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="usageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="usageServiceType">
+                                                        <input type="text" class="form-control" id="usageServiceType" x-model="monitoringData.topUpUsageServiceType">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="operators" class="col-sm-2 col-form-label">Operators</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="operators">
+                                                        <input type="text" class="form-control" id="operators" x-model="monitoringData.topUpOperatorValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value</label>
                                                     <div class="col-sm-5">
-                                                        <select id="topUpValueOperators" class="form-control">
+                                                        <select id="topUpValueOperators" class="form-control" x-model="monitoringData.topUpOperators">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -410,13 +430,13 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="topUpValue">
+                                                        <input type="text" class="form-control" id="topUpValue" x-model="monitoringData.topUpValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpCode" class="col-sm-2 col-form-label">Top Up Code</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="topUpCode">
+                                                        <input type="text" class="form-control" id="topUpCode" x-model="monitoringData.topUpCode">
                                                     </div>
                                                 </div>
                                             </div>
@@ -424,9 +444,9 @@
                                         <template x-if="eventTypeData === 'Usage'">
                                             <div class="eventTypeFulfillmentMonitoring" id="usageForm">
                                                 <div class="mb-3 row">
-                                                    <label for="creditMethod" class="col-sm-2 col-form-label">Usage Service Type</label>
+                                                    <label for="usageServiceTypeDropdown" class="col-sm-2 col-form-label">Usage Service Type</label>
                                                     <div class="col-sm-10">
-                                                        <select id="usageServiceTypeDropdown" class="form-control">
+                                                        <select id="usageServiceTypeDropdown" class="form-control" x-model="monitoringData.usageServiceType">
                                                             <option value="voice">Voice</option>
                                                             <option value="data">Data</option>
                                                             <option value="SMS">SMS</option>
@@ -437,7 +457,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="productPackage" class="col-sm-2 col-form-label">Usage Type</label>
                                                     <div class="col-sm-10">
-                                                        <select id="usageTypeDropdown" class="form-control">
+                                                        <select id="usageTypeDropdown" class="form-control" x-model="monitoringData.usageType">
                                                             <option value="VOICE_COUNT">VOICE_COUNT</option>
                                                             <option value="VOICE_MINS">VOICE_MINS</option>
                                                             <option value="VOICE_AMOUNT">VOICE_AMOUNT</option>
@@ -448,7 +468,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Usage</label>
                                                     <div class="col-sm-5">
-                                                        <select id="usageOperatorsDropdown" class="form-control">
+                                                        <select id="usageOperatorsDropdown" class="form-control" x-model="monitoringData.usageOperators">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -457,7 +477,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <select id="usageValueDropdown" class="form-control">
+                                                        <select id="usageValueDropdown" class="form-control" x-model="monitoringData.usageValue">
                                                             <option value="GB">GB</option>
                                                             <option value="Mins">Mins</option>
                                                             <option value="Count">Count</option>
@@ -469,39 +489,39 @@
                                         <template x-if="eventTypeData === 'ARPU'">
                                             <div class="eventTypeFulfillmentMonitoring" id="ARPUForm">
                                                 <div class="mb-3 row">
-                                                    <label for="creditMethod" class="col-sm-2 col-form-label">Credit Method</label>
+                                                    <label for="arpuCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="creditMethodARPU">
+                                                        <input type="text" class="form-control" id="arpuCreditMethod" x-model="monitoringData.arpuCreditMethod">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="productPackage" class="col-sm-2 col-form-label">Product Package</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="productPackageARPU">
+                                                        <input type="text" class="form-control" id="productPackageARPU" x-model="monitoringData.arpuProductPackage">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="usageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="usageServiceTypeARPU">
+                                                        <input type="text" class="form-control" id="usageServiceTypeARPU" x-model="monitoringData.arpuUsageServiceType">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="operators" class="col-sm-2 col-form-label">Operators</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="operatorsARPU">
+                                                        <input type="text" class="form-control" id="operatorsARPU" x-model="monitoringData.arpuOperatorsValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpCode" class="col-sm-2 col-form-label">Top Up Code</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="topUpCodeARPU">
+                                                        <input type="text" class="form-control" id="topUpCodeARPU" x-model="monitoringData.arpuTopUpCode">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">ARPU</label>
                                                     <div class="col-sm-5">
-                                                        <select id="topUpValueOperatorsARPU" class="form-control">
+                                                        <select id="topUpValueOperatorsARPU" class="form-control" x-model="monitoringData.arpuOperators">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -510,13 +530,13 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="ARPUValue">
+                                                        <input type="text" class="form-control" id="ARPUValue" x-model="monitoringData.arpu">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Paid ARPU Top-UP</label>
                                                     <div class="col-sm-5">
-                                                        <select id="paidARPUTopUpValueOperators" class="form-control">
+                                                        <select id="paidARPUTopUpValueOperators" class="form-control" x-model="monitoringData.arpuPaidOperators">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -525,7 +545,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="paidARPUValue">
+                                                        <input type="text" class="form-control" id="paidARPUValue" x-model="monitoringData.arpuPaidTopUp">
                                                     </div>
                                                 </div>
                                             </div>
@@ -537,8 +557,8 @@
                                                     Monitor Specified Period
                                                 </label>
                                                 <div class="col-sm-1">
-                                                    <div class="custom-control custom-radio" x-init="$watch('isFrequencyOnly', value => console.log(value))">
-                                                        <input type="radio" id="isRedemptionCapOnly" name="radioMonitoringSpecified" class="custom-control-input" :value="true" x-model="redemptionData.isRedemptionCapOnly">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="isRedemptionCapOnly" name="radioMonitoringSpecified" class="custom-control-input" :value="true" x-model="monitoringData.isRedemptionCapOnly">
                                                         <label class="custom-control-label" for="isRedemptionCapOnly"></label>
                                                     </div>
                                                 </div>
@@ -549,7 +569,7 @@
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="input-group date" data-provide="datepicker">
-                                                                <input type="text" class="form-control" id="start-date">
+                                                                <input type="text" class="form-control" id="start-date" x-model="monitoringData.monitorStartDate">
                                                                 <div class="input-group-addon">
                                                                     <span class="glyphicon glyphicon-th"></span>
                                                                 </div>
@@ -560,7 +580,7 @@
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="input-group date" data-provide="datepicker">
-                                                                <input type="text" class="form-control" id="end-date">
+                                                                <input type="text" class="form-control" id="end-date" x-model="monitoringData.monitorEndDate">
                                                                 <div class="input-group-addon">
                                                                     <span class="glyphicon glyphicon-th"></span>
                                                                 </div>
@@ -574,17 +594,17 @@
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isRedemptionCapAndPeriod" name="radioMonitoringSpecified" class="custom-control-input" :value="true" x-model="redemptionData.isRedemptionCapAndPeriod">
-                                                        <label class="custom-control-label" for="isRedemptionCapAndPeriod"></label>
+                                                        <input type="radio" id="monitorPeriodRadio" name="radioMonitoringSpecified" class="custom-control-input" :value="true" x-model="monitoringData.monitorPeriodRadio">
+                                                        <label class="custom-control-label" for="monitorPeriodRadio"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-8">
                                                     <div class="row">
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" id="periodValue">
+                                                            <input type="text" class="form-control" id="periodValue" x-model="monitoringData.monitorPeriod">
                                                         </div>
-                                                        <div class="col-sm-2">
-                                                            <select id="monitorPeriodDropdown" class="form-control">
+                                                        <div class="col-sm-3">
+                                                            <select id="monitorPeriodDropdown" class="form-control" x-model="monitoringData.monitorPeriodDayMonth">
                                                                 <option value="month">Month</option>
                                                                 <option value="days">Days</option>
                                                             </select>
@@ -783,7 +803,7 @@
 
 			<br>
 			<div class="form-group">
-				<button class="btn btn-primary btn-block" id="saveConfiguration" @click="saveConfiguration()"><i class="fas fa-save"></i> Save</button>
+				<button class="btn btn-block btn-singtel" id="saveConfiguration" @click="saveConfiguration()"><i class="fas fa-save"></i> Save</button>
 			</div>
 
 		</div>
@@ -791,6 +811,26 @@
 	<div class="form-group" style="visibility: hidden">
 		<label>Message : <span id="instanceId" th:text="${instanceId}" /></label>
 	</div>
+
+    <div class="modal hide" id="successDialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-body">
+            <div id="ajax_loader">
+                <div class="alert alert-success" role="alert">
+                    Configuration saved...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal hide" id="failedDialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-body">
+            <div id="ajax_loader_danger">
+                <div class="alert alert-danger" role="alert">
+                    This is a danger alert with
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -901,6 +941,29 @@
             });
         });
         // Redemption Policy - Redemption Method Dropdown END
+
+        function closeAlertDialog() {
+            $('#successDialog').modal('hide');
+            $('#failedDialog').modal('hide');
+        }
+
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+        // Listen response message from child window
+        eventer(messageEvent,function(e) {
+            console.log('parent received message!:  ',e.data);
+            var payload = JSON.parse(e.data.payload);
+
+            $('#offerCodeId').text(payload.offerBucketCode);
+            $('#offerNameId').text(payload.offerCampaignName);
+
+            $('#statusId').text(e.data.configurationStatus);
+
+            $('#successDialog').modal();
+            setTimeout(closeAlertDialog, 1000);
+        },false);
     }
 </script>
 <!--jQUERY END-->
@@ -924,18 +987,19 @@
 			eligibilityData: null,
 			monitoringData: null,
             redemptionData: null,
-			isLoading: false,
+            type: 'directProvisioning',
             eventTypeData: 'Top-Up',
             redemptionMethod: 'AutoRedemption',
 			addNewData() {
-				this.isLoading = true;
-				fetch(PROD_URL + `offerDetail?bucketOfferId=${this.selectedBucket}&campaignOfferId=${this.selectedCampaign}`)
-					.then(res => res.json())
-					.then(data => {
-						this.offers.push(data)
-					})
-					.catch(error => console.log(error))
-					.finally()
+                if ((this.selectedBucket && this.selectedCampaign != null) && this.selectedCampaign != 'Choose...') {
+                    fetch(PROD_URL + `offerDetail?bucketOfferId=${this.selectedBucket}&campaignOfferId=${this.selectedCampaign}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            this.offers.push(data)
+                        })
+                        .catch(error => console.log(error))
+                        .finally()
+                }
 			},
 			offerBucketDropdown() {
 				this.select2 = $(this.$refs.selectBucket).select2();
@@ -946,17 +1010,15 @@
 				this.$watch("selectedBucket", (value) => {
 					this.campaignOfferDropdown();
 				});
-				this.isLoading = true;
 				fetch(PROD_URL + `offerBucket`)
 					.then(res => res.json())
 					.then(data => {
 						this.offerBucketList = data
 					})
 					.catch(error => console.log(error))
-					.finally(() => this.isLoading = false)
+					.finally()
 			},
 			campaignOfferDropdown() {
-				this.isLoading = true;
 				this.select2 = $(this.$refs.selectCampaign).select2();
 				this.select2.on("select2:select", (event) => {
 					this.selectedCampaign = event.target.value;
@@ -971,7 +1033,7 @@
 							this.campaignOfferList = data
 						})
 						.catch(error => console.log(error))
-						.finally(() => this.isLoading = false)
+						.finally()
 				}
 			},
 			removeOffer(index) {
@@ -1017,7 +1079,7 @@
                 var message = { amsAction : "save", requestId : "save" };
                 var request = { "amsAction" : "save", "requestId" : "save",
                     "payload": {
-                        "type": "Direct Provisioning",
+                        "type": this.type,
                         "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
                             return {
                                 offerBucketId: item.offerBucketId,
@@ -1037,22 +1099,33 @@
                             "offerLevelCapPeriodValue": this.eligibilityData.offerLevelCapPeriodValue
                         },
                         "offerMonitoring": {
-                            "eventType": "",
-                            "usageServiceType": "",
-                            "productPackage": "",
-                            "creditMethod": "",
-                            "operatorId": "",
-                            "periodDays": "",
-                            "periodStartDate": "",
-                            "periodEndDate": "",
-                            "topupCode": "",
-                            "usageType": "",
-                            "transactionValue": "",
-                            "operatorValue": "",
-                            "paidArpuOperator": "",
-                            "paidArpuValue": "",
-                            "isMonitorDateRange": "",
-                            "isMonitorSpecificPeriod": ""
+                            "eventType": this.eventTypeData,
+                            "topUpCreditMethod": this.monitoringData.topUpCreditMethod,
+                            "topUpProductPackage": this.monitoringData.topUpProductPackage,
+                            "topUpUsageServiceType": this.monitoringData.topUpUsageServiceType,
+                            "topUpValueOperator": this.monitoringData.topUpValueOperator,
+                            "topUpOperator": this.monitoringData.topUpOperator,
+                            "topUpTransactionValue": this.monitoringData.topUpTransactionValue,
+                            "topUpCode": this.monitoringData.topUpCode,
+                            "arpuCreditMethod": this.monitoringData.arpuCreditMethod,
+                            "arpuProductPackage": this.monitoringData.arpuProductPackage,
+                            "arpuUsageServiceType": this.monitoringData.arpuUsageServiceType,
+                            "arpuOperatorsValue": this.monitoringData.arpuOperatorsValue,
+                            "arpuTopUpCode": this.monitoringData.arpuTopUpCode,
+                            "arpuOperators": this.monitoringData.arpuOperators,
+                            "arpu": this.monitoringData.arpu,
+                            "arpuPaidOperators": this.monitoringData.arpuPaidOperators,
+                            "arpuPaidTopUp": this.monitoringData.arpuPaidTopUp,
+                            "usageServiceType": this.monitoringData.usageServiceType,
+                            "usageType": this.monitoringData.usageType,
+                            "usageOperator": this.monitoringData.usageOperator,
+                            "usageValue": this.monitoringData.usageValue,
+                            "monitorSpecifiedPeriodRadio": this.monitoringData.monitorSpecifiedPeriodRadio,
+                            "monitorStartDate": this.monitoringData.monitorStartDate,
+                            "monitorEndDate": this.monitoringData.monitorEndDate,
+                            "monitorPeriodRadio": this.monitoringData.monitorPeriodRadio,
+                            "monitorPeriod": this.monitoringData.monitorPeriod,
+                            "monitorPeriodDayMonth": this.monitoringData.monitorPeriodDayMonth
                         },
                         "offerRedemption": {
                             "isRedemptionCapOnly": this.redemptionData.isRedemptionCapOnly,
@@ -1080,7 +1153,7 @@
                     },
                     "notification": "true"
                 };
-                console.log(request);
+                // console.log(request);
                 window.parent.postMessage(request,'*');
             },
 		};
