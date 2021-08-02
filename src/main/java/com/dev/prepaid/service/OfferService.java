@@ -3,10 +3,7 @@ package com.dev.prepaid.service;
 import java.util.List;
 
 import com.dev.prepaid.domain.*;
-import com.dev.prepaid.model.configuration.OfferEligibility;
-import com.dev.prepaid.model.configuration.OfferMonitoring;
-import com.dev.prepaid.model.configuration.OfferRedemption;
-import com.dev.prepaid.model.configuration.OfferSelection;
+import com.dev.prepaid.model.configuration.*;
 
 
 public interface OfferService {
@@ -27,6 +24,6 @@ public interface OfferService {
 
 	public List<PrepaidCxOfferSelection> getOfferSelection(String instanceId);
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId);
-	public PrepaidCxOfferMonitoring getOfferMonitoring(String instanceId);
+	public OfferFulfilment getOfferMonitoring(String instanceId);
 	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId);
 }

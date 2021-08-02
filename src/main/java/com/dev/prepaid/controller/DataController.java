@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.configuration.OfferFulfilment;
 import com.dev.prepaid.model.configuration.OfferSelection;
 import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -311,7 +312,7 @@ public class DataController {
 		return offerService.getOfferEligibility(instanceId);
 	}
 	@GetMapping(value = "offerMonitoring")
-	public PrepaidCxOfferMonitoring getOfferMonitoring(@RequestParam(value = "instanceId", required = false) String instanceId){
+	public OfferFulfilment getOfferMonitoring(@RequestParam(value = "instanceId", required = false) String instanceId){
 		return offerService.getOfferMonitoring(instanceId);
 	}
 	@GetMapping(value = "offerRedemption")
