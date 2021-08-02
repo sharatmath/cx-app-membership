@@ -468,7 +468,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Usage</label>
                                                     <div class="col-sm-5">
-                                                        <select id="usageOperatorsDropdown" class="form-control" x-model="monitoringData.usageOperators">
+                                                        <select id="usageOperatorsDropdown" class="form-control" x-model="monitoringData.usageOperator">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -568,8 +568,8 @@
                                                             Start Date
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <div class="input-group date" data-provide="datepicker">
-                                                                <input type="text" class="form-control" id="start-date" x-model="monitoringData.monitorStartDate">
+                                                            <div class="input-group date" data-provider="datepicker">
+                                                                <input type="datetime-local" class="form-control" id="start-date" x-model="monitoringData.monitorStartDate">
                                                                 <div class="input-group-addon">
                                                                     <span class="glyphicon glyphicon-th"></span>
                                                                 </div>
@@ -579,8 +579,8 @@
                                                             End Date
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <div class="input-group date" data-provide="datepicker">
-                                                                <input type="text" class="form-control" id="end-date" x-model="monitoringData.monitorEndDate">
+                                                            <div class="input-group date" data-provider="datepicker">
+                                                                <input type="datetime-local" class="form-control" id="end-date" x-model="monitoringData.monitorEndDate">
                                                                 <div class="input-group-addon">
                                                                     <span class="glyphicon glyphicon-th"></span>
                                                                 </div>
