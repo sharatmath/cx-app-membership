@@ -143,7 +143,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferConfig = prepaidCxOfferConfigRepository.save(opsFind.get());
 
 			if(prepaidCxOfferConfig.getId() != null){
-				if(!saveConfigRequest.getPayload().getOfferSelections().isEmpty()) {
+				if(saveConfigRequest.getPayload().getOfferSelections() !=null ) {
 					saveOfferSelection(prepaidCxOfferConfig.getId(), saveConfigRequest);
 				}
 				if(saveConfigRequest.getPayload().getOfferEligibility() != null) {
