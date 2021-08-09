@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>CONFIGURE PROVISIONING MEMBERSHIP</title>
+    <title>CONFIGURE OFFER & AUDIENCE SELECTION</title>
 
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
@@ -164,7 +164,7 @@
 		<div class="col-md-12 mt-12 card">
 
 				<div class="form-group">
-					<h4 class="mt-3"><img src="https://cdn1.singteldigital.com/content/dam/singtel/online-draft/singtel_logo_coloured.png" style="max-height: 64px;"> Configure Provisioning Membership</h4>
+					<h4 class="mt-3"><img src="https://cdn1.singteldigital.com/content/dam/singtel/online-draft/singtel_logo_coloured.png" style="max-height: 64px;"> Configure Offer & Audience Selection</h4>
 				</div>
 
 				<div class="form-group">
@@ -184,7 +184,7 @@
 							<div id="offerSelectionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseOne"><h5><i class="fa fa-plus"></i> Offer Selection - Required</h5></div>
 						</div>
 						<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#directProvisioning">
-							<div class="card-body">
+							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment'">
                                 <div>
                                     <form class="form-inline">
                                         <label for="offerBucket" class="my-1 mr-2">Offer Bucket</label>
@@ -307,7 +307,7 @@
 							<div id="eligibilityPolicyAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseThree"><h5><i class="fa fa-plus"></i> Eligibility Policy - Optional</h5></div>
 						</div>
 						<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#directProvisioning">
-							<div class="card-body">
+							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment'">
 								<b>Subscriber Offer Eligibility - For Configured Offer</b><br><br>
 								<template x-if="eligibilityData">
                                     <div>
@@ -376,13 +376,13 @@
 							<div id="fulfillmentAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseFour"><h5><i class="fa fa-plus"></i> Fullfilment Monitoring Policy - Not Applicable</h5></div>
 						</div>
 						<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#directProvisioning">
-                            <div class="card-body">
+                            <div class="card-body"x-show="type === 'offerMonitoringWithAssignment' || type === 'offerMonitoring'">
                                 <template x-if="monitoringData">
                                     <div>
                                         <div class="form-group">
                                             <label for="eventTypeData">Event Type : </label>
                                             <div class="form-group d-flex justify-content-between">
-                                                <select id="eventTypeData" class="form-control" x-model="eventTypeData">
+                                                <select :disabled="type === 'directProvisioning'" id="eventTypeData" class="form-control" x-model="eventTypeData">
                                                     <option value="Top-Up">Top-Up</option>
                                                     <option value="Usage">Usage</option>
                                                     <option value="ARPU">ARPU</option>
@@ -706,7 +706,7 @@
 							<div id="redemptionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseFive"><h5><i class="fa fa-plus"></i> Redemption Policy - Required</h5></div>
 						</div>
 						<div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#directProvisioning">
-							<div class="card-body">
+							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment'">
                                 <template x-if="redemptionData">
                                     <div>
                                         <div id="redemptionCapForm">
@@ -1055,8 +1055,8 @@
 
 <!--AlpineJS BEGIN-->
 <script>
-	const INSTANCE_ID = $("#instanceId").text();
-	// const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
+	// const INSTANCE_ID = $("#instanceId").text();
+	const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
 	const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
 
 	function configureMembership() {
