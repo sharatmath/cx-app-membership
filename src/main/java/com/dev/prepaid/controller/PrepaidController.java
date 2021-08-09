@@ -102,13 +102,15 @@ public class PrepaidController {
 //			String offerBucketType = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(0);
 //			String bucketOfferId = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(1);
 
-		request.getPayload().getOfferSelections().stream().forEach(o ->
-				o.setOfferBucketType(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(0))
-		);
+		if(request.getPayload().getOfferSelections() != null) {
+			request.getPayload().getOfferSelections().stream().forEach(o ->
+					o.setOfferBucketType(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(0))
+			);
 
-		request.getPayload().getOfferSelections().stream().forEach(o ->
-				o.setOfferBucketId(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(1))
-		);
+			request.getPayload().getOfferSelections().stream().forEach(o ->
+					o.setOfferBucketId(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(1))
+			);
+		}
 
 		log.debug(request.getPayload().toString());
 		prepaidCxService.appConfigurationAddEntity(request);
