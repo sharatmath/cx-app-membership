@@ -25,13 +25,13 @@ public class PrepaidCxOfferRedemption extends Auditable{
     private Long redemptionCapValue;
     private Boolean isRedemptionCapAndPeriod;
     private Long totalRedemptionPeriodValue;
-    private String totalRedemptionPeriodEvery;
+    private Long totalRedemptionPeriodEvery;
     private Boolean isFrequencyOnly;
     private Boolean isFrequencyAndTime;
     private Long frequencyValue;
     private Long timePeriodValue;
     private String timePeriodType;
-    private String timePeriodEvery;
+    private Long timePeriodEvery;
     private String totalRedemptionPeriodType;
     private Long totalRecurringFrequency;
     private Boolean isRecurringFrequencyAndPeriod;
