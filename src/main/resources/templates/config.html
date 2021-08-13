@@ -1080,7 +1080,11 @@
             subscriberRedemptionCapRadio: null,
             recurringRedemptionRadio: null,
 			addNewData() {
-                if ((this.selectedBucket && this.selectedCampaign != null) && this.selectedCampaign != 'Choose...') {
+			    let campaignID = this.selectedCampaign;
+			    let data = JSON.parse(JSON.stringify(this.offers));
+			    let duplicateData = data.find(val => val.offerCampaignId == campaignID);
+
+                if ((this.selectedBucket && this.selectedCampaign != null) && this.selectedCampaign != 'Choose...' && !duplicateData) {
                     fetch(PROD_URL + `offerDetail?bucketOfferId=${this.selectedBucket}&campaignOfferId=${this.selectedCampaign}`)
                         .then(res => res.json())
                         .then(data => {
