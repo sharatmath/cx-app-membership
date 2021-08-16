@@ -143,7 +143,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferConfig = prepaidCxOfferConfigRepository.save(opsFind.get());
 
 			if(prepaidCxOfferConfig.getId() != null){
-				if(!saveConfigRequest.getPayload().getOfferSelections().isEmpty()) {
+				if(saveConfigRequest.getPayload().getOfferSelections() != null) {
 					saveOfferSelection(prepaidCxOfferConfig.getId(), saveConfigRequest);
 				}
 				if(saveConfigRequest.getPayload().getOfferEligibility() != null) {
@@ -272,6 +272,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.build();
 		}
 		prepaidCxOfferMonitoring.setEventType(saveConfigRequest.getPayload().getOfferMonitoring().getEventType());
+		prepaidCxOfferMonitoring.setEventCampaignName(saveConfigRequest.getPayload().getOfferMonitoring().getEventCampaignName());
+		prepaidCxOfferMonitoring.setEventStartDate(saveConfigRequest.getPayload().getOfferMonitoring().getEventStartDate());
+		prepaidCxOfferMonitoring.setEventEndDate(saveConfigRequest.getPayload().getOfferMonitoring().getEventEndDate());
 		//monitoring
 		if(true == saveConfigRequest.getPayload().getOfferMonitoring().getMonitorSpecifiedPeriodRadio()) {
 			prepaidCxOfferMonitoring.setIsMonitorSpecificPeriod(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorSpecifiedPeriodRadio());

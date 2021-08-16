@@ -15,6 +15,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class OfferFulfilment {
     @SerializedName("eventType") private String eventType;
+    @SerializedName("eventCampaignName") private String eventCampaignName;
+    @SerializedName("eventStartDate") private Date eventStartDate;
+    @SerializedName("eventEndDate") private Date eventEndDate;
 
     @SerializedName("topupCreditMethod") private String topUpCreditMethod;
     @SerializedName("topupProductPackage") private String topUpProductPackage;

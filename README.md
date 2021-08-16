@@ -362,3 +362,23 @@ CREATE TABLE PREPAID_PROVISIONED_OFFER(
 ```
 
 
+
+##  History
+```sh
+#Date 2021-08-16
+#1 Data Model | Alter table prepaid_cx_offer_monitoring
+  add column event_campaign_name
+  add column event_start_date
+  add column event_end_date
+
+#2 Java | 
+  PrepaidCxOfferMonitoring.java
+  add field String eventCampaignName;
+  add field String eventStartDate;
+  add field String eventEndDate;
+  
+#3 Offer Monitoring Logic
+  OfferMonitoringServiceImpl.java
+  pointing after applu policy to redemption process/ queue
+  
+```

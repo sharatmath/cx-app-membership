@@ -21,6 +21,9 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private Long id;
     private String offerConfigId;
     private String eventType;
+    private String eventCampaignName;
+    private Date eventStartDate;
+    private Date eventEndDate;
     private String usageServiceType;
     private String productPackage;
     private String creditMethod;
