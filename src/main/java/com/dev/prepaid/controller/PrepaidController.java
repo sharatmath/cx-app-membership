@@ -98,6 +98,10 @@ public class PrepaidController {
 	public SaveConfigResponse saveConfiguration(@RequestBody SaveConfigRequest request) throws Exception{ //Config config
 		log.info("saveconfiguration call");
 		log.info(GsonUtils.deserializeObjectToJSON(request));
+
+//			String offerBucketType = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(0);
+//			String bucketOfferId = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(1);
+
 		if(request.getPayload().getOfferSelections() != null) {
 			request.getPayload().getOfferSelections().stream().forEach(o ->
 					o.setOfferBucketType(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(0))
