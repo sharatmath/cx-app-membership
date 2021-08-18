@@ -143,7 +143,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferConfig = prepaidCxOfferConfigRepository.save(opsFind.get());
 
 			if(prepaidCxOfferConfig.getId() != null){
-				if(!saveConfigRequest.getPayload().getOfferSelections().isEmpty()) {
+				if(saveConfigRequest.getPayload().getOfferSelections() !=null ) {
 					saveOfferSelection(prepaidCxOfferConfig.getId(), saveConfigRequest);
 				}
 				if(saveConfigRequest.getPayload().getOfferEligibility() != null) {
@@ -324,11 +324,13 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferRedemption.setRedemptionCapValue(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionCapValue());
 			prepaidCxOfferRedemption.setIsRedemptionCapAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRedemptionCapAndPeriod());
 			prepaidCxOfferRedemption.setTotalRedemptionPeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodValue());
+			prepaidCxOfferRedemption.setTotalRedemptionPeriodEvery(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodEvery());
 			prepaidCxOfferRedemption.setIsFrequencyOnly(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyOnly());
 			prepaidCxOfferRedemption.setIsFrequencyAndTime(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyAndTime());
 			prepaidCxOfferRedemption.setFrequencyValue(saveConfigRequest.getPayload().getOfferRedemption().getFrequencyValue());
 			prepaidCxOfferRedemption.setTimePeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodValue());
 			prepaidCxOfferRedemption.setTimePeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodType());
+			prepaidCxOfferRedemption.setTimePeriodEvery(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodEvery());
 			prepaidCxOfferRedemption.setTotalRedemptionPeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodType());
 			prepaidCxOfferRedemption.setTotalRecurringFrequency(saveConfigRequest.getPayload().getOfferRedemption().getTotalRecurringFrequency());
 			prepaidCxOfferRedemption.setIsRecurringFrequencyAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod());
@@ -347,11 +349,13 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.redemptionCapValue(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionCapValue())
 					.isRedemptionCapAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRedemptionCapAndPeriod())
 					.totalRedemptionPeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodValue())
+					.totalRedemptionPeriodEvery(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodEvery())
 					.isFrequencyOnly(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyOnly())
 					.isFrequencyAndTime(saveConfigRequest.getPayload().getOfferRedemption().getIsFrequencyAndTime())
 					.frequencyValue(saveConfigRequest.getPayload().getOfferRedemption().getFrequencyValue())
 					.timePeriodValue(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodValue())
 					.timePeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodType())
+					.timePeriodEvery(saveConfigRequest.getPayload().getOfferRedemption().getTimePeriodEvery())
 					.totalRedemptionPeriodType(saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodType())
 					.totalRecurringFrequency(saveConfigRequest.getPayload().getOfferRedemption().getTotalRecurringFrequency())
 					.isRecurringFrequencyAndPeriod(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod())
