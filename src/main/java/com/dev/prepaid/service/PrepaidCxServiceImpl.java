@@ -158,6 +158,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 				if(saveConfigRequest.getPayload().getOfferRedemption() != null) {
 					saveOfferRedemption(prepaidCxOfferConfig.getId(), saveConfigRequest);
 				}
+				if(saveConfigRequest.getPayload().getOfferEventCondition() != null){
+					saveOfferEventCondition(prepaidCxOfferConfig.getId(), saveConfigRequest);
+				}
 			}
 
 //			for(OfferSelection offerSelection : saveConfigRequest.getPayload().getOfferSelections()) {
@@ -412,7 +415,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferEventCondition.setArpuOp(saveConfigRequest.getPayload().getOfferEventCondition().getArpuOp());
 			prepaidCxOfferEventCondition.setArpuValue(saveConfigRequest.getPayload().getOfferEventCondition().getArpuValue());
 			prepaidCxOfferEventCondition.setAggregationPeriodDays(saveConfigRequest.getPayload().getOfferEventCondition().getAggregationPeriodDays());
-			//arpu
+			prepaidCxOfferEventCondition.setArpuSelectedTopUpCode(saveConfigRequest.getPayload().getOfferEventCondition().getArpuSelectedTopUpCode());
 
 		}else if("Usage".equals(prepaidCxOfferEventCondition.getEventConditionType())){
 			prepaidCxOfferEventCondition.setUsageServiceType(saveConfigRequest.getPayload().getOfferEventCondition().getUsageServiceType());

@@ -34,10 +34,10 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private String topupCode;
 
     private String topupCurBalanceOp;
-    private String topupCurBalanceValue;
+    private Long topupCurBalanceValue;
 
     private String topupAccBalanceBeforeOp;
-    private String topupAccBalanceBeforeValue;
+    private Long topupAccBalanceBeforeValue;
 
     private String topupOp;
     private Long topupTransactionValue;
@@ -49,13 +49,13 @@ public class PrepaidCxOfferEventCondition extends Auditable{
 
     private Long eventTypeUsages;
     private String eventUsagesOp;
-    private String eventUsagesValue;
-    private String aggregationPeriodDays;
+    private Long eventUsagesValue;
+    private Integer aggregationPeriodDays;
 
     private String countryCode;
 
     private String arpuType;
     private String arpuOp;
-    private String arpuValue;
-    private String arpuSelectedCode;
+    private Long arpuValue;
+    private String arpuSelectedTopUpCode;
 }

@@ -35,12 +35,12 @@ public class EventCondition {
     @SerializedName("topupCurBalanceOp")
     private String topupCurBalanceOp;
     @SerializedName("topupCurBalanceValue")
-    private String topupCurBalanceValue;
+    private Long topupCurBalanceValue;
 
     @SerializedName("topupAccBalanceBeforeOp")
     private String topupAccBalanceBeforeOp;
     @SerializedName("topupAccBalanceBeforeValue")
-    private String topupAccBalanceBeforeValue;
+    private Long topupAccBalanceBeforeValue;
 
     @SerializedName("topupOp")
     private String topupOp;
@@ -61,9 +61,9 @@ public class EventCondition {
     @SerializedName("eventUsagesOp")
     private String eventUsagesOp;
     @SerializedName("eventUsagesValue")
-    private String eventUsagesValue;
+    private Long eventUsagesValue;
     @SerializedName("aggregationPeriodDays")
-    private String aggregationPeriodDays;
+    private Integer aggregationPeriodDays;
 
     @SerializedName("countryCode")
     private String countryCode;
@@ -73,7 +73,7 @@ public class EventCondition {
     @SerializedName("arpuOp")
     private String arpuOp;
     @SerializedName("arpuValue")
-    private String arpuValue;
-    @SerializedName("arpuSelectedCode")
-    private String arpuSelectedCode;
+    private Long arpuValue;
+    @SerializedName("arpuSelectedTopUpCode")
+    private String arpuSelectedTopUpCode;
 }
