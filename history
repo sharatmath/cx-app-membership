@@ -1,0 +1,11 @@
+history
+changes 20210818 update UI
+	#1 Offer Eligibility
+		add field exclude_program_id
+	#2 API List Get Program Id And Program Name
+	#3 Event Condition new == > save config by InstanceId
+		eventCondition :{
+		}
+		
+	#4 AP Get Event Condition by InstanceId
+		

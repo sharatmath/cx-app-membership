@@ -55,7 +55,8 @@ public class OfferServiceImpl implements OfferService {
 	private PrepaidCxOfferMonitoringRepository prepaidCxOfferMonitoringRepository;
 	@Autowired
 	private PrepaidCxOfferRedemptionRepository prepaidCxOfferRedemptionRepository;
-
+	@Autowired
+	private PrepaidCxOfferEventConditionRepository prepaidCxOfferEventConditionRepository;
 	@Override
 	public void evictAllCaches() {
 		//clear caches
@@ -157,6 +158,15 @@ public class OfferServiceImpl implements OfferService {
 		}
 		return null;
 	}
+	public PrepaidCxOfferEventCondition getOfferEventCondition(String instanceId){
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			Optional<PrepaidCxOfferEventCondition> opsFind = prepaidCxOfferEventConditionRepository.findByOfferConfigId(offerConfig.get().getId());
+			if(opsFind.isPresent())
+				return opsFind.get();
+		}
+		return new PrepaidCxOfferEventCondition();
+	}
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
@@ -226,6 +236,14 @@ public class OfferServiceImpl implements OfferService {
 				return opsFind.get();
 		}
 		return new PrepaidCxOfferRedemption();
+	}
+
+	public List<ResponSysProgram> listProgram() {
+		List<ResponSysProgram> list = new ArrayList<>();
+		for(PrepaidCxOfferConfig d : prepaidCxOfferConfigRepository.findAll()){
+			list.add(new ResponSysProgram(String.valueOf(d.getProgramId()), d.getProgramName()));
+		}
+		return list;
 	}
 
 }
