@@ -1,11 +1,242 @@
 history
 changes 20210818 update UI
-	#1 Offer Eligibility
-		add field exclude_program_id
-	#2 API List Get Program Id And Program Name
-	#3 Event Condition new == > save config by InstanceId
-		eventCondition :{
-		}
-		
-	#4 AP Get Event Condition by InstanceId
-		
+#1 Offer Eligibility
+	add field exclude_program_id
+
+
+#2 API List Get Program Id And Program Name
+request
+curl -X GET --header 'Accept: application/json' 'http://ip:port/data/listProgram'
+
+response
+
+[
+  {
+    "programId": "3774508",
+    "programName": null
+  },
+  {
+    "programId": "3774508",
+    "programName": null
+  }
+]
+
+#3 Event Condition new == > save config by InstanceId
+	{
+	  "instanceUuid": "e9407d99-0c21-491c-a842-4c5b69973569",
+	  "payload": { 
+	    "offerEventCondition": {
+	      "aggregationPeriodDays": 0,
+	      "arpuOp": "Less Than",
+	      "arpuSelectedTopUpCode": "Selected",
+	      "arpuType": "Data",
+	      "arpuValue": 11110,
+	      "campaignEndDate": "2021-08-18T10:33:57.022Z",
+	      "campaignStartDate": "2021-08-18T10:33:57.022Z",
+	      "countryCode": "string",
+	      "creditMethod": "string",
+	      "eventConditionName": "TestName",
+	      "eventConditionType": "ARPU",
+	      "eventTypeUsages": 0,
+	      "eventUsagesOp": "string",
+	      "eventUsagesValue": 0,
+	      "operatorId": "string",
+	      "topUpAccBalanceBeforeOp": "string",
+	      "topUpAccBalanceBeforeValue": 0,
+	      "topUpCode": "string",
+	      "topUpCurBalanceOp": "string",
+	      "topUpCurBalanceValue": 0,
+	      "topUpDaBalanceOp": "string",
+	      "topUpDaBalanceValue": 0,
+	      "topUpDaId": "string",
+	      "topUpOp": "string",
+	      "topUpTempServiceClass": "string",
+	      "topUpTransactionValue": 0,
+	      "usageServiceType": "string"
+	    },
+	    "programId": "1",
+	    "programName": "Test",
+	    "type": "string",
+	    "uuid": "string"
+	  }
+	}
+	
+#4 AP Get Event Condition by InstanceId
+
+request
+parameter instanceId
+
+curl -X GET --header 'Accept: application/json' 'http://localhost:8090/data/offerEventCondition?instanceId=e9407d99-0c21-491c-a842-4c5b69973569'
+
+
+response
+
+{
+  "id": 1,
+  "offerConfigId": "90da14c5-16f6-4b0b-86d9-c4dfded2e77f",
+  "campaignStartDate": "2021-08-18T10:33:57.000+00:00",
+  "campaignEndDate": "2021-08-18T10:33:57.000+00:00",
+  "eventConditionName": "TestName",
+  "eventConditionType": "ARPU",
+  "creditMethod": null,
+  "usageServiceType": null,
+  "operatorId": "string",
+  "topUpCode": null,
+  "topUpCurBalanceOp": null,
+  "topUpCurBalanceValue": null,
+  "topUpAccBalanceBeforeOp": null,
+  "topUpAccBalanceBeforeValue": null,
+  "topUpOp": null,
+  "topUpTransactionValue": null,
+  "topUpDaId": null,
+  "topUpDaBalanceOp": null,
+  "topUpDaBalanceValue": null,
+  "topUpTempServiceClass": null,
+  "eventTypeUsages": null,
+  "eventUsagesOp": null,
+  "eventUsagesValue": null,
+  "aggregationPeriodDays": 0,
+  "countryCode": null,
+  "arpuType": "Data",
+  "arpuOp": "Less Than",
+  "arpuValue": 11110,
+  "arpuSelectedTopUpCode": "Selected"
+}
+
+#5 Offer Monitoring 
+
+// Usage save configuration
+
+{
+  "instanceUuid": "e9407d99-0c21-491c-a842-4c5b69973569",
+  "payload": {
+    "notification": true,
+    "offerMonitoring": {
+      "countryCode": "string",
+      "eventType": "Usage",
+      "monitorEndDate": "2021-08-18T14:04:53.612Z",
+      "monitorPeriod": 0,
+      "monitorPeriodDayMonth": "string",
+      "monitorPeriodRadio": true,
+      "monitorSpecifiedPeriodRadio": true,
+      "monitorStartDate": "2021-08-18T14:04:53.612Z",
+      "usageOperator": "Less Than",
+      "usageServiceType": "Usage",
+      "usageType": "Type",
+      "usageValue": 0
+    },
+    "programId": "1",
+    "programName": "Name",
+    "type": "Direct Prov",
+    "uuid": "string"
+  }
+}
+
+request
+curl -X GET --header 'Accept: application/json' 'http://localhost:8090/data/offerMonitoring?instanceId=e9407d99-0c21-491c-a842-4c5b69973569'
+response
+
+{
+  "eventType": "Usage",
+  "topUpCreditMethod": null,
+  "topUpUsageServiceType": null,
+  "topUpOperator": null,
+  "topUpCode": null,
+  "topUpCurBalanceOp": null,
+  "topUpCurBalanceValue": null,
+  "topUpAccBalanceBeforeOp": null,
+  "topUpAccBalanceBeforeValue": null,
+  "topUpOp": null,
+  "topUpTransactionValue": null,
+  "topUpDaId": null,
+  "topUpDaBalanceOp": null,
+  "topUpDaBalanceValue": null,
+  "topUpTempServiceClass": null,
+  "operatorId": null,
+  "arpuType": null,
+  "arpuSelectedTopUpCode": null,
+  "arpuOp": null,
+  "arpuValue": null,
+  "usageServiceType": "Usage",
+  "usageType": "Type",
+  "usageOperator": "Less Than",
+  "usageValue": 0,
+  "countryCode": "string",
+  "monitorSpecifiedPeriodRadio": true,
+  "monitorStartDate": "2021-08-18T14:04:53.000+00:00",
+  "monitorEndDate": "2021-08-18T14:04:53.000+00:00",
+  "monitorPeriodRadio": true,
+  "monitorPeriod": 0,
+  "monitorPeriodDayMonth": "string"
+}
+
+
+
+//APRU save configuration
+
+{
+  "instanceUuid": "e9407d99-0c21-491c-a842-4c5b69973569",
+  "payload": {
+    "notification": true,
+    "offerMonitoring": {
+      "arpuOp": "Less Than",
+      "arpuSelectedTopUpCode": "131431,232324",
+      "arpuType": "Type",
+      "arpuValue": "0331313",
+      "eventType": "ARPU",
+      "monitorEndDate": "2021-08-18T14:04:53.612Z",
+      "monitorPeriod": 0,
+      "monitorPeriodDayMonth": "string",
+      "monitorPeriodRadio": true,
+      "monitorSpecifiedPeriodRadio": true,
+      "monitorStartDate": "2021-08-18T14:04:53.612Z"
+    },
+    "programId": "1",
+    "programName": "Name",
+    "type": "Direct",
+    "uuid": "string"
+  }
+}
+
+request
+curl -X GET --header 'Accept: application/json' 'http://localhost:8090/data/offerMonitoring?instanceId=e9407d99-0c21-491c-a842-4c5b69973569'
+response
+{
+  "eventType": "ARPU",
+  "topUpCreditMethod": null,
+  "topUpUsageServiceType": null,
+  "topUpOperator": null,
+  "topUpCode": null,
+  "topUpCurBalanceOp": null,
+  "topUpCurBalanceValue": null,
+  "topUpAccBalanceBeforeOp": null,
+  "topUpAccBalanceBeforeValue": null,
+  "topUpOp": null,
+  "topUpTransactionValue": null,
+  "topUpDaId": null,
+  "topUpDaBalanceOp": null,
+  "topUpDaBalanceValue": null,
+  "topUpTempServiceClass": null,
+  "operatorId": null,
+  "arpuType": "Type",
+  "arpuSelectedTopUpCode": "131431,232324",
+  "arpuOp": "Less Than",
+  "arpuValue": 331313,
+  "usageServiceType": null,
+  "usageType": null,
+  "usageOperator": null,
+  "usageValue": null,
+  "countryCode": null,
+  "monitorSpecifiedPeriodRadio": true,
+  "monitorStartDate": "2021-08-18T14:04:53.000+00:00",
+  "monitorEndDate": "2021-08-18T14:04:53.000+00:00",
+  "monitorPeriodRadio": true,
+  "monitorPeriod": 0,
+  "monitorPeriodDayMonth": "string"
+}
+
+
+
+
+
+				

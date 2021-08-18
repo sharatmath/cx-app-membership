@@ -12,68 +12,41 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventCondition {
-    @SerializedName("campaignStartDate")
-    private Date campaignStartDate;
-    @SerializedName("campaignEndDate")
-    private Date campaignEndDate;
-    @SerializedName("eventConditionName")
-    private String eventConditionName;
-    @SerializedName("eventConditionType")
-    private String eventConditionType;
+    @SerializedName("campaignStartDate") private Date campaignStartDate;
+    @SerializedName("campaignEndDate") private  Date campaignEndDate;
+    @SerializedName("eventConditionName") private  String eventConditionName;
+    @SerializedName("eventConditionType") private  String eventConditionType;
 
-    @SerializedName("creditMethod")
-    private String creditMethod;
-    @SerializedName("usageServiceType")
-    private String usageServiceType;
-    @SerializedName("operatorId")
-    private String operatorId;
+    @SerializedName("creditMethod") private  String creditMethod;
+    @SerializedName("usageServiceType") private  String usageServiceType;
+    @SerializedName("operatorId") private  String operatorId;
 
-    @SerializedName("topupCode")
-    private String topupCode;
+    @SerializedName("topupCode") private  String topUpCode;
 
 
-    @SerializedName("topupCurBalanceOp")
-    private String topupCurBalanceOp;
-    @SerializedName("topupCurBalanceValue")
-    private Long topupCurBalanceValue;
+    @SerializedName("topupCurBalanceOp") private  String topUpCurBalanceOp;
+    @SerializedName("topupCurBalanceValue") private  Long topUpCurBalanceValue;
 
-    @SerializedName("topupAccBalanceBeforeOp")
-    private String topupAccBalanceBeforeOp;
-    @SerializedName("topupAccBalanceBeforeValue")
-    private Long topupAccBalanceBeforeValue;
+    @SerializedName("topupAccBalanceBeforeOp") private  String topUpAccBalanceBeforeOp;
+    @SerializedName("topupAccBalanceBeforeValue") private  Long topUpAccBalanceBeforeValue;
 
-    @SerializedName("topupOp")
-    private String topupOp;
-    @SerializedName("topupTransactionValue")
-    private Long topupTransactionValue;
+    @SerializedName("topupOp") private  String topUpOp;
+    @SerializedName("topupTransactionValue") private  Long topUpTransactionValue;
 
-    @SerializedName("topupDaId")
-    private String topupDaId;
-    @SerializedName("topupDaBalanceOp")
-    private String topupDaBalanceOp;
-    @SerializedName("topupDaBalanceValue")
-    private Long topupDaBalanceValue;
-    @SerializedName("topupTempServiceClass")
-    private String topupTempServiceClass;
+    @SerializedName("topupDaId") private  String topUpDaId;
+    @SerializedName("topupDaBalanceOp") private  String topUpDaBalanceOp;
+    @SerializedName("topupDaBalanceValue") private  Long topUpDaBalanceValue;
+    @SerializedName("topupTempServiceClass") private  String topUpTempServiceClass;
 
-    @SerializedName("eventTypeUsages")
-    private Long eventTypeUsages;
-    @SerializedName("eventUsagesOp")
-    private String eventUsagesOp;
-    @SerializedName("eventUsagesValue")
-    private Long eventUsagesValue;
-    @SerializedName("aggregationPeriodDays")
-    private Integer aggregationPeriodDays;
+    @SerializedName("eventTypeUsages") private  Long eventTypeUsages;
+    @SerializedName("eventUsagesOp") private  String eventUsagesOp;
+    @SerializedName("eventUsagesValue") private  Long eventUsagesValue;
+    @SerializedName("aggregationPeriodDays") private  Integer aggregationPeriodDays;
 
-    @SerializedName("countryCode")
-    private String countryCode;
+    @SerializedName("countryCode") private  String countryCode;
 
-    @SerializedName("arpuType")
-    private String arpuType;
-    @SerializedName("arpuOp")
-    private String arpuOp;
-    @SerializedName("arpuValue")
-    private Long arpuValue;
-    @SerializedName("arpuSelectedTopUpCode")
-    private String arpuSelectedTopUpCode;
+    @SerializedName("arpuType") private  String arpuType;
+    @SerializedName("arpuOp") private  String arpuOp;
+    @SerializedName("arpuValue") private  Long arpuValue;
+    @SerializedName("arpuSelectedTopUpCode") private  String arpuSelectedTopUpCode;
 }

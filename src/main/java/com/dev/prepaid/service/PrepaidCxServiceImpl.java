@@ -292,30 +292,35 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 		if("Top-Up".equals(prepaidCxOfferMonitoring.getEventType())){
 			prepaidCxOfferMonitoring.setCreditMethod(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCreditMethod());
-			prepaidCxOfferMonitoring.setProductPackage(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpProductPackage());
 			prepaidCxOfferMonitoring.setUsageServiceType(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpUsageServiceType());
 			prepaidCxOfferMonitoring.setOperatorId(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpOperator());
-			prepaidCxOfferMonitoring.setOperatorValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpValueOperator());
-			prepaidCxOfferMonitoring.setTransactionValue(Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue()));
-			prepaidCxOfferMonitoring.setTopupCode(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCode());
+			prepaidCxOfferMonitoring.setTopUpCode(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCode());
+
+			prepaidCxOfferMonitoring.setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
+			prepaidCxOfferMonitoring.setTopUpCurBalanceValue(Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue()));
+			prepaidCxOfferMonitoring.setTopUpAccBalanceBeforeOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpAccBalanceBeforeOp());
+			prepaidCxOfferMonitoring.setTopUpAccBalanceBeforeValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpAccBalanceBeforeValue());
+			prepaidCxOfferMonitoring.setTopUpOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpOp());
+			prepaidCxOfferMonitoring.setTopUpTransactionValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue());
+			prepaidCxOfferMonitoring.setTopUpDaId(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaId());
+			prepaidCxOfferMonitoring.setTopUpDaBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceOp());
+			prepaidCxOfferMonitoring.setTopUpDaBalanceValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceValue());
+			prepaidCxOfferMonitoring.setTopUpTempServiceClass(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
+
 
 		}else if("ARPU".equals(prepaidCxOfferMonitoring.getEventType())){
-			prepaidCxOfferMonitoring.setCreditMethod(saveConfigRequest.getPayload().getOfferMonitoring().getArpuCreditMethod());
-			prepaidCxOfferMonitoring.setProductPackage(saveConfigRequest.getPayload().getOfferMonitoring().getArpuProductPackage());
-			prepaidCxOfferMonitoring.setUsageServiceType(saveConfigRequest.getPayload().getOfferMonitoring().getArpuUsageServiceType());
-			prepaidCxOfferMonitoring.setOperatorId(saveConfigRequest.getPayload().getOfferMonitoring().getArpuOperators());
-			prepaidCxOfferMonitoring.setTopupCode(saveConfigRequest.getPayload().getOfferMonitoring().getArpuTopUpCode());
+			prepaidCxOfferMonitoring.setOperatorId(saveConfigRequest.getPayload().getOfferMonitoring().getOperatorId());
 			//arpu
-			prepaidCxOfferMonitoring.setOperatorValue(saveConfigRequest.getPayload().getOfferMonitoring().getArpuOperatorsValue());
-			prepaidCxOfferMonitoring.setTransactionValue(Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getArpu()));
-			///paid arpu
-			prepaidCxOfferMonitoring.setPaidArpuOperator(saveConfigRequest.getPayload().getOfferMonitoring().getArpuPaidOperators());
-			prepaidCxOfferMonitoring.setPaidArpuValue(Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getArpuPaidTopUp()));
+			prepaidCxOfferMonitoring.setArpuType(saveConfigRequest.getPayload().getOfferMonitoring().getArpuType());
+			prepaidCxOfferMonitoring.setArpuOp(saveConfigRequest.getPayload().getOfferMonitoring().getArpuOp());
+			prepaidCxOfferMonitoring.setArpuValue(saveConfigRequest.getPayload().getOfferMonitoring().getArpuValue());
+			prepaidCxOfferMonitoring.setArpuSelectedTopUpCode(saveConfigRequest.getPayload().getOfferMonitoring().getArpuSelectedTopUpCode());
 		}else if("Usage".equals(prepaidCxOfferMonitoring.getEventType())){
 			prepaidCxOfferMonitoring.setUsageServiceType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageServiceType());
 			prepaidCxOfferMonitoring.setUsageType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageType());
-			prepaidCxOfferMonitoring.setOperatorValue(saveConfigRequest.getPayload().getOfferMonitoring().getUsageOperator());
-			prepaidCxOfferMonitoring.setTransactionValue(Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getUsageValue()));
+			prepaidCxOfferMonitoring.setUsageOp(saveConfigRequest.getPayload().getOfferMonitoring().getUsageOperator());
+			prepaidCxOfferMonitoring.setUsageValue(saveConfigRequest.getPayload().getOfferMonitoring().getUsageValue());
+			prepaidCxOfferMonitoring.setCountryCode(saveConfigRequest.getPayload().getOfferMonitoring().getCountryCode());
 		}
 
 		prepaidCxOfferMonitoringRepository.save(prepaidCxOfferMonitoring);
@@ -390,6 +395,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.build();
 		}
 		prepaidCxOfferEventCondition.setEventConditionType(saveConfigRequest.getPayload().getOfferEventCondition().getEventConditionType());
+		prepaidCxOfferEventCondition.setEventConditionName(saveConfigRequest.getPayload().getOfferEventCondition().getEventConditionName());
 		prepaidCxOfferEventCondition.setCampaignStartDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignStartDate());
 		prepaidCxOfferEventCondition.setCampaignEndDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate());
 
@@ -397,17 +403,17 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferEventCondition.setCreditMethod(saveConfigRequest.getPayload().getOfferEventCondition().getCreditMethod());
 			prepaidCxOfferEventCondition.setUsageServiceType(saveConfigRequest.getPayload().getOfferEventCondition().getUsageServiceType());
 			prepaidCxOfferEventCondition.setOperatorId(saveConfigRequest.getPayload().getOfferEventCondition().getOperatorId());
-			prepaidCxOfferEventCondition.setTopupCode(saveConfigRequest.getPayload().getOfferEventCondition().getTopupCode());
+			prepaidCxOfferEventCondition.setTopUpCode(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCode());
 
-			prepaidCxOfferEventCondition.setTopupCurBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopupCurBalanceOp());
-			prepaidCxOfferEventCondition.setTopupCurBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopupCurBalanceValue());
-			prepaidCxOfferEventCondition.setTopupAccBalanceBeforeOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopupAccBalanceBeforeOp());
-			prepaidCxOfferEventCondition.setTopupAccBalanceBeforeValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopupAccBalanceBeforeValue());
-			prepaidCxOfferEventCondition.setTopupOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopupOp());
-			prepaidCxOfferEventCondition.setTopupTransactionValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopupTransactionValue());
-			prepaidCxOfferEventCondition.setTopupDaId(saveConfigRequest.getPayload().getOfferEventCondition().getTopupDaId());
-			prepaidCxOfferEventCondition.setTopupDaBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopupDaBalanceOp());
-			prepaidCxOfferEventCondition.setTopupDaBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopupDaBalanceValue());
+			prepaidCxOfferEventCondition.setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCurBalanceOp());
+			prepaidCxOfferEventCondition.setTopUpCurBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCurBalanceValue());
+			prepaidCxOfferEventCondition.setTopUpAccBalanceBeforeOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpAccBalanceBeforeOp());
+			prepaidCxOfferEventCondition.setTopUpAccBalanceBeforeValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpAccBalanceBeforeValue());
+			prepaidCxOfferEventCondition.setTopUpOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpOp());
+			prepaidCxOfferEventCondition.setTopUpTransactionValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpTransactionValue());
+			prepaidCxOfferEventCondition.setTopUpDaId(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaId());
+			prepaidCxOfferEventCondition.setTopUpDaBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaBalanceOp());
+			prepaidCxOfferEventCondition.setTopUpDaBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaBalanceValue());
 
 		}else if("ARPU".equals(prepaidCxOfferEventCondition.getEventConditionType())){
 			prepaidCxOfferEventCondition.setOperatorId(saveConfigRequest.getPayload().getOfferEventCondition().getOperatorId());

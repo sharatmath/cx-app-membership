@@ -14,33 +14,36 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OfferFulfilment {
-    @SerializedName("eventType") private String eventType;
-    @SerializedName("eventCampaignName") private String eventCampaignName;
-    @SerializedName("eventStartDate") private Date eventStartDate;
-    @SerializedName("eventEndDate") private Date eventEndDate;
+    @SerializedName("offerMonitoringType") private String eventType;
 
     @SerializedName("topupCreditMethod") private String topUpCreditMethod;
-    @SerializedName("topupProductPackage") private String topUpProductPackage;
     @SerializedName("topupUsageServiceType") private String topUpUsageServiceType;
-    @SerializedName("topupValueOperator") private String topUpValueOperator;
     @SerializedName("topupOperators") private String topUpOperator;
-    @SerializedName("topupValue") private String topUpTransactionValue;
     @SerializedName("topupCode") private String topUpCode;
 
-    @SerializedName("arpuCreditMethod") private String arpuCreditMethod;
-    @SerializedName("arpuProductPackage") private String arpuProductPackage;
-    @SerializedName("arpuUsageServiceType") private String arpuUsageServiceType;
-    @SerializedName("arpuOperatorsValue") private String arpuOperatorsValue;
-    @SerializedName("arpuTopUpCode") private String arpuTopUpCode;
-    @SerializedName("arpuOperators") private String arpuOperators;
-    @SerializedName("arpu") private String arpu;
-    @SerializedName("arpuPaidOperators") private String arpuPaidOperators;
-    @SerializedName("arpuPaidTopUp") private String arpuPaidTopUp;
+    @SerializedName("topupCurBalanceOp") private  String topUpCurBalanceOp;
+    @SerializedName("topupCurBalanceValue") private  Long topUpCurBalanceValue;
+    @SerializedName("topupAccBalanceBeforeOp") private  String topUpAccBalanceBeforeOp;
+    @SerializedName("topupAccBalanceBeforeValue") private  Long topUpAccBalanceBeforeValue;
+    @SerializedName("topupOp") private  String topUpOp;
+    @SerializedName("topupTransactionValue") private  Long topUpTransactionValue;
+    @SerializedName("topupDaId") private  String topUpDaId;
+    @SerializedName("topupDaBalanceOp") private  String topUpDaBalanceOp;
+    @SerializedName("topupDaBalanceValue") private  Long topUpDaBalanceValue;
+    @SerializedName("topupTempServiceClass") private  String topUpTempServiceClass;
+
+    @SerializedName("operatorId") private String operatorId;
+    @SerializedName("arpuType") private String arpuType;
+    @SerializedName("arpuSelectedTopUpCode") private String arpuSelectedTopUpCode;
+    @SerializedName("arpuOp") private String arpuOp;
+    @SerializedName("arpuValue") private Long arpuValue;
 
     @SerializedName("usageServiceType") private String usageServiceType;
     @SerializedName("usageType") private String usageType;
     @SerializedName("usageOperator") private String usageOperator;
-    @SerializedName("usageValue") private String usageValue;
+    @SerializedName("usageValue") private Long usageValue;
+
+    @SerializedName("countryCode") private String countryCode;
 
     @SerializedName("monitorSpecifiedPeriodRadio") private Boolean monitorSpecifiedPeriodRadio;
     @SerializedName("monitorStartDate") private Date monitorStartDate;

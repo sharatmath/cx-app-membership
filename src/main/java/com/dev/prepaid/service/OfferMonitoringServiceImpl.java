@@ -5,6 +5,7 @@ import com.dev.prepaid.domain.PrepaidCxOfferConfig;
 import com.dev.prepaid.domain.PrepaidCxOfferMonitoring;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
 import com.dev.prepaid.repository.PrepaidCxOfferMonitoringRepository;
+import com.dev.prepaid.type.EventType;
 import com.dev.prepaid.type.OperatorType;
 import com.dev.prepaid.type.ProvisionType;
 import com.dev.prepaid.type.UsageServiceType;
@@ -118,28 +119,32 @@ public class OfferMonitoringServiceImpl implements OfferMonitoringService{
         if(value == null){
             return false;
         }
-        OperatorType operatorType = OperatorType.valueOf(prepaidCxOfferMonitoring.getOperatorValue());
-        Long configValue = prepaidCxOfferMonitoring.getTransactionValue();
-        log.debug("{}|evaluate operator type|{}|value|{}", requestId, operatorType, prepaidCxOfferMonitoring.getOperatorValue());
-        if(OperatorType.LESS_THAN.equals(operatorType)){
-            if(value < configValue){
-                return true;
-            }
-        }else if(OperatorType.MORE_THAN.equals(operatorType)){
-            if(value > configValue){
-                return true;
-            }
-        }else if(OperatorType.EQUAL_TO.equals(operatorType)){
-            if(value == configValue){
-                return true;
-            }
-        }else if(OperatorType.LESS_THAN_OR_EQUAL_TO.equals(operatorType)){
-            if(value <= configValue){
-                return true;
-            }
-        }else if(operatorType.MORE_THAN_OR_EQUAL_TO.equals(operatorType)){
-            if(value >= configValue){
-                return true;
+
+        String evenTypeValue = prepaidCxOfferMonitoring.getEventType();
+        if(EventType.USAGE.getDescription().equals(evenTypeValue)) {
+            OperatorType operatorType = OperatorType.valueOf(prepaidCxOfferMonitoring.getUsageOp());
+            Long configValue = prepaidCxOfferMonitoring.getUsageValue();
+            log.debug("{}|evaluate operator type|{}|value|{}", requestId, operatorType, prepaidCxOfferMonitoring.getUsageValue());
+            if (OperatorType.LESS_THAN.equals(operatorType)) {
+                if (value < configValue) {
+                    return true;
+                }
+            } else if (OperatorType.MORE_THAN.equals(operatorType)) {
+                if (value > configValue) {
+                    return true;
+                }
+            } else if (OperatorType.EQUAL_TO.equals(operatorType)) {
+                if (value == configValue) {
+                    return true;
+                }
+            } else if (OperatorType.LESS_THAN_OR_EQUAL_TO.equals(operatorType)) {
+                if (value <= configValue) {
+                    return true;
+                }
+            } else if (operatorType.MORE_THAN_OR_EQUAL_TO.equals(operatorType)) {
+                if (value >= configValue) {
+                    return true;
+                }
             }
         }
         return false;

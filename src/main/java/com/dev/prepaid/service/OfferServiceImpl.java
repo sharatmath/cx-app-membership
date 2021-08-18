@@ -200,28 +200,40 @@ public class OfferServiceImpl implements OfferService {
 
 				if ("Top-Up".equals(prepaidCxOfferMonitoring.getEventType())) {
 					offerFulfilment.setTopUpCreditMethod(prepaidCxOfferMonitoring.getCreditMethod());
-					offerFulfilment.setTopUpProductPackage(prepaidCxOfferMonitoring.getProductPackage());
 					offerFulfilment.setTopUpUsageServiceType(prepaidCxOfferMonitoring.getUsageServiceType());
 					offerFulfilment.setTopUpOperator(prepaidCxOfferMonitoring.getOperatorId());
-					offerFulfilment.setTopUpValueOperator(prepaidCxOfferMonitoring.getOperatorValue());
-					offerFulfilment.setTopUpTransactionValue(String.valueOf(prepaidCxOfferMonitoring.getTransactionValue()));
-					offerFulfilment.setTopUpCode(prepaidCxOfferMonitoring.getTopupCode());
+					offerFulfilment.setTopUpCode(prepaidCxOfferMonitoring.getTopUpCode());
+
+					offerFulfilment.setTopUpCurBalanceOp(prepaidCxOfferMonitoring.getTopUpCurBalanceOp());
+					offerFulfilment.setTopUpCurBalanceValue(prepaidCxOfferMonitoring.getTopUpCurBalanceValue());
+
+					offerFulfilment.setTopUpAccBalanceBeforeOp(prepaidCxOfferMonitoring.getTopUpAccBalanceBeforeOp());
+					offerFulfilment.setTopUpAccBalanceBeforeValue(prepaidCxOfferMonitoring.getTopUpAccBalanceBeforeValue());
+
+					offerFulfilment.setTopUpOp(prepaidCxOfferMonitoring.getTopUpOp());
+					offerFulfilment.setTopUpTransactionValue(prepaidCxOfferMonitoring.getTopUpTransactionValue());
+
+					offerFulfilment.setTopUpDaId(prepaidCxOfferMonitoring.getTopUpDaId());
+
+					offerFulfilment.setTopUpDaBalanceOp(prepaidCxOfferMonitoring.getTopUpDaBalanceOp());
+					offerFulfilment.setTopUpDaBalanceValue(prepaidCxOfferMonitoring.getTopUpDaBalanceValue());
+
+					offerFulfilment.setTopUpTempServiceClass(prepaidCxOfferMonitoring.getTopUpTempServiceClass());
+
 					return offerFulfilment;
 				} else if("ARPU".equals(prepaidCxOfferMonitoring.getEventType())){
-					offerFulfilment.setArpuCreditMethod(prepaidCxOfferMonitoring.getCreditMethod());
-					offerFulfilment.setArpuProductPackage(prepaidCxOfferMonitoring.getProductPackage());
-					offerFulfilment.setArpuUsageServiceType(prepaidCxOfferMonitoring.getUsageServiceType());
-					offerFulfilment.setArpuOperators(prepaidCxOfferMonitoring.getOperatorId());
-					offerFulfilment.setArpuOperatorsValue (prepaidCxOfferMonitoring.getOperatorValue());
-					offerFulfilment.setArpu(String.valueOf(prepaidCxOfferMonitoring.getTransactionValue()));
-					offerFulfilment.setArpuPaidOperators(prepaidCxOfferMonitoring.getPaidArpuOperator());
-					offerFulfilment.setArpuTopUpCode(String.valueOf(prepaidCxOfferMonitoring.getPaidArpuValue()));
+					offerFulfilment.setOperatorId(prepaidCxOfferMonitoring.getOperatorId());
+					offerFulfilment.setArpuType (prepaidCxOfferMonitoring.getArpuType());
+					offerFulfilment.setArpuSelectedTopUpCode(prepaidCxOfferMonitoring.getArpuSelectedTopUpCode());
+					offerFulfilment.setArpuOp(prepaidCxOfferMonitoring.getArpuOp());
+					offerFulfilment.setArpuValue(prepaidCxOfferMonitoring.getArpuValue());
 					return offerFulfilment;
 				}else if("Usage".equals(prepaidCxOfferMonitoring.getEventType())){
 					offerFulfilment.setUsageServiceType(prepaidCxOfferMonitoring.getUsageServiceType());
+					offerFulfilment.setCountryCode(prepaidCxOfferMonitoring.getCountryCode());
 					offerFulfilment.setUsageType(prepaidCxOfferMonitoring.getUsageType());
-					offerFulfilment.setUsageOperator(prepaidCxOfferMonitoring.getOperatorValue());
-					offerFulfilment.setUsageValue(String.valueOf(prepaidCxOfferMonitoring.getTransactionValue()));
+					offerFulfilment.setUsageOperator(prepaidCxOfferMonitoring.getUsageOp());
+					offerFulfilment.setUsageValue(prepaidCxOfferMonitoring.getUsageValue());
 					return  offerFulfilment;
 				}
 			}

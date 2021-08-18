@@ -320,7 +320,7 @@ public class DataController {
 	public PrepaidCxOfferRedemption getOfferRedemption(@RequestParam(value = "instanceId", required = false) String instanceId){
 		return offerService.getOfferRedemption(instanceId);
 	}
-	@GetMapping(value = "offerEventConfig")
+	@GetMapping(value = "offerEventCondition")
 	public PrepaidCxOfferEventCondition getOfferEventCondition(@RequestParam(value = "instanceId", required = false) String instanceId){
 		return offerService.getOfferEventCondition(instanceId);
 	}
