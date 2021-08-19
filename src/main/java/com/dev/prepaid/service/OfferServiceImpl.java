@@ -57,6 +57,9 @@ public class OfferServiceImpl implements OfferService {
 	private PrepaidCxOfferRedemptionRepository prepaidCxOfferRedemptionRepository;
 	@Autowired
 	private PrepaidCxOfferEventConditionRepository prepaidCxOfferEventConditionRepository;
+	@Autowired
+	private CountryRepository countryRepository;
+
 	@Override
 	public void evictAllCaches() {
 		//clear caches
@@ -256,6 +259,10 @@ public class OfferServiceImpl implements OfferService {
 			list.add(new ResponSysProgram(String.valueOf(d.getProgramId()), d.getProgramName()));
 		}
 		return list;
+	}
+
+	public List<Country> listCountry(){
+		return countryRepository.findAll();
 	}
 
 }

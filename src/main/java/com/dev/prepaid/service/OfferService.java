@@ -28,4 +28,5 @@ public interface OfferService {
 	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId);
 	public PrepaidCxOfferEventCondition getOfferEventCondition(String instanceId);
 	public List<ResponSysProgram> listProgram();
+	public List<Country> listCountry();
 }

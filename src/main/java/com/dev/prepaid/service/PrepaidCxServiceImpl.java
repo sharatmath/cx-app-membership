@@ -279,12 +279,19 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		}
 		prepaidCxOfferMonitoring.setEventType(saveConfigRequest.getPayload().getOfferMonitoring().getEventType());
 		//monitoring
-		if(true == saveConfigRequest.getPayload().getOfferMonitoring().getMonitorSpecifiedPeriodRadio()) {
+		boolean isMonitorSpecificPeriod =
+				saveConfigRequest.getPayload().getOfferMonitoring().getMonitorSpecifiedPeriodRadio()  == null ? false :
+						saveConfigRequest.getPayload().getOfferMonitoring().getMonitorSpecifiedPeriodRadio();
+
+		boolean isMonitorDateRange = saveConfigRequest.getPayload().getOfferMonitoring().getMonitorPeriodRadio() == null ? false :
+						saveConfigRequest.getPayload().getOfferMonitoring().getMonitorPeriodRadio();
+
+		if(isMonitorSpecificPeriod) {
 			prepaidCxOfferMonitoring.setIsMonitorSpecificPeriod(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorSpecifiedPeriodRadio());
 			prepaidCxOfferMonitoring.setPeriodEndDate(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorStartDate());
 			prepaidCxOfferMonitoring.setPeriodStartDate(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorEndDate());
 		}
-		if(true == saveConfigRequest.getPayload().getOfferMonitoring().getMonitorSpecifiedPeriodRadio()) {
+		if(isMonitorDateRange) {
 			prepaidCxOfferMonitoring.setIsMonitorDateRange(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorPeriodRadio());
 			prepaidCxOfferMonitoring.setPeriodDays(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorPeriod());
 			prepaidCxOfferMonitoring.setPeriod(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorPeriodDayMonth());

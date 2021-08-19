@@ -1,20 +1,24 @@
 package com.dev.prepaid.controller;
 
+import java.net.http.HttpResponse;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.configuration.OfferFulfilment;
 import com.dev.prepaid.model.configuration.OfferSelection;
 import com.dev.prepaid.model.configuration.ResponSysProgram;
+import com.dev.prepaid.model.configuration.ServiceInstanceConfiguration;
 import oracle.ucp.proxy.annotation.Pre;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import com.dev.prepaid.model.DataOffer;
 import com.dev.prepaid.model.PrepaidBucketDetailDTO;
@@ -25,6 +29,8 @@ import com.dev.prepaid.util.DateUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
+
 @Slf4j
 @RestController
 @RequestMapping("/data/")
@@ -32,7 +38,10 @@ public class DataController {
 	
 	@Autowired
 	private OfferService offerService;
-	
+
+	@Autowired
+	RabbitTemplate rabbitTemplate;
+
 	@GetMapping(value = "offerDetail")
     public PrepaidCampaignOfferDetailDTO offerDetail(
 //    		@RequestParam(value = "bucketName", required = false) String bucketName,
@@ -327,5 +336,21 @@ public class DataController {
 	@GetMapping(value = "listProgram")
 	public List<ResponSysProgram> listProgram(){
 		return offerService.listProgram();
+	}
+
+	@GetMapping(value = "listCountry")
+	public List<Country> listCountry(){
+		return offerService.listCountry();
+	}
+
+	@PostMapping(value = "offerMonitoringTrx")
+	public ResponseEntity<String> configure(@RequestBody Map<String, Object> payload){
+			rabbitTemplate.convertAndSend(
+					Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+					Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
+					payload
+			);
+			log.info("{}", payload);
+		return  ResponseEntity.ok("Success");
 	}
 }
