@@ -53,8 +53,8 @@ public class OfferRedemption {
     private Integer smsKeywordValidityDays;
 
     @SerializedName("totalRedemptionPeriodEvery")
-    private Integer totalRedemptionPeriodEvery;
+    private Long totalRedemptionPeriodEvery;
     @SerializedName("timePeriodEvery")
-    private Integer timePeriodEvery;
+    private Long timePeriodEvery;
 
 }

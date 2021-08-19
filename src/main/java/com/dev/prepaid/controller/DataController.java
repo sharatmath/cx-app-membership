@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.configuration.OfferFulfilment;
 import com.dev.prepaid.model.configuration.OfferSelection;
+import com.dev.prepaid.model.configuration.ResponSysProgram;
 import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -318,5 +319,13 @@ public class DataController {
 	@GetMapping(value = "offerRedemption")
 	public PrepaidCxOfferRedemption getOfferRedemption(@RequestParam(value = "instanceId", required = false) String instanceId){
 		return offerService.getOfferRedemption(instanceId);
+	}
+	@GetMapping(value = "offerEventCondition")
+	public PrepaidCxOfferEventCondition getOfferEventCondition(@RequestParam(value = "instanceId", required = false) String instanceId){
+		return offerService.getOfferEventCondition(instanceId);
+	}
+	@GetMapping(value = "listProgram")
+	public List<ResponSysProgram> listProgram(){
+		return offerService.listProgram();
 	}
 }

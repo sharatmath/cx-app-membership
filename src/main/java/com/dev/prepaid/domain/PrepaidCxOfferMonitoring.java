@@ -21,20 +21,40 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private Long id;
     private String offerConfigId;
     private String eventType;
-    private String usageServiceType;
-    private String productPackage;
+
     private String creditMethod;
     private String operatorId;
-    private String period;
-    private Integer periodDays;
+
+    private String usageServiceType;
+
+    private String usageType;
+    private String usageOp;
+    private Long usageValue;
+
+    private String countryCode;
+
+    private String arpuType;
+    private String arpuOp;
+    private Long arpuValue;
+    private String arpuSelectedTopUpCode;
+
+    private Boolean isMonitorDateRange;
     private Date periodStartDate;
     private Date periodEndDate;
-    private String topupCode;
-    private String usageType;
-    private Long transactionValue;
-    private String operatorValue;
-    private String paidArpuOperator;
-    private Long paidArpuValue;
-    private Boolean isMonitorDateRange;
+
     private Boolean isMonitorSpecificPeriod;
+    private Integer periodDays;
+    private String period;
+
+    private String topUpCode;
+    private String topUpCurBalanceOp;
+    private Long topUpCurBalanceValue;
+    private String topUpAccBalanceBeforeOp;
+    private Long topUpAccBalanceBeforeValue;
+    private String topUpOp;
+    private Long topUpTransactionValue;
+    private String topUpDaId;
+    private String topUpDaBalanceOp;
+    private Long topUpDaBalanceValue;
+    private String topUpTempServiceClass;
 }

@@ -28,10 +28,10 @@ public class AmqpConfig {
 	@Value("${pgs.queue.concurent:1}")
 	private Integer pgsQueueConcurent;
 
-	@Value("${pvas.queue.prefetch:1}")
-	private Integer pvasQueuePrefetch;
-	@Value("${pvas.queue.concurent:1}")
-	private Integer pvasQueueConcurent;
+	@Value("${membership.queue.prefetch:1}")
+	private Integer membershipQueuePrefetch;
+	@Value("${membership.queue.concurent:1}")
+	private Integer membershipQueueConcurent;
 	
 	//============================================================================= //
 	//queue
@@ -110,15 +110,49 @@ public class AmqpConfig {
 	//container factory
 	@Bean
 	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
-	rabbitListenerContainerFactoryForPvas(
+	rabbitListenerContainerFactoryForMembership(
 			ConnectionFactory rabbitConnectionFactory) {
 		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
 		factory.setConnectionFactory(rabbitConnectionFactory);
-		factory.setPrefetchCount(pvasQueuePrefetch);
-		factory.setConcurrentConsumers(pvasQueueConcurent);
+		factory.setPrefetchCount(membershipQueuePrefetch);
+		factory.setConcurrentConsumers(membershipQueueConcurent);
 		factory.setMessageConverter(jackson2MessageConverter());
 		return factory;
 	}
+
+	@Bean
+	public Queue queueMembershipOfferMonitoring() {
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("x-max-priority", 1);
+		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_MONITORING, true, false, false, args);
+		return queue;
+	}
+
+	@Bean
+	public Binding bindingMembershipOfferMonitoring(Queue queueMembershipOfferMonitoring, TopicExchange exchangeMembership) {
+		return BindingBuilder.bind(queueMembershipOfferMonitoring).to(exchangeMembership)
+				.with(Constant.QUEUE_NAME_MEMBERSHIP_MONITORING); //route.key.name=queue.name
+	}
+
+	@Bean
+	public Queue queueMembershipOfferSubscriber() {
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("x-max-priority", 1);
+		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_SUBSCRIBER, true, false, false, args);
+		return queue;
+	}
+
+	@Bean
+	public Binding bindingMembershipOfferSubscriber(Queue queueMembershipOfferSubscriber, TopicExchange exchangeMembership) {
+		return BindingBuilder.bind(queueMembershipOfferSubscriber).to(exchangeMembership)
+				.with(Constant.QUEUE_NAME_MEMBERSHIP_SUBSCRIBER); //route.key.name=queue.name
+	}
+
+	@Bean
+	public TopicExchange exchangeMembership() {
+		return new TopicExchange(Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP);
+	}
+
 	//============================================================================= //
 	
 	
