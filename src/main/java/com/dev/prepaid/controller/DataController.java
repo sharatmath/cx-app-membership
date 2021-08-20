@@ -344,7 +344,7 @@ public class DataController {
 	}
 
 	@PostMapping(value = "offerMonitoringTrx")
-	public ResponseEntity<String> configure(@RequestBody Map<String, Object> payload){
+	public ResponseEntity<String> offerMonitoringTrx(@RequestBody Map<String, Object> payload){
 			rabbitTemplate.convertAndSend(
 					Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
 					Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
@@ -353,4 +353,16 @@ public class DataController {
 			log.info("{}", payload);
 		return  ResponseEntity.ok("Success");
 	}
+
+	@PostMapping(value = "offerMonitoringTrxBulk")
+	public ResponseEntity<String> offerMonitoringTrxBulk(@RequestBody  List<Map<String, Object>> payload){
+		rabbitTemplate.convertAndSend(
+				Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+				Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
+				payload
+		);
+		log.info("{}", payload);
+		return  ResponseEntity.ok("Success");
+	}
+
 }

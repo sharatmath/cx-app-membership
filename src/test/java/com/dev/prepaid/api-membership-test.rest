@@ -12,4 +12,6 @@ curl -X GET --header 'Accept: application/json' 'https://jihefwrkoypnlto6hgcr6lv
 
 curl -X GET --header 'Accept: application/json' 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/offerMonitoring?instanceId=63483226-49f3-48a2-8720-4f4c47021e32'
 
-curl -X GET --header 'Accept: application/json' 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/offerRedemption?instanceId=63483226-49f3-48a2-8720-4f4c47021e32' 
+curl -X GET --header 'Accept: application/json' 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/offerRedemption?instanceId=63483226-49f3-48a2-8720-4f4c47021e32'
+
+curl -X GET --header 'Accept: application/json' 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/offerEventCondition?instanceId=63483226-49f3-48a2-8720-4f4c47021e32'
