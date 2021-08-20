@@ -199,7 +199,7 @@
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <div class="input-group date" data-provider="datepicker">
-                                                            <input type="datetime-local" class="form-control" id="eventConditionDataCampaignStarDate">
+                                                            <input type="datetime-local" class="form-control" id="eventConditionDataCampaignStarDate" x-model="eventConditionData.campaignStartDate">
                                                             <div class="input-group-addon">
                                                                 <span class="glyphicon glyphicon-th"></span>
                                                             </div>
@@ -210,7 +210,7 @@
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <div class="input-group date" data-provider="datepicker">
-                                                            <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate">
+                                                            <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate" x-model="eventConditionData.campaignEndDate">
                                                             <div class="input-group-addon">
                                                                 <span class="glyphicon glyphicon-th"></span>
                                                             </div>
@@ -223,7 +223,7 @@
                                             <div class="mb-3 row">
                                                 <label for="eventConditionDataEventConditionName" class="col-sm-2 col-form-label">Event Condition Name</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="eventConditionDataEventConditionName">
+                                                    <input type="text" class="form-control" id="eventConditionDataEventConditionName" x-model="eventConditionData.eventConditionName">
                                                 </div>
                                             </div>
                                         </div>
@@ -247,31 +247,31 @@
                                                 <div class="mb-3 row">
                                                     <label for="eventConditionDataTopupCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataTopupCreditMethod">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopupCreditMethod" x-model="eventConditionData.topUpCreditMethod">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="eventConditionDataUsageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataUsageServiceType">
+                                                        <input type="text" class="form-control" id="eventConditionDataUsageServiceType" x-model="eventConditionData.usageServiceType">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="eventConditionDataOperators" class="col-sm-2 col-form-label">Operator</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataOperators">
+                                                        <input type="text" class="form-control" id="eventConditionDataOperators" x-model="eventConditionData.operatorId">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="eventConditionDataRefillProfileID" class="col-sm-2 col-form-label">Refill Profile ID</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataRefillProfileID">
+                                                        <input type="text" class="form-control" id="eventConditionDataRefillProfileID" x-model="eventConditionData.topUpCode">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Current Balance</label>
                                                     <div class="col-sm-5">
-                                                        <select id="eventConditionDataCurrentBalanceOperators" class="form-control">
+                                                        <select id="eventConditionDataCurrentBalanceOperators" class="form-control" x-model="eventConditionData.topUpCurBalanceOp">
                                                             <option value="AllTopUp">ALL TOP UP</option>
                                                             <option value="PaidTopUp">PAID TOP UP</option>
                                                             <option value="DatabaseDirect">DATABASE DIRECT</option>
@@ -280,13 +280,13 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="eventConditionDataCurrentBalanceValue">
+                                                        <input type="text" class="form-control" id="eventConditionDataCurrentBalanceValue" x-model="eventConditionData.topUpCurBalanceValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Account Balance Before</label>
                                                     <div class="col-sm-5">
-                                                        <select id="eventConditionDataAccountBalanceOperators" class="form-control">
+                                                        <select id="eventConditionDataAccountBalanceOperators" class="form-control" x-model="eventConditionData.topUpAccBalanceBeforeOp">
                                                             <option value="AllTopUp">ALL TOP UP</option>
                                                             <option value="PaidTopUp">PAID TOP UP</option>
                                                             <option value="DatabaseDirect">DATABASE DIRECT</option>
@@ -295,13 +295,13 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="eventConditionDataAccountBalanceValue">
+                                                        <input type="text" class="form-control" id="eventConditionDataAccountBalanceValue" x-model="eventConditionData.topUpAccBalanceBeforeValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value</label>
                                                     <div class="col-sm-5">
-                                                        <select id="eventConditionDataTopUpValueOperators" class="form-control">
+                                                        <select id="eventConditionDataTopUpValueOperators" class="form-control" x-model="eventConditionData.topUpOp">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -310,19 +310,19 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="eventConditionDataTopUpValue">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopUpValue" x-model="eventConditionData.topUpTransactionValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="refillProfileID" class="col-sm-2 col-form-label">DA ID</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataDaID">
+                                                        <input type="text" class="form-control" id="eventConditionDataDaID" x-model="eventConditionData.topUpDaId">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">DA Balance</label>
                                                     <div class="col-sm-5">
-                                                        <select id="eventConditionDataTopUpDaBalanceOperators" class="form-control">
+                                                        <select id="eventConditionDataTopUpDaBalanceOperators" class="form-control" x-model="eventConditionData.topUpDaBalanceOp">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -331,13 +331,13 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="eventConditionDataTopUpDaBalanceValue">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopUpDaBalanceValue" x-model="eventConditionData.topUpDaBalanceValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass" x-model="eventConditionData.topUpTempServiceClass">
                                                     </div>
                                                 </div>
                                             </div>
@@ -360,7 +360,7 @@
                                                     <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeVoice" class="col-sm-2 col-form-label">Usage Type</label>
                                                         <div class="col-sm-10">
-                                                            <select id="eventConditionDataUsageTypeVoice" class="form-control">
+                                                            <select id="eventConditionDataUsageTypeVoice" class="form-control" x-model="eventConditionData.eventTypeUsages">
                                                                 <option>Choose...</option>
                                                                 <option value="VOICE_COUNT">VOICE_COUNT</option>
                                                                 <option value="VOICE_MINS">VOICE_MINS</option>
@@ -384,7 +384,7 @@
                                                     <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeData" class="col-sm-2 col-form-label">Usage Type</label>
                                                         <div class="col-sm-10">
-                                                            <select id="eventConditionDataUsageTypeData" class="form-control">
+                                                            <select id="eventConditionDataUsageTypeData" class="form-control" x-model="eventConditionData.eventTypeUsages">
                                                                 <option>Choose...</option>
                                                                 <option value="DATA_VOLUME">DATA_VOLUME</option>
                                                                 <option value="DATA_AMOUNT">DATA_AMOUNT</option>
@@ -401,7 +401,7 @@
                                                     <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeSMS" class="col-sm-2 col-form-label">Usage Type</label>
                                                         <div class="col-sm-10">
-                                                            <select id="eventConditionDataUsageTypeSMS" class="form-control">
+                                                            <select id="eventConditionDataUsageTypeSMS" class="form-control" x-model="eventConditionData.eventTypeUsages">
                                                                 <option>Choose...</option>
                                                                 <option value="SMS_ALL_COUNT">SMS_ALL_COUNT</option>
                                                                 <option value="SMS_ALL_AMOUNT">SMS_ALL_AMOUNT</option>
@@ -417,7 +417,7 @@
                                                     <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeIDD" class="col-sm-2 col-form-label">Usage Type</label>
                                                         <div class="col-sm-10">
-                                                            <select id="eventConditionDataUsageTypeIDD" class="form-control">
+                                                            <select id="eventConditionDataUsageTypeIDD" class="form-control" x-model="eventConditionData.eventTypeUsages">
                                                                 <option>Choose...</option>
                                                                 <option value="TRANSACTION_DATE_KEY">TRANSACTION_DATE_KEY</option>
                                                                 <option value="COUNTRY_CD">COUNTRY_CD</option>
@@ -449,10 +449,17 @@
                                                     <div class="mb-3 row">
                                                         <label for="countryCodeIDD" class="col-sm-2 col-form-label">Country Code</label>
                                                         <div class="col-sm-10">
-                                                            <select id="countryCodeIDD" class="form-control">
+                                                            <select id="countryCodeIDD" class="form-control" x-model="eventConditionData.countryCode">
                                                                 <option>Choose...</option>
-                                                                <option value="TRANSACTION_DATE_KEY">TRANSACTION_DATE_KEY</option>
-                                                                <option value="COUNTRY_CD">COUNTRY_CD</option>
+                                                                <option value="60">Malaysia</option>
+                                                                <option value="62">Indonesia</option>
+                                                                <option value="63">Philippines</option>
+                                                                <option value="66">Thailand</option>
+                                                                <option value="84">Vietnam</option>
+                                                                <option value="86">China</option>
+                                                                <option value="91">India</option>
+                                                                <option value="95">Myanmar</option>
+                                                                <option value="880">Bangladesh</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -460,7 +467,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Usage</label>
                                                     <div class="col-sm-4">
-                                                        <select id="eventConditionDataUsageOperatorsDropdown" class="form-control">
+                                                        <select id="eventConditionDataUsageOperatorsDropdown" class="form-control" x-model="eventConditionData.eventUsagesOp">
                                                             <option>Choose...</option>
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
@@ -470,19 +477,14 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-2">
-                                                        <input type="number" class="form-control" id="eventConditionDataUsageValue">
-                                                        <!--                                                        <select id="eventConditionDataUsageValueDropdown" class="form-control" x-model="eventConditionData.usageValue">-->
-                                                        <!--                                                            <option value="GB">GB</option>-->
-                                                        <!--                                                            <option value="Mins">Mins</option>-->
-                                                        <!--                                                            <option value="Count">Count</option>-->
-                                                        <!--                                                        </select>-->
+                                                        <input type="number" class="form-control" id="eventConditionDataUsageValue" x-model="eventConditionData.eventUsagesValue">
                                                     </div> GB / Mins / Count
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Aggregation Period</label>
                                                     <span>Last</span>
                                                     <div class="col-sm-4">
-                                                        <select id="aggregationPeriodDropdown" class="form-control">
+                                                        <select id="aggregationPeriodDropdown" class="form-control" x-model="eventConditionData.aggregationPeriodDays">
                                                             <option>Choose...</option>
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
@@ -498,39 +500,28 @@
                                         <template x-if="eventConditionTypeData === 'ARPU'">
                                             <div class="eventConditionFulfillmentMonitoring" id="eventConditionDataARPUForm">
                                                 <div class="mb-3 row">
-                                                    <label for="eventConditionDataArpuCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
+                                                    <label for="operators" class="col-sm-2 col-form-label">Operator</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataArpuCreditMethod">
+                                                        <input type="text" class="form-control" id="eventConditionDataOperatorsARPU" x-model="eventConditionData.operatorId">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
-                                                    <label for="eventConditionDataProductPackageARPU" class="col-sm-2 col-form-label">Product Package</label>
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Type</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataProductPackageARPU">
+                                                        <select id="eventConditionDataTopUpValueARPUValue" class="form-control" x-model="eventConditionData.arpuType">
+                                                            <option>Choose...</option>
+                                                            <option value="allTopUp">ALL TOP UP</option>
+                                                            <option value="paidTopUp">PAID TOP UP</option>
+                                                            <option value="selfService">SELF SERVICE</option>
+                                                            <option value="ma">MA</option>
+                                                            <option value="others">OTHERS</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
-                                                    <label for="usageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataUsageServiceTypeARPU">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="eventConditionDataOperatorsARPU" class="col-sm-2 col-form-label">Operators</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataOperatorsARPU">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="eventConditionDataTopUpCodeARPU" class="col-sm-2 col-form-label">Top Up Code</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataTopUpCodeARPU">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU</label>
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Value</label>
                                                     <div class="col-sm-5">
-                                                        <select id="eventConditionDataTopUpValueOperatorsARPU" class="form-control">
+                                                        <select id="eventConditionDataPaidARPUTopUpValueOperators" class="form-control" x-model="eventConditionData.arpuOp">
                                                             <option>Choose...</option>
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
@@ -540,13 +531,14 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="eventConditionDataARPUValue">
+                                                        <input type="text" class="form-control" id="eventConditionDataPaidARPUValue" x-model="eventConditionData.arpuValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
-                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Paid ARPU Top-UP</label>
-                                                    <div class="col-sm-5">
-                                                        <select id="eventConditionDataPaidARPUTopUpValueOperators" class="form-control">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Aggregation Period</label>
+                                                    <span>Last</span>
+                                                    <div class="col-sm-4">
+                                                        <select id="eventConditionDataARPUAggregationPeriodDropdown" class="form-control" x-model="eventConditionData.aggregationPeriodDays">
                                                             <option>Choose...</option>
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
@@ -555,9 +547,7 @@
                                                             <option value="moreOrEqualTo">More than or Equal to</option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="eventConditionDataPaidARPUValue">
-                                                    </div>
+                                                    <span>Days</span>
                                                 </div>
                                             </div>
                                         </template>
@@ -757,7 +747,7 @@
                                             <b>Exclude Subscriber from this if they are in the following Program</b><br><br>
                                             <div class="form-group row">
                                                 <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="excludeSubscriber" x-model="eligibilityData.excludeSubscriber">
+                                                    <input type="text" class="form-control" id="excludeSubscriber" x-model="eligibilityData.excludeProgramId">
                                                 </div>
                                             </div>
                                         </div><br>
@@ -812,13 +802,13 @@
                                                 <div class="mb-3 row">
                                                     <label for="refillProfileID" class="col-sm-2 col-form-label">Refill Profile ID</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="refillProfileID" x-model="monitoringData.refillProfileID">
+                                                        <input type="text" class="form-control" id="refillProfileID" x-model="monitoringData.topUpCode">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Current Balance</label>
                                                     <div class="col-sm-5">
-                                                        <select id="currentBalanceOperators" class="form-control" x-model="monitoringData.currentBalanceOperators">
+                                                        <select id="currentBalanceOperators" class="form-control" x-model="monitoringData.topUpCurBalanceOp">
                                                             <option value="AllTopUp">ALL TOP UP</option>
                                                             <option value="PaidTopUp">PAID TOP UP</option>
                                                             <option value="DatabaseDirect">DATABASE DIRECT</option>
@@ -827,13 +817,13 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="currentBalanceValue" x-model="monitoringData.currentBalanceValue">
+                                                        <input type="text" class="form-control" id="currentBalanceValue" x-model="monitoringData.topUpCurBalanceValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Account Balance Before</label>
                                                     <div class="col-sm-5">
-                                                        <select id="accountBalanceOperators" class="form-control" x-model="monitoringData.accountBalanceOperators">
+                                                        <select id="accountBalanceOperators" class="form-control" x-model="monitoringData.topUpAccBalanceBeforeOp">
                                                             <option value="AllTopUp">ALL TOP UP</option>
                                                             <option value="PaidTopUp">PAID TOP UP</option>
                                                             <option value="DatabaseDirect">DATABASE DIRECT</option>
@@ -842,13 +832,13 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="accountBalanceValue" x-model="monitoringData.accountBalanceValue">
+                                                        <input type="text" class="form-control" id="accountBalanceValue" x-model="monitoringData.topUpAccBalanceBeforeValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value</label>
                                                     <div class="col-sm-5">
-                                                        <select id="topUpValueOperators" class="form-control" x-model="monitoringData.topUpValueOperator">
+                                                        <select id="topUpValueOperators" class="form-control" x-model="monitoringData.topUpOp">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -863,13 +853,13 @@
                                                 <div class="mb-3 row">
                                                     <label for="refillProfileID" class="col-sm-2 col-form-label">DA ID</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="daID" x-model="monitoringData.daID">
+                                                        <input type="text" class="form-control" id="daID" x-model="monitoringData.topUpDaId">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">DA Balance</label>
                                                     <div class="col-sm-5">
-                                                        <select id="topUpDaBalanceOperators" class="form-control" x-model="monitoringData.daBalanceOperators">
+                                                        <select id="topUpDaBalanceOperators" class="form-control" x-model="monitoringData.topUpDaBalanceOp">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -884,7 +874,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="topUpTemporaryServiceClass" x-model="monitoringData.topUpTemporaryServiceClass">
+                                                        <input type="text" class="form-control" id="topUpTemporaryServiceClass" x-model="monitoringData.topUpTempServiceClass">
                                                     </div>
                                                 </div>
                                             </div>
@@ -966,8 +956,15 @@
                                                         <div class="col-sm-10">
                                                             <select id="countryCode" class="form-control" x-model="monitoringData.countryCode">
                                                                 <option>Choose...</option>
-                                                                <option value="TRANSACTION_DATE_KEY">TRANSACTION_DATE_KEY</option>
-                                                                <option value="COUNTRY_CD">COUNTRY_CD</option>
+                                                                <option value="60">Malaysia</option>
+                                                                <option value="62">Indonesia</option>
+                                                                <option value="63">Philippines</option>
+                                                                <option value="66">Thailand</option>
+                                                                <option value="84">Vietnam</option>
+                                                                <option value="86">China</option>
+                                                                <option value="91">India</option>
+                                                                <option value="95">Myanmar</option>
+                                                                <option value="880">Bangladesh</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1018,11 +1015,6 @@
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <input type="number" class="form-control" id="usageValue" x-model="monitoringData.usageValue">
-<!--                                                        <select id="usageValueDropdown" class="form-control" x-model="monitoringData.usageValue">-->
-<!--                                                            <option value="GB">GB</option>-->
-<!--                                                            <option value="Mins">Mins</option>-->
-<!--                                                            <option value="Count">Count</option>-->
-<!--                                                        </select>-->
                                                     </div> GB / Mins / Count
                                                 </div>
                                             </div>
@@ -1032,7 +1024,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="operators" class="col-sm-2 col-form-label">Operator</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="operatorsARPU" x-model="monitoringData.arpuOperatorsValue">
+                                                        <input type="text" class="form-control" id="operatorsARPU" x-model="monitoringData.arpuOp">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
@@ -1051,7 +1043,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Value</label>
                                                     <div class="col-sm-5">
-                                                        <select id="paidARPUTopUpValueOperators" class="form-control" x-model="monitoringData.arpuPaidOperators">
+                                                        <select id="paidARPUTopUpValueOperators" class="form-control" x-model="monitoringData.arpuSelectedTopUpCode">
                                                             <option>Choose...</option>
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
@@ -1061,7 +1053,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="paidARPUValue" x-model="monitoringData.arpuPaidTopUp">
+                                                        <input type="text" class="form-control" id="paidARPUValue" x-model="monitoringData.arpuValue">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1628,7 +1620,7 @@
 					.finally()
 			},
             eventConditionPolicy() {
-                fetch(PROD_URL + `offerMonitoring?instanceId=${INSTANCE_ID}`)
+                fetch(PROD_URL + `offerEventCondition?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
                     .then(data => {
                         this.eventConditionData = data
@@ -1647,6 +1639,42 @@
             },
             saveConfiguration() {
                 var message = { amsAction : "save", requestId : "save" };
+                const offerEventCondition = {
+                    "eventType": this.eventConditionTypeData,
+                    "campaignStartDate": this.eventConditionData.campaignStartDate,
+                    "campaignEndDate": this.eventConditionData.campaignEndDate,
+                    "eventConditionName": this.eventConditionData.eventConditionName,
+                };
+                if (this.eventTypeData === 'Top-Up') {
+                    offerEventCondition.topUpCreditMethod = this.eventConditionData.topUpCreditMethod;
+                    offerEventCondition.topUpUsageServiceType = this.eventConditionData.topUpUsageServiceType;
+                    offerEventCondition.topUpProductPackage = this.eventConditionData.topUpProductPackage;
+                    offerEventCondition.operatorId = this.eventConditionData.operatorId;
+                    offerEventCondition.topUpCode = this.eventConditionData.topUpCode;
+                    offerEventCondition.topUpCurBalanceOp = this.eventConditionData.topUpCurBalanceOp;
+                    offerEventCondition.topUpCurBalanceValue = this.eventConditionData.topUpCurBalanceValue;
+                    offerEventCondition.topUpAccBalanceBeforeOp = this.eventConditionData.topUpAccBalanceBeforeOp;
+                    offerEventCondition.topUpAccBalanceBeforeValue = this.eventConditionData.topUpAccBalanceBeforeValue;
+                    offerEventCondition.topUpOp = this.eventConditionData.topUpOp || 'lessThan';
+                    offerEventCondition.topUpTransactionValue = this.eventConditionData.topUpTransactionValue;
+                    offerEventCondition.topUpDaId = this.eventConditionData.topUpDaId;
+                    offerEventCondition.topUpDaBalanceOp = this.eventConditionData.topUpDaBalanceOp;
+                    offerEventCondition.topUpDaBalanceValue = this.eventConditionData.topUpDaBalanceValue;
+                    offerEventCondition.topUpTempServiceClass = this.eventConditionData.topUpTempServiceClass;
+                } else if (this.eventTypeData === 'Usage') {
+                    offerEventCondition.usageServiceType = this.eventConditionData.usageServiceType;
+                    offerEventCondition.eventTypeUsages = this.eventConditionData.eventTypeUsages;
+                    offerEventCondition.eventUsagesOp = this.eventConditionData.eventUsagesOp;
+                    offerEventCondition.eventUsagesValue = this.eventConditionData.eventUsagesValue;
+                    offerEventCondition.aggregationPeriodDays = this.eventConditionData.aggregationPeriodDays;
+                } else if (this.eventTypeData === 'ARPU') {
+                    offerEventCondition.operatorId = this.eventConditionData.operatorId;
+                    offerEventCondition.arpuType = this.eventConditionData.arpuType;
+                    offerEventCondition.arpuSelectedTopUpCode = this.eventConditionData.arpuSelectedTopUpCode;
+                    offerEventCondition.arpuOp = this.eventConditionData.arpuOp;
+                    offerEventCondition.arpuValue = this.eventConditionData.arpuValue;
+                    offerEventCondition.aggregationPeriodDays = this.eventConditionData.aggregationPeriodDays;
+                };
                 const offerMonitoring = {
                     "eventType": this.eventTypeData,
                 };
@@ -1671,27 +1699,30 @@
                 };
                 if (this.eventTypeData === 'Top-Up') {
                     offerMonitoring.topUpCreditMethod = this.monitoringData.topUpCreditMethod;
-                    offerMonitoring.topUpProductPackage = this.monitoringData.topUpProductPackage;
                     offerMonitoring.topUpUsageServiceType = this.monitoringData.topUpUsageServiceType;
-                    offerMonitoring.topUpValueOperator = this.monitoringData.topUpValueOperator;
-                    offerMonitoring.topUpOperator = this.monitoringData.topUpOperator || 'lessThan';
-                    offerMonitoring.topUpTransactionValue = this.monitoringData.topUpTransactionValue;
+                    offerMonitoring.topUpOperator = this.monitoringData.topUpOperator;
                     offerMonitoring.topUpCode = this.monitoringData.topUpCode;
+                    offerMonitoring.topUpCurBalanceOp = this.monitoringData.topUpCurBalanceOp;
+                    offerMonitoring.topUpCurBalanceValue = this.monitoringData.topUpCurBalanceValue;
+                    offerMonitoring.topUpAccBalanceBeforeOp = this.monitoringData.topUpAccBalanceBeforeOp;
+                    offerMonitoring.topUpAccBalanceBeforeValue = this.monitoringData.topUpAccBalanceBeforeValue;
+                    offerMonitoring.topUpOp = this.monitoringData.topUpOp || 'lessThan';
+                    offerMonitoring.topUpTransactionValue = this.monitoringData.topUpTransactionValue;
+                    offerMonitoring.topUpDaId = this.monitoringData.topUpDaId;
+                    offerMonitoring.topUpDaBalanceOp = this.monitoringData.topUpDaBalanceOp;
+                    offerMonitoring.topUpDaBalanceValue = this.monitoringData.topUpDaBalanceValue;
+                    offerMonitoring.topUpTempServiceClass = this.monitoringData.topUpTempServiceClass;
                 } else if (this.eventTypeData === 'Usage') {
                     offerMonitoring.usageServiceType = this.monitoringData.usageServiceType;
                     offerMonitoring.usageType = this.monitoringData.usageType;
+                    offerMonitoring.countryCode = this.monitoringData.countryCode;
                     offerMonitoring.usageOperator = this.monitoringData.usageOperator;
                     offerMonitoring.usageValue = this.monitoringData.usageValue;
                 } else if (this.eventTypeData === 'ARPU') {
-                    offerMonitoring.arpuCreditMethod = this.monitoringData.arpuCreditMethod;
-                    offerMonitoring.arpuProductPackage = this.monitoringData.arpuProductPackage;
-                    offerMonitoring.arpuUsageServiceType = this.monitoringData.arpuUsageServiceType;
-                    offerMonitoring.arpuOperatorsValue = this.monitoringData.arpuOperatorsValue;
-                    offerMonitoring.arpuTopUpCode = this.monitoringData.arpuTopUpCode;
-                    offerMonitoring.arpuOperators = this.monitoringData.arpuOperators;
-                    offerMonitoring.arpu = this.monitoringData.arpu;
-                    offerMonitoring.arpuPaidOperators = this.monitoringData.arpuPaidOperators;
-                    offerMonitoring.arpuPaidTopUp = this.monitoringData.arpuPaidTopUp;
+                    offerMonitoring.arpuOp = this.monitoringData.arpuOp;
+                    offerMonitoring.arpuType = this.monitoringData.arpuType;
+                    offerMonitoring.arpuSelectedTopUpCode = this.monitoringData.arpuSelectedTopUpCode;
+                    offerMonitoring.arpuValue = this.monitoringData.arpuValue;
                 };
                 const offerEligibility = {
                     "isFrequencyOnly": this.eligibilityData.isFrequencyOnly,
@@ -1699,6 +1730,7 @@
                     "frequency": this.eligibilityData.frequency,
                     "numberOfFrequency": this.eligibilityData.numberOfFrequency,
                     "numberOfDays": this.eligibilityData.numberOfDays,
+                    "excludeProgramId": this.eligibilityData.excludeProgramId,
                 };
                 if (this.offerLevelType === 'cap-only') {
                     offerEligibility.isOfferLevelCapOnly = true;
@@ -1782,6 +1814,7 @@
                                 offerCampaignName: item.offerCampaignName
                             }
                         }),
+                        offerEventCondition,
                         offerEligibility,
                         offerMonitoring,
                         offerRedemption,
