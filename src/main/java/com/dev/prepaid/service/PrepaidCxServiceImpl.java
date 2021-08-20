@@ -24,9 +24,6 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 	@Autowired
 	private PrepaidCxProvApplicationRepository prepaidCxProvApplicationRepository;
-	
-//	@Autowired
-//	private PrepaidCxProvInstancesRepository prepaidCxProvInstancesRepository;
 
 	@Autowired
 	private PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
@@ -81,12 +78,6 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 				 serviceInstance.getApplicationServiceInstall().getApplication().getUuid());
 		log.debug("prepaidCxProvApplication {} ", prepaidCxProvApplication );
 		if(prepaidCxProvApplication == null) return; //return or throw exception
-		
-//		PrepaidCxProvInstances prepaidCxProvInstances = prepaidCxProvInstancesRepository
-//				.findOneByApplicationIdAndServiceIdAndInstanceIdAndDeletedDateIsNull
-//				(prepaidCxProvApplication.getId(),
-//				 serviceInstance.getApplicationServiceInstall().getUuid(),
-//				 serviceInstance.getUuid());
 
 		Optional<PrepaidCxOfferConfig> opsFind = prepaidCxOfferConfigRepository.findByInstanceId(
 				serviceInstance.getUuid());
@@ -96,53 +87,23 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.id(offerConfigId)
 					.instanceId(serviceInstance.getUuid())
 					.programId(serviceInstance.getAssetId())
-//					.programName(serviceInstance.getApplicationServiceInstall().getName())
+					.programName(serviceInstance.getApplicationServiceInstall().getName())
 					.provisionType(serviceInstance.getAssetType())
 					.build();
 
 			prepaidCxOfferConfigRepository.save(prepaidCxOfferConfig);
 		}
-
-//		if(prepaidCxProvInstances == null) {
-//			prepaidCxProvInstances = new PrepaidCxProvInstances().builder()
-//					.id(GUIDUtil.generateGUID())
-//
-//					.applicationId(prepaidCxProvApplication.getId())
-//					.serviceId(serviceInstance.getApplicationServiceInstall().getUuid())
-//					.instanceId(serviceInstance.getUuid())
-//					.programId(serviceInstance.getAssetId())
-//
-//					.status("CREATED")
-//					.createdBy(serviceInstance.getApplicationServiceInstall().getName())
-//					.createdDate(new Date())
-//					.build();
-//
-//			prepaidCxProvInstancesRepository.save(prepaidCxProvInstances);
-//		}else {
-//
-//			prepaidCxProvInstances.setStatus("CREATED"); //CREATED
-//			prepaidCxProvInstances.setLastModifiedBy(serviceInstance.getApplicationServiceInstall().getName());
-//			prepaidCxProvInstances.setLastModifiedDate(new Date());
-//
-//			prepaidCxProvInstancesRepository.save(prepaidCxProvInstances);
-//		}
 	}
 	
 	@Override
 	public void appConfigurationAddEntity(SaveConfigRequest saveConfigRequest) {
 		Boolean notification = (saveConfigRequest.getPayload().getNotification() != null) ? saveConfigRequest.getPayload().getNotification() : false;
 		// TODO update entity
-//		PrepaidCxProvInstances prepaidCxProvInstances = prepaidCxProvInstancesRepository
-//				.findOneByInstanceIdAndDeletedDateIsNull(saveConfigRequest.getInstanceUuid());
-
 		Optional<PrepaidCxOfferConfig> opsFind = prepaidCxOfferConfigRepository.findByInstanceId(saveConfigRequest.getInstanceUuid());
 		PrepaidCxOfferConfig prepaidCxOfferConfig = null;
 		log.debug("get data  {} ", opsFind);
 		if(opsFind.isPresent()) {
-			opsFind.get().setProgramId(saveConfigRequest.getPayload().getProgramId());
-			opsFind.get().setProgramName(saveConfigRequest.getPayload().getProgramName());
 			opsFind.get().setProvisionType(saveConfigRequest.getPayload().getType());
-
 			prepaidCxOfferConfig = prepaidCxOfferConfigRepository.save(opsFind.get());
 
 			if(prepaidCxOfferConfig.getId() != null){
@@ -162,33 +123,12 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					saveOfferEventCondition(prepaidCxOfferConfig.getId(), saveConfigRequest);
 				}
 			}
-
-//			for(OfferSelection offerSelection : saveConfigRequest.getPayload().getOfferSelections()) {
-	//			prepaidCxProvInstances.setStartDate(saveConfigRequest.getPayload().getStartDate());
-	//			prepaidCxProvInstances.setEndDate(saveConfigRequest.getPayload().getEndDate());
-//				prepaidCxProvInstances.setCampaignOfferType(offerSelection.getOfferBucketType());
-//				prepaidCxProvInstances.setCampaignOfferId(offerSelection.getOfferCampaignId());
-//				prepaidCxProvInstances.setInputMapping(GsonUtils.deserializeObjectToJSON(InitData.recordDefinition.getInputParameters()));
-//				prepaidCxProvInstances.setOutputMapping(GsonUtils.deserializeObjectToJSON(InitData.recordDefinition.getOutputParameters()));
-//
-//				prepaidCxProvInstances.setNotification(notification);
-//
-//				prepaidCxProvInstances.setStatus("CONFIGURED");
-//				prepaidCxProvInstances.setLastModifiedDate(new Date());
-//
-//				prepaidCxProvInstancesRepository.save(prepaidCxProvInstances);
-//				log.trace("save {} ", prepaidCxProvInstances);
-//			}
-			
 		}
 		
 	}
 
 	@Override
 	public void appDeleteEntity(String instanceUuid) {
-//		PrepaidCxProvInstances prepaidCxProvInstances = prepaidCxProvInstancesRepository
-//				.findOneByInstanceIdAndDeletedDateIsNull(instanceUuid);
-
 		PrepaidCxOfferConfig prepaidCxOfferConfig = prepaidCxOfferConfigRepository.
 				findOneByInstanceIdAndDeletedDateIsNull(instanceUuid);
 
@@ -198,7 +138,6 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 			prepaidCxOfferConfigRepository.save(prepaidCxOfferConfig);
 		}
-//		prepaidCxProvInstancesRepository.save(prepaidCxProvInstances);
 	}
 
 	@Override
