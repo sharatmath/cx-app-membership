@@ -247,7 +247,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="eventConditionDataTopupCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataTopupCreditMethod" x-model="eventConditionData.topUpCreditMethod">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopupCreditMethod" x-model="eventConditionData.creditMethod">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
@@ -347,7 +347,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="eventConditionDataUsageServiceTypeDropdown" class="col-sm-2 col-form-label">Usage Service Type</label>
                                                     <div class="col-sm-10">
-                                                        <select id="eventConditionDataUsageServiceTypeDropdown" class="form-control" x-model="eventConditionData.eventConditionUsageServiceType">
+                                                        <select id="eventConditionDataUsageServiceTypeDropdown" class="form-control" x-model="eventConditionData.usageServiceType">
                                                             <option>Choose...</option>
                                                             <option value="voice">Voice</option>
                                                             <option value="data">Data</option>
@@ -356,7 +356,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <template x-if="eventConditionData.eventConditionUsageServiceType === 'voice'">
+                                                <template x-if="eventConditionData.usageServiceType === 'voice'">
                                                     <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeVoice" class="col-sm-2 col-form-label">Usage Type</label>
                                                         <div class="col-sm-10">
@@ -380,7 +380,7 @@
                                                         </div>
                                                     </div>
                                                 </template>
-                                                <template x-if="eventConditionData.eventConditionUsageServiceType === 'data'">
+                                                <template x-if="eventConditionData.usageServiceType === 'data'">
                                                     <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeData" class="col-sm-2 col-form-label">Usage Type</label>
                                                         <div class="col-sm-10">
@@ -397,7 +397,7 @@
                                                         </div>
                                                     </div>
                                                 </template>
-                                                <template x-if="eventConditionData.eventConditionUsageServiceType === 'SMS'">
+                                                <template x-if="eventConditionData.usageServiceType === 'SMS'">
                                                     <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeSMS" class="col-sm-2 col-form-label">Usage Type</label>
                                                         <div class="col-sm-10">
@@ -413,7 +413,7 @@
                                                         </div>
                                                     </div>
                                                 </template>
-                                                <template x-if="eventConditionData.eventConditionUsageServiceType === 'IDD'">
+                                                <template x-if="eventConditionData.usageServiceType === 'IDD'">
                                                     <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeIDD" class="col-sm-2 col-form-label">Usage Type</label>
                                                         <div class="col-sm-10">
@@ -507,7 +507,7 @@
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Type</label>
-                                                    <div class="col-sm-10">
+                                                    <div class="col-sm-5">
                                                         <select id="eventConditionDataTopUpValueARPUValue" class="form-control" x-model="eventConditionData.arpuType">
                                                             <option>Choose...</option>
                                                             <option value="allTopUp">ALL TOP UP</option>
@@ -517,6 +517,11 @@
                                                             <option value="others">OTHERS</option>
                                                         </select>
                                                     </div>
+                                                    <template x-if="eventConditionData.arpuType === 'others'">
+                                                        <div class="col-sm-5">
+                                                            <input type="text" class="form-control" id="eventConditionArpuSelectedTopUpCode" x-model="eventConditionData.arpuSelectedTopUpCode">
+                                                        </div>
+                                                    </template>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Value</label>
@@ -1645,32 +1650,35 @@
                     "campaignEndDate": this.eventConditionData.campaignEndDate,
                     "eventConditionName": this.eventConditionData.eventConditionName,
                 };
-                if (this.eventTypeData === 'Top-Up') {
-                    offerEventCondition.topUpCreditMethod = this.eventConditionData.topUpCreditMethod;
-                    offerEventCondition.topUpUsageServiceType = this.eventConditionData.topUpUsageServiceType;
-                    offerEventCondition.topUpProductPackage = this.eventConditionData.topUpProductPackage;
+                if (this.eventConditionTypeData === 'Top-Up') {
+                    offerEventCondition.creditMethod = this.eventConditionData.creditMethod;
+                    offerEventCondition.usageServiceType = this.eventConditionData.usageServiceType;
                     offerEventCondition.operatorId = this.eventConditionData.operatorId;
                     offerEventCondition.topUpCode = this.eventConditionData.topUpCode;
-                    offerEventCondition.topUpCurBalanceOp = this.eventConditionData.topUpCurBalanceOp;
+                    offerEventCondition.topUpCurBalanceOp = this.eventConditionData.topUpCurBalanceOp || 'AllTopUp';
                     offerEventCondition.topUpCurBalanceValue = this.eventConditionData.topUpCurBalanceValue;
-                    offerEventCondition.topUpAccBalanceBeforeOp = this.eventConditionData.topUpAccBalanceBeforeOp;
+                    offerEventCondition.topUpAccBalanceBeforeOp = this.eventConditionData.topUpAccBalanceBeforeOp || 'AllTopUp';
                     offerEventCondition.topUpAccBalanceBeforeValue = this.eventConditionData.topUpAccBalanceBeforeValue;
                     offerEventCondition.topUpOp = this.eventConditionData.topUpOp || 'lessThan';
                     offerEventCondition.topUpTransactionValue = this.eventConditionData.topUpTransactionValue;
                     offerEventCondition.topUpDaId = this.eventConditionData.topUpDaId;
-                    offerEventCondition.topUpDaBalanceOp = this.eventConditionData.topUpDaBalanceOp;
+                    offerEventCondition.topUpDaBalanceOp = this.eventConditionData.topUpDaBalanceOp || 'lessThan';
                     offerEventCondition.topUpDaBalanceValue = this.eventConditionData.topUpDaBalanceValue;
                     offerEventCondition.topUpTempServiceClass = this.eventConditionData.topUpTempServiceClass;
-                } else if (this.eventTypeData === 'Usage') {
+                } else if (this.eventConditionTypeData === 'Usage') {
                     offerEventCondition.usageServiceType = this.eventConditionData.usageServiceType;
                     offerEventCondition.eventTypeUsages = this.eventConditionData.eventTypeUsages;
                     offerEventCondition.eventUsagesOp = this.eventConditionData.eventUsagesOp;
                     offerEventCondition.eventUsagesValue = this.eventConditionData.eventUsagesValue;
                     offerEventCondition.aggregationPeriodDays = this.eventConditionData.aggregationPeriodDays;
-                } else if (this.eventTypeData === 'ARPU') {
+                } else if (this.eventConditionTypeData === 'ARPU') {
                     offerEventCondition.operatorId = this.eventConditionData.operatorId;
                     offerEventCondition.arpuType = this.eventConditionData.arpuType;
-                    offerEventCondition.arpuSelectedTopUpCode = this.eventConditionData.arpuSelectedTopUpCode;
+                    if (this.eventConditionData.arpuType === 'others') {
+                        offerEventCondition.arpuSelectedTopUpCode = this.eventConditionData.arpuSelectedTopUpCode;
+                    } else {
+                        offerEventCondition.arpuSelectedTopUpCode = null;
+                    }
                     offerEventCondition.arpuOp = this.eventConditionData.arpuOp;
                     offerEventCondition.arpuValue = this.eventConditionData.arpuValue;
                     offerEventCondition.aggregationPeriodDays = this.eventConditionData.aggregationPeriodDays;
@@ -1702,14 +1710,14 @@
                     offerMonitoring.topUpUsageServiceType = this.monitoringData.topUpUsageServiceType;
                     offerMonitoring.topUpOperator = this.monitoringData.topUpOperator;
                     offerMonitoring.topUpCode = this.monitoringData.topUpCode;
-                    offerMonitoring.topUpCurBalanceOp = this.monitoringData.topUpCurBalanceOp;
+                    offerMonitoring.topUpCurBalanceOp = this.monitoringData.topUpCurBalanceOp || 'AllTopUp';
                     offerMonitoring.topUpCurBalanceValue = this.monitoringData.topUpCurBalanceValue;
-                    offerMonitoring.topUpAccBalanceBeforeOp = this.monitoringData.topUpAccBalanceBeforeOp;
+                    offerMonitoring.topUpAccBalanceBeforeOp = this.monitoringData.topUpAccBalanceBeforeOp || 'AllTopUp';
                     offerMonitoring.topUpAccBalanceBeforeValue = this.monitoringData.topUpAccBalanceBeforeValue;
                     offerMonitoring.topUpOp = this.monitoringData.topUpOp || 'lessThan';
                     offerMonitoring.topUpTransactionValue = this.monitoringData.topUpTransactionValue;
                     offerMonitoring.topUpDaId = this.monitoringData.topUpDaId;
-                    offerMonitoring.topUpDaBalanceOp = this.monitoringData.topUpDaBalanceOp;
+                    offerMonitoring.topUpDaBalanceOp = this.monitoringData.topUpDaBalanceOp || 'lessThan';
                     offerMonitoring.topUpDaBalanceValue = this.monitoringData.topUpDaBalanceValue;
                     offerMonitoring.topUpTempServiceClass = this.monitoringData.topUpTempServiceClass;
                 } else if (this.eventTypeData === 'Usage') {
