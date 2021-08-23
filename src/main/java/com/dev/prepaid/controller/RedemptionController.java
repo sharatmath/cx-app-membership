@@ -5,10 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dev.prepaid.model.redemption.RedemptionResponse;
 import com.dev.prepaid.service.RedemptionService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -309,14 +311,19 @@ public class RedemptionController {
 //		return offerService.getOfferRedemption(instanceId);
 //	}
 //	
-	@GetMapping(value = "process")
-	public ResponseEntity<String> getProcessRedemption(@RequestParam(value = "msisdn", required = false) String msisdn){
+	
+	@RequestMapping(value = "processRedemption",
+			method = RequestMethod.POST)
+	public ResponseEntity<String> processRedemption(@RequestBody String msisdn){
 		redemptionService.processByCall(msisdn);
 		
-		return  ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("Response:"+msisdn +"redemption done");
+		
+		return ResponseEntity.status(HttpStatus.OK).body("Response:"+msisdn +"redemption done");
+		
+//		return  ResponseEntity
+//                .status(HttpStatus.OK)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .body("Response:"+msisdn +"redemption done");
 	}
 	
 	@GetMapping("test")
@@ -330,5 +337,24 @@ public class RedemptionController {
                 .body(hello);
     }
 	
+	
+	@RequestMapping(value = "processRedemption2",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RedemptionResponse> processRedemption2(@RequestBody String msisdn){
+		
+		RedemptionResponse response = RedemptionResponse.builder()
+				.successful(true)
+				.content("Msisd:"+msisdn)
+				.errorMessage("")
+				.build();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+		
+//		return  ResponseEntity
+//                .status(HttpStatus.OK)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .body("Response:"+msisdn +"redemption done");
+	}
 	
 }
