@@ -6,6 +6,7 @@
 
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
@@ -569,6 +570,13 @@
 							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
                                 <div>
                                     <form class="form-inline">
+                                        <label for="offerType" class="my-1 mr-2">Offer Type</label>
+                                        <select id="offerType" x-ref="selectBucket" class="custom-select my-1 mr-sm-2 col-sm-2" >
+                                            <option>Choose...</option>
+                                            <option value="daOffer">DA Offer</option>
+                                            <option value="omsOffer">OMS Offer</option>
+                                            <option value="promoCode">Promo Code</option>
+                                        </select>
                                         <label for="offerBucket" class="my-1 mr-2">Offer Bucket</label>
                                         <select id="offerBucket" x-ref="selectBucket" class="custom-select my-1 mr-sm-2 col-sm-4" >
                                             <option>Choose...</option>
@@ -730,31 +738,33 @@
                                         </div><br>
                                         <b>Subscriber Offer Eligibility - For Configured Offer</b><br><br>
                                         <form class="form-inline">
-                                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                                <input type="checkbox" class="custom-control-input" id="frequencyOnly" x-model="eligibilityData.isFrequencyOnly">
+                                            <div class="custom-control custom-radio my-1 mr-sm-2">
+                                                <input type="radio" class="custom-control-input" id="frequencyOnly" name="radioSubscriberOfferEligibility" x-model="subscriberOfferEligibility" value="freq-only">
                                                 <label class="custom-control-label" for="frequencyOnly">Frequency Only</label>
                                             </div>
                                             <label class="sr-only" for="inputFrequency">Name</label>
-                                            <input type="number" class="form-control mb-2 mr-sm-2" id="inputFrequency" x-model="eligibilityData.frequency">
+                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'"  class="form-control mb-2 mr-sm-2" id="inputFrequency" x-model="eligibilityData.frequency">
                                         </form>
                                         <form class="form-inline">
-                                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                                <input type="checkbox" class="custom-control-input" id="frequencyTimePeriod" x-model="eligibilityData.isFrequencyAndTime">
+                                            <div class="custom-control custom-radio my-1 mr-sm-2">
+                                                <input type="radio" class="custom-control-input" name="radioSubscriberOfferEligibility" id="frequencyTimePeriod" x-model="subscriberOfferEligibility" value="freq-timeperiod">
                                                 <label class="custom-control-label" for="frequencyTimePeriod">Frequency and Time Period</label>
                                             </div>
                                             <label class="sr-only" for="inputFrequencyTimePeriod">Name</label>
-                                            <input type="number" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> in &nbsp;
+                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-timeperiod'" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> in &nbsp;
 
                                             <label class="sr-only" for="inputFrequencyIn">Name</label>
-                                            <input type="number" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
+                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-timeperiod'" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
                                         </form><br>
                                         <div id="excludeSubsForm">
                                             <b>Exclude Subscriber from this if they are in the following Program</b><br><br>
-                                            <div class="form-group row">
-                                                <div class="col-sm-12">
-                                                    <input type="text" class="form-control" id="excludeSubscriber" x-model="eligibilityData.excludeProgramId">
-                                                </div>
-                                            </div>
+                                            <select multiple class="selectpicker w-100" x-model="eligibilityData.excludeSubscriber">
+                                                <option>Program 1</option>
+                                                <option>Program 2</option>
+                                                <option>Program 3</option>
+                                                <option>Program 4</option>
+                                                <option>Program 5</option>
+                                            </select>
                                         </div><br>
                                     </div>
 								</template>
@@ -1247,11 +1257,6 @@
                                                     <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="text" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
                                                 </div>
                                                 <div class="col-sm-2"> Day
-<!--                                                    <label class="sr-only" for="recFreqDaysOrMonth"></label>-->
-<!--                                                    <select class="form-control mb-2 mr-sm-2" id="recFreqDaysOrMonth">-->
-<!--                                                        <option value="Days">Days</option>-->
-<!--                                                        <option value="Month">Month</option>-->
-<!--                                                    </select>-->
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -1281,28 +1286,48 @@
                                             </div>
                                             <template x-if="redemptionMethod === 'ManualRedemption'">
                                                 <div class="manualRedemptionSelection">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Keyword</label>
-                                                    <div class="col-sm-2">
-                                                        <label class="sr-only" for="inputKeywordDP">Name</label>
-                                                        <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordDP" x-model="redemptionData.smsKeyword">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control form-control-sm" id="manualSmsCampaignName" x-model="redemptionData.manualSmsCampaignName">
+                                                        </div>
                                                     </div>
-                                                    <label class="col-sm-2 col-form-label col-form-label">Keyword Validity</label>
-                                                    <div class="col-sm-2">
-                                                        <label class="sr-only" for="inputKeywordValidityDP">Name</label>
-                                                        <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordValidityDP" x-model="redemptionData.smsKeywordValidityDays">
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        Days
-<!--                                                        <label class="sr-only" for="keywordValDaysOrMonth"></label>-->
-<!--                                                        <select class="form-control mb-2 mr-sm-2" id="keywordValDaysOrMonth">-->
-<!--                                                            <option value="Days">Days</option>-->
-<!--                                                            <option value="Month">Month</option>-->
-<!--                                                        </select>-->
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label">Keyword</label>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="inputKeywordDP">Name</label>
+<!--                                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordDP" x-model="redemptionData.smsKeyword">-->
+                                                            <select class="form-control mb-2 mr-sm-2">
+                                                                <option value="keyword1">Keyword 1</option>
+                                                                <option value="keyword2">Keyword 2</option>
+                                                                <option value="keyword3">Keyword 3</option>
+                                                                <option value="keyword4">Keyword 4</option>
+                                                            </select>
+                                                        </div>
+                                                        <label class="col-sm-2 col-form-label col-form-label">Keyword Validity</label>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="inputKeywordValidityDP">Name</label>
+                                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordValidityDP" x-model="redemptionData.smsKeywordValidityDays">
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            Days
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                             </template>
+                                            <b>Post Provision Message</b><br><br>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control form-control-sm" id="smaCampaignName" x-model="redemptionData.smsCampaignName">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label">Coupon Code SMS Campaign Name (Optional)</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control form-control-sm" id="couponCodeSmsCampaignName" x-model="redemptionData.couponCodeSmsCampaignName">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </template>
@@ -1344,17 +1369,22 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>-->
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!--jQUERY BEGIN-->
 <script>
     function jQuery() {
+        $(document).ready(function() {
+            $('.selectpicker').select2();
+        });
+
         $(document).ready(function(){
             $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Not Applicable</h5>");
             $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
@@ -1540,6 +1570,7 @@
             eventTypeData: 'Top-Up',
             eventConditionTypeData: 'Top-Up',
             offerLevelType: null,
+            subscriberOfferEligibility: null,
             monitoringFulfillmentRadio: null,
             totalRedemptionCapRadio: null,
             subscriberRedemptionCapRadio: null,
