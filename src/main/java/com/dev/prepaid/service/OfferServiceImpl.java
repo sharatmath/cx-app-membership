@@ -256,7 +256,8 @@ public class OfferServiceImpl implements OfferService {
 	public List<ResponSysProgram> listProgram() {
 		List<ResponSysProgram> list = new ArrayList<>();
 		for(PrepaidCxOfferConfig d : prepaidCxOfferConfigRepository.findAll()){
-			list.add(new ResponSysProgram(String.valueOf(d.getProgramId()), d.getProgramName()));
+			String programName = d.getProgramName() + "-" + d.getInstanceId();
+			list.add(new ResponSysProgram(String.valueOf(d.getProgramId()), d.getProgramName());
 		}
 		return list;
 	}
