@@ -1,5 +1,6 @@
 package com.dev.prepaid.domain;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,11 +25,13 @@ public class PrepaidCxOfferRedemption extends Auditable{
     private Long redemptionCapValue;
     private Boolean isRedemptionCapAndPeriod;
     private Long totalRedemptionPeriodValue;
+    private Long totalRedemptionPeriodEvery;
     private Boolean isFrequencyOnly;
     private Boolean isFrequencyAndTime;
     private Long frequencyValue;
     private Long timePeriodValue;
     private String timePeriodType;
+    private Long timePeriodEvery;
     private String totalRedemptionPeriodType;
     private Long totalRecurringFrequency;
     private Boolean isRecurringFrequencyAndPeriod;

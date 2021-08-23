@@ -3,8 +3,8 @@ prepaid-cx-api.git
 ##  DOCKER BUILD
 ```sh
 mvn clean package -DskipTests=true
-sudo docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.0.5 .
-sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.0.5
+sudo docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.0.8 .
+sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.0.8
 ```
 
 ##  DEPLOYMENT
@@ -362,3 +362,23 @@ CREATE TABLE PREPAID_PROVISIONED_OFFER(
 ```
 
 
+
+##  History
+```sh
+#Date 2021-08-16
+#1 Data Model | Alter table prepaid_cx_offer_monitoring
+  add column event_campaign_name
+  add column event_start_date
+  add column event_end_date
+
+#2 Java | 
+  PrepaidCxOfferMonitoring.java
+  add field String eventCampaignName;
+  add field String eventStartDate;
+  add field String eventEndDate;
+  
+#3 Offer Monitoring Logic
+  OfferMonitoringServiceImpl.java
+  pointing after applu policy to redemption process/ queue
+  
+```

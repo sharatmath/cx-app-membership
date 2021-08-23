@@ -50,6 +50,20 @@
       "totalRedemptionPeriodValue": 0
     },
     "offerSelections": [
+      {
+        "offerBucketCode": "string",
+        "offerBucketId": "OMS|261",
+        "offerBucketType": "string",
+        "offerCampaignId": 401,
+        "offerCampaignName": "Test"
+      },
+      {
+        "offerBucketCode": "string",
+        "offerBucketId": "DA|1",
+        "offerBucketType": "string",
+        "offerCampaignId": 241,
+        "offerCampaignName": "Test"
+      }
     ],
     "programId": "string",
     "programName": "string",

@@ -26,4 +26,7 @@ public interface OfferService {
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId);
 	public OfferFulfilment getOfferMonitoring(String instanceId);
 	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId);
+	public PrepaidCxOfferEventCondition getOfferEventCondition(String instanceId);
+	public List<ResponSysProgram> listProgram();
+	public List<Country> listCountry();
 }

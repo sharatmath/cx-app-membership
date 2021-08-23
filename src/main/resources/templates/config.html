@@ -2,10 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>CONFIGURE PROVISIONING MEMBERSHIP</title>
+    <title>CONFIGURE OFFER & AUDIENCE SELECTION</title>
 
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
@@ -159,12 +160,12 @@
 </head>
 
 <body><br>
-<div class="container" x-data="{...configureMembership(), ...jQuery()}" x-init="[offerBucketDropdown(), campaignOfferDropdown(), getOfferSelection(), eligibilityPolicy(), monitoringPolicy(), redemptionPolicy()]">
+<div class="container" x-data="{...configureMembership(), ...jQuery()}" x-init="[offerBucketDropdown(), campaignOfferDropdown(), getOfferSelection(), eligibilityPolicy(), monitoringPolicy(), redemptionPolicy(), eventConditionPolicy()]">
 	<div class="row">
 		<div class="col-md-12 mt-12 card">
 
 				<div class="form-group">
-					<h4 class="mt-3"><img src="https://cdn1.singteldigital.com/content/dam/singtel/online-draft/singtel_logo_coloured.png" style="max-height: 64px;"> Configure Provisioning Membership</h4>
+					<h4 class="mt-3"><img src="https://cdn1.singteldigital.com/content/dam/singtel/online-draft/singtel_logo_coloured.png" style="max-height: 64px;"> Configure Offer & Audience Selection</h4>
 				</div>
 
 				<div class="form-group">
@@ -173,20 +174,409 @@
 						<select id="typeData" class="form-control" x-model="type">
 							<option value="directProvisioning">Direct Provisioning</option>
 							<option value="offerMonitoringWithAssignment">Offer Monitoring with Offer Assignment</option>
-							<option value="offerMonitoring">Offer Monitoring Only</option>
+                            <option value="eventConditionDirectProvisioning">Event Condition With Direct Provisioning</option>
+							<option value="offerMonitoring">Event Condition Only</option>
 						</select>
 					</div>
 				</div>
 
 				<div class="accordion DPForm" id="directProvisioning">
+                    <div class="card">
+                        <div id="headingSix">
+                            <div id="eventConditionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseSix"><h5><i class="fa fa-plus"></i> Event Condition - Not Applicable</h5></div>
+                        </div>
+                        <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#directProvisioning">
+                            <div class="card-body"x-show="type === 'eventConditionDirectProvisioning' || type === 'offerMonitoring'">
+                                <template x-if="eventConditionData">
+                                    <div>
+                                        <div class="form-group row">
+                                            <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
+                                                Campaign Period
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="row">
+                                                    <div class="col-sm-2">
+                                                        Start Date
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group date" data-provider="datepicker">
+                                                            <input type="datetime-local" class="form-control" id="eventConditionDataCampaignStarDate" x-model="eventConditionData.campaignStartDate">
+                                                            <div class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-th"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        End Date
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group date" data-provider="datepicker">
+                                                            <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate" x-model="eventConditionData.campaignEndDate">
+                                                            <div class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-th"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="mb-3 row">
+                                                <label for="eventConditionDataEventConditionName" class="col-sm-2 col-form-label">Event Condition Name</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="eventConditionDataEventConditionName" x-model="eventConditionData.eventConditionName">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="mb-3 row">
+                                                <label for="eventTypeData" class="col-sm-2 col-form-label">Event Condition Type </label>
+                                                <div class="col-sm-10">
+                                                    <div class="form-group d-flex justify-content-between">
+                                                        <select class="form-control" id="eventConditionTypeData" x-model="eventConditionTypeData">
+                                                            <option value="Top-Up">Top-Up</option>
+                                                            <option value="Usage">Usage</option>
+                                                            <option value="ARPU">ARPU</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <template x-if="eventConditionTypeData === 'Top-Up'">
+                                            <div class="eventConditionFulfillmentMonitoring" id="eventConditionDataTopUpForm">
+                                                <div class="mb-3 row">
+                                                    <label for="eventConditionDataTopupCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopupCreditMethod" x-model="eventConditionData.creditMethod">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="eventConditionDataUsageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="eventConditionDataUsageServiceType" x-model="eventConditionData.usageServiceType">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="eventConditionDataOperators" class="col-sm-2 col-form-label">Operator</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="eventConditionDataOperators" x-model="eventConditionData.operatorId">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="eventConditionDataRefillProfileID" class="col-sm-2 col-form-label">Refill Profile ID</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="eventConditionDataRefillProfileID" x-model="eventConditionData.topUpCode">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Current Balance</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="eventConditionDataCurrentBalanceOperators" class="form-control" x-model="eventConditionData.topUpCurBalanceOp">
+                                                            <option value="AllTopUp">ALL TOP UP</option>
+                                                            <option value="PaidTopUp">PAID TOP UP</option>
+                                                            <option value="DatabaseDirect">DATABASE DIRECT</option>
+                                                            <option value="SelfService">SELF SERVICE</option>
+                                                            <option value="Others">OTHERS</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="eventConditionDataCurrentBalanceValue" x-model="eventConditionData.topUpCurBalanceValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Account Balance Before</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="eventConditionDataAccountBalanceOperators" class="form-control" x-model="eventConditionData.topUpAccBalanceBeforeOp">
+                                                            <option value="AllTopUp">ALL TOP UP</option>
+                                                            <option value="PaidTopUp">PAID TOP UP</option>
+                                                            <option value="DatabaseDirect">DATABASE DIRECT</option>
+                                                            <option value="SelfService">SELF SERVICE</option>
+                                                            <option value="Others">OTHERS</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="eventConditionDataAccountBalanceValue" x-model="eventConditionData.topUpAccBalanceBeforeValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="eventConditionDataTopUpValueOperators" class="form-control" x-model="eventConditionData.topUpOp">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopUpValue" x-model="eventConditionData.topUpTransactionValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="refillProfileID" class="col-sm-2 col-form-label">DA ID</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="eventConditionDataDaID" x-model="eventConditionData.topUpDaId">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">DA Balance</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="eventConditionDataTopUpDaBalanceOperators" class="form-control" x-model="eventConditionData.topUpDaBalanceOp">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopUpDaBalanceValue" x-model="eventConditionData.topUpDaBalanceValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass" x-model="eventConditionData.topUpTempServiceClass">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="eventConditionTypeData === 'Usage'">
+                                            <div class="eventConditionFulfillmentMonitoring" id="eventConditionDataUsageForm">
+                                                <div class="mb-3 row">
+                                                    <label for="eventConditionDataUsageServiceTypeDropdown" class="col-sm-2 col-form-label">Usage Service Type</label>
+                                                    <div class="col-sm-10">
+                                                        <select id="eventConditionDataUsageServiceTypeDropdown" class="form-control" x-model="eventConditionData.usageServiceType">
+                                                            <option>Choose...</option>
+                                                            <option value="voice">Voice</option>
+                                                            <option value="data">Data</option>
+                                                            <option value="SMS">SMS</option>
+                                                            <option value="IDD">IDD</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <template x-if="eventConditionData.usageServiceType === 'voice'">
+                                                    <div class="mb-3 row">
+                                                        <label for="eventConditionDataUsageTypeVoice" class="col-sm-2 col-form-label">Usage Type</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="eventConditionDataUsageTypeVoice" class="form-control" x-model="eventConditionData.eventTypeUsages">
+                                                                <option>Choose...</option>
+                                                                <option value="VOICE_COUNT">VOICE_COUNT</option>
+                                                                <option value="VOICE_MINS">VOICE_MINS</option>
+                                                                <option value="VOICE_AMOUNT">VOICE_AMOUNT</option>
+                                                                <option value="VOICE_OFFNET_COUNT">VOICE_OFFNET_COUNT</option>
+                                                                <option value="VOICE_OFFNET_MINS">VOICE_OFFNET_MINS</option>
+                                                                <option value="VOICE_OFFNET_AMOUNT">VOICE_OFFNET_AMOUNT</option>
+                                                                <option value="VOICE_ONNET_COUNT">VOICE_ONNET_COUNT</option>
+                                                                <option value="VOICE_ONNET_MINS">VOICE_ONNET_MINS</option>
+                                                                <option value="VOICE_ONNET_AMOUNT">VOICE_ONNET_AMOUNT</option>
+                                                                <option value="VOICE_INCOMING_COUNT">VOICE_INCOMING_COUNT</option>
+                                                                <option value="VOICE_INCOMING_MINS">VOICE_INCOMING_MINS</option>
+                                                                <option value="VOICE_INCOMING_AMOUNT">VOICE_INCOMING_AMOUNT</option>
+                                                                <option value="VOICE_LOCAL_USAGE">VOICE_LOCAL_USAGE</option>
+                                                                <option value="VOICE_LOCAL_DURATION">VOICE_LOCAL_DURATION</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <template x-if="eventConditionData.usageServiceType === 'data'">
+                                                    <div class="mb-3 row">
+                                                        <label for="eventConditionDataUsageTypeData" class="col-sm-2 col-form-label">Usage Type</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="eventConditionDataUsageTypeData" class="form-control" x-model="eventConditionData.eventTypeUsages">
+                                                                <option>Choose...</option>
+                                                                <option value="DATA_VOLUME">DATA_VOLUME</option>
+                                                                <option value="DATA_AMOUNT">DATA_AMOUNT</option>
+                                                                <option value="DATA_LOCAL_USAGE">DATA_LOCAL_USAGE</option>
+                                                                <option value="DATA_LOCAL_DURATION">DATA_LOCAL_DURATION</option>
+                                                                <option value="DATA_ROAMING_USAGE">DATA_ROAMING_USAGE</option>
+                                                                <option value="DATA_ROAMING">DATA_ROAMING</option>
+                                                                <option value="DURATION">DURATION</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <template x-if="eventConditionData.usageServiceType === 'SMS'">
+                                                    <div class="mb-3 row">
+                                                        <label for="eventConditionDataUsageTypeSMS" class="col-sm-2 col-form-label">Usage Type</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="eventConditionDataUsageTypeSMS" class="form-control" x-model="eventConditionData.eventTypeUsages">
+                                                                <option>Choose...</option>
+                                                                <option value="SMS_ALL_COUNT">SMS_ALL_COUNT</option>
+                                                                <option value="SMS_ALL_AMOUNT">SMS_ALL_AMOUNT</option>
+                                                                <option value="SMS_OFFNET_COUNT">SMS_OFFNET_COUNT</option>
+                                                                <option value="SMS_OFFNET_AMOUNT">SMS_OFFNET_AMOUNT</option>
+                                                                <option value="SMS_ONNET_COUNT">SMS_ONNET_COUNT</option>
+                                                                <option value="SMS_ONNET_AMOUNT">SMS_ONNET_AMOUNT</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <template x-if="eventConditionData.usageServiceType === 'IDD'">
+                                                    <div class="mb-3 row">
+                                                        <label for="eventConditionDataUsageTypeIDD" class="col-sm-2 col-form-label">Usage Type</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="eventConditionDataUsageTypeIDD" class="form-control" x-model="eventConditionData.eventTypeUsages">
+                                                                <option>Choose...</option>
+                                                                <option value="TRANSACTION_DATE_KEY">TRANSACTION_DATE_KEY</option>
+                                                                <option value="COUNTRY_CD">COUNTRY_CD</option>
+                                                                <option value="COUNTRY_NAME">COUNTRY_NAME</option>
+                                                                <option value="COUNT">COUNT</option>
+                                                                <option value="DURATION">DURATION</option>
+                                                                <option value="MA_AMOUNT">MA_AMOUNT</option>
+                                                                <option value="DA_AMOUNT">DA_AMOUNT</option>
+                                                                <option value="SMS_COUNT">SMS_COUNT</option>
+                                                                <option value="MA_CHARGED_SMS">MA_CHARGED_SMS</option>
+                                                                <option value="DA_CHARGED_SMS">DA_CHARGED_SMS</option>
+                                                                <option value="019_8_8_COUNT">019_8_8_COUNT</option>
+                                                                <option value="019_8_8_DURATION">019_8_8_DURATION</option>
+                                                                <option value="001_8_8_COUNT">001_8_8_COUNT</option>
+                                                                <option value="001_8_8_DURATION">001_8_8_DURATION</option>
+                                                                <option value="019_NON_PEAK_COUNT">019_NON_PEAK_COUNT</option>
+                                                                <option value="019_NON_PEAK_DURATION">019_NON_PEAK_DURATION</option>
+                                                                <option value="001_NON_PEAK_COUNT">001_NON_PEAK_COUNT</option>
+                                                                <option value="001_NON_PEAK_DURATION">001_NON_PEAK_DURATION</option>
+                                                                <option value="NO_PREFIX_8_8_COUNT">NO_PREFIX_8_8_COUNT</option>
+                                                                <option value="NO_PREFIX_8_8_DURATION">NO_PREFIX_8_8_DURATION</option>
+                                                                <option value="NO_PREFIX_NON_PEAK_COUNT">NO_PREFIX_NON_PEAK_COUNT</option>
+                                                                <option value="NO_PREFIX_NON_PEAK_DURATION">NO_PREFIX_NON_PEAK_DURATION</option>
+                                                                <option value="VOICE_IDD_USAGE">VOICE_IDD_USAGE</option>
+                                                                <option value="VOICE_IDD_DURATION">VOICE_IDD_DURATION</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3 row">
+                                                        <label for="countryCodeIDD" class="col-sm-2 col-form-label">Country Code</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="countryCodeIDD" class="form-control" x-model="eventConditionData.countryCode">
+                                                                <option>Choose...</option>
+                                                                <option value="60">Malaysia</option>
+                                                                <option value="62">Indonesia</option>
+                                                                <option value="63">Philippines</option>
+                                                                <option value="66">Thailand</option>
+                                                                <option value="84">Vietnam</option>
+                                                                <option value="86">China</option>
+                                                                <option value="91">India</option>
+                                                                <option value="95">Myanmar</option>
+                                                                <option value="880">Bangladesh</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Usage</label>
+                                                    <div class="col-sm-4">
+                                                        <select id="eventConditionDataUsageOperatorsDropdown" class="form-control" x-model="eventConditionData.eventUsagesOp">
+                                                            <option>Choose...</option>
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <input type="number" class="form-control" id="eventConditionDataUsageValue" x-model="eventConditionData.eventUsagesValue">
+                                                    </div> GB / Mins / Count
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Aggregation Period</label>
+                                                    <span>Last</span>
+                                                    <div class="col-sm-4">
+                                                        <select id="aggregationPeriodDropdown" class="form-control" x-model="eventConditionData.aggregationPeriodDays">
+                                                            <option>Choose...</option>
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <span>Days</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="eventConditionTypeData === 'ARPU'">
+                                            <div class="eventConditionFulfillmentMonitoring" id="eventConditionDataARPUForm">
+                                                <div class="mb-3 row">
+                                                    <label for="operators" class="col-sm-2 col-form-label">Operator</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="eventConditionDataOperatorsARPU" x-model="eventConditionData.operatorId">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Type</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="eventConditionDataTopUpValueARPUValue" class="form-control" x-model="eventConditionData.arpuType">
+                                                            <option>Choose...</option>
+                                                            <option value="allTopUp">ALL TOP UP</option>
+                                                            <option value="paidTopUp">PAID TOP UP</option>
+                                                            <option value="selfService">SELF SERVICE</option>
+                                                            <option value="ma">MA</option>
+                                                            <option value="others">OTHERS</option>
+                                                        </select>
+                                                    </div>
+                                                    <template x-if="eventConditionData.arpuType === 'others'">
+                                                        <div class="col-sm-5">
+                                                            <input type="text" class="form-control" id="eventConditionArpuSelectedTopUpCode" x-model="eventConditionData.arpuSelectedTopUpCode">
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Value</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="eventConditionDataPaidARPUTopUpValueOperators" class="form-control" x-model="eventConditionData.arpuOp">
+                                                            <option>Choose...</option>
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="eventConditionDataPaidARPUValue" x-model="eventConditionData.arpuValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Aggregation Period</label>
+                                                    <span>Last</span>
+                                                    <div class="col-sm-4">
+                                                        <select id="eventConditionDataARPUAggregationPeriodDropdown" class="form-control" x-model="eventConditionData.aggregationPeriodDays">
+                                                            <option>Choose...</option>
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <span>Days</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
 					<div class="card">
 						<div id="headingOne">
 							<div id="offerSelectionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseOne"><h5><i class="fa fa-plus"></i> Offer Selection - Required</h5></div>
 						</div>
 						<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#directProvisioning">
-							<div class="card-body">
+							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
                                 <div>
                                     <form class="form-inline">
+                                        <label for="offerType" class="my-1 mr-2">Offer Type</label>
+                                        <select id="offerType" x-ref="selectBucket" class="custom-select my-1 mr-sm-2 col-sm-2" >
+                                            <option>Choose...</option>
+                                            <option value="daOffer">DA Offer</option>
+                                            <option value="omsOffer">OMS Offer</option>
+                                            <option value="promoCode">Promo Code</option>
+                                        </select>
                                         <label for="offerBucket" class="my-1 mr-2">Offer Bucket</label>
                                         <select id="offerBucket" x-ref="selectBucket" class="custom-select my-1 mr-sm-2 col-sm-4" >
                                             <option>Choose...</option>
@@ -307,64 +697,74 @@
 							<div id="eligibilityPolicyAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseThree"><h5><i class="fa fa-plus"></i> Eligibility Policy - Optional</h5></div>
 						</div>
 						<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#directProvisioning">
-							<div class="card-body">
-								<b>Subscriber Offer Eligibility - For Configured Offer</b><br><br>
+							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning' || type === 'offerMonitoring'">
 								<template x-if="eligibilityData">
                                     <div>
-                                        <form class="form-inline">
-                                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                                <input type="checkbox" class="custom-control-input" id="frequencyOnly" x-model="eligibilityData.isFrequencyOnly">
-                                                <label class="custom-control-label" for="frequencyOnly">Frequency Only</label>
-                                            </div>
-                                            <label class="sr-only" for="inputFrequency">Name</label>
-                                            <input type="number" class="form-control mb-2 mr-sm-2" id="inputFrequency" x-model="eligibilityData.frequency">
-                                        </form>
-                                        <form class="form-inline">
-                                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                                <input type="checkbox" class="custom-control-input" id="frequencyTimePeriod" x-model="eligibilityData.isFrequencyAndTime">
-                                                <label class="custom-control-label" for="frequencyTimePeriod">Frequency and Time Period</label>
-                                            </div>
-                                            <label class="sr-only" for="inputFrequencyTimePeriod">Name</label>
-                                            <input type="number" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> in &nbsp;
-
-                                            <label class="sr-only" for="inputFrequencyIn">Name</label>
-                                            <input type="number" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
-                                        </form><br><br>
                                         <div id="subsOfferEligibilityForm">
-                                            <b>Subscriber Offer Eligibility - For Configured Offer</b><br><br>
+                                            <b>Total Eligibility Cap - For Configured Offer</b><br><br>
                                             <div class="form-group row">
-                                                <label for="isOfferLevelCapOnly" class="col-sm-4 col-form-label col-form-label-sm">Offer Level Cap (Max Number of Subscriber Who Can Receive This Offer)
+                                                <label for="isOfferLevelCapOnly" class="col-sm-4 col-form-label col-form-label">Total eligibility Cap (max number of subscriber who can receive this offer)
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isOfferLevelCapOnly" name="radioSubscriberOffer" class="custom-control-input" :checked="eligibilityData.isOfferLevelCapOnly + '' == 'true'" :value="true">
+                                                        <input type="radio" id="isOfferLevelCapOnly" name="radioSubscriberOffer" class="custom-control-input" x-model="offerLevelType" value="cap-only">
                                                         <label class="custom-control-label" for="isOfferLevelCapOnly"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <input type="number" class="form-control form-control-sm" id="offerLevelCapValue" x-model="eligibilityData.offerLevelCapValue">
+                                                    <input type="number" :disabled="!offerLevelType || offerLevelType === 'cap-period'" class="form-control form-control-sm" id="offerLevelCapValue" x-model="eligibilityData.offerLevelCapValue">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label col-form-label-sm">Offer Level Cap and Period
+                                                <label class="col-sm-4 col-form-label col-form-label">Totally eligibility Cap and Period
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isOfferLevelCapAndPeriod" name="radioSubscriberOffer" class="custom-control-input" :checked="eligibilityData.isOfferLevelCapAndPeriod + '' == 'true'" :value="true">
+                                                        <input type="radio" id="isOfferLevelCapAndPeriod" name="radioSubscriberOffer" class="custom-control-input" x-model="offerLevelType" value="cap-period">
                                                         <label class="custom-control-label" for="isOfferLevelCapAndPeriod"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="offerLevelCapPeriodValue">Name</label>
-                                                    <input type="number" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodValue" x-model="eligibilityData.offerLevelCapPeriodValue">
+                                                    <input type="number" :disabled="!offerLevelType || offerLevelType === 'cap-only'" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodValue" x-model="eligibilityData.offerLevelCapPeriodValue">
                                                 </div>
-                                                <label class="col-sm-1 col-form-label col-form-label-sm">in Every</label>
+                                                <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="offerLevelCapPeriodDays">Name</label>
-                                                    <input type="number" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodDays" x-model="eligibilityData.offerLevelCapPeriodDays">
+                                                    <input type="number" :disabled="!offerLevelType || offerLevelType === 'cap-only'" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodDays" x-model="eligibilityData.offerLevelCapPeriodDays">
                                                 </div>
                                                 <p>Days</p>
                                             </div>
+                                        </div><br>
+                                        <b>Subscriber Offer Eligibility - For Configured Offer</b><br><br>
+                                        <form class="form-inline">
+                                            <div class="custom-control custom-radio my-1 mr-sm-2">
+                                                <input type="radio" class="custom-control-input" id="frequencyOnly" name="radioSubscriberOfferEligibility" x-model="subscriberOfferEligibility" value="freq-only">
+                                                <label class="custom-control-label" for="frequencyOnly">Frequency Only</label>
+                                            </div>
+                                            <label class="sr-only" for="inputFrequency">Name</label>
+                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'"  class="form-control mb-2 mr-sm-2" id="inputFrequency" x-model="eligibilityData.frequency">
+                                        </form>
+                                        <form class="form-inline">
+                                            <div class="custom-control custom-radio my-1 mr-sm-2">
+                                                <input type="radio" class="custom-control-input" name="radioSubscriberOfferEligibility" id="frequencyTimePeriod" x-model="subscriberOfferEligibility" value="freq-timeperiod">
+                                                <label class="custom-control-label" for="frequencyTimePeriod">Frequency and Time Period</label>
+                                            </div>
+                                            <label class="sr-only" for="inputFrequencyTimePeriod">Name</label>
+                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-timeperiod'" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> in &nbsp;
+
+                                            <label class="sr-only" for="inputFrequencyIn">Name</label>
+                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-timeperiod'" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
+                                        </form><br>
+                                        <div id="excludeSubsForm">
+                                            <b>Exclude Subscriber from this if they are in the following Program</b><br><br>
+                                            <select multiple class="selectpicker w-100" x-model="eligibilityData.excludeSubscriber">
+                                                <option>Program 1</option>
+                                                <option>Program 2</option>
+                                                <option>Program 3</option>
+                                                <option>Program 4</option>
+                                                <option>Program 5</option>
+                                            </select>
                                         </div><br>
                                     </div>
 								</template>
@@ -373,20 +773,24 @@
 					</div>
 					<div class="card">
 						<div id="headingFour">
-							<div id="fulfillmentAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseFour"><h5><i class="fa fa-plus"></i> Fullfilment Monitoring Policy - Not Applicable</h5></div>
+							<div id="fulfillmentAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseFour"><h5><i class="fa fa-plus"></i> Offer Monitoring - Not Applicable</h5></div>
 						</div>
 						<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#directProvisioning">
-                            <div class="card-body">
+                            <div class="card-body"x-show="type === 'offerMonitoringWithAssignment'">
                                 <template x-if="monitoringData">
                                     <div>
                                         <div class="form-group">
-                                            <label for="eventTypeData">Event Type : </label>
-                                            <div class="form-group d-flex justify-content-between">
-                                                <select id="eventTypeData" class="form-control" x-model="eventTypeData">
-                                                    <option value="Top-Up">Top-Up</option>
-                                                    <option value="Usage">Usage</option>
-                                                    <option value="ARPU">ARPU</option>
-                                                </select>
+                                            <div class="mb-3 row">
+                                            <label for="eventTypeData" class="col-sm-2 col-form-label">Offer Monitoring Type </label>
+                                                <div class="col-sm-10">
+                                                    <div class="form-group d-flex justify-content-between">
+                                                        <select :disabled="type === 'directProvisioning'" id="eventTypeData" class="form-control" x-model="eventTypeData">
+                                                            <option value="Top-Up">Top-Up</option>
+                                                            <option value="Usage">Usage</option>
+                                                            <option value="ARPU">ARPU</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <hr>
@@ -399,27 +803,57 @@
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
-                                                    <label for="productPackage" class="col-sm-2 col-form-label">Product Package</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="productPackage" x-model="monitoringData.topUpProductPackage">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
                                                     <label for="usageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="usageServiceType" x-model="monitoringData.topUpUsageServiceType">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
-                                                    <label for="operators" class="col-sm-2 col-form-label">Operators</label>
+                                                    <label for="operators" class="col-sm-2 col-form-label">Operator</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="operators" x-model="monitoringData.topUpOperatorValue">
+                                                        <input type="text" class="form-control" id="operators" x-model="monitoringData.topUpOperator">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="refillProfileID" class="col-sm-2 col-form-label">Refill Profile ID</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="refillProfileID" x-model="monitoringData.topUpCode">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Current Balance</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="currentBalanceOperators" class="form-control" x-model="monitoringData.topUpCurBalanceOp">
+                                                            <option value="AllTopUp">ALL TOP UP</option>
+                                                            <option value="PaidTopUp">PAID TOP UP</option>
+                                                            <option value="DatabaseDirect">DATABASE DIRECT</option>
+                                                            <option value="SelfService">SELF SERVICE</option>
+                                                            <option value="Others">OTHERS</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="currentBalanceValue" x-model="monitoringData.topUpCurBalanceValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Account Balance Before</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="accountBalanceOperators" class="form-control" x-model="monitoringData.topUpAccBalanceBeforeOp">
+                                                            <option value="AllTopUp">ALL TOP UP</option>
+                                                            <option value="PaidTopUp">PAID TOP UP</option>
+                                                            <option value="DatabaseDirect">DATABASE DIRECT</option>
+                                                            <option value="SelfService">SELF SERVICE</option>
+                                                            <option value="Others">OTHERS</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="accountBalanceValue" x-model="monitoringData.topUpAccBalanceBeforeValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value</label>
                                                     <div class="col-sm-5">
-                                                        <select id="topUpValueOperators" class="form-control" x-model="monitoringData.topUpOperators">
+                                                        <select id="topUpValueOperators" class="form-control" x-model="monitoringData.topUpOp">
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -428,13 +862,34 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="topUpValue" x-model="monitoringData.topUpValue">
+                                                        <input type="text" class="form-control" id="topUpValue" x-model="monitoringData.topUpTransactionValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
-                                                    <label for="topUpCode" class="col-sm-2 col-form-label">Top Up Code</label>
+                                                    <label for="refillProfileID" class="col-sm-2 col-form-label">DA ID</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="topUpCode" x-model="monitoringData.topUpCode">
+                                                        <input type="text" class="form-control" id="daID" x-model="monitoringData.topUpDaId">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">DA Balance</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="topUpDaBalanceOperators" class="form-control" x-model="monitoringData.topUpDaBalanceOp">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="topUpDaBalanceValue" x-model="monitoringData.topUpDaBalanceValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="topUpTemporaryServiceClass" x-model="monitoringData.topUpTempServiceClass">
                                                     </div>
                                                 </div>
                                             </div>
@@ -445,6 +900,7 @@
                                                     <label for="usageServiceTypeDropdown" class="col-sm-2 col-form-label">Usage Service Type</label>
                                                     <div class="col-sm-10">
                                                         <select id="usageServiceTypeDropdown" class="form-control" x-model="monitoringData.usageServiceType">
+                                                            <option>Choose...</option>
                                                             <option value="voice">Voice</option>
                                                             <option value="data">Data</option>
                                                             <option value="SMS">SMS</option>
@@ -452,21 +908,119 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="mb-3 row">
-                                                    <label for="productPackage" class="col-sm-2 col-form-label">Usage Type</label>
-                                                    <div class="col-sm-10">
-                                                        <select id="usageTypeDropdown" class="form-control" x-model="monitoringData.usageType">
-                                                            <option value="VOICE_COUNT">VOICE_COUNT</option>
-                                                            <option value="VOICE_MINS">VOICE_MINS</option>
-                                                            <option value="VOICE_AMOUNT">VOICE_AMOUNT</option>
-                                                            <option value="VOICE_OFFNET_COUNT">VOICE_OFFNET_COUNT</option>
-                                                        </select>
+                                                <template x-if="monitoringData.usageServiceType === 'voice'">
+                                                    <div class="mb-3 row">
+                                                        <label for="usageTypeVoice" class="col-sm-2 col-form-label">Usage Type</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="usageTypeVoice" class="form-control" x-model="monitoringData.usageType">
+                                                                <option>Choose...</option>
+                                                                <option value="VOICE_COUNT">VOICE_COUNT</option>
+                                                                <option value="VOICE_MINS">VOICE_MINS</option>
+                                                                <option value="VOICE_AMOUNT">VOICE_AMOUNT</option>
+                                                                <option value="VOICE_OFFNET_COUNT">VOICE_OFFNET_COUNT</option>
+                                                                <option value="VOICE_OFFNET_MINS">VOICE_OFFNET_MINS</option>
+                                                                <option value="VOICE_OFFNET_AMOUNT">VOICE_OFFNET_AMOUNT</option>
+                                                                <option value="VOICE_ONNET_COUNT">VOICE_ONNET_COUNT</option>
+                                                                <option value="VOICE_ONNET_MINS">VOICE_ONNET_MINS</option>
+                                                                <option value="VOICE_ONNET_AMOUNT">VOICE_ONNET_AMOUNT</option>
+                                                                <option value="VOICE_INCOMING_COUNT">VOICE_INCOMING_COUNT</option>
+                                                                <option value="VOICE_INCOMING_MINS">VOICE_INCOMING_MINS</option>
+                                                                <option value="VOICE_INCOMING_AMOUNT">VOICE_INCOMING_AMOUNT</option>
+                                                                <option value="VOICE_LOCAL_USAGE">VOICE_LOCAL_USAGE</option>
+                                                                <option value="VOICE_LOCAL_DURATION">VOICE_LOCAL_DURATION</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </template>
+                                                <template x-if="monitoringData.usageServiceType === 'data'">
+                                                    <div class="mb-3 row">
+                                                        <label for="usageTypeData" class="col-sm-2 col-form-label">Usage Type</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="usageTypeData" class="form-control" x-model="monitoringData.usageType">
+                                                                <option>Choose...</option>
+                                                                <option value="DATA_VOLUME">DATA_VOLUME</option>
+                                                                <option value="DATA_AMOUNT">DATA_AMOUNT</option>
+                                                                <option value="DATA_LOCAL_USAGE">DATA_LOCAL_USAGE</option>
+                                                                <option value="DATA_LOCAL_DURATION">DATA_LOCAL_DURATION</option>
+                                                                <option value="DATA_ROAMING_USAGE">DATA_ROAMING_USAGE</option>
+                                                                <option value="DATA_ROAMING">DATA_ROAMING</option>
+                                                                <option value="DURATION">DURATION</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <template x-if="monitoringData.usageServiceType === 'SMS'">
+                                                    <div class="mb-3 row">
+                                                        <label for="usageTypeSMS" class="col-sm-2 col-form-label">Usage Type</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="usageTypeSMS" class="form-control" x-model="monitoringData.usageType">
+                                                                <option>Choose...</option>
+                                                                <option value="SMS_ALL_COUNT">SMS_ALL_COUNT</option>
+                                                                <option value="SMS_ALL_AMOUNT">SMS_ALL_AMOUNT</option>
+                                                                <option value="SMS_OFFNET_COUNT">SMS_OFFNET_COUNT</option>
+                                                                <option value="SMS_OFFNET_AMOUNT">SMS_OFFNET_AMOUNT</option>
+                                                                <option value="SMS_ONNET_COUNT">SMS_ONNET_COUNT</option>
+                                                                <option value="SMS_ONNET_AMOUNT">SMS_ONNET_AMOUNT</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                                <template x-if="monitoringData.usageServiceType === 'IDD'">
+                                                    <div class="mb-3 row">
+                                                        <label for="countryCode" class="col-sm-2 col-form-label">Country Code</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="countryCode" class="form-control" x-model="monitoringData.countryCode">
+                                                                <option>Choose...</option>
+                                                                <option value="60">Malaysia</option>
+                                                                <option value="62">Indonesia</option>
+                                                                <option value="63">Philippines</option>
+                                                                <option value="66">Thailand</option>
+                                                                <option value="84">Vietnam</option>
+                                                                <option value="86">China</option>
+                                                                <option value="91">India</option>
+                                                                <option value="95">Myanmar</option>
+                                                                <option value="880">Bangladesh</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3 row">
+                                                        <label for="usageTypeIDD" class="col-sm-2 col-form-label">Usage Type</label>
+                                                        <div class="col-sm-10">
+                                                            <select id="usageTypeIDD" class="form-control" x-model="monitoringData.usageType">
+                                                                <option>Choose...</option>
+                                                                <option value="TRANSACTION_DATE_KEY">TRANSACTION_DATE_KEY</option>
+                                                                <option value="COUNTRY_CD">COUNTRY_CD</option>
+                                                                <option value="COUNTRY_NAME">COUNTRY_NAME</option>
+                                                                <option value="COUNT">COUNT</option>
+                                                                <option value="DURATION">DURATION</option>
+                                                                <option value="MA_AMOUNT">MA_AMOUNT</option>
+                                                                <option value="DA_AMOUNT">DA_AMOUNT</option>
+                                                                <option value="SMS_COUNT">SMS_COUNT</option>
+                                                                <option value="MA_CHARGED_SMS">MA_CHARGED_SMS</option>
+                                                                <option value="DA_CHARGED_SMS">DA_CHARGED_SMS</option>
+                                                                <option value="019_8_8_COUNT">019_8_8_COUNT</option>
+                                                                <option value="019_8_8_DURATION">019_8_8_DURATION</option>
+                                                                <option value="001_8_8_COUNT">001_8_8_COUNT</option>
+                                                                <option value="001_8_8_DURATION">001_8_8_DURATION</option>
+                                                                <option value="019_NON_PEAK_COUNT">019_NON_PEAK_COUNT</option>
+                                                                <option value="019_NON_PEAK_DURATION">019_NON_PEAK_DURATION</option>
+                                                                <option value="001_NON_PEAK_COUNT">001_NON_PEAK_COUNT</option>
+                                                                <option value="001_NON_PEAK_DURATION">001_NON_PEAK_DURATION</option>
+                                                                <option value="NO_PREFIX_8_8_COUNT">NO_PREFIX_8_8_COUNT</option>
+                                                                <option value="NO_PREFIX_8_8_DURATION">NO_PREFIX_8_8_DURATION</option>
+                                                                <option value="NO_PREFIX_NON_PEAK_COUNT">NO_PREFIX_NON_PEAK_COUNT</option>
+                                                                <option value="NO_PREFIX_NON_PEAK_DURATION">NO_PREFIX_NON_PEAK_DURATION</option>
+                                                                <option value="VOICE_IDD_USAGE">VOICE_IDD_USAGE</option>
+                                                                <option value="VOICE_IDD_DURATION">VOICE_IDD_DURATION</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </template>
                                                 <div class="mb-3 row">
                                                     <label for="topUpValue" class="col-sm-2 col-form-label">Usage</label>
-                                                    <div class="col-sm-5">
+                                                    <div class="col-sm-4">
                                                         <select id="usageOperatorsDropdown" class="form-control" x-model="monitoringData.usageOperator">
+                                                            <option>Choose...</option>
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -474,52 +1028,38 @@
                                                             <option value="moreOrEqualTo">More than or Equal to</option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-sm-5">
-                                                        <select id="usageValueDropdown" class="form-control" x-model="monitoringData.usageValue">
-                                                            <option value="GB">GB</option>
-                                                            <option value="Mins">Mins</option>
-                                                            <option value="Count">Count</option>
-                                                        </select>
-                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <input type="number" class="form-control" id="usageValue" x-model="monitoringData.usageValue">
+                                                    </div> GB / Mins / Count
                                                 </div>
                                             </div>
                                         </template>
                                         <template x-if="eventTypeData === 'ARPU'">
                                             <div class="eventTypeFulfillmentMonitoring" id="ARPUForm">
                                                 <div class="mb-3 row">
-                                                    <label for="arpuCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
+                                                    <label for="operators" class="col-sm-2 col-form-label">Operator</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="arpuCreditMethod" x-model="monitoringData.arpuCreditMethod">
+                                                        <input type="text" class="form-control" id="operatorsARPU" x-model="monitoringData.arpuOp">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
-                                                    <label for="productPackage" class="col-sm-2 col-form-label">Product Package</label>
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Type</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="productPackageARPU" x-model="monitoringData.arpuProductPackage">
+                                                        <select id="topUpValueARPUValue" class="form-control" x-model="monitoringData.arpuType">
+                                                            <option>Choose...</option>
+                                                            <option value="allTopUp">ALL TOP UP</option>
+                                                            <option value="paidTopUp">PAID TOP UP</option>
+                                                            <option value="selfService">SELF SERVICE</option>
+                                                            <option value="ma">MA</option>
+                                                            <option value="others">OTHERS</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
-                                                    <label for="usageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="usageServiceTypeARPU" x-model="monitoringData.arpuUsageServiceType">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="operators" class="col-sm-2 col-form-label">Operators</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="operatorsARPU" x-model="monitoringData.arpuOperatorsValue">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="topUpCode" class="col-sm-2 col-form-label">Top Up Code</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="topUpCodeARPU" x-model="monitoringData.arpuTopUpCode">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU</label>
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">ARPU Value</label>
                                                     <div class="col-sm-5">
-                                                        <select id="topUpValueOperatorsARPU" class="form-control" x-model="monitoringData.arpuOperators">
+                                                        <select id="paidARPUTopUpValueOperators" class="form-control" x-model="monitoringData.arpuSelectedTopUpCode">
+                                                            <option>Choose...</option>
                                                             <option value="lessThan">Less than</option>
                                                             <option value="moreThan">More than</option>
                                                             <option value="equalTo">Equal to</option>
@@ -528,57 +1068,38 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="ARPUValue" x-model="monitoringData.arpu">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Paid ARPU Top-UP</label>
-                                                    <div class="col-sm-5">
-                                                        <select id="paidARPUTopUpValueOperators" class="form-control" x-model="monitoringData.arpuPaidOperators">
-                                                            <option value="lessThan">Less than</option>
-                                                            <option value="moreThan">More than</option>
-                                                            <option value="equalTo">Equal to</option>
-                                                            <option value="lessOrEqual">Les than or Equal to</option>
-                                                            <option value="moreOrEqualTo">More than or Equal to</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="paidARPUValue" x-model="monitoringData.arpuPaidTopUp">
+                                                        <input type="text" class="form-control" id="paidARPUValue" x-model="monitoringData.arpuValue">
                                                     </div>
                                                 </div>
                                             </div>
                                         </template>
                                         <div id="monitoringFulfillmentPeriod">
-                                            <b>Monitoring Fulfillment Period:</b><br><br>
+                                            <b>Monitoring Fulfillment Period:</b>
+                                            <br>
+                                            <br>
                                             <div class="form-group row">
-                                                <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label-sm">
-                                                    Monitor Specified Period
-                                                </label>
+                                                <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label-sm"> Monitor Specified Period </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isRedemptionCapOnly" name="radioMonitoringSpecified" class="custom-control-input" :value="true" x-model="monitoringData.isRedemptionCapOnly">
+                                                        <input type="radio" x-model="monitoringFulfillmentRadio" id="isRedemptionCapOnly" name="radioMonitoringSpecified" class="custom-control-input" value="specified-period">
                                                         <label class="custom-control-label" for="isRedemptionCapOnly"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-8">
                                                     <div class="row">
-                                                        <div class="col-sm-2">
-                                                            Start Date
-                                                        </div>
+                                                        <div class="col-sm-2"> Start Date </div>
                                                         <div class="col-sm-4">
                                                             <div class="input-group date" data-provider="datepicker">
-                                                                <input type="datetime-local" class="form-control" id="start-date" x-model="monitoringData.monitorStartDate">
+                                                                <input :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'period-only'" type="datetime-local" class="form-control" id="start-date" x-model="monitoringData.monitorStartDate">
                                                                 <div class="input-group-addon">
                                                                     <span class="glyphicon glyphicon-th"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-2">
-                                                            End Date
-                                                        </div>
+                                                        <div class="col-sm-2"> End Date </div>
                                                         <div class="col-sm-4">
                                                             <div class="input-group date" data-provider="datepicker">
-                                                                <input type="datetime-local" class="form-control" id="end-date" x-model="monitoringData.monitorEndDate">
+                                                                <input :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'period-only'" type="datetime-local" class="form-control" id="end-date" x-model="monitoringData.monitorEndDate">
                                                                 <div class="input-group-addon">
                                                                     <span class="glyphicon glyphicon-th"></span>
                                                                 </div>
@@ -588,21 +1109,20 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label col-form-label-sm">Monitor Period
-                                                </label>
+                                                <label class="col-sm-2 col-form-label col-form-label-sm">Monitor Period </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="monitorPeriodRadio" name="radioMonitoringSpecified" class="custom-control-input" :value="true" x-model="monitoringData.monitorPeriodRadio">
+                                                        <input type="radio" x-model="monitoringFulfillmentRadio" id="monitorPeriodRadio" name="radioMonitoringSpecified" class="custom-control-input" value="period-only">
                                                         <label class="custom-control-label" for="monitorPeriodRadio"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-8">
                                                     <div class="row">
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" id="periodValue" x-model="monitoringData.monitorPeriod">
+                                                            <input :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" type="text" class="form-control" id="periodValue" x-model="monitoringData.monitorPeriod">
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <select id="monitorPeriodDropdown" class="form-control" x-model="monitoringData.monitorPeriodDayMonth">
+                                                            <select :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" id="monitorPeriodDropdown" class="form-control" x-model="monitoringData.monitorPeriodDayMonth">
                                                                 <option value="month">Month</option>
                                                                 <option value="days">Days</option>
                                                             </select>
@@ -621,45 +1141,46 @@
 							<div id="redemptionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseFive"><h5><i class="fa fa-plus"></i> Redemption Policy - Required</h5></div>
 						</div>
 						<div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#directProvisioning">
-							<div class="card-body">
+							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
                                 <template x-if="redemptionData">
                                     <div>
                                         <div id="redemptionCapForm">
                                             <b>Total Redemption Cap</b><br><br>
                                             <div class="form-group row">
-                                                <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label-sm">
+                                                <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
                                                     Total Number of Redemption
                                                 </label>
                                                 <div class="col-sm-1">
-                                                    <div class="custom-control custom-radio" x-init="$watch('isFrequencyOnly', value => console.log(value))">
-                                                        <input type="radio" id="isRedemptionCapOnlyID" name="radioTotalRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isRedemptionCapOnly">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="isRedemptionCapOnlyID" name="radioTotalRedemption" class="custom-control-input" value="redemption-only" x-model="totalRedemptionCapRadio">
                                                         <label class="custom-control-label" for="isRedemptionCapOnlyID"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <input type="text" class="form-control form-control-sm" id="redemptionCapValue" x-model="redemptionData.redemptionCapValue">
+                                                    <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-time-period'" type="text" class="form-control form-control-sm" id="redemptionCapValue" x-model="redemptionData.redemptionCapValue">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label col-form-label-sm">Redemption and Time Period
+                                                <label class="col-sm-2 col-form-label col-form-label">Redemption and Time Period
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isRedemptionCapAndPeriodID" name="radioTotalRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isRedemptionCapAndPeriod">
+                                                        <input type="radio" id="isRedemptionCapAndPeriodID" name="radioTotalRedemption" class="custom-control-input" value="redemption-time-period" x-model="totalRedemptionCapRadio">
                                                         <label class="custom-control-label" for="isRedemptionCapAndPeriodID"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="totalRedemptionPeriodValue">Name</label>
-                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="totalRedemptionPeriodValue" x-model="redemptionData.totalRedemptionPeriodValue">
+                                                    <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only'" type="text" class="form-control mb-2 mr-sm-2" id="totalRedemptionPeriodValue" x-model="redemptionData.totalRedemptionPeriodValue">
                                                 </div>
-                                                <label class="col-sm-1 col-form-label col-form-label-sm">in Every</label>
+                                                <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="timePeriodValueEvery">Name</label>
-                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValueEvery" x-model="redemptionData.totalRedemptionPeriodEvery">
+                                                    <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValueEvery" x-model="redemptionData.totalRedemptionPeriodEvery">
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <select class="form-control mb-2 mr-sm-2" x-model="redemptionData.totalRedemptionPeriodType">
+                                                    <select :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.totalRedemptionPeriodType">
+                                                        <option>Choose...</option>
                                                         <option value="Days">Days</option>
                                                         <option value="Month">Month</option>
                                                     </select>
@@ -669,40 +1190,41 @@
                                         <div id="subscriberRedemptionCapForm">
                                             <b>Subscriber Redemption Cap</b><br><br>
                                             <div class="form-group row">
-                                                <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label-sm">
+                                                <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
                                                     Frequency Only
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isFrequencyOnlyID" name="radioSubscriberRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isFrequencyOnly">
+                                                        <input type="radio" id="isFrequencyOnlyID" name="radioSubscriberRedemption" class="custom-control-input" value="freq-only" x-model="subscriberRedemptionCapRadio">
                                                         <label class="custom-control-label" for="isFrequencyOnlyID"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <input type="text" class="form-control form-control-sm" id="frequencyValue" x-model="redemptionData.frequencyValue">
+                                                    <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-timeperiod'" type="text" class="form-control form-control-sm" id="frequencyValue" x-model="redemptionData.frequencyValue">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label col-form-label-sm">
+                                                <label class="col-sm-2 col-form-label col-form-label">
                                                     Frequency and Time Period
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isFrequencyAndTime" name="radioSubscriberRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isFrequencyAndTime">
+                                                        <input type="radio" id="isFrequencyAndTime" name="radioSubscriberRedemption" class="custom-control-input" value="freq-timeperiod" x-model="subscriberRedemptionCapRadio">
                                                         <label class="custom-control-label" for="isFrequencyAndTime"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="timePeriodValue">Name</label>
-                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue" x-model="redemptionData.timePeriodValue">
+                                                    <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue" x-model="redemptionData.timePeriodValue">
                                                 </div>
-                                                <label class="col-sm-1 col-form-label col-form-label-sm">in Every</label>
+                                                <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="timePeriodValue2">Name</label>
-                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue2" x-model="redemptionData.timePeriodEvery">
+                                                    <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue2" x-model="redemptionData.timePeriodEvery">
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <select class="form-control mb-2 mr-sm-2" x-model="redemptionData.timePeriodType">
+                                                    <select :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.timePeriodType">
+                                                        <option>Choose...</option>
                                                         <option value="Days">Days</option>
                                                         <option value="Month">Month</option>
                                                     </select>
@@ -712,54 +1234,49 @@
                                         <div id="recurringRedemptionCapForm">
                                             <b>Recurring Redemption</b><br><br>
                                             <div class="form-group row">
-                                                <label for="totalRecurringFrequency" class="col-sm-2 col-form-label col-form-label-sm">Total Frequency</label>
+                                                <label for="totalRecurringFrequency" class="col-sm-2 col-form-label col-form-label">Total Frequency</label>
                                                 <div class="col-sm-4">
                                                     <input type="text" class="form-control form-control-sm" id="totalRecurringFrequency" x-model="redemptionData.totalRecurringFrequency">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label col-form-label-sm">Recurring Frequency</label>
+                                                <label class="col-sm-2 col-form-label col-form-label">Recurring Frequency</label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="radioRecurringRedemptionID" name="radioRecurringRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isRecurringFrequencyAndPeriod">
+                                                        <input type="radio" id="radioRecurringRedemptionID" name="radioRecurringRedemption" class="custom-control-input" value="req-day" x-model="recurringRedemptionRadio">
                                                         <label class="custom-control-label" for="radioRecurringRedemptionID"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="inputRecFreqDP">Name</label>
-                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
+                                                    <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="text" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
                                                 </div>
-                                                <label class="col-sm-1 col-form-label col-form-label-sm">in Every</label>
+                                                <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="inputRecFreqDPIn">Name</label>
-                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
+                                                    <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="text" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
                                                 </div>
                                                 <div class="col-sm-2"> Day
-<!--                                                    <label class="sr-only" for="recFreqDaysOrMonth"></label>-->
-<!--                                                    <select class="form-control mb-2 mr-sm-2" id="recFreqDaysOrMonth">-->
-<!--                                                        <option value="Days">Days</option>-->
-<!--                                                        <option value="Month">Month</option>-->
-<!--                                                    </select>-->
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label col-form-label-sm"></label>
+                                                <label class="col-sm-2 col-form-label col-form-label"></label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isRecurringFrequencyEachMonthID" name="radioRecurringRedemption" class="custom-control-input" :value="true" x-model="redemptionData.isRecurringFrequencyEachMonth">
+                                                        <input type="radio" id="isRecurringFrequencyEachMonthID" name="radioRecurringRedemption" class="custom-control-input" value="req-month" x-model="recurringRedemptionRadio">
                                                         <label class="custom-control-label" for="isRecurringFrequencyEachMonthID"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="dayRecFreq">Day</label>
-                                                    <input type="text" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                    <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="text" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
                                                 </div>
-                                                <label class="col-sm-2 col-form-label col-form-label-sm">of Each Month</label>
+                                                <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
                                             </div>
                                         </div><br>
                                         <div id="redemptionMethodForm">
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label col-form-label-sm"><b>Redemption Method</b></label>
+                                                <label class="col-sm-2 col-form-label col-form-label"><b>Redemption Method</b></label>
                                                 <div class="col-sm-3">
                                                     <select class="form-control mb-2 mr-sm-2" id="redemptionAutoOrManual" x-model="redemptionMethod">
                                                         <option value="AutoRedemption">Auto Redemption</option>
@@ -769,28 +1286,48 @@
                                             </div>
                                             <template x-if="redemptionMethod === 'ManualRedemption'">
                                                 <div class="manualRedemptionSelection">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label-sm">Keyword</label>
-                                                    <div class="col-sm-2">
-                                                        <label class="sr-only" for="inputKeywordDP">Name</label>
-                                                        <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordDP" x-model="redemptionData.smsKeyword">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control form-control-sm" id="manualSmsCampaignName" x-model="redemptionData.manualSmsCampaignName">
+                                                        </div>
                                                     </div>
-                                                    <label class="col-sm-2 col-form-label col-form-label-sm">Keyword Validity</label>
-                                                    <div class="col-sm-2">
-                                                        <label class="sr-only" for="inputKeywordValidityDP">Name</label>
-                                                        <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordValidityDP" x-model="redemptionData.smsKeywordValidityDays">
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        Days
-<!--                                                        <label class="sr-only" for="keywordValDaysOrMonth"></label>-->
-<!--                                                        <select class="form-control mb-2 mr-sm-2" id="keywordValDaysOrMonth">-->
-<!--                                                            <option value="Days">Days</option>-->
-<!--                                                            <option value="Month">Month</option>-->
-<!--                                                        </select>-->
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label">Keyword</label>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="inputKeywordDP">Name</label>
+<!--                                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordDP" x-model="redemptionData.smsKeyword">-->
+                                                            <select class="form-control mb-2 mr-sm-2">
+                                                                <option value="keyword1">Keyword 1</option>
+                                                                <option value="keyword2">Keyword 2</option>
+                                                                <option value="keyword3">Keyword 3</option>
+                                                                <option value="keyword4">Keyword 4</option>
+                                                            </select>
+                                                        </div>
+                                                        <label class="col-sm-2 col-form-label col-form-label">Keyword Validity</label>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="inputKeywordValidityDP">Name</label>
+                                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordValidityDP" x-model="redemptionData.smsKeywordValidityDays">
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            Days
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                             </template>
+                                            <b>Post Provision Message</b><br><br>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control form-control-sm" id="smaCampaignName" x-model="redemptionData.smsCampaignName">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label col-form-label">Coupon Code SMS Campaign Name (Optional)</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control form-control-sm" id="couponCodeSmsCampaignName" x-model="redemptionData.couponCodeSmsCampaignName">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </template>
@@ -832,48 +1369,66 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>-->
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!--jQUERY BEGIN-->
 <script>
     function jQuery() {
+        $(document).ready(function() {
+            $('.selectpicker').select2();
+        });
+
         $(document).ready(function(){
+            $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Not Applicable</h5>");
             $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
             $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
             $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
-            $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Fullfilment Monitoring Policy - Not Applicable</h5>");
+            $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Not Applicable</h5>");
             $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
 
             $('#typeData').on('change', function() {
 
                 if (this.value == 'directProvisioning')
                 {
+                    $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Not Applicable</h5>");
                     $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
                     $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
                     $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
-                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Fullfilment Monitoring Policy - Not Applicable</h5>");
+                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Not Applicable</h5>");
                     $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
                 }
                 if (this.value == 'offerMonitoringWithAssignment')
                 {
+                    $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Not Applicable</h5>");
                     $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
                     $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
                     $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
-                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Fullfilment Monitoring Policy - Required</h5>");
+                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Required</h5>");
+                    $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
+                }
+                if (this.value == 'eventConditionDirectProvisioning')
+                {
+                    $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Required</h5>");
+                    $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
+                    $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
+                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
+                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Not Applicable</h5>");
                     $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
                 }
                 if (this.value == 'offerMonitoring')
                 {
+                    $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Required</h5>");
                     $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Not Applicable</h5>");
                     $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
-                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Not Applicable</h5>");
-                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Fullfilment Monitoring Policy - Required</h5>");
+                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
+                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Not Applicable</h5>");
                     $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Not Applicable</h5>");
                 }
             });
@@ -920,6 +1475,31 @@
             });
         });
         // Event Fulfillment Monitoring Policy Dropdown END
+
+        // Event Condition Dropdown BEGIN
+        $(document).ready(function(){
+            $("#eventConditionDataTopUpForm").show();
+            $("#eventConditionDataUsageForm").hide();
+            $("#eventConditionDataARPUForm").hide();
+
+            $('#eventConditionTypeData').on('change', function() {
+                $(".eventConditionFulfillmentMonitoring").hide();
+
+                if (this.value == 'Top-Up')
+                {
+                    $("#eventConditionDataTopUpForm").show();
+                }
+                if (this.value == 'Usage')
+                {
+                    $("#eventConditionDataUsageForm").show();
+                }
+                if (this.value == 'ARPU')
+                {
+                    $("#eventConditionDataARPUForm").show();
+                }
+            });
+        });
+        // Event Condition Dropdown END
 
         // Redemption Policy - Redemption Method Dropdown BEGIN
         $(document).ready(function(){
@@ -968,10 +1548,9 @@
 
 <!--AlpineJS BEGIN-->
 <script>
-	const INSTANCE_ID_PROD = $("#instanceId").text();
+	// const INSTANCE_ID = $("#instanceId").text();
 	const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
 	const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
-	const DEV_URL = 'http://130.61.15.242/data/';
 
 	function configureMembership() {
 		return {
@@ -985,11 +1564,23 @@
 			eligibilityData: null,
 			monitoringData: null,
             redemptionData: null,
+            eventConditionData: null,
+            redemptionMethod: 'AutoRedemption',
             type: 'directProvisioning',
             eventTypeData: 'Top-Up',
-            redemptionMethod: 'AutoRedemption',
+            eventConditionTypeData: 'Top-Up',
+            offerLevelType: null,
+            subscriberOfferEligibility: null,
+            monitoringFulfillmentRadio: null,
+            totalRedemptionCapRadio: null,
+            subscriberRedemptionCapRadio: null,
+            recurringRedemptionRadio: null,
 			addNewData() {
-                if ((this.selectedBucket && this.selectedCampaign != null) && this.selectedCampaign != 'Choose...') {
+			    let campaignID = this.selectedCampaign;
+			    let data = JSON.parse(JSON.stringify(this.offers));
+			    let duplicateData = data.find(val => val.offerCampaignId == campaignID);
+
+                if ((this.selectedBucket && this.selectedCampaign != null) && this.selectedCampaign != 'Choose...' && !duplicateData) {
                     fetch(PROD_URL + `offerDetail?bucketOfferId=${this.selectedBucket}&campaignOfferId=${this.selectedCampaign}`)
                         .then(res => res.json())
                         .then(data => {
@@ -1064,6 +1655,15 @@
 					.catch(error => console.log(error))
 					.finally()
 			},
+            eventConditionPolicy() {
+                fetch(PROD_URL + `offerEventCondition?instanceId=${INSTANCE_ID}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        this.eventConditionData = data
+                    })
+                    .catch(error => console.log(error))
+                    .finally()
+            },
             redemptionPolicy() {
                 fetch(PROD_URL + `offerRedemption?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
@@ -1075,38 +1675,171 @@
             },
             saveConfiguration() {
                 var message = { amsAction : "save", requestId : "save" };
+                const offerEventCondition = {
+                    "eventType": this.eventConditionTypeData,
+                    "campaignStartDate": this.eventConditionData.campaignStartDate,
+                    "campaignEndDate": this.eventConditionData.campaignEndDate,
+                    "eventConditionName": this.eventConditionData.eventConditionName,
+                };
+                if (this.eventConditionTypeData === 'Top-Up') {
+                    offerEventCondition.creditMethod = this.eventConditionData.creditMethod;
+                    offerEventCondition.usageServiceType = this.eventConditionData.usageServiceType;
+                    offerEventCondition.operatorId = this.eventConditionData.operatorId;
+                    offerEventCondition.topUpCode = this.eventConditionData.topUpCode;
+                    offerEventCondition.topUpCurBalanceOp = this.eventConditionData.topUpCurBalanceOp || 'AllTopUp';
+                    offerEventCondition.topUpCurBalanceValue = this.eventConditionData.topUpCurBalanceValue;
+                    offerEventCondition.topUpAccBalanceBeforeOp = this.eventConditionData.topUpAccBalanceBeforeOp || 'AllTopUp';
+                    offerEventCondition.topUpAccBalanceBeforeValue = this.eventConditionData.topUpAccBalanceBeforeValue;
+                    offerEventCondition.topUpOp = this.eventConditionData.topUpOp || 'lessThan';
+                    offerEventCondition.topUpTransactionValue = this.eventConditionData.topUpTransactionValue;
+                    offerEventCondition.topUpDaId = this.eventConditionData.topUpDaId;
+                    offerEventCondition.topUpDaBalanceOp = this.eventConditionData.topUpDaBalanceOp || 'lessThan';
+                    offerEventCondition.topUpDaBalanceValue = this.eventConditionData.topUpDaBalanceValue;
+                    offerEventCondition.topUpTempServiceClass = this.eventConditionData.topUpTempServiceClass;
+                } else if (this.eventConditionTypeData === 'Usage') {
+                    offerEventCondition.usageServiceType = this.eventConditionData.usageServiceType;
+                    offerEventCondition.eventTypeUsages = this.eventConditionData.eventTypeUsages;
+                    offerEventCondition.eventUsagesOp = this.eventConditionData.eventUsagesOp;
+                    offerEventCondition.eventUsagesValue = this.eventConditionData.eventUsagesValue;
+                    offerEventCondition.aggregationPeriodDays = this.eventConditionData.aggregationPeriodDays;
+                } else if (this.eventConditionTypeData === 'ARPU') {
+                    offerEventCondition.operatorId = this.eventConditionData.operatorId;
+                    offerEventCondition.arpuType = this.eventConditionData.arpuType;
+                    if (this.eventConditionData.arpuType === 'others') {
+                        offerEventCondition.arpuSelectedTopUpCode = this.eventConditionData.arpuSelectedTopUpCode;
+                    } else {
+                        offerEventCondition.arpuSelectedTopUpCode = null;
+                    }
+                    offerEventCondition.arpuOp = this.eventConditionData.arpuOp;
+                    offerEventCondition.arpuValue = this.eventConditionData.arpuValue;
+                    offerEventCondition.aggregationPeriodDays = this.eventConditionData.aggregationPeriodDays;
+                };
                 const offerMonitoring = {
                     "eventType": this.eventTypeData,
-                    "monitorSpecifiedPeriodRadio": this.monitoringData.monitorSpecifiedPeriodRadio,
-                    "monitorStartDate": this.monitoringData.monitorStartDate,
-                    "monitorEndDate": this.monitoringData.monitorEndDate,
-                    "monitorPeriodRadio": this.monitoringData.monitorPeriodRadio,
-                    "monitorPeriod": this.monitoringData.monitorPeriod,
-                    "monitorPeriodDayMonth": this.monitoringData.monitorPeriodDayMonth
+                };
+                if (this.monitoringFulfillmentRadio === 'specified-period') {
+                    offerMonitoring.monitorPeriodRadio = false;
+                    offerMonitoring.monitorSpecifiedPeriodRadio = true;
+                    offerMonitoring.monitorStartDate = this.monitoringData.monitorStartDate;
+                    offerMonitoring.monitorEndDate = this.monitoringData.monitorEndDate;
+                    offerMonitoring.monitorPeriod = null;
+                    offerMonitoring.monitorPeriodDayMonth = null;
+                } else if (this.monitoringFulfillmentRadio === 'period-only') {
+                    offerMonitoring.monitorPeriodRadio = true;
+                    offerMonitoring.monitorSpecifiedPeriodRadio = false;
+                    offerMonitoring.monitorStartDate = null;
+                    offerMonitoring.monitorEndDate = null;
+                    offerMonitoring.monitorPeriod = this.monitoringData.monitorPeriod;
+                    if (this.monitoringData.monitorPeriodDayMonth === 'string') {
+                        offerMonitoring.monitorPeriodDayMonth = 'month';
+                    } else {
+                        offerMonitoring.monitorPeriodDayMonth = this.monitoringData.monitorPeriodDayMonth;
+                    }
                 };
                 if (this.eventTypeData === 'Top-Up') {
                     offerMonitoring.topUpCreditMethod = this.monitoringData.topUpCreditMethod;
-                    offerMonitoring.topUpProductPackage = this.monitoringData.topUpProductPackage;
                     offerMonitoring.topUpUsageServiceType = this.monitoringData.topUpUsageServiceType;
-                    offerMonitoring.topUpValueOperator = this.monitoringData.topUpValueOperator;
                     offerMonitoring.topUpOperator = this.monitoringData.topUpOperator;
-                    offerMonitoring.topUpTransactionValue = this.monitoringData.topUpTransactionValue;
                     offerMonitoring.topUpCode = this.monitoringData.topUpCode;
+                    offerMonitoring.topUpCurBalanceOp = this.monitoringData.topUpCurBalanceOp || 'AllTopUp';
+                    offerMonitoring.topUpCurBalanceValue = this.monitoringData.topUpCurBalanceValue;
+                    offerMonitoring.topUpAccBalanceBeforeOp = this.monitoringData.topUpAccBalanceBeforeOp || 'AllTopUp';
+                    offerMonitoring.topUpAccBalanceBeforeValue = this.monitoringData.topUpAccBalanceBeforeValue;
+                    offerMonitoring.topUpOp = this.monitoringData.topUpOp || 'lessThan';
+                    offerMonitoring.topUpTransactionValue = this.monitoringData.topUpTransactionValue;
+                    offerMonitoring.topUpDaId = this.monitoringData.topUpDaId;
+                    offerMonitoring.topUpDaBalanceOp = this.monitoringData.topUpDaBalanceOp || 'lessThan';
+                    offerMonitoring.topUpDaBalanceValue = this.monitoringData.topUpDaBalanceValue;
+                    offerMonitoring.topUpTempServiceClass = this.monitoringData.topUpTempServiceClass;
                 } else if (this.eventTypeData === 'Usage') {
                     offerMonitoring.usageServiceType = this.monitoringData.usageServiceType;
                     offerMonitoring.usageType = this.monitoringData.usageType;
+                    offerMonitoring.countryCode = this.monitoringData.countryCode;
                     offerMonitoring.usageOperator = this.monitoringData.usageOperator;
                     offerMonitoring.usageValue = this.monitoringData.usageValue;
                 } else if (this.eventTypeData === 'ARPU') {
-                    offerMonitoring.arpuCreditMethod = this.monitoringData.arpuCreditMethod;
-                    offerMonitoring.arpuProductPackage = this.monitoringData.arpuProductPackage;
-                    offerMonitoring.arpuUsageServiceType = this.monitoringData.arpuUsageServiceType;
-                    offerMonitoring.arpuOperatorsValue = this.monitoringData.arpuOperatorsValue;
-                    offerMonitoring.arpuTopUpCode = this.monitoringData.arpuTopUpCode;
-                    offerMonitoring.arpuOperators = this.monitoringData.arpuOperators;
-                    offerMonitoring.arpu = this.monitoringData.arpu;
-                    offerMonitoring.arpuPaidOperators = this.monitoringData.arpuPaidOperators;
-                    offerMonitoring.arpuPaidTopUp = this.monitoringData.arpuPaidTopUp;
+                    offerMonitoring.arpuOp = this.monitoringData.arpuOp;
+                    offerMonitoring.arpuType = this.monitoringData.arpuType;
+                    offerMonitoring.arpuSelectedTopUpCode = this.monitoringData.arpuSelectedTopUpCode;
+                    offerMonitoring.arpuValue = this.monitoringData.arpuValue;
+                };
+                const offerEligibility = {
+                    "isFrequencyOnly": this.eligibilityData.isFrequencyOnly,
+                    "isFrequencyAndTime": this.eligibilityData.isFrequencyAndTime,
+                    "frequency": this.eligibilityData.frequency,
+                    "numberOfFrequency": this.eligibilityData.numberOfFrequency,
+                    "numberOfDays": this.eligibilityData.numberOfDays,
+                    "excludeProgramId": this.eligibilityData.excludeProgramId,
+                };
+                if (this.offerLevelType === 'cap-only') {
+                    offerEligibility.isOfferLevelCapOnly = true;
+                    offerEligibility.isOfferLevelCapAndPeriod = false;
+                    offerEligibility.offerLevelCapValue = this.eligibilityData.offerLevelCapValue;
+                    offerEligibility.offerLevelCapPeriodValue = null;
+                    offerEligibility.offerLevelCapPeriodDays = null;
+                } else if (this.offerLevelType === 'cap-period') {
+                    offerEligibility.isOfferLevelCapOnly = false;
+                    offerEligibility.isOfferLevelCapAndPeriod = true;
+                    offerEligibility.offerLevelCapValue = null;
+                    offerEligibility.offerLevelCapPeriodValue = this.eligibilityData.offerLevelCapPeriodValue;
+                    offerEligibility.offerLevelCapPeriodDays = this.eligibilityData.offerLevelCapPeriodDays;
+                }
+
+                const offerRedemption = {
+                    "totalRecurringFrequency": this.redemptionData.totalRecurringFrequency,
+                    "redemptionMethod": this.redemptionData.redemptionMethod,
+                };
+                if (this.totalRedemptionCapRadio === 'redemption-only') {
+                    offerRedemption.isRedemptionCapOnly = true;
+                    offerRedemption.isRedemptionCapAndPeriod = false;
+                    offerRedemption.redemptionCapValue = this.redemptionData.redemptionCapValue;
+                    offerRedemption.totalRedemptionPeriodValue = null;
+                    offerRedemption.totalRedemptionPeriodEvery = null;
+                    offerRedemption.totalRedemptionPeriodType = null;
+                } else if (this.totalRedemptionCapRadio === 'redemption-time-period') {
+                    offerRedemption.isRedemptionCapOnly = false;
+                    offerRedemption.isRedemptionCapAndPeriod = true;
+                    offerRedemption.redemptionCapValue = null;
+                    offerRedemption.totalRedemptionPeriodValue = this.redemptionData.totalRedemptionPeriodValue;
+                    offerRedemption.totalRedemptionPeriodEvery = this.redemptionData.totalRedemptionPeriodEvery;
+                    offerRedemption.totalRedemptionPeriodType = this.redemptionData.totalRedemptionPeriodType;
+                };
+                if (this.subscriberRedemptionCapRadio === 'freq-only') {
+                    offerRedemption.isFrequencyOnly = true;
+                    offerRedemption.isFrequencyAndTime = false;
+                    offerRedemption.frequencyValue = this.redemptionData.frequencyValue;
+                    offerRedemption.timePeriodValue = null;
+                    offerRedemption.timePeriodEvery = null;
+                    offerRedemption.timePeriodType = null;
+                } else if (this.subscriberRedemptionCapRadio === 'freq-timeperiod') {
+                    offerRedemption.isFrequencyOnly = false;
+                    offerRedemption.isFrequencyAndTime = true;
+                    offerRedemption.frequencyValue = null;
+                    offerRedemption.timePeriodValue = this.redemptionData.timePeriodValue;
+                    offerRedemption.timePeriodEvery = this.redemptionData.timePeriodEvery;
+                    offerRedemption.timePeriodType = this.redemptionData.timePeriodType;
+                };
+                if (this.recurringRedemptionRadio === 'req-day') {
+                    offerRedemption.isRecurringFrequencyAndPeriod = true;
+                    offerRedemption.isRecurringFrequencyEachMonth = false;
+                    offerRedemption.recurringFrequencyValue = this.redemptionData.recurringFrequencyValue;
+                    offerRedemption.recurringFrequencyPeriodValue = this.redemptionData.recurringFrequencyPeriodValue;
+                    offerRedemption.recurringFrequencyDayOfMonth = null;
+                } else if (this.recurringRedemptionRadio === 'req-month') {
+                    offerRedemption.isRecurringFrequencyAndPeriod = false;
+                    offerRedemption.isRecurringFrequencyEachMonth = true;
+                    offerRedemption.recurringFrequencyValue = null;
+                    offerRedemption.recurringFrequencyPeriodValue = null;
+                    offerRedemption.recurringFrequencyDayOfMonth = this.redemptionData.recurringFrequencyDayOfMonth;
+                }
+                if (this.redemptionMethod === 'AutoRedemption') {
+                    offerRedemption.redemptionMethod = 'AutoRedemption';
+                    offerRedemption.smsKeyword = null;
+                    offerRedemption.smsKeywordValidityDays = null;
+                } else if (this.redemptionMethod === 'ManualRedemption') {
+                    offerRedemption.redemptionMethod = 'ManualRedemption';
+                    offerRedemption.smsKeyword = this.redemptionData.smsKeyword;
+                    offerRedemption.smsKeywordValidityDays = this.redemptionData.smsKeywordValidityDays;
                 }
 
                 var request = { "amsAction" : "save", "requestId" : "save",
@@ -1120,40 +1853,10 @@
                                 offerCampaignName: item.offerCampaignName
                             }
                         }),
-                        "offerEligibility": {
-                            "isFrequencyOnly": this.eligibilityData.isFrequencyOnly,
-                            "isFrequencyAndTime": this.eligibilityData.isFrequencyAndTime,
-                            "frequency": this.eligibilityData.frequency,
-                            "numberOfDays": this.eligibilityData.numberOfDays,
-                            "isOfferLevelCapOnly": this.eligibilityData.isOfferLevelCapOnly,
-                            "isOfferLevelCapAndPeriod": this.eligibilityData.isOfferLevelCapAndPeriod,
-                            "offerLevelCapValue": this.eligibilityData.offerLevelCapValue,
-                            "offerLevelCapPeriodValue": this.eligibilityData.offerLevelCapPeriodValue
-                        },
+                        offerEventCondition,
+                        offerEligibility,
                         offerMonitoring,
-                        "offerRedemption": {
-                            "isRedemptionCapOnly": this.redemptionData.isRedemptionCapOnly,
-                            "redemptionCapValue": this.redemptionData.redemptionCapValue,
-                            "isRedemptionCapAndPeriod": this.redemptionData.isRedemptionCapAndPeriod,
-                            "totalRedemptionPeriodValue": this.redemptionData.totalRedemptionPeriodValue,
-                            "isFrequencyOnly": this.redemptionData.isFrequencyOnly,
-                            "isFrequencyAndTime": this.redemptionData.isFrequencyAndTime,
-                            "frequencyValue": this.redemptionData.frequencyValue,
-                            "timePeriodValue": this.redemptionData.timePeriodValue,
-                            "timePeriodType": this.redemptionData.timePeriodType,
-                            "totalRedemptionPeriodType": this.redemptionData.totalRedemptionPeriodType,
-                            "totalRecurringFrequency": this.redemptionData.totalRecurringFrequency,
-                            "isRecurringFrequencyAndPeriod": this.redemptionData.isRecurringFrequencyAndPeriod,
-                            "recurringFrequencyValue": this.redemptionData.recurringFrequencyValue,
-                            "recurringFrequencyPeriodType": this.redemptionData.recurringFrequencyPeriodType,
-                            "recurringFrequencyPeriodValue": this.redemptionData.recurringFrequencyPeriodValue,
-                            "isRecurringFrequencyEachMonth": this.redemptionData.isRecurringFrequencyEachMonth,
-                            "recurringFrequencyDayOfMonth": this.redemptionData.recurringFrequencyDayOfMonth,
-                            "redemptionMethod": this.redemptionData.redemptionMethod,
-                            "smsKeyword": this.redemptionData.smsKeyword,
-                            "smsKeywordValidityDays": this.redemptionData.smsKeywordValidityDays
-                        }
-
+                        offerRedemption,
                     },
                     "notification": "true"
                 };
