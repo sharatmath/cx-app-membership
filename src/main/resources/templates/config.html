@@ -738,23 +738,23 @@
                                         </div><br>
                                         <b>Subscriber Offer Eligibility - For Configured Offer</b><br><br>
                                         <form class="form-inline">
-                                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                                <input type="radio" class="custom-control-input" id="frequencyOnly" x-model="eligibilityData.isFrequencyOnly">
+                                            <div class="custom-control custom-radio my-1 mr-sm-2">
+                                                <input type="radio" class="custom-control-input" id="frequencyOnly" name="radioSubscriberOfferEligibility" x-model="subscriberOfferEligibility" value="freq-only">
                                                 <label class="custom-control-label" for="frequencyOnly">Frequency Only</label>
                                             </div>
                                             <label class="sr-only" for="inputFrequency">Name</label>
-                                            <input type="number" class="form-control mb-2 mr-sm-2" id="inputFrequency" x-model="eligibilityData.frequency">
+                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'"  class="form-control mb-2 mr-sm-2" id="inputFrequency" x-model="eligibilityData.frequency">
                                         </form>
                                         <form class="form-inline">
-                                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                                <input type="radio" class="custom-control-input" id="frequencyTimePeriod" x-model="eligibilityData.isFrequencyAndTime">
+                                            <div class="custom-control custom-radio my-1 mr-sm-2">
+                                                <input type="radio" class="custom-control-input" name="radioSubscriberOfferEligibility" id="frequencyTimePeriod" x-model="subscriberOfferEligibility" value="freq-timeperiod">
                                                 <label class="custom-control-label" for="frequencyTimePeriod">Frequency and Time Period</label>
                                             </div>
                                             <label class="sr-only" for="inputFrequencyTimePeriod">Name</label>
-                                            <input type="number" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> in &nbsp;
+                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-timeperiod'" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> in &nbsp;
 
                                             <label class="sr-only" for="inputFrequencyIn">Name</label>
-                                            <input type="number" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
+                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-timeperiod'" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
                                         </form><br>
                                         <div id="excludeSubsForm">
                                             <b>Exclude Subscriber from this if they are in the following Program</b><br><br>
@@ -1296,7 +1296,13 @@
                                                         <label class="col-sm-2 col-form-label col-form-label">Keyword</label>
                                                         <div class="col-sm-2">
                                                             <label class="sr-only" for="inputKeywordDP">Name</label>
-                                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordDP" x-model="redemptionData.smsKeyword">
+<!--                                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordDP" x-model="redemptionData.smsKeyword">-->
+                                                            <select class="form-control mb-2 mr-sm-2">
+                                                                <option value="keyword1">Keyword 1</option>
+                                                                <option value="keyword2">Keyword 2</option>
+                                                                <option value="keyword3">Keyword 3</option>
+                                                                <option value="keyword4">Keyword 4</option>
+                                                            </select>
                                                         </div>
                                                         <label class="col-sm-2 col-form-label col-form-label">Keyword Validity</label>
                                                         <div class="col-sm-2">
@@ -1564,6 +1570,7 @@
             eventTypeData: 'Top-Up',
             eventConditionTypeData: 'Top-Up',
             offerLevelType: null,
+            subscriberOfferEligibility: null,
             monitoringFulfillmentRadio: null,
             totalRedemptionCapRadio: null,
             subscriberRedemptionCapRadio: null,
