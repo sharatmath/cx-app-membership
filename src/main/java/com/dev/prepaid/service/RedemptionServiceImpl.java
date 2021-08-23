@@ -58,16 +58,32 @@ public class RedemptionServiceImpl implements RedemptionService {
 		}
 		//1.2 Redemption and Time Period
 		else if (pCxOfferRedemption.getIsRedemptionCapAndPeriod()) {
-			sql="select * from prepaid_offer_membership "
-					+ "where "
-					+ "offer_config_id='"+pCxOfferRedemption.getOfferConfigId()+"' and "
-					+ "redemption_date is null "
-					+ "order by offer_membership_id FETCH NEXT "+pCxOfferRedemption.getRedemptionCapValue()+" ROWS ONLY";
+			if (pCxOfferRedemption.getTotalRedemptionPeriodType().equalsIgnoreCase("days")) {
+				sql="select * from prepaid_offer_membership "
+						+ "where "
+						+ "offer_config_id='"+pCxOfferRedemption.getOfferConfigId()+"' and "
+						+ "(redemption_date is not null and redemption_date = trunc(sysdate - "+pCxOfferRedemption.getTotalRedemptionPeriodEvery()+")) "
+						+ "order by offer_membership_id FETCH NEXT "+pCxOfferRedemption.getRedemptionCapValue()+" ROWS ONLY";
+			}
+			else if (pCxOfferRedemption.getTotalRedemptionPeriodType().equalsIgnoreCase("months")) {
+				sql="select * from prepaid_offer_membership "
+						+ "where "
+						+ "offer_config_id='"+pCxOfferRedemption.getOfferConfigId()+"' and "
+						+ "(redemption_date is not null and redemption_date = redemption_date = trunc(add_months(sysdate,-"+pCxOfferRedemption.getTotalRedemptionPeriodEvery()+"))) "
+						+ "order by offer_membership_id FETCH NEXT "+pCxOfferRedemption.getRedemptionCapValue()+" ROWS ONLY";
+			}
 			log.info("sql="+sql);
 			
 			q=em.createNativeQuery(sql);
 			membership = q.getResultList();
 		}
+		
+		if (membership.size()==0)
+			return;
+		
+		
+		
+		//2.---Subsricber Redemption Cap---
 		
 //		prepaidOfferMembershipRepository.find
 	}
