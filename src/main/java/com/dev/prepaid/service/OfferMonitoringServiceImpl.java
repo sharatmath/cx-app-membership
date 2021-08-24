@@ -32,7 +32,6 @@ public class OfferMonitoringServiceImpl implements OfferMonitoringService {
     RabbitTemplate rabbitTemplate;
 
     @Override
-    @Async
     public void processUsage(Map<String, Object> payload) {
         String requestId = getRequestId(payload);
         EventType eventType = EventType.USAGE;
@@ -40,7 +39,6 @@ public class OfferMonitoringServiceImpl implements OfferMonitoringService {
     }
 
     @Override
-    @Async
     public void processTopup(Map<String, Object> payload) {
         String requestId = getRequestId(payload);
         EventType eventType = EventType.TOPUP;
@@ -48,7 +46,6 @@ public class OfferMonitoringServiceImpl implements OfferMonitoringService {
     }
 
     @Override
-    @Async
     public void processArpu(Map<String, Object> payload) {
         String requestId = getRequestId(payload);
         EventType eventType = EventType.ARPU;
