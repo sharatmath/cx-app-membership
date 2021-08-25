@@ -156,6 +156,89 @@
             border-color: #da7200 !important;
         }
 
+
+        /* Advance filter styles */
+        .tab-selected {
+            color: rgb(0, 0, 0) !important;
+            background-color: #ebeeff !important;
+            border-color: #ebeeff !important;
+            text-decoration: none;
+            padding: 10px !important;
+            border-radius: .25rem;
+            font-size: medium;
+        }
+
+        .tab-unselected {
+            color: rgb(0, 0, 0) !important;
+            text-decoration: none;
+            padding: 10px !important;
+            font-size: medium;
+        }
+
+        .tab-card {
+            background-color: #ebeeff !important;
+            border-color: #ebeeff !important;
+        }
+
+        .modal-mask {
+            position: fixed;
+            z-index: 9998;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: table;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-wrapper {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .modal-container {
+            width: 20%;
+            height: 280px;
+            margin: 10% auto;
+            padding: 20px 30px;
+            background-color: #fff;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+            transition: all 0.3s ease;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        .modal-header h3 {
+            margin-top: 0;
+            color: #42b983;
+        }
+
+        .modal-body {
+            margin: 10px 0;
+            padding: 15px 0;
+        }
+        .modal-footer {
+            border: none;
+            margin-top: 13%;
+            float: right;
+            padding: 0;
+        }
+
+        .modal-enter {
+            opacity: 0;
+        }
+
+        .modal-leave-active {
+            opacity: 0;
+        }
+
+        .modal-enter .modal-container,
+        .modal-leave-active .modal-container {
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+        }
+
 	</style>
 </head>
 
@@ -688,7 +771,78 @@
 						</div>
 						<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#directProvisioning">
 							<div class="card-body">
-								<p>Advanced Filter</p>
+                                <div x-data="{isCustomUItab:true, showModal:false}">
+                                    <a class="tab-selected"
+                                        href="#"
+                                        x-show="isCustomUItab ===true"
+                                    >Custom UI</a>
+                                    <a class="tab-unselected"
+                                        href="#"
+                                        @click.prevent="showModal = true"
+                                        x-show="isCustomUItab === false"
+                                    >Custom UI</a>
+                                    <a class="tab-selected"
+                                        href="#"
+                                        x-show="isCustomUItab === false"
+                                    >Custom Query</a>
+                                    <a class="tab-unselected"
+                                        href="#"
+                                        @click.prevent="showModal = true"
+                                        x-show="isCustomUItab ===true"
+                                    >Custom Query</a>
+
+
+                                    <div x-show="isCustomUItab === true">
+                                        <div class="card-body tab-card" id="vtest"> Custom UI Card content
+                                            <div id="customUIComponent" > <!--Wrapping the component under Vue -->
+                                                {{ message }}
+                                                <div v-for="component in componentList" v-bind:is="component"></div>
+                                            </div> 
+                                        </div>
+                                    </div>
+
+
+
+                                    <div x-show="isCustomUItab === false"> 
+                                        <div class="card-body tab-card"> Custom Query card content</div>
+                                    </div>
+                                
+
+                                    <div  x-show="showModal === true"> <!--Modal Template -->
+                                        <div name="modal">
+                                          <div class="modal-mask">
+                                            <div class="modal-wrapper">
+                                              <div class="modal-container">
+                                  
+                                                <div class="modal-header">
+                                                  <slot name="header">
+                                                    Switch Tab
+                                                  </slot>
+                                                </div>
+                                                <div class="modal-body">
+                                                  <slot name="body">
+                                                    <div>Switching tab will erase all of configuration done in present tab, Should we proceed? </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn" @click.prevent="showModal=false">
+                                                            No
+                                                        </button>
+                                                        <button class="btn btn-singtel" @click.prevent="showModal=false, isCustomUItab =!isCustomUItab">  
+                                                            <div id="modal-button" @click="emptyComponentList">proceed</div>
+                                                        </button>
+                                                    </div>
+                                                  </slot>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                
+                                
+                            
+                                </div>
+
+                                
 							</div>
 						</div>
 					</div>
@@ -1377,7 +1531,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<!-- <script src="https://unpkg.com/petite-vue" defer init></script> -->
 <!--jQUERY BEGIN-->
 <script>
     function jQuery() {
@@ -1551,6 +1706,14 @@
 	// const INSTANCE_ID = $("#instanceId").text();
 	const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
 	const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
+
+    var colorCodes = {
+
+back  : "#fff",
+front : "#888",
+side  : "#369"
+
+};
 
 	function configureMembership() {
 		return {
@@ -1868,6 +2031,62 @@
 
 </script>
 <!--AlpineJS END-->
+
+<!--VueJS START-->
+<script>
+
+    var store = {  // handle the state management of data
+        debug: true,
+        state: {
+            message: 'hello vue',
+            componentList: [
+            'mycomponent',
+            'myothercomponent', 
+            'mycomponent',], // this will indicate the appearance of component
+        },
+        setStateRemoveComponent(newValue) {
+            this.state.componentList = newValue;
+        }
+    }
+
+    var emptyComponentList = function() {
+        console.log('Removing')
+        var emptyList = customUI.componentList.splice(0, customUI.componentList.length); // empty the list
+        console.log(emptyList, 'going set state')
+        store.setStateRemoveComponent(emptyList)
+    }
+
+    var myothercomponent = Vue.component('myothercomponent',{
+        template:'<div><button v-on:click="emptyComponentList">XXX</button>myothercomponentasadfsadsad</div>',
+        methods:{
+            testClick: function() {
+                console.log('test');
+                customUI.componentList.splice(0, 1)
+            }
+        }
+    })
+
+    var mycomponent = Vue.component('mycomponent',{template:'<div>rtetetasdasdasd</div>'})
+
+    // Vue.component("modal", {
+    //     el: "#modal-button"
+    //   });
+    
+    var customUI = new Vue({
+      el: '#customUIComponent',
+      data: {
+        message: store.state.message,
+        componentList: store.state.componentList, // this will indicate the appearance of component
+      }
+    })
+
+    var modalResetButton = new Vue({
+        el: "#modal-button"
+    })
+
+    // alert(colorCodes.back)
+</script>
+<!--VueJS END-->
 
 </body>
 </html>
