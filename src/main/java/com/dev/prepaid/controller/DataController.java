@@ -365,4 +365,8 @@ public class DataController {
 		return  ResponseEntity.ok("Success");
 	}
 
+	@GetMapping(value = "listOfferType")
+	public List<PromoCode> listOfferType(){
+		return offerService.listOfferType();
+	}
 }

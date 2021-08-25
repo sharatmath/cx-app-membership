@@ -59,6 +59,8 @@ public class OfferServiceImpl implements OfferService {
 	private PrepaidCxOfferEventConditionRepository prepaidCxOfferEventConditionRepository;
 	@Autowired
 	private CountryRepository countryRepository;
+	@Autowired
+	private PromoCodeRepository promoCodeRepository;
 
 	@Override
 	public void evictAllCaches() {
@@ -261,6 +263,11 @@ public class OfferServiceImpl implements OfferService {
 		}
 		return list;
 	}
+
+	public List<PromoCode> listOfferType() {
+		return promoCodeRepository.findEligiblePromo();
+	}
+
 
 	public List<Country> listCountry(){
 		return countryRepository.findAll();
