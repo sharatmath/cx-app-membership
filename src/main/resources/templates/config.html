@@ -246,6 +246,18 @@
             transform: scale(1.1);
         }
 
+        .customUIcontainer {
+            height: 300px;
+            padding: 10px;
+        }
+
+        .selection-card {
+            border-color: #ffffff !important;
+        }
+        .config-card {
+            background-color: #fff !important;
+        }
+
 	</style>
 </head>
 
@@ -839,49 +851,61 @@
 						</div>
 						<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#directProvisioning">
 							<div class="card-body">
-                                <div x-data="{isCustomUItab:true, showModal:false}">
+                                <div id="customUIComponent">
                                     <a class="tab-selected"
                                         href="#"
-                                        x-show="isCustomUItab ===true"
+                                        v-show="tab === 'customUI'"
                                     >Custom UI</a>
                                     <a class="tab-unselected"
                                         href="#"
                                         @click.prevent="showModal = true"
-                                        x-show="isCustomUItab === false"
+                                        v-show="tab === 'customQuery'"
                                     >Custom UI</a>
                                     <a class="tab-selected"
                                         href="#"
-                                        x-show="isCustomUItab === false"
+                                        v-show="tab === 'customQuery'"
                                     >Custom Query</a>
                                     <a class="tab-unselected"
                                         href="#"
                                         @click.prevent="showModal = true"
-                                        x-show="isCustomUItab ===true"
+                                        v-show="tab ==='customUI'"
                                     >Custom Query</a>
 
 
-                                    <div x-show="isCustomUItab === true">
-                                        <div class="card-body tab-card" id="vtest"> Custom UI Card content
-                                            <div id="customUIComponent" > <!--Wrapping the component under Vue -->
-                                                {{ message }}
-                                                <div v-for="component in componentList" v-bind:is="component"></div>
+                                    <div v-show="tab === 'customUI'">
+                                        <div class="card-body tab-card" id="vtest">
+                                            <div id="customUIComponent" > 
+                                                <div class="customUIcontainer row">
+                                                    <div class="selection-card col-4"> 
+                                                        <v-select 
+                                                            :options="dropdownfunctionList"
+                                                            placeholder="Select Function"
+                                                            label="Select Function" 
+                                                            @input="setSelected"
+                                                            :clearable="false"
+                                                            v-model="selectedFunction"
+                                                            ></v-select>
+                                                    </div>
+                                                    <div class="config-card col-8">
+                                                        <div v-for="component in componentList" v-bind:is="component"></div>
+                                                    </div>
+                                                </div>
                                             </div> 
                                         </div>
                                     </div>
 
 
 
-                                    <div x-show="isCustomUItab === false"> 
+                                    <div v-show="tab === 'customQuery'"> 
                                         <div class="card-body tab-card"> Custom Query card content</div>
                                     </div>
                                 
 
-                                    <div  x-show="showModal === true"> <!--Modal Template -->
+                                    <div  v-show="showModal === true">
                                         <div name="modal">
                                           <div class="modal-mask">
                                             <div class="modal-wrapper">
                                               <div class="modal-container">
-                                  
                                                 <div class="modal-header">
                                                   <slot name="header">
                                                     Switch Tab
@@ -894,8 +918,8 @@
                                                         <button class="btn" @click.prevent="showModal=false">
                                                             No
                                                         </button>
-                                                        <button class="btn btn-singtel" @click.prevent="showModal=false, isCustomUItab =!isCustomUItab">  
-                                                            <div id="modal-button" @click="emptyComponentList">proceed</div>
+                                                        <button class="btn btn-singtel" @click.prevent="showModal=false" @click="emptyComponentList">  
+                                                            proceed
                                                         </button>
                                                     </div>
                                                   </slot>
@@ -905,9 +929,6 @@
                                           </div>
                                         </div>
                                     </div>
-                                
-                                
-                            
                                 </div>
 
                                 
@@ -1652,9 +1673,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-<!-- <script src="https://unpkg.com/petite-vue" defer init></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://unpkg.com/vue-select@latest"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
 <!--jQUERY BEGIN-->
 <script>
     function jQuery() {
@@ -1828,14 +1850,6 @@
 	// const INSTANCE_ID = $("#instanceId").text();
 	const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
 	const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
-
-    var colorCodes = {
-
-back  : "#fff",
-front : "#888",
-side  : "#369"
-
-};
 
 	function configureMembership() {
 		return {
@@ -2156,59 +2170,107 @@ side  : "#369"
 </script>
 <!--AlpineJS END-->
 
+
+
 <!--VueJS START-->
 <script>
 
-    var store = {  // handle the state management of data
+    // handle the state management of data
+    var store = {  
         debug: true,
         state: {
-            message: 'hello vue',
-            componentList: [
-            'mycomponent',
-            'myothercomponent', 
-            'mycomponent',], // this will indicate the appearance of component
+            dropdownfunctionList: [
+                    'sampleComponent1',
+                    'sampleComponent2'],
+            componentList: [],
+            tab: 'customUI',
+            showModal: false,
+            selectedFunction: null,
         },
-        setStateRemoveComponent(newValue) {
+        setStateFunctionComponentList(newValue) {
             this.state.componentList = newValue;
+        },
+        setStateComponentDropdownList(newValue) {
+            this.state.dropdownfunctionList = newValue;
         }
     }
 
+
+
     var emptyComponentList = function() {
-        console.log('Removing')
-        var emptyList = customUI.componentList.splice(0, customUI.componentList.length); // empty the list
-        console.log(emptyList, 'going set state')
-        store.setStateRemoveComponent(emptyList)
+        
+        if (customUI.tab === 'customUI') {
+            let emptyList = customUI.componentList.splice(0, customUI.componentList.length); // empty the list
+            //store.setStateFunctionComponentList(emptyList)
+
+           // store.setStateComponentDropdownList(completedropdownFunctionList);
+           let completedropdownFunctionList = [
+                    'sampleComponent1',
+                    'sampleComponent2']
+    
+            customUI.dropdownfunctionList.splice(0,customUI.dropdownfunctionList.length);
+            console.log(completedropdownFunctionList)
+            customUI.dropdownfunctionList.push(...completedropdownFunctionList);
+            customUI.tab = 'customQuery'
+        } else {
+            customUI.tab = 'customUI'
+        }
     }
 
-    var myothercomponent = Vue.component('myothercomponent',{
-        template:'<div><button v-on:click="emptyComponentList">XXX</button>myothercomponentasadfsadsad</div>',
-        methods:{
-            testClick: function() {
-                console.log('test');
-                customUI.componentList.splice(0, 1)
+    var removeSpecificComponent = function(value) {
+
+        var selectedIndex = store.state.componentList.indexOf(value);
+        var test = customUI.componentList.splice(selectedIndex, 1);
+        //store.setStateFunctionComponentList(test)
+
+        customUI.dropdownfunctionList.push(value)
+
+    }
+    
+    // Custom UI Components START
+
+    var sampleComponent2 = Vue.component('sampleComponent2',{
+        template:`<div>This is component 2 <button v-on:click="removeSpecificComponent('sampleComponent2')" id="sampleComponent2">X</button></div>`,
+    })
+
+    var sampleComponent1 = Vue.component('sampleComponent1',{template:`<div>component 1 <button v-on:click="removeSpecificComponent('sampleComponent1')" id="sampleComponent1">X</button></div>`})
+    // Custom UI Components END
+    
+    Vue.component('v-select', VueSelect.VueSelect)
+
+    // Main Component for Custom UI
+    var customUI = new Vue({
+        el: '#customUIComponent',
+        data: {
+            componentList: store.state.componentList,
+            dropdownfunctionList: store.state.dropdownfunctionList,
+            tab: store.state.tab,
+            showModal: store.state.showModal,
+            selectedFunction: null,
+        },
+        methods: {
+            setSelected(value) {
+                // var selectedIndex = store.state.dropdownfunctionList.indexOf(value);
+                console.log(value)
+                var selectedIndex = customUI.dropdownfunctionList.indexOf(value);
+                customUI.dropdownfunctionList.splice(selectedIndex, 1);
+                
+                //store.setStateComponentDropdownList(customUI.dropdownfunctionList)
+                customUI.componentList.push(value)
+            }
+        },
+        watch: {
+            selectedFunction: function () {
+                this.selectedFunction = null;
+                return(this.selectedFunction)
             }
         }
     })
 
-    var mycomponent = Vue.component('mycomponent',{template:'<div>rtetetasdasdasd</div>'})
-
-    // Vue.component("modal", {
-    //     el: "#modal-button"
-    //   });
-    
-    var customUI = new Vue({
-      el: '#customUIComponent',
-      data: {
-        message: store.state.message,
-        componentList: store.state.componentList, // this will indicate the appearance of component
-      }
-    })
-
+    // empty the configuration when switch tab
     var modalResetButton = new Vue({
         el: "#modal-button"
     })
-
-    // alert(colorCodes.back)
 </script>
 <!--VueJS END-->
 
