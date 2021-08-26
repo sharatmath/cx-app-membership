@@ -256,7 +256,7 @@
             border-color: #ffffff !important;
         }
         .config-card {
-            background-color: #fff !important;
+            /* background-color: #fff !important; */
             padding: 8px;
         }
 
@@ -264,7 +264,7 @@
             border-color: black !important;
             border-radius: 5px;
             border-width: bold;
-            background-color: #ddffef;
+            background-color: #fcfcfc;
             padding: 5px;
             margin-top: 7px;
         }
@@ -285,6 +285,10 @@
         .operators {
             width:20%;
             margin: 10px;
+            background-color: white;
+        }
+        .select-function-dropdown {
+            background-color:white;
         }
 
         .hr-custom {
@@ -925,6 +929,7 @@
                                                             @input="setSelected"
                                                             :clearable="false"
                                                             v-model="selectedFunction"
+                                                            class="select-function-dropdown"
                                                             ></v-select>
                                                     </div>
                                                     <div class="config-card col-8">
