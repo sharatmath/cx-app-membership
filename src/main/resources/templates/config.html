@@ -2277,6 +2277,9 @@
     
     // Custom UI Components START
 
+    //** rule in creating component
+    //** 1. varialbe name, component name and parameter name (on removeSpecificComponent function) must be the same
+
     var sampleComponent2 = Vue.component('sampleComponent2',{
         template:`<div>This is component 2 <button v-on:click="removeSpecificComponent('sampleComponent2')" id="sampleComponent2">X</button></div>`,
     })
