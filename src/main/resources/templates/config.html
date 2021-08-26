@@ -248,7 +248,7 @@
         }
 
         .customUIcontainer {
-            height: 300px;
+            min-height: 300px;
             padding: 10px;
         }
 
@@ -257,7 +257,46 @@
         }
         .config-card {
             background-color: #fff !important;
+            padding: 8px;
         }
+
+        .component-card {
+            border-color: black !important;
+            border-radius: 5px;
+            border-width: bold;
+            background-color: #ddffef;
+            padding: 5px;
+            margin-top: 7px;
+        }
+
+        .delete-component-btn {
+            float: right;
+        }
+
+        .component-title {
+            padding-left: 25px;
+            padding-top: 10px;
+        }
+
+        .component-form {
+            padding: 5px;
+        }
+
+        .operators {
+            width:20%;
+            margin: 10px;
+        }
+
+        .hr-custom {
+            margin-top: 5px;
+            margin-bottom: 8px;
+        }
+
+        .input-custom {
+            width: 80%;
+            margin: 5px;
+        }
+
 
 	</style>
 </head>
@@ -851,6 +890,7 @@
 							<div id="advancedFilterAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseTwo"><h5><i class="fa fa-plus"></i> Advanced Filter - Optional</h5></div>
 						</div>
 						<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#directProvisioning">
+                            tite
 							<div class="card-body">
                                 <div id="customUIComponent">
                                     <a class="tab-selected"
@@ -2228,12 +2268,13 @@
         debug: true,
         state: {
             dropdownfunctionList: [
-                    'sampleComponent1',
+                    'getTopupFrequencyMatchForXMonths',
                     'sampleComponent2'],
             componentList: [],
             tab: 'customUI',
             showModal: false,
             selectedFunction: null,
+            operatorsList:['AND', 'OR',]
         },
         setStateFunctionComponentList(newValue) {
             this.state.componentList = newValue;
@@ -2243,19 +2284,15 @@
         }
     }
 
-
+    // FUNCTIONS START
 
     var emptyComponentList = function() {
-        
         if (customUI.tab === 'customUI') {
             let emptyList = customUI.componentList.splice(0, customUI.componentList.length); // empty the list
-            //store.setStateFunctionComponentList(emptyList)
-
-           // store.setStateComponentDropdownList(completedropdownFunctionList);
            let completedropdownFunctionList = [
-                    'sampleComponent1',
+                    'getTopupFrequencyMatchForXMonths',
                     'sampleComponent2']
-    
+
             customUI.dropdownfunctionList.splice(0,customUI.dropdownfunctionList.length);
             console.log(completedropdownFunctionList)
             customUI.dropdownfunctionList.push(...completedropdownFunctionList);
@@ -2266,27 +2303,88 @@
     }
 
     var removeSpecificComponent = function(value) {
-
-        var selectedIndex = store.state.componentList.indexOf(value);
-        var test = customUI.componentList.splice(selectedIndex, 1);
+        var selectedIndex = customUI.componentList.indexOf(value);
+        customUI.componentList.splice(selectedIndex, 1);
         //store.setStateFunctionComponentList(test)
-
+        
+        if (selectedIndex > 0 && customUI.componentList[selectedIndex-1] === 'operators'){
+            customUI.componentList.splice(selectedIndex - 1, 1);
+        }
+        
         customUI.dropdownfunctionList.push(value)
-
+        customUI.dropdownfunctionList.sort()
     }
     
-    // Custom UI Components START
+    var setOperator = function() {
+        console.log('setOperator')
+    }
 
+    //FUNCTION END
+
+
+    // Custom UI Components START
     //** rule in creating component
     //** 1. varialbe name, component name and parameter name (on removeSpecificComponent function) must be the same
+    
+    var getTopupFrequencyMatchForXMonths = Vue.component('getTopupFrequencyMatchForXMonths',
+        {
+            template:
+                `<div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>getTopupFrequencyMatchForXMonths</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('getTopupFrequencyMatchForXMonths')" 
+                                    id="getTopupFrequencyMatchForXMonths" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <input placeholder="Package Name, Multiple value separated by pipe.." class="input-custom"/>  
+                        <input placeholder="Package Name, Multiple value separated by pipe.." class="input-custom"/>  
+                        <input placeholder="Package Name, Multiple value separated by pipe.." class="input-custom"/>  
+                        <input placeholder="Package Name, Multiple value separated by pipe.." class="input-custom"/>  
+                    </div>
+                </div>`,
+        })
 
-    var sampleComponent2 = Vue.component('sampleComponent2',{
-        template:`<div>This is component 2 <button v-on:click="removeSpecificComponent('sampleComponent2')" id="sampleComponent2">X</button></div>`,
-    })
+    var sampleComponent2 = Vue.component('sampleComponent2',
+        {
+            template:
+                `<div class="component-card">
+                    <div class="row">
+                        <div class=" col-sm-10 component-title">
+                            <h6><b>sampleComponent2</b> </h6>
+                        </div>
+                        <div class=" col-sm-2">
+                            <button v-on:click="removeSpecificComponent('sampleComponent2')" 
+                                id="sampleComponent2" class="btn btn-danger my-1 delete-component-btn">x</button>
+                        </div>
+                    </div>
+                    <hr class="hr-custom">
+                    <div>ssdasdsa</div>
+                </div>`,
+        })
+    
+    var operators = Vue.component('operators',
+        {
+            template:
+                `<div class="operators"> 
+                    <v-select 
+                    :options="store.state.operatorsList"
+                    placeholder="AND"
+                    @input="setOperator"
+                    :clearable="false"
+                    v-model="customUI.selectedOperator"
+                    ></v-select>
+                </div>`
 
-    var sampleComponent1 = Vue.component('sampleComponent1',{template:`<div>component 1 <button v-on:click="removeSpecificComponent('sampleComponent1')" id="sampleComponent1">X</button></div>`})
+        })
     // Custom UI Components END
     
+
+
     Vue.component('v-select', VueSelect.VueSelect)
 
     // Main Component for Custom UI
@@ -2298,16 +2396,19 @@
             tab: store.state.tab,
             showModal: store.state.showModal,
             selectedFunction: null,
+            selectedOperator: 'AND',
         },
         methods: {
             setSelected(value) {
-                // var selectedIndex = store.state.dropdownfunctionList.indexOf(value);
-                console.log(value)
                 var selectedIndex = customUI.dropdownfunctionList.indexOf(value);
                 customUI.dropdownfunctionList.splice(selectedIndex, 1);
-                
-                //store.setStateComponentDropdownList(customUI.dropdownfunctionList)
                 customUI.componentList.push(value)
+                
+                // add Operator to the block
+                let indexComponent =  customUI.componentList.findIndex(element => element === value);
+               if(indexComponent > 0) {
+                customUI.componentList.splice(indexComponent,0,'operators');
+               }
             }
         },
         watch: {
@@ -2318,10 +2419,6 @@
         }
     })
 
-    // empty the configuration when switch tab
-    var modalResetButton = new Vue({
-        el: "#modal-button"
-    })
 </script>
 <!--VueJS END-->
 
