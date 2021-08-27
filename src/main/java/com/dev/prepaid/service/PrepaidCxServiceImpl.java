@@ -193,6 +193,12 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 				prepaidCxOfferSelection.setOfferBucketId(offerSelection.getOfferBucketId());
 				prepaidCxOfferSelection.setOfferType(offerSelection.getOfferCampaignName());
 				prepaidCxOfferSelection.setOfferId(String.valueOf(offerSelection.getOfferCampaignId()));
+				prepaidCxOfferSelection.setSmsCampaignName(offerSelection.getSmsCampaignName());
+				prepaidCxOfferSelection.setPromoType(offerSelection.getPromoType());
+				prepaidCxOfferSelection.setMessageText1(offerSelection.getMessageText1());
+				prepaidCxOfferSelection.setMessageText2(offerSelection.getMessageText2());
+				prepaidCxOfferSelection.setMessageText3(offerSelection.getMessageText3());
+				prepaidCxOfferSelection.setMessageText4(offerSelection.getMessageText4());
 			}else {
 				prepaidCxOfferSelection = PrepaidCxOfferSelection.builder()
 						.offerConfigId(offerConfigId)
@@ -200,6 +206,12 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 						.offerBucketId(offerSelection.getOfferBucketId())
 						.offerType(offerSelection.getOfferCampaignName())
 						.offerId(String.valueOf(offerSelection.getOfferCampaignId()))
+						.smsCampaignName(offerSelection.getSmsCampaignName())
+						.promoType(offerSelection.getPromoType())
+						.messageText1(offerSelection.getMessageText1())
+						.messageText2(offerSelection.getMessageText2())
+						.messageText3(offerSelection.getMessageText3())
+						.messageText4(offerSelection.getMessageText4())
 						.build();
 			}
 			prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
@@ -299,6 +311,15 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferRedemption.setRedemptionMethod(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionMethod());
 			prepaidCxOfferRedemption.setSmsKeyword(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeyword());
 			prepaidCxOfferRedemption.setSmsKeywordValidityDays(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeywordValidityDays());
+
+			prepaidCxOfferRedemption.setSmsCampaignName(saveConfigRequest.getPayload().getOfferRedemption().getSmsCampaignName());
+			prepaidCxOfferRedemption.setPostSmsCampaignName(saveConfigRequest.getPayload().getOfferRedemption().getPostSmsCampaignName());
+			prepaidCxOfferRedemption.setDynamicVariable1(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable1());
+			prepaidCxOfferRedemption.setDynamicVariable2(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable2());
+			prepaidCxOfferRedemption.setDynamicVariable3(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable3());
+			prepaidCxOfferRedemption.setDynamicVariable4(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable4());
+			prepaidCxOfferRedemption.setDynamicVariable5(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable5());
+
 		}else {
 			prepaidCxOfferRedemption = PrepaidCxOfferRedemption.builder()
 					.offerConfigId(offerConfigId)
@@ -324,6 +345,13 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.redemptionMethod(saveConfigRequest.getPayload().getOfferRedemption().getRedemptionMethod())
 					.smsKeyword(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeyword())
 					.smsKeywordValidityDays(saveConfigRequest.getPayload().getOfferRedemption().getSmsKeywordValidityDays())
+					.smsCampaignName(saveConfigRequest.getPayload().getOfferRedemption().getSmsCampaignName())
+					.postSmsCampaignName(saveConfigRequest.getPayload().getOfferRedemption().getPostSmsCampaignName())
+					.dynamicVariable1(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable1())
+					.dynamicVariable2(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable2())
+					.dynamicVariable3(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable3())
+					.dynamicVariable4(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable4())
+					.dynamicVariable5(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable5())
 					.build();
 		}
 		prepaidCxOfferRedemptionRepository.save(prepaidCxOfferRedemption);

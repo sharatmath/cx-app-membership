@@ -265,7 +265,11 @@ public class OfferServiceImpl implements OfferService {
 	}
 
 	public List<PromoCode> listOfferType() {
-		return promoCodeRepository.findEligiblePromo();
+		List<PromoCode> list  = promoCodeRepository.findEligiblePromo();
+		list.add(new PromoCode("1", "DA", "DA"));
+		list.add(new PromoCode("2", "OMS", "OMS"));
+
+		return list;
 	}
 
 

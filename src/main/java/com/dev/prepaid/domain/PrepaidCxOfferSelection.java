@@ -1,5 +1,6 @@
 package com.dev.prepaid.domain;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,4 +25,12 @@ public class PrepaidCxOfferSelection extends Auditable{
     private String offerId;
     private String offerBucketId;
     private String offerType;
+
+    private String smsCampaignName;
+    private String promoType;
+    private String messageText1;
+    private String messageText2;
+    private String messageText3;
+    private String messageText4;
+
 }

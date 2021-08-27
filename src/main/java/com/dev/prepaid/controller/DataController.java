@@ -305,7 +305,15 @@ public class DataController {
 		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
 		List<PrepaidCxOfferSelection>  data = offerService.getOfferSelection(instanceId);
 		for (PrepaidCxOfferSelection prepaidCxOfferSelection: data){
-			PrepaidCampaignOfferDetailDTO offerDetailDTO = offerDetail(
+			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
+			offerDetailDTO.setSmsCampaignName(prepaidCxOfferSelection.getSmsCampaignName());
+			offerDetailDTO.setOfferType(prepaidCxOfferSelection.getOfferType());
+			offerDetailDTO.setMessageText1(prepaidCxOfferSelection.getMessageText1());
+			offerDetailDTO.setMessageText2(prepaidCxOfferSelection.getMessageText2());
+			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
+			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
+
+			offerDetailDTO = offerDetail(
 					prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()),
 					String.valueOf(prepaidCxOfferSelection.getOfferId()));
 //			offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()));
