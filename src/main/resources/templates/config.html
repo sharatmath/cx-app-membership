@@ -248,7 +248,7 @@
         }
 
         .customUIcontainer {
-            min-height: 300px;
+            min-height: 350px;
             padding: 10px;
         }
 
@@ -2278,14 +2278,17 @@
         debug: true,
         state: {
             dropdownfunctionList: [
-                    'getTopupFrequencyMatchForXMonths',
-                    'sampleComponent2'],
+                'getPackageFrequency',
+                'getTopupFrequency',
+                'getTopupFrequencyMatchForXMonths',
+            ],
             componentList: [],
             tab: 'customUI',
             showModal: false,
             selectedFunction: null,
             operatorsList: ['AND', 'OR',],
-            trueOrFalse: ['true','false']
+            trueOrFalse: ['true','false'],
+            frequencyOfPackageOperadList: ['=', '> | =', '< | =', '<', '>']
         },
         setStateFunctionComponentList(newValue) {
             this.state.componentList = newValue;
@@ -2300,12 +2303,12 @@
     var emptyComponentList = function() {
         if (customUI.tab === 'customUI') {
             let emptyList = customUI.componentList.splice(0, customUI.componentList.length); // empty the list
-           let completedropdownFunctionList = [
-                    'getTopupFrequencyMatchForXMonths',
-                    'sampleComponent2']
-
+            let completedropdownFunctionList = [
+                'getPackageFrequency',
+                'getTopupFrequency',         
+                'getTopupFrequencyMatchForXMonths',
+            ]
             customUI.dropdownfunctionList.splice(0,customUI.dropdownfunctionList.length);
-            console.log(completedropdownFunctionList)
             customUI.dropdownfunctionList.push(...completedropdownFunctionList);
             customUI.tab = 'customQuery'
         } else {
@@ -2318,21 +2321,12 @@
         customUI.componentList.splice(selectedIndex, 1);
         //store.setStateFunctionComponentList(test)
         
-        if (selectedIndex > 0 && customUI.componentList[selectedIndex-1] === 'operators'){
-            customUI.componentList.splice(selectedIndex - 1, 1);
-        }
-        
         customUI.dropdownfunctionList.push(value)
         customUI.dropdownfunctionList.sort()
+        customUI[customUI.componentList[0]].hasOperand = false; // delete the operand on the top
+ 
     }
     
-    var setOperator = function() {
-        console.log('setOperator')
-    }
-
-    var setTrueOrFalse = function(componentId) {
-        console.log(componentId)
-    }
 
     //FUNCTION END
 
@@ -2344,72 +2338,279 @@
     var getTopupFrequencyMatchForXMonths = Vue.component('getTopupFrequencyMatchForXMonths',
         {
             template:
-                `<div class="component-card">
-                        <div class="row">
-                            <div class=" col-sm-10 component-title">
-                                <h6><b>getTopupFrequencyMatchForXMonths</b> </h6>
-                            </div>
-                            <div class=" col-sm-2">
-                                <button v-on:click="removeSpecificComponent('getTopupFrequencyMatchForXMonths')" 
-                                    id="getTopupFrequencyMatchForXMonths" class="btn btn-danger my-1 delete-component-btn">x</button>
-                            </div>
+                `<div>
+                    <div v-if="customUI.getTopupFrequencyMatchForXMonths.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getTopupFrequencyMatchForXMonths.operand"
+                            ></v-select>
                         </div>
-                    <hr class="hr-custom">
-                    <div class="component-form">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="label-component">Package Name Matches</div>
-                                <div class="label-component">Start Month</div>
-                                <div class="label-component">Number_of_months</div>
-                               
-                                <div class="label-component" style="margin-top:17px">Frequency_of Package</div>
-                                
-                                <div class="label-component" style="margin-top:25px">Other_packages_allowed</div>
-                            </div>
-                            <div class="col-md-8">
-                                <input placeholder="Package Name, Multiple value separated by pipe.." class="form-control form-control-sm input-custom"/>  
-                                <input placeholder="yyyymm, freq calculation start from this month" class="form-control form-control-sm input-custom"/>  
-                                <input placeholder="Number of Month" class="form-control form-control-sm input-custom"/>
-                                <div class="row" style="width:104%">
-                                    <div class="col-md-6"> <input placeholder=" =, >|=, <|=, <, >" class="form-control form-control-sm input-custom"/> </div>
-                                    <div class="col-md-6"> <input placeholder="Integer, freq required..." class="form-control form-control-sm input-custom"/> </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getTopupFrequencyMatchForXMonths</b> </h6>
                                 </div>
-                                <v-select 
-                                    class="operators"
-                                    :options="store.state.trueOrFalse"
-                                    placeholder="Other_packages_allowed"
-                                    @input="setTrueOrFalse('getTopupFrequencyMatchForXMonths')"
-                                    :clearable="false"
-                                    v-model="customUI.trueOrFalse"
-                                ></v-select>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getTopupFrequencyMatchForXMonths')" 
+                                        id="getTopupFrequencyMatchForXMonths" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
                             </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
 
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Package Name Matches</div>
+                                    <div class="label-component">Start Month</div>
+                                    <div class="label-component">Number_of_months</div>
+                                
+                                    <div class="label-component" style="margin-top:17px">Frequency_of Package</div>
+
+                                    <div class="label-component" style="margin-top:25px">Other_packages_allowed</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="Package Name, Multiple value separated by pipe.." 
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.getTopupFrequencyMatchForXMonths.packageName"
+                                        id="packageName"
+                                    /> 
+                                    <input placeholder="yyyymm, freq calculation start from this month"
+                                        class="form-control form-control-sm input-custom"
+                                        v-model="customUI.getTopupFrequencyMatchForXMonths.startMonth"
+                                        id="startMonth"/>  
+                                    <input placeholder="Number of Month"
+                                        class="form-control form-control-sm input-custom"
+                                        v-model="customUI.getTopupFrequencyMatchForXMonths.numberOfMonth"
+                                        id="numberOfMonth"/>
+                                    <div class="row" style="width:104%">
+                                        <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.frequencyOfPackageOperadList"
+                                            :clearable="false"
+                                            v-model="customUI.getTopupFrequencyMatchForXMonths.frequencyOfPackageOperand"
+                                        ></v-select>
+                                        <div class="col-md-6"> 
+                                            <input placeholder="Integer, freq required..." 
+                                                class="form-control form-control-sm input-custom"
+                                                v-model="customUI.getTopupFrequencyMatchForXMonths.frequencyOfPackageValue"
+                                            /> 
+                                        </div>
+                                    </div>
+                                    <v-select 
+                                        class="operators"
+                                        style="margin-left:5px"
+                                        :options="store.state.trueOrFalse"
+                                        :clearable="false"
+                                        v-model="customUI.getTopupFrequencyMatchForXMonths.otherPackagesAllowed"
+                                    ></v-select>
+                                </div>
+                            </div>
                         </div>
-                        
                     </div>
                 </div>`,
+                beforeCreate: function() {
+                    let indexComponent =  customUI.componentList.findIndex(element => element === 'getTopupFrequencyMatchForXMonths');
+                    if(indexComponent > 0) {
+                        // customUI.componentList.splice(indexComponent,0,'operators');
+                        customUI.getTopupFrequencyMatchForXMonths.hasOperand = true;
+                    }
+                },
+                beforeDestroy: function () {
+                    customUI.getTopupFrequencyMatchForXMonths.hasOperand = false;
+                    //customUI.getTopupFrequencyMatchForXMonths.operand = 'AND';
+                }
         })
 
-    var sampleComponent2 = Vue.component('sampleComponent2',
+        var getTopupFrequency = Vue.component('getTopupFrequency',
         {
             template:
-                `<div class="component-card">
-                    <div class="row">
-                        <div class=" col-sm-10 component-title">
-                            <h6><b>sampleComponent2</b> </h6>
-                        </div>
-                        <div class=" col-sm-2">
-                            <button v-on:click="removeSpecificComponent('sampleComponent2')" 
-                                id="sampleComponent2" class="btn btn-danger my-1 delete-component-btn">x</button>
+                `<div>
+                    <div v-if="customUI.getTopupFrequency.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getTopupFrequency.operand"
+                            ></v-select>
                         </div>
                     </div>
-                    <hr class="hr-custom">
-                    <div>ssdasdsa</div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getTopupFrequency</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getTopupFrequency')" 
+                                        id="getTopupFrequency" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Package Name Matches</div>
+                                    <div class="label-component">Start Month</div>
+                                    <div class="label-component">Number_of_months</div>
+                                
+                                    <div class="label-component" style="margin-top:17px">Frequency_of Package</div>
+
+                                    <div class="label-component" style="margin-top:25px">Other_packages_allowed</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="Package Name, Multiple value separated by pipe.." 
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.getTopupFrequency.packageName"
+                                        id="packageName"
+                                    /> 
+                                    <input placeholder="yyyymm, freq calculation start from this month"
+                                        class="form-control form-control-sm input-custom"
+                                        v-model="customUI.getTopupFrequency.startMonth"
+                                        id="startMonth"/>  
+                                    <input placeholder="Number of Month"
+                                        class="form-control form-control-sm input-custom"
+                                        v-model="customUI.getTopupFrequency.numberOfMonth"
+                                        id="numberOfMonth"/>
+                                    <div class="row" style="width:104%">
+                                        <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.frequencyOfPackageOperadList"
+                                            :clearable="false"
+                                            v-model="customUI.getTopupFrequency.frequencyOfPackageOperand"
+                                        ></v-select>
+                                        <div class="col-md-6"> 
+                                            <input placeholder="Integer, freq required..." 
+                                                class="form-control form-control-sm input-custom"
+                                                v-model="customUI.getTopupFrequency.frequencyOfPackageValue"
+                                            /> 
+                                        </div>
+                                    </div>
+                                    <v-select 
+                                        class="operators"
+                                        style="margin-left:5px"
+                                        :options="store.state.trueOrFalse"
+                                        :clearable="false"
+                                        v-model="customUI.getTopupFrequency.otherPackagesAllowed"
+                                    ></v-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>`,
+                beforeCreate: function() {
+                    let indexComponent =  customUI.componentList.findIndex(element => element === 'getTopupFrequency');
+                    if(indexComponent > 0) {
+                        // customUI.componentList.splice(indexComponent,0,'operators');
+                        customUI.getTopupFrequency.hasOperand = true;
+                    }
+                },
+                beforeDestroy: function () {
+                    customUI.getTopupFrequency.hasOperand = false;
+                    //customUI.getTopupFrequency.operand = 'AND';
+                }
+        })
+
+        var getPackageFrequency = Vue.component('getPackageFrequency',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.getPackageFrequency.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getPackageFrequency.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getPackageFrequency</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getPackageFrequency')" 
+                                        id="getPackageFrequency" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Package Name Matches</div>
+                                    <div class="label-component">Start Month</div>
+                                    <div class="label-component">Number_of_months</div>
+                                
+                                    <div class="label-component" style="margin-top:17px">Frequency_of Package</div>
+
+                                    <div class="label-component" style="margin-top:25px">Other_packages_allowed</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="Package Name, Multiple value separated by pipe.." 
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.getPackageFrequency.packageName"
+                                        id="packageName"
+                                    /> 
+                                    <input placeholder="yyyymm, freq calculation start from this month"
+                                        class="form-control form-control-sm input-custom"
+                                        v-model="customUI.getPackageFrequency.startMonth"
+                                        id="startMonth"/>  
+                                    <input placeholder="Number of Month"
+                                        class="form-control form-control-sm input-custom"
+                                        v-model="customUI.getPackageFrequency.numberOfMonth"
+                                        id="numberOfMonth"/>
+                                    <div class="row" style="width:104%">
+                                        <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.frequencyOfPackageOperadList"
+                                            :clearable="false"
+                                            v-model="customUI.getPackageFrequency.frequencyOfPackageOperand"
+                                        ></v-select>
+                                        <div class="col-md-6"> 
+                                            <input placeholder="Integer, freq required..." 
+                                                class="form-control form-control-sm input-custom"
+                                                v-model="customUI.getPackageFrequency.frequencyOfPackageValue"
+                                            /> 
+                                        </div>
+                                    </div>
+                                    <v-select 
+                                        class="operators"
+                                        style="margin-left:5px"
+                                        :options="store.state.trueOrFalse"
+                                        :clearable="false"
+                                        v-model="customUI.getPackageFrequency.otherPackagesAllowed"
+                                    ></v-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+                beforeCreate: function() {
+                    let indexComponent =  customUI.componentList.findIndex(element => element === 'getPackageFrequency');
+                    if(indexComponent > 0) {
+                        // customUI.componentList.splice(indexComponent,0,'operators');
+                        customUI.getPackageFrequency.hasOperand = true;
+                    }
+                },
+                beforeDestroy: function () {
+                    customUI.getPackageFrequency.hasOperand = false;
+                    //customUI.getPackageFrequency.operand = 'AND';
+                }
         })
     
+        // for reference only
     var operators = Vue.component('operators',
         {
+            props:[
+                'propsModel'
+            ],
             template:
                 `<div class="operators"> 
                     <v-select 
@@ -2417,8 +2618,9 @@
                     placeholder="AND"
                     @input="setOperator"
                     :clearable="false"
-                    v-model="customUI.selectedOperator"
+                    v-model="propsModel"
                     ></v-select>
+                    {{customUI.getTopupFrequencyMatchForXMonths.operand}}
                 </div>`
 
         })
@@ -2437,8 +2639,36 @@
             tab: store.state.tab,
             showModal: store.state.showModal,
             selectedFunction: null,
-            selectedOperator: 'AND',
-            trueOrFalse: 'true',
+            getTopupFrequency: {
+                hasOperand: false,
+                operand:'AND',
+                packageName: '',
+                startMonth:'',
+                numberOfMonth:'',
+                frequencyOfPackageOperand:'=',
+                frequencyOfPackageValue:'',
+                otherPackagesAllowed: 'false'
+            },
+            getTopupFrequencyMatchForXMonths: {
+                hasOperand: false,
+                operand:'AND',
+                packageName: '',
+                startMonth:'',
+                numberOfMonth:'',
+                frequencyOfPackageOperand:'=',
+                frequencyOfPackageValue:'',
+                otherPackagesAllowed: 'false'
+            },
+            getPackageFrequency: {
+                hasOperand: false,
+                operand:'AND',
+                packageName: '',
+                startMonth:'',
+                numberOfMonth:'',
+                frequencyOfPackageOperand:'=',
+                frequencyOfPackageValue:'',
+                otherPackagesAllowed: 'false'
+            },
         },
         methods: {
             setSelected(value) {
@@ -2447,18 +2677,19 @@
                 customUI.componentList.push(value)
                 
                 // add Operator to the block
-                let indexComponent =  customUI.componentList.findIndex(element => element === value);
-               if(indexComponent > 0) {
-                customUI.componentList.splice(indexComponent,0,'operators');
-               }
+            //     let indexComponent =  customUI.componentList.findIndex(element => element === value);
+            //    if(indexComponent > 0) {
+            //     customUI.componentList.splice(indexComponent,0,'operators');
+            //    }
             }
         },
         watch: {
             selectedFunction: function () {
                 this.selectedFunction = null;
                 return(this.selectedFunction)
-            }
-        }
+            },
+        },
+       
     })
 
 </script>
