@@ -254,18 +254,6 @@
                                         <template x-if="eventConditionTypeData === 'Top-Up'">
                                             <div class="eventConditionFulfillmentMonitoring" id="eventConditionDataTopUpForm">
                                                 <div class="mb-3 row">
-                                                    <label for="eventConditionDataTopupCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataTopupCreditMethod" x-model="eventConditionData.creditMethod">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="eventConditionDataUsageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="eventConditionDataUsageServiceType" x-model="eventConditionData.usageServiceType">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
                                                     <label for="eventConditionDataOperators" class="col-sm-2 col-form-label">OPID</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="eventConditionDataOperators" x-model="eventConditionData.operatorId">
@@ -275,6 +263,33 @@
                                                     <label for="eventConditionDataRefillProfileID" class="col-sm-2 col-form-label">Top Up Code</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="eventConditionDataRefillProfileID" x-model="eventConditionData.topUpCode">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="eventConditionDataTopUpValueOperators" class="form-control" x-model="eventConditionData.topUpOp">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopUpValue" x-model="eventConditionData.topUpTransactionValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="eventConditionDataTopupCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="eventConditionDataTopupCreditMethod" x-model="eventConditionData.creditMethod">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="eventConditionDataUsageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="eventConditionDataUsageServiceType" x-model="eventConditionData.usageServiceType">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
@@ -305,21 +320,6 @@
                                                     </div>
                                                     <div class="col-sm-5">
                                                         <input type="text" class="form-control" id="eventConditionDataAccountBalanceValue" x-model="eventConditionData.topUpAccBalanceBeforeValue">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value</label>
-                                                    <div class="col-sm-5">
-                                                        <select id="eventConditionDataTopUpValueOperators" class="form-control" x-model="eventConditionData.topUpOp">
-                                                            <option value="lessThan">Less than</option>
-                                                            <option value="moreThan">More than</option>
-                                                            <option value="equalTo">Equal to</option>
-                                                            <option value="lessOrEqual">Les than or Equal to</option>
-                                                            <option value="moreOrEqualTo">More than or Equal to</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="eventConditionDataTopUpValue" x-model="eventConditionData.topUpTransactionValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
@@ -505,6 +505,81 @@
                                                         </select>
                                                     </div>
                                                     <span>Days</span>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Current Balance</label>
+                                                    <div class="col-sm-5">
+                                                        <select class="form-control" x-model="eventConditionData.topUpCurBalanceOp">
+                                                            <option value="AllTopUp">ALL TOP UP</option>
+                                                            <option value="PaidTopUp">PAID TOP UP</option>
+                                                            <option value="DatabaseDirect">DATABASE DIRECT</option>
+                                                            <option value="SelfService">SELF SERVICE</option>
+                                                            <option value="Others">OTHERS</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" x-model="eventConditionData.topUpCurBalanceValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Account Balance Before</label>
+                                                    <div class="col-sm-5">
+                                                        <select class="form-control" x-model="eventConditionData.topUpAccBalanceBeforeOp">
+                                                            <option value="AllTopUp">ALL TOP UP</option>
+                                                            <option value="PaidTopUp">PAID TOP UP</option>
+                                                            <option value="DatabaseDirect">DATABASE DIRECT</option>
+                                                            <option value="SelfService">SELF SERVICE</option>
+                                                            <option value="Others">OTHERS</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" x-model="eventConditionData.topUpAccBalanceBeforeValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="refillProfileID" class="col-sm-2 col-form-label">DA ID</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" x-model="eventConditionData.topUpDaId">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">DA Balance</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="usageTopUpDaBalanceOperators" class="form-control" x-model="eventConditionData.topUpDaBalanceOp">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="usageTopUpDaBalanceValue" x-model="eventConditionData.topUpDaBalanceValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">Service Class</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="usageTopUpTemporaryServiceClass" x-model="eventConditionData.topUpTempServiceClass">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">IMEI</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="usageTopUpIMEI" x-model="eventConditionData.topUpTempServiceClass">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">DA Change</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="usageTopUpDAChange" x-model="eventConditionData.topUpTempServiceClass">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">Charge Amount</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="usageTopUpChargeAmount" x-model="eventConditionData.topUpTempServiceClass">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </template>
@@ -705,6 +780,14 @@
                                                     </div>
                                                     <div class="form-group row">
                                                         <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label col-form-label">Promo Code List<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control form-control-sm">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="form-group row">
                                                             <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control form-control-sm">
@@ -887,18 +970,6 @@
                                         <template x-if="eventTypeData === 'Top-Up'">
                                             <div class="eventTypeFulfillmentMonitoring" id="topUpForm">
                                                 <div class="mb-3 row">
-                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="topupCreditMethod" x-model="monitoringData.topUpCreditMethod">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="usageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="usageServiceType" x-model="monitoringData.topUpUsageServiceType">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
                                                     <label for="operators" class="col-sm-2 col-form-label">OPID</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="operators" x-model="monitoringData.topUpOperator">
@@ -908,6 +979,33 @@
                                                     <label for="refillProfileID" class="col-sm-2 col-form-label">Top Up Code</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="refillProfileID" x-model="monitoringData.topUpCode">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                    <div class="col-sm-5">
+                                                        <select id="topUpValueOperators" class="form-control" x-model="monitoringData.topUpOp">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="topUpValue" x-model="monitoringData.topUpTransactionValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">Credit Method</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="topupCreditMethod" x-model="monitoringData.topUpCreditMethod">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="usageServiceType" class="col-sm-2 col-form-label">Usage Service Type</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="usageServiceType" x-model="monitoringData.topUpUsageServiceType">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
@@ -938,21 +1036,6 @@
                                                     </div>
                                                     <div class="col-sm-5">
                                                         <input type="text" class="form-control" id="accountBalanceValue" x-model="monitoringData.topUpAccBalanceBeforeValue">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3 row">
-                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Top-Up Value<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                    <div class="col-sm-5">
-                                                        <select id="topUpValueOperators" class="form-control" x-model="monitoringData.topUpOp">
-                                                            <option value="lessThan">Less than</option>
-                                                            <option value="moreThan">More than</option>
-                                                            <option value="equalTo">Equal to</option>
-                                                            <option value="lessOrEqual">Les than or Equal to</option>
-                                                            <option value="moreOrEqualTo">More than or Equal to</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-sm-5">
-                                                        <input type="text" class="form-control" id="topUpValue" x-model="monitoringData.topUpTransactionValue">
                                                     </div>
                                                 </div>
                                                 <div class="mb-3 row">
@@ -1123,6 +1206,81 @@
                                                     <div class="col-sm-2">
                                                         <input type="number" class="form-control" id="usageValue" x-model="monitoringData.usageValue">
                                                     </div> GB / Mins / Count
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Current Balance</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="usageCurrentBalanceOperators" class="form-control" x-model="monitoringData.topUpCurBalanceOp">
+                                                            <option value="AllTopUp">ALL TOP UP</option>
+                                                            <option value="PaidTopUp">PAID TOP UP</option>
+                                                            <option value="DatabaseDirect">DATABASE DIRECT</option>
+                                                            <option value="SelfService">SELF SERVICE</option>
+                                                            <option value="Others">OTHERS</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="usageCurrentBalanceValue" x-model="monitoringData.topUpCurBalanceValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">Account Balance Before</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="usageAccountBalanceOperators" class="form-control" x-model="monitoringData.topUpAccBalanceBeforeOp">
+                                                            <option value="AllTopUp">ALL TOP UP</option>
+                                                            <option value="PaidTopUp">PAID TOP UP</option>
+                                                            <option value="DatabaseDirect">DATABASE DIRECT</option>
+                                                            <option value="SelfService">SELF SERVICE</option>
+                                                            <option value="Others">OTHERS</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="usageAccountBalanceValue" x-model="monitoringData.topUpAccBalanceBeforeValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="refillProfileID" class="col-sm-2 col-form-label">DA ID</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="usageDaID" x-model="monitoringData.topUpDaId">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topUpValue" class="col-sm-2 col-form-label">DA Balance</label>
+                                                    <div class="col-sm-5">
+                                                        <select id="monitoringDataUsageTopUpDaBalanceOperators" class="form-control" x-model="monitoringData.topUpDaBalanceOp">
+                                                            <option value="lessThan">Less than</option>
+                                                            <option value="moreThan">More than</option>
+                                                            <option value="equalTo">Equal to</option>
+                                                            <option value="lessOrEqual">Les than or Equal to</option>
+                                                            <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" id="monitoringDataUTopUpDaBalanceValue" x-model="monitoringData.topUpDaBalanceValue">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">Service Class</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="monitoringDataUTopUpTemporaryServiceClass" x-model="monitoringData.topUpTempServiceClass">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">IMEI</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="monitoringDataUTopUpIMEI" x-model="monitoringData.topUpTempServiceClass">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">DA Change</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="monitoringDataUTopUpDAChange" x-model="monitoringData.topUpTempServiceClass">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="topupCreditMethod" class="col-sm-2 col-form-label">Charge Amount</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="monitoringDataUTopUpChargeAmount" x-model="monitoringData.topUpTempServiceClass">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </template>
@@ -1382,11 +1540,53 @@
                                             </div>
                                             <template x-if="redemptionMethod === 'AutoRedemption'">
                                                 <div>
-                                                    <b>Post Provision Message</b><br><br>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="smaCampaignName" x-model="redemptionData.smsCampaignName">
+                                                        <b>Post Provision Message</b><br><br>
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control form-control-sm" x-model="redemptionData.smsCampaignName">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control form-control-sm" id="dynamicVariable1" x-model="redemptionData.dynamicVariable1">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control form-control-sm" id="dynamicVariable2" x-model="redemptionData.dynamicVariable2">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable3">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable4">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 5</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable5">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1394,13 +1594,13 @@
                                             <template x-if="redemptionMethod === 'ManualRedemption'">
                                                 <div class="manualRedemptionSelection">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control form-control-sm" id="manualSmsCampaignName" x-model="redemptionData.manualSmsCampaignName">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Keyword</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">Opt in Keyword<sup><i class="fas fa-asterisk"></i></sup></label>
                                                         <div class="col-sm-2">
                                                             <label class="sr-only">Name</label>
 <!--                                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordDP" x-model="redemptionData.smsKeyword">-->
@@ -1411,7 +1611,7 @@
                                                                 <option value="keyword4">Keyword 4</option>
                                                             </select>
                                                         </div>
-                                                        <label class="col-sm-2 col-form-label col-form-label">Keyword Validity</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">Keyword Validity<sup><i class="fas fa-asterisk"></i></sup></label>
                                                         <div class="col-sm-2">
                                                             <label class="sr-only" for="inputKeywordValidityDP">Name</label>
                                                             <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordValidityDP" x-model="redemptionData.smsKeywordValidityDays">
@@ -1433,7 +1633,7 @@
                                                         <div class="form-group row">
                                                             <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control form-control-sm" id="dynamicVariable1" x-model="redemptionData.dynamicVariable1">
+                                                                <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable1">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1441,7 +1641,7 @@
                                                         <div class="form-group row">
                                                             <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control form-control-sm" id="dynamicVariable2" x-model="redemptionData.dynamicVariable2">
+                                                                <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable2">
                                                             </div>
                                                         </div>
                                                     </div>
