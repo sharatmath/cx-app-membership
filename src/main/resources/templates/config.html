@@ -2281,12 +2281,15 @@
                 'getPackageFrequency',
                 'getTopupFrequency',
                 'getTopupFrequencyMatchForXMonths',
+                'hasDonePaidTopupFromTopupCode',
+                'isFirstPaidTopupofMonth',
             ],
             componentList: [],
             tab: 'customUI',
             showModal: false,
             selectedFunction: null,
             operatorsList: ['AND', 'OR',],
+            // trueOrFalse: [{text: "true",value: true},{text: "false",value: false}],
             trueOrFalse: ['true','false'],
             frequencyOfPackageOperadList: ['=', '> | =', '< | =', '<', '>']
         },
@@ -2307,6 +2310,8 @@
                 'getPackageFrequency',
                 'getTopupFrequency',         
                 'getTopupFrequencyMatchForXMonths',
+                'hasDonePaidTopupFromTopupCode',
+                'isFirstPaidTopupofMonth',
             ]
             customUI.dropdownfunctionList.splice(0,customUI.dropdownfunctionList.length);
             customUI.dropdownfunctionList.push(...completedropdownFunctionList);
@@ -2323,10 +2328,16 @@
         
         customUI.dropdownfunctionList.push(value)
         customUI.dropdownfunctionList.sort()
-        customUI[customUI.componentList[0]].hasOperand = false; // delete the operand on the top
- 
+        if (customUI[customUI.componentList[0]]) {
+            customUI[customUI.componentList[0]].hasOperand = false; // delete the operand on the top
+        }
     }
     
+    var someHandler = function (value) {
+        Math.abs(value)
+        console.log("someHandler", Math.abs(value))
+
+    }
 
     //FUNCTION END
 
@@ -2412,17 +2423,17 @@
                         </div>
                     </div>
                 </div>`,
-                beforeCreate: function() {
-                    let indexComponent =  customUI.componentList.findIndex(element => element === 'getTopupFrequencyMatchForXMonths');
-                    if(indexComponent > 0) {
-                        // customUI.componentList.splice(indexComponent,0,'operators');
-                        customUI.getTopupFrequencyMatchForXMonths.hasOperand = true;
-                    }
-                },
-                beforeDestroy: function () {
-                    customUI.getTopupFrequencyMatchForXMonths.hasOperand = false;
-                    //customUI.getTopupFrequencyMatchForXMonths.operand = 'AND';
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getTopupFrequencyMatchForXMonths');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getTopupFrequencyMatchForXMonths.hasOperand = true;
                 }
+            },
+            beforeDestroy: function () {
+                customUI.getTopupFrequencyMatchForXMonths.hasOperand = false;
+                //customUI.getTopupFrequencyMatchForXMonths.operand = 'AND';
+            }
         })
 
         var getTopupFrequency = Vue.component('getTopupFrequency',
@@ -2502,17 +2513,17 @@
                         </div>
                     </div>
                 </div>`,
-                beforeCreate: function() {
-                    let indexComponent =  customUI.componentList.findIndex(element => element === 'getTopupFrequency');
-                    if(indexComponent > 0) {
-                        // customUI.componentList.splice(indexComponent,0,'operators');
-                        customUI.getTopupFrequency.hasOperand = true;
-                    }
-                },
-                beforeDestroy: function () {
-                    customUI.getTopupFrequency.hasOperand = false;
-                    //customUI.getTopupFrequency.operand = 'AND';
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getTopupFrequency');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getTopupFrequency.hasOperand = true;
                 }
+            },
+            beforeDestroy: function () {
+                customUI.getTopupFrequency.hasOperand = false;
+                //customUI.getTopupFrequency.operand = 'AND';
+            }
         })
 
         var getPackageFrequency = Vue.component('getPackageFrequency',
@@ -2592,38 +2603,144 @@
                         </div>
                     </div>
                 </div>`,
-                beforeCreate: function() {
-                    let indexComponent =  customUI.componentList.findIndex(element => element === 'getPackageFrequency');
-                    if(indexComponent > 0) {
-                        // customUI.componentList.splice(indexComponent,0,'operators');
-                        customUI.getPackageFrequency.hasOperand = true;
-                    }
-                },
-                beforeDestroy: function () {
-                    customUI.getPackageFrequency.hasOperand = false;
-                    //customUI.getPackageFrequency.operand = 'AND';
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getPackageFrequency');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getPackageFrequency.hasOperand = true;
                 }
+            },
+            beforeDestroy: function () {
+                customUI.getPackageFrequency.hasOperand = false;
+                //customUI.getPackageFrequency.operand = 'AND';
+            }
         })
-    
-        // for reference only
-    var operators = Vue.component('operators',
-        {
-            props:[
-                'propsModel'
-            ],
-            template:
-                `<div class="operators"> 
-                    <v-select 
-                    :options="store.state.operatorsList"
-                    placeholder="AND"
-                    @input="setOperator"
-                    :clearable="false"
-                    v-model="propsModel"
-                    ></v-select>
-                    {{customUI.getTopupFrequencyMatchForXMonths.operand}}
-                </div>`
 
+
+        var hasDonePaidTopupFromTopupCode = Vue.component('hasDonePaidTopupFromTopupCode',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.hasDonePaidTopupFromTopupCode.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.hasDonePaidTopupFromTopupCode.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>hasDonePaidTopupFromTopupCode</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('hasDonePaidTopupFromTopupCode')" 
+                                        id="hasDonePaidTopupFromTopupCode" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    <div class="label-component">Topup Code</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="0=will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.hasDonePaidTopupFromTopupCode.startDay"
+                                        id="startDay"
+                                    /> 
+                                    <input placeholder="yyyymm, freq calculation start from this month" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom"
+                                        v-model="customUI.hasDonePaidTopupFromTopupCode.duration"
+                                        id="duration"/>  
+                                    <input placeholder="Number of Month"
+                                        class="form-control form-control-sm input-custom"
+                                        v-model="customUI.hasDonePaidTopupFromTopupCode.topupCode"
+                                        id="topupCode"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'hasDonePaidTopupFromTopupCode');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.hasDonePaidTopupFromTopupCode.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.hasDonePaidTopupFromTopupCode.hasOperand = false;
+                //customUI.hasDonePaidTopupFromTopupCode.operand = 'AND';
+            }
         })
+
+        var isFirstPaidTopupofMonth = Vue.component('isFirstPaidTopupofMonth',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.isFirstPaidTopupofMonth.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.isFirstPaidTopupofMonth.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>isFirstPaidTopupofMonth</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('isFirstPaidTopupofMonth')" 
+                                        id="isFirstPaidTopupofMonth" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Start Day</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin-left:5px"
+                                        :options="store.state.trueOrFalse"
+                                        :clearable="false"
+                                        v-model="customUI.isFirstPaidTopupofMonth.firstPaidTopup"
+                                        label="text"
+                                    ></v-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'isFirstPaidTopupofMonth');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.isFirstPaidTopupofMonth.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.isFirstPaidTopupofMonth.hasOperand = false;
+                //customUI.isFirstPaidTopupofMonth.operand = 'AND';
+            }
+        })
+
+        
     // Custom UI Components END
     
 
@@ -2669,18 +2786,24 @@
                 frequencyOfPackageValue:'',
                 otherPackagesAllowed: 'false'
             },
+            hasDonePaidTopupFromTopupCode: {
+                hasOperand: false,
+                operand:'AND',
+                startDay: 0,
+                duration: 0,
+                topupCode: ''
+            },
+            isFirstPaidTopupofMonth: {
+                hasOperand: false,
+                operand:'AND',
+                firstPaidTopup: 'false'
+            }
         },
         methods: {
             setSelected(value) {
                 var selectedIndex = customUI.dropdownfunctionList.indexOf(value);
                 customUI.dropdownfunctionList.splice(selectedIndex, 1);
                 customUI.componentList.push(value)
-                
-                // add Operator to the block
-            //     let indexComponent =  customUI.componentList.findIndex(element => element === value);
-            //    if(indexComponent > 0) {
-            //     customUI.componentList.splice(indexComponent,0,'operators');
-            //    }
             }
         },
         watch: {
