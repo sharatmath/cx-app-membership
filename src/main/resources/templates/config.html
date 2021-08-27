@@ -2283,6 +2283,7 @@
                 'getTopupFrequencyMatchForXMonths',
                 'hasDonePaidTopupFromTopupCode',
                 'isFirstPaidTopupofMonth',
+                'hasDoneSinglePaidTopup',
             ],
             componentList: [],
             tab: 'customUI',
@@ -2312,6 +2313,7 @@
                 'getTopupFrequencyMatchForXMonths',
                 'hasDonePaidTopupFromTopupCode',
                 'isFirstPaidTopupofMonth',
+                'hasDoneSinglePaidTopup',
             ]
             customUI.dropdownfunctionList.splice(0,customUI.dropdownfunctionList.length);
             customUI.dropdownfunctionList.push(...completedropdownFunctionList);
@@ -2334,8 +2336,9 @@
     }
     
     var someHandler = function (value) {
-        Math.abs(value)
-        console.log("someHandler", Math.abs(value))
+        console.log("someHandler", value)
+        var test = customUI[value];
+        console.log("test", test)
 
     }
 
@@ -2740,6 +2743,75 @@
             }
         })
 
+        var hasDoneSinglePaidTopup = Vue.component('hasDoneSinglePaidTopup',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.hasDoneSinglePaidTopup.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.hasDoneSinglePaidTopup.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>hasDoneSinglePaidTopup</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('hasDoneSinglePaidTopup')" 
+                                        id="hasDoneSinglePaidTopup" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    <div class="label-component">Money Value</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.hasDoneSinglePaidTopup.startDay"
+                                        id="startDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.hasDoneSinglePaidTopup.duration"
+                                        id="duration"
+                                    /> 
+                                    <input placeholder="transaction value of a single top up transaction" type="number"
+                                        
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.hasDoneSinglePaidTopup.moneyValue"
+                                        id="moneyValue"
+                                    /> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'hasDoneSinglePaidTopup');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.hasDoneSinglePaidTopup.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.hasDoneSinglePaidTopup.hasOperand = false;
+                //customUI.hasDoneSinglePaidTopup.operand = 'AND';
+            }
+        })
+
         
     // Custom UI Components END
     
@@ -2797,6 +2869,13 @@
                 hasOperand: false,
                 operand:'AND',
                 firstPaidTopup: 'false'
+            },
+            hasDoneSinglePaidTopup: {
+                hasOperand: false,
+                operand:'AND',
+                startDay: 0,
+                duration: 0,
+                moneyValue:0
             }
         },
         methods: {
