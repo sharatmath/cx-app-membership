@@ -27,7 +27,7 @@ public class PrepaidCxOfferSelection extends Auditable{
     private String offerType;
 
     private String smsCampaignName;
-    private String promoType;
+    private String promoCodeList;
     private String messageText1;
     private String messageText2;
     private String messageText3;

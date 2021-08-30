@@ -11,51 +11,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OfferRedemption {
-    @SerializedName("isRedemptionCapOnly")
-    private Boolean isRedemptionCapOnly;
-    @SerializedName("redemptionCapValue")
-    private Long redemptionCapValue;
-    @SerializedName("isRedemptionCapAndPeriod")
-    private Boolean isRedemptionCapAndPeriod;
-    @SerializedName("totalRedemptionPeriodValue")
-    private Long totalRedemptionPeriodValue;
-    @SerializedName("isFrequencyOnly")
-    private Boolean isFrequencyOnly;
-    @SerializedName("isFrequencyAndTime")
-    private Boolean isFrequencyAndTime;
-    @SerializedName("frequencyValue")
-    private Long frequencyValue;
-    @SerializedName("timePeriodValue")
-    private Long timePeriodValue;
-    @SerializedName("timePeriodType")
-    private String timePeriodType;
-    @SerializedName("totalRedemptionPeriodType")
-    private String totalRedemptionPeriodType;
-    @SerializedName("totalRecurringFrequency")
-    private Long totalRecurringFrequency;
-    @SerializedName("isRecurringFrequencyAndPeriod")
-    private Boolean isRecurringFrequencyAndPeriod;
-    @SerializedName("recurringFrequencyValue")
-    private Long recurringFrequencyValue;
-    @SerializedName("recurringFrequencyPeriodType")
-    private String recurringFrequencyPeriodType;
-    @SerializedName("recurringFrequencyPeriodValue")
-    private Long recurringFrequencyPeriodValue;
-    @SerializedName("isRecurringFrequencyEachMonth")
-    private Boolean isRecurringFrequencyEachMonth;
-    @SerializedName("recurringFrequencyDayOfMonth")
-    private Long recurringFrequencyDayOfMonth;
-    @SerializedName("redemptionMethod")
-    private String redemptionMethod;
-    @SerializedName("smsKeyword")
-    private String smsKeyword;
-    @SerializedName("smsKeywordValidityDays")
-    private Integer smsKeywordValidityDays;
+    @SerializedName("isRedemptionCapOnly") Boolean isRedemptionCapOnly;
+    @SerializedName("redemptionCapValue") Long redemptionCapValue;
+    @SerializedName("isRedemptionCapAndPeriod") Boolean isRedemptionCapAndPeriod;
+    @SerializedName("totalRedemptionPeriodValue") Long totalRedemptionPeriodValue;
+    @SerializedName("isFrequencyOnly") Boolean isFrequencyOnly;
+    @SerializedName("isFrequencyAndTime") Boolean isFrequencyAndTime;
+    @SerializedName("frequencyValue") Long frequencyValue;
+    @SerializedName("timePeriodValue") Long timePeriodValue;
+    @SerializedName("timePeriodType") String timePeriodType;
+    @SerializedName("totalRedemptionPeriodType") String totalRedemptionPeriodType;
+    @SerializedName("totalRecurringFrequency") Long totalRecurringFrequency;
+    @SerializedName("isRecurringFrequencyAndPeriod") Boolean isRecurringFrequencyAndPeriod;
+    @SerializedName("recurringFrequencyValue") Long recurringFrequencyValue;
+    @SerializedName("recurringFrequencyPeriodType") String recurringFrequencyPeriodType;
+    @SerializedName("recurringFrequencyPeriodValue") Long recurringFrequencyPeriodValue;
+    @SerializedName("isRecurringFrequencyEachMonth") Boolean isRecurringFrequencyEachMonth;
+    @SerializedName("recurringFrequencyDayOfMonth") Long recurringFrequencyDayOfMonth;
+    @SerializedName("redemptionMethod") String redemptionMethod;
+    @SerializedName("smsKeyword") String smsKeyword;
+    @SerializedName("smsKeywordValidityDays") Integer smsKeywordValidityDays;
 
-    @SerializedName("totalRedemptionPeriodEvery")
-    private Long totalRedemptionPeriodEvery;
-    @SerializedName("timePeriodEvery")
-    private Long timePeriodEvery;
+    @SerializedName("totalRedemptionPeriodEvery") Long totalRedemptionPeriodEvery;
+    @SerializedName("timePeriodEvery") Long timePeriodEvery;
 
 // UI Version 4
     @SerializedName("isRecurringFrequency") private boolean isRecurringFrequency;

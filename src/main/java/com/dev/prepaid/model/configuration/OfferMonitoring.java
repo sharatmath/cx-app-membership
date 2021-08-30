@@ -29,4 +29,7 @@ public class OfferMonitoring {
     @SerializedName("paidArpuValue") private  Long paidArpuValue;
     @SerializedName("isMonitorDateRange") private  Boolean isMonitorDateRange;
     @SerializedName("isMonitorSpecificPeriod") private  Boolean isMonitorSpecificPeriod;
+    @SerializedName("imei") private  String imei;
+    @SerializedName("daChange") private  String daChange;
+    @SerializedName("chargedAmount") private  String chargedAmount;
 }

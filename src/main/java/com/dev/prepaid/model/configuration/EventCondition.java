@@ -33,10 +33,13 @@ public class EventCondition {
     @SerializedName("topupOp") private  String topUpOp;
     @SerializedName("topupTransactionValue") private  Long topUpTransactionValue;
 
-    @SerializedName("topupDaId") private  String topUpDaId;
-    @SerializedName("topupDaBalanceOp") private  String topUpDaBalanceOp;
-    @SerializedName("topupDaBalanceValue") private  Long topUpDaBalanceValue;
-    @SerializedName("topupTempServiceClass") private  String topUpTempServiceClass;
+    @SerializedName("DaId") private  String daId;
+    @SerializedName("DaBalanceOp") private  String daBalanceOp;
+    @SerializedName("DaBalanceValue") private  Long daBalanceValue;
+    @SerializedName("TempServiceClass") private  String tempServiceClass;
+    @SerializedName("imei") private  String imei;
+    @SerializedName("daChange") private  String daChange;
+    @SerializedName("chargedAmount") private  String chargedAmount;
 
     @SerializedName("eventTypeUsages") private  Long eventTypeUsages;
     @SerializedName("eventUsagesOp") private  String eventUsagesOp;
