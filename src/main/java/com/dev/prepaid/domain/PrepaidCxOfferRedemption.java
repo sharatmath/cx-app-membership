@@ -44,7 +44,7 @@ public class PrepaidCxOfferRedemption extends Auditable{
     private String smsKeyword;
     private Integer smsKeywordValidityDays;
  // UI Version4
-    private boolean isRecurringFrequency;
+    private boolean isRecurringProvisioning;
     private String smsCampaignName;
     private String postSmsCampaignName;
     private String dynamicVariable1;
