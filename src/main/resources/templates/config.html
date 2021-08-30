@@ -307,6 +307,12 @@
             padding: 0;
         }
 
+        .dropdown-long {
+            background-color:#fff;
+            margin:5px; 
+            margin-right:15px
+        }
+
 
 	</style>
 </head>
@@ -929,8 +935,8 @@
                                                     <div class="selection-card col-4"> 
                                                         <v-select 
                                                             :options="dropdownfunctionList"
-                                                            placeholder="Select Function"
-                                                            label="Select Function" 
+                                                            placeholder="Select PSM Function"
+                                                            label="Select PSM Function" 
                                                             @input="setSelected"
                                                             :clearable="false"
                                                             v-model="selectedFunction"
@@ -2277,22 +2283,52 @@
     var store = {  
         debug: true,
         state: {
-            dropdownfunctionList: [
+            dropdownfunctionList: [  //this are individual component
                 'getPackageFrequency',
                 'getTopupFrequency',
                 'getTopupFrequencyMatchForXMonths',
                 'hasDonePaidTopupFromTopupCode',
                 'isFirstPaidTopupofMonth',
                 'hasDoneSinglePaidTopup',
+                'hasDoneSelfServeTopup',
+                'getAccumulatedTopups',
+                'isPaidTopupInLastXDays',
+                'getTopupCountforTopupCode',
+                'getIDDSum',
+                'getIDDBucketPeakDetails',
+
             ],
             componentList: [],
             tab: 'customUI',
             showModal: false,
             selectedFunction: null,
             operatorsList: ['AND', 'OR',],
-            // trueOrFalse: [{text: "true",value: true},{text: "false",value: false}],
-            trueOrFalse: ['true','false'],
-            frequencyOfPackageOperadList: ['=', '> | =', '< | =', '<', '>']
+            trueOrFalse: [{text: "true",value: true},{text: "false",value: false}],
+            //trueOrFalse: ['true','false'],
+            frequencyOfPackageOperadList: ['=', '> | =', '< | =', '<', '>'],
+            indexList: [
+                {text: 'count', value:0},
+                {text: 'duration in sec', value:1},
+                {text: 'MA charged amount', value:2},
+                {text: 'DA charged amount', value:3},
+                {text: 'SMS count', value:4},
+                {text: 'MA charged amount on SMS', value:5},
+                {text: 'DA charged amount on SMS', value:6},
+                {text: '019 count 8am to 8pm', value: 7},
+                {text: '019 duration 8am to 8pm', value: 8},
+                {text: '001 count 8am to 8pm', value: 9},
+                {text: '001 duration 8am to 8pm', value:10},
+                {text: '019 count non-peak', value:11},
+                {text: '019 duration non-peak', value: 12},
+                {text: '001 count non peak', value: 13},
+                {text: '001 duration non peak', value: 14},
+                {text: 'noPrefix 8am to 8pm count', value: 15},
+                {text: 'noPrefix 8am to 8pm duration', value: 16},
+                {text: 'noPrefix non-peak count', value: 17},
+                {text: 'noPrefix non-peak duration', value: 18}
+            ],
+            countryList:['Malaysia','Indonesia','Philippines','Thailand','Vietnam','China','India','Myanmar','Bangladesh'],
+                    
         },
         setStateFunctionComponentList(newValue) {
             this.state.componentList = newValue;
@@ -2314,6 +2350,12 @@
                 'hasDonePaidTopupFromTopupCode',
                 'isFirstPaidTopupofMonth',
                 'hasDoneSinglePaidTopup',
+                'hasDoneSelfServeTopup',
+                'getAccumulatedTopups',
+                'isPaidTopupInLastXDays',
+                'getTopupCountforTopupCode',
+                'getIDDSum',
+                'getIDDBucketPeakDetails'
             ]
             customUI.dropdownfunctionList.splice(0,customUI.dropdownfunctionList.length);
             customUI.dropdownfunctionList.push(...completedropdownFunctionList);
@@ -2369,7 +2411,7 @@
                                 </div>
                                 <div class=" col-sm-2">
                                     <button v-on:click="removeSpecificComponent('getTopupFrequencyMatchForXMonths')" 
-                                        id="getTopupFrequencyMatchForXMonths" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                        id="getTopupFrequencyMatchForXMonthsDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
                                 </div>
                             </div>
                         <hr class="hr-custom">
@@ -2389,16 +2431,16 @@
                                     <input placeholder="Package Name, Multiple value separated by pipe.." 
                                         class="form-control form-control-sm input-custom" 
                                         v-model="customUI.getTopupFrequencyMatchForXMonths.packageName"
-                                        id="packageName"
+                                        id="getTopupFrequencyMatchForXMonthsPackageName"
                                     /> 
                                     <input placeholder="yyyymm, freq calculation start from this month"
                                         class="form-control form-control-sm input-custom"
                                         v-model="customUI.getTopupFrequencyMatchForXMonths.startMonth"
-                                        id="startMonth"/>  
+                                        id="getTopupFrequencyMatchForXMonthsStartMonth"/>  
                                     <input placeholder="Number of Month"
                                         class="form-control form-control-sm input-custom"
                                         v-model="customUI.getTopupFrequencyMatchForXMonths.numberOfMonth"
-                                        id="numberOfMonth"/>
+                                        id="getTopupFrequencyMatchForXMonthsNumberOfMonth"/>
                                     <div class="row" style="width:104%">
                                         <v-select 
                                             class="operators"
@@ -2420,6 +2462,8 @@
                                         :options="store.state.trueOrFalse"
                                         :clearable="false"
                                         v-model="customUI.getTopupFrequencyMatchForXMonths.otherPackagesAllowed"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                 </div>
                             </div>
@@ -2459,7 +2503,7 @@
                                 </div>
                                 <div class=" col-sm-2">
                                     <button v-on:click="removeSpecificComponent('getTopupFrequency')" 
-                                        id="getTopupFrequency" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                        id="getTopupFrequencyDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
                                 </div>
                             </div>
                         <hr class="hr-custom">
@@ -2479,16 +2523,16 @@
                                     <input placeholder="Package Name, Multiple value separated by pipe.." 
                                         class="form-control form-control-sm input-custom" 
                                         v-model="customUI.getTopupFrequency.packageName"
-                                        id="packageName"
+                                        id="getTopupFrequencyPackageName"
                                     /> 
                                     <input placeholder="yyyymm, freq calculation start from this month"
                                         class="form-control form-control-sm input-custom"
                                         v-model="customUI.getTopupFrequency.startMonth"
-                                        id="startMonth"/>  
+                                        id="getTopupFrequencyStartMonth"/>  
                                     <input placeholder="Number of Month"
                                         class="form-control form-control-sm input-custom"
                                         v-model="customUI.getTopupFrequency.numberOfMonth"
-                                        id="numberOfMonth"/>
+                                        id="getTopupFrequencyNumberOfMonth"/>
                                     <div class="row" style="width:104%">
                                         <v-select 
                                             class="operators"
@@ -2510,6 +2554,8 @@
                                         :options="store.state.trueOrFalse"
                                         :clearable="false"
                                         v-model="customUI.getTopupFrequency.otherPackagesAllowed"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                 </div>
                             </div>
@@ -2549,7 +2595,7 @@
                                 </div>
                                 <div class=" col-sm-2">
                                     <button v-on:click="removeSpecificComponent('getPackageFrequency')" 
-                                        id="getPackageFrequency" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                        id="getPackageFrequencyDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
                                 </div>
                             </div>
                         <hr class="hr-custom">
@@ -2569,16 +2615,16 @@
                                     <input placeholder="Package Name, Multiple value separated by pipe.." 
                                         class="form-control form-control-sm input-custom" 
                                         v-model="customUI.getPackageFrequency.packageName"
-                                        id="packageName"
+                                        id="getPackageFrequencyPackageName"
                                     /> 
                                     <input placeholder="yyyymm, freq calculation start from this month"
                                         class="form-control form-control-sm input-custom"
                                         v-model="customUI.getPackageFrequency.startMonth"
-                                        id="startMonth"/>  
+                                        id="getPackageFrequencyStartMonth"/>  
                                     <input placeholder="Number of Month"
                                         class="form-control form-control-sm input-custom"
                                         v-model="customUI.getPackageFrequency.numberOfMonth"
-                                        id="numberOfMonth"/>
+                                        id="getPackageFrequencyNumberOfMonth"/>
                                     <div class="row" style="width:104%">
                                         <v-select 
                                             class="operators"
@@ -2600,6 +2646,8 @@
                                         :options="store.state.trueOrFalse"
                                         :clearable="false"
                                         v-model="customUI.getPackageFrequency.otherPackagesAllowed"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                 </div>
                             </div>
@@ -2640,7 +2688,7 @@
                                 </div>
                                 <div class=" col-sm-2">
                                     <button v-on:click="removeSpecificComponent('hasDonePaidTopupFromTopupCode')" 
-                                        id="hasDonePaidTopupFromTopupCode" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                        id="hasDonePaidTopupFromTopupCodeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
                                 </div>
                             </div>
                         <hr class="hr-custom">
@@ -2656,18 +2704,18 @@
                                     <input placeholder="0=will include today’s entries ; 1 = will start from today-1" type="number" min="0"
                                         onkeypress="return event.charCode >= 48"
                                         class="form-control form-control-sm input-custom" 
-                                        v-model="customUI.hasDonePaidTopupFromTopupCode.startDay"
-                                        id="startDay"
+                                        v-model.number="customUI.hasDonePaidTopupFromTopupCode.startDay"
+                                        id="hasDonePaidTopupFromTopupCodeStartDay"
                                     /> 
-                                    <input placeholder="yyyymm, freq calculation start from this month" type="number" min="0"
+                                    <input placeholder="days in the past" type="number" min="0"
                                         onkeypress="return event.charCode >= 48"
                                         class="form-control form-control-sm input-custom"
-                                        v-model="customUI.hasDonePaidTopupFromTopupCode.duration"
-                                        id="duration"/>  
-                                    <input placeholder="Number of Month"
+                                        v-model.number="customUI.hasDonePaidTopupFromTopupCode.duration"
+                                        id="hasDonePaidTopupFromTopupCodeDuration"/>  
+                                    <input placeholder="Topup Code"
                                         class="form-control form-control-sm input-custom"
                                         v-model="customUI.hasDonePaidTopupFromTopupCode.topupCode"
-                                        id="topupCode"/>
+                                        id="hasDonePaidTopupFromTopupCodeTopupCode"/>
                                 </div>
                             </div>
                         </div>
@@ -2706,7 +2754,7 @@
                                 </div>
                                 <div class=" col-sm-2">
                                     <button v-on:click="removeSpecificComponent('isFirstPaidTopupofMonth')" 
-                                        id="isFirstPaidTopupofMonth" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                        id="isFirstPaidTopupofMonthDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
                                 </div>
                             </div>
                         <hr class="hr-custom">
@@ -2723,6 +2771,7 @@
                                         :options="store.state.trueOrFalse"
                                         :clearable="false"
                                         v-model="customUI.isFirstPaidTopupofMonth.firstPaidTopup"
+                                        :reduce="text => text.value"
                                         label="text"
                                     ></v-select>
                                 </div>
@@ -2763,7 +2812,7 @@
                                 </div>
                                 <div class=" col-sm-2">
                                     <button v-on:click="removeSpecificComponent('hasDoneSinglePaidTopup')" 
-                                        id="hasDoneSinglePaidTopup" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                        id="hasDoneSinglePaidTopupDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
                                 </div>
                             </div>
                         <hr class="hr-custom">
@@ -2779,20 +2828,20 @@
                                     <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
                                         onkeypress="return event.charCode >= 48"
                                         class="form-control form-control-sm input-custom" 
-                                        v-model="customUI.hasDoneSinglePaidTopup.startDay"
-                                        id="startDay"
+                                        v-model.number="customUI.hasDoneSinglePaidTopup.startDay"
+                                        id="hasDoneSinglePaidTopupStartDay"
                                     /> 
                                     <input placeholder="days in the past" type="number" min="0"
                                         onkeypress="return event.charCode >= 48"
                                         class="form-control form-control-sm input-custom" 
-                                        v-model="customUI.hasDoneSinglePaidTopup.duration"
-                                        id="duration"
+                                        v-model.number="customUI.hasDoneSinglePaidTopup.duration"
+                                        id="hasDoneSinglePaidTopupDuration"
                                     /> 
                                     <input placeholder="transaction value of a single top up transaction" type="number"
-                                        
+                                        onkeypress="return event.charCode >= 48"
                                         class="form-control form-control-sm input-custom" 
-                                        v-model="customUI.hasDoneSinglePaidTopup.moneyValue"
-                                        id="moneyValue"
+                                        v-model.number="customUI.hasDoneSinglePaidTopup.moneyValue"
+                                        id="hasDoneSinglePaidTopupMoneyValue"
                                     /> 
                                 </div>
                             </div>
@@ -2812,6 +2861,468 @@
             }
         })
 
+        var hasDoneSelfServeTopup = Vue.component('hasDoneSelfServeTopup',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.hasDoneSelfServeTopup.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.hasDoneSelfServeTopup.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>hasDoneSelfServeTopup</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('hasDoneSelfServeTopup')" 
+                                        id="hasDoneSelfServeTopupDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.hasDoneSelfServeTopup.startDay"
+                                        id="hasDoneSelfServeTopupStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.hasDoneSelfServeTopup.duration"
+                                        id="hasDoneSelfServeTopupDuration"
+                                    /> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'hasDoneSelfServeTopup');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.hasDoneSelfServeTopup.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.hasDoneSelfServeTopup.hasOperand = false;
+                //customUI.hasDoneSelfServeTopup.operand = 'AND';
+            }
+        })
+
+        var getAccumulatedTopups = Vue.component('getAccumulatedTopups',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.getAccumulatedTopups.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getAccumulatedTopups.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getAccumulatedTopups</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getAccumulatedTopups')" 
+                                        id="getAccumulatedTopupsDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    <div class="label-component" style="margin-top:17px">Accumulated Value</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getAccumulatedTopups.startDay"
+                                        id="getAccumulatedTopupsStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getAccumulatedTopups.duration"
+                                        id="getAccumulatedTopupsDuration"
+                                    /> 
+                                    <div class="row" style="width:104%">
+                                        <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.frequencyOfPackageOperadList"
+                                            :clearable="false"
+                                            v-model="customUI.getAccumulatedTopups.accumulatedValueOperand"
+                                        ></v-select>
+                                        <div class="col-md-6"> 
+                                            <input placeholder="value can include decimal point"
+                                                type="number" min="0"
+                                                onkeypress="return event.charCode >= 48"
+                                                class="form-control form-control-sm input-custom"
+                                                v-model.number="customUI.getAccumulatedTopups.accumulatedValue"
+                                            /> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getAccumulatedTopups');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getAccumulatedTopups.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.getAccumulatedTopups.hasOperand = false;
+                //customUI.getAccumulatedTopups.operand = 'AND';
+            }
+        })
+
+        var isPaidTopupInLastXDays = Vue.component('isPaidTopupInLastXDays',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.isPaidTopupInLastXDays.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.isPaidTopupInLastXDays.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>isPaidTopupInLastXDays</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('isPaidTopupInLastXDays')" 
+                                        id="isPaidTopupInLastXDaysDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Duration</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.isPaidTopupInLastXDays.duration"
+                                        id="isPaidTopupInLastXDaysDuration"
+                                    /> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'isPaidTopupInLastXDays');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.isPaidTopupInLastXDays.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.isPaidTopupInLastXDays.hasOperand = false;
+                //customUI.isPaidTopupInLastXDays.operand = 'AND';
+            }
+        })
+
+
+        var getTopupCountforTopupCode = Vue.component('getTopupCountforTopupCode',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.getTopupCountforTopupCode.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getTopupCountforTopupCode.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getTopupCountforTopupCode</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getTopupCountforTopupCode')" 
+                                        id="getTopupCountforTopupCodeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    <div class="label-component">topup Code</div>
+                                    <div class="label-component" style="margin-top:17px">Accumulated Value</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getTopupCountforTopupCode.startDay"
+                                        id="getTopupCountforTopupCodeStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getTopupCountforTopupCode.duration"
+                                        id="getTopupCountforTopupCodeDuration"
+                                    /> 
+                                    <input placeholder="Topup Code" 
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.getTopupCountforTopupCode.topupCode"
+                                        id="getTopupCountforTopupCodeTopupCode"
+                                    /> 
+                                    <div class="row" style="width:104%">
+                                        <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.frequencyOfPackageOperadList"
+                                            :clearable="false"
+                                            v-model="customUI.getTopupCountforTopupCode.accumulatedValueOperand"
+                                        ></v-select>
+                                        <div class="col-md-6"> 
+                                            <input placeholder="Integer, freq required..."
+                                                type="number" min="0"
+                                                onkeypress="return event.charCode >= 48"
+                                                class="form-control form-control-sm input-custom"
+                                                v-model.number="customUI.getTopupCountforTopupCode.accumulatedValue"
+                                            /> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getTopupCountforTopupCode');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getTopupCountforTopupCode.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.getTopupCountforTopupCode.hasOperand = false;
+                //customUI.getTopupCountforTopupCode.operand = 'AND';
+            }
+        })
+
+
+        var getIDDSum = Vue.component('getIDDSum',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.getIDDSum.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getIDDSum.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getIDDSum</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getIDDSum')" 
+                                        id="getIDDSumDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Index</div>
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    <div class="label-component" style="margin-top:17px">Value</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <v-select 
+                                            style="background-color: #fff;"
+                                            :options="store.state.indexList"
+                                            :clearable="false"
+                                            v-model="customUI.getIDDSum.index"
+                                            :reduce="text => text.value"
+                                            label="text"
+                                    ></v-select>
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getIDDSum.startDay"
+                                        id="getIDDSumStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getIDDSum.duration"
+                                        id="getIDDSumDuration"
+                                    /> 
+                                    <div class="row" style="width:104%">
+                                        <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.frequencyOfPackageOperadList"
+                                            :clearable="false"
+                                            v-model="customUI.getIDDSum.valueOperand"
+                                        ></v-select>
+                                        <div class="col-md-6"> 
+                                            <input placeholder="Integer, freq required..."
+                                                type="number" min="0"
+                                                onkeypress="return event.charCode >= 48"
+                                                class="form-control form-control-sm input-custom"
+                                                v-model.number="customUI.getIDDSum.value"
+                                            /> 
+                                        </div>
+                                    </div>
+                                </div>
+                                {{customUI.getIDDSum}}
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getIDDSum');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getIDDSum.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.getIDDSum.hasOperand = false;
+                //customUI.getIDDSum.operand = 'AND';
+            }
+        })
+
+
+        var getIDDBucketPeakDetails = Vue.component('getIDDBucketPeakDetails',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.getIDDBucketPeakDetails.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getIDDBucketPeakDetails.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getIDDBucketPeakDetails</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getIDDBucketPeakDetails')" 
+                                        id="getIDDBucketPeakDetailsDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Country</div>
+                                    <div class="label-component">Index</div>
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    <div class="label-component" style="margin-top:17px">Percentage</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <v-select 
+                                        class="dropdown-long"
+                                        :options="store.state.countryList"
+                                        :clearable="false"
+                                        v-model="customUI.getIDDBucketPeakDetails.country"
+                                    ></v-select>
+                                    <v-select 
+                                        class="dropdown-long"
+                                        :options="store.state.indexList"
+                                        :clearable="false"
+                                        v-model="customUI.getIDDBucketPeakDetails.index"
+                                        :reduce="text => text.value"
+                                        label="text"
+                                    ></v-select>
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getIDDBucketPeakDetails.startDay"
+                                        id="getIDDBucketPeakDetailsStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getIDDBucketPeakDetails.duration"
+                                        id="getIDDBucketPeakDetailsDuration"
+                                    /> 
+                                    <input placeholder="Value can have decimal" type="number" min="0" step="0.01"
+                                        
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getIDDBucketPeakDetails.percentage"
+                                        id="getIDDBucketPeakDetailsPercentage"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getIDDBucketPeakDetails');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getIDDBucketPeakDetails.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.getIDDBucketPeakDetails.hasOperand = false;
+                //customUI.getIDDBucketPeakDetails.operand = 'AND';
+            }
+        })
+
         
     // Custom UI Components END
     
@@ -2828,7 +3339,7 @@
             tab: store.state.tab,
             showModal: store.state.showModal,
             selectedFunction: null,
-            getTopupFrequency: {
+            getTopupFrequency:{
                 hasOperand: false,
                 operand:'AND',
                 packageName: '',
@@ -2838,7 +3349,17 @@
                 frequencyOfPackageValue:'',
                 otherPackagesAllowed: 'false'
             },
-            getTopupFrequencyMatchForXMonths: {
+            getTopupFrequencyMatchForXMonths:{
+                hasOperand: false,
+                operand:'AND',
+                packageName: '',
+                startMonth:'',
+                numberOfMonth:'',
+                frequencyOfPackageOperand:'=',
+                frequencyOfPackageValue:'',
+                otherPackagesAllowed: false
+            },
+            getPackageFrequency:{
                 hasOperand: false,
                 operand:'AND',
                 packageName: '',
@@ -2848,17 +3369,7 @@
                 frequencyOfPackageValue:'',
                 otherPackagesAllowed: 'false'
             },
-            getPackageFrequency: {
-                hasOperand: false,
-                operand:'AND',
-                packageName: '',
-                startMonth:'',
-                numberOfMonth:'',
-                frequencyOfPackageOperand:'=',
-                frequencyOfPackageValue:'',
-                otherPackagesAllowed: 'false'
-            },
-            hasDonePaidTopupFromTopupCode: {
+            hasDonePaidTopupFromTopupCode:{
                 hasOperand: false,
                 operand:'AND',
                 startDay: 0,
@@ -2876,6 +3387,52 @@
                 startDay: 0,
                 duration: 0,
                 moneyValue:0
+            },
+            hasDoneSelfServeTopup:{
+                hasOperand: false,
+                operand:'AND',
+                startDay: 0,
+                duration: 0,
+            },
+            getAccumulatedTopups:{
+                hasOperand: false,
+                operand:'AND',
+                startDay: 0,
+                duration: 0,
+                accumulatedValueOperand:'=',
+                accumulatedValue:0
+            },
+            isPaidTopupInLastXDays:{
+                hasOperand: false,
+                operand:'AND',
+                duration: 0,
+            },
+            getTopupCountforTopupCode:{
+                hasOperand: false,
+                operand:'AND',
+                startDay: 0,
+                duration: 0,
+                topupCode:'',
+                accumulatedValueOperand:'=',
+                accumulatedValue:0
+            },
+            getIDDSum:{
+                hasOperand: false,
+                operand:'AND',
+                index:0,
+                startDay: 0,
+                duration: 0,
+                valueOperand:'=',
+                value:0
+            },
+            getIDDBucketPeakDetails: {
+                hasOperand: false,
+                operand:'AND',
+                country:'Malaysia',
+                index:0,
+                startDay: 0,
+                duration: 0,
+                percentage: 0,
             }
         },
         methods: {
