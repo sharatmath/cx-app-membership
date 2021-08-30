@@ -283,12 +283,13 @@
         }
 
         .operators {
-            width:25%;
+            width:28%;
             margin: 10px;
             background-color: white;
         }
-        .select-function-dropdown {
+        .select-component-dropdown {
             background-color:white;
+            max-height: 100px !important;
         }
 
         .hr-custom {
@@ -312,7 +313,6 @@
             margin:5px; 
             margin-right:15px
         }
-
 
 	</style>
 </head>
@@ -940,7 +940,7 @@
                                                             @input="setSelected"
                                                             :clearable="false"
                                                             v-model="selectedFunction"
-                                                            class="select-function-dropdown"
+                                                            class="select-component-dropdown"
                                                             ></v-select>
                                                     </div>
                                                     <div class="config-card col-8">
@@ -2296,6 +2296,14 @@
                 'getTopupCountforTopupCode',
                 'getIDDSum',
                 'getIDDBucketPeakDetails',
+                'getIDDBucketPeakStatistic',
+                'packageExclusionCheck',
+                'isDataVasBoughtinLastXDays',
+                'hasDoneinternalSelfServeTopup',
+                'hasDoneTopUpfromOPIDs',
+                'hasBoughtPackageinDuration',
+                'getMonthlyDataPPUSum',
+                'getDAPackageFrequency'
 
             ],
             componentList: [],
@@ -2328,6 +2336,8 @@
                 {text: 'noPrefix non-peak duration', value: 18}
             ],
             countryList:['Malaysia','Indonesia','Philippines','Thailand','Vietnam','China','India','Myanmar','Bangladesh'],
+            meanOrMedian:['Mean','Median'],
+            spendOrUsage:['Spend','Usage'],
                     
         },
         setStateFunctionComponentList(newValue) {
@@ -2355,7 +2365,15 @@
                 'isPaidTopupInLastXDays',
                 'getTopupCountforTopupCode',
                 'getIDDSum',
-                'getIDDBucketPeakDetails'
+                'getIDDBucketPeakDetails',
+                'getIDDBucketPeakStatistic',
+                'packageExclusionCheck',
+                'isDataVasBoughtinLastXDays',
+                'hasDoneinternalSelfServeTopup',
+                'hasDoneTopUpfromOPIDs',
+                'hasBoughtPackageinDuration',
+                'getMonthlyDataPPUSum',
+                'getDAPackageFrequency'
             ]
             customUI.dropdownfunctionList.splice(0,customUI.dropdownfunctionList.length);
             customUI.dropdownfunctionList.push(...completedropdownFunctionList);
@@ -3219,7 +3237,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{customUI.getIDDSum}}
                             </div>
                         </div>
                     </div>
@@ -3320,6 +3337,593 @@
             beforeDestroy: function () {
                 customUI.getIDDBucketPeakDetails.hasOperand = false;
                 //customUI.getIDDBucketPeakDetails.operand = 'AND';
+            }
+        })
+
+
+        var getIDDBucketPeakStatistic = Vue.component('getIDDBucketPeakStatistic',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.getIDDBucketPeakStatistic.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getIDDBucketPeakStatistic.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getIDDBucketPeakStatistic</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getIDDBucketPeakStatistic')" 
+                                        id="getIDDBucketPeakStatisticDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Country</div>
+                                    <div class="label-component">Index</div>
+                                    <div class="label-component" style="margin-top:17px">Start Day</div>
+                                    <div class="label-component" style="margin-top:17px">Duration</div>
+                                    <div class="label-component" style="margin-top:15px">Percentage</div>
+                                    <div class="label-component" style="margin-top:15px">Mode</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <v-select 
+                                        class="dropdown-long"
+                                        :options="store.state.countryList"
+                                        :clearable="false"
+                                        v-model="customUI.getIDDBucketPeakStatistic.country"
+                                    ></v-select>
+                                    <v-select 
+                                        class="dropdown-long"
+                                        :options="store.state.indexList"
+                                        :clearable="false"
+                                        v-model="customUI.getIDDBucketPeakStatistic.index"
+                                        :reduce="text => text.value"
+                                        label="text"
+                                    ></v-select>
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getIDDBucketPeakStatistic.startDay"
+                                        id="getIDDBucketPeakStatisticStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getIDDBucketPeakStatistic.duration"
+                                        id="getIDDBucketPeakStatisticDuration"
+                                    /> 
+                                    <input placeholder="Value can have decimal" type="number" min="0" step="0.01"
+                                        
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getIDDBucketPeakStatistic.percentage"
+                                        id="getIDDBucketPeakStatisticPercentage"
+                                    />
+                                    <v-select 
+                                        class="operators"
+                                        :options="store.state.meanOrMedian"
+                                        :clearable="false"
+                                        v-model="customUI.getIDDBucketPeakStatistic.mode"
+                                    ></v-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getIDDBucketPeakStatistic');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getIDDBucketPeakStatistic.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.getIDDBucketPeakStatistic.hasOperand = false;
+                //customUI.getIDDBucketPeakStatistic.operand = 'AND';
+            }
+        })
+
+
+        var packageExclusionCheck = Vue.component('packageExclusionCheck',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.packageExclusionCheck.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.packageExclusionCheck.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>packageExclusionCheck</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('packageExclusionCheck')" 
+                                        id="packageExclusionCheckDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Duration</div>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.packageExclusionCheck.duration"
+                                        id="packageExclusionCheckDuration"
+                                    /> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'packageExclusionCheck');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.packageExclusionCheck.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.packageExclusionCheck.hasOperand = false;
+                //customUI.packageExclusionCheck.operand = 'AND';
+            }
+        })
+
+
+        var isDataVasBoughtinLastXDays = Vue.component('isDataVasBoughtinLastXDays',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.isDataVasBoughtinLastXDays.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.isDataVasBoughtinLastXDays.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>isDataVasBoughtinLastXDays</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('isDataVasBoughtinLastXDays')" 
+                                        id="isDataVasBoughtinLastXDaysDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Package ID</div>
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="Package ID"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.isDataVasBoughtinLastXDays.packageId"
+                                        id="isDataVasBoughtinLastXDaysPackageId"
+                                    /> 
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.isDataVasBoughtinLastXDays.startDay"
+                                        id="isDataVasBoughtinLastXDaysStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.isDataVasBoughtinLastXDays.duration"
+                                        id="isDataVasBoughtinLastXDaysDuration"
+                                    /> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'isDataVasBoughtinLastXDays');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.isDataVasBoughtinLastXDays.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.isDataVasBoughtinLastXDays.hasOperand = false;
+                //customUI.isDataVasBoughtinLastXDays.operand = 'AND';
+            }
+        })
+
+
+        var hasDoneinternalSelfServeTopup = Vue.component('hasDoneinternalSelfServeTopup',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.hasDoneinternalSelfServeTopup.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.hasDoneinternalSelfServeTopup.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>hasDoneinternalSelfServeTopup</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('hasDoneinternalSelfServeTopup')" 
+                                        id="hasDoneinternalSelfServeTopupDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.hasDoneinternalSelfServeTopup.startDay"
+                                        id="hasDoneinternalSelfServeTopupStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.hasDoneinternalSelfServeTopup.duration"
+                                        id="hasDoneinternalSelfServeTopupDuration"
+                                    /> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'hasDoneinternalSelfServeTopup');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.hasDoneinternalSelfServeTopup.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.hasDoneinternalSelfServeTopup.hasOperand = false;
+                //customUI.hasDoneinternalSelfServeTopup.operand = 'AND';
+            }
+        })
+
+
+
+        var hasDoneTopUpfromOPIDs = Vue.component('hasDoneTopUpfromOPIDs',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.hasDoneTopUpfromOPIDs.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.hasDoneTopUpfromOPIDs.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>hasDoneTopUpfromOPIDs</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('hasDoneTopUpfromOPIDs')" 
+                                        id="hasDoneTopUpfromOPIDsDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Operator ID</div>
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="Value of operator ID, Can have multiple value"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.hasDoneTopUpfromOPIDs.opId"
+                                        id="hasDoneTopUpfromOPIDsOpId"
+                                    /> 
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.hasDoneTopUpfromOPIDs.startDay"
+                                        id="hasDoneTopUpfromOPIDsStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.hasDoneTopUpfromOPIDs.duration"
+                                        id="hasDoneTopUpfromOPIDsDuration"
+                                    /> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'hasDoneTopUpfromOPIDs');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.hasDoneTopUpfromOPIDs.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.hasDoneTopUpfromOPIDs.hasOperand = false;
+                //customUI.hasDoneTopUpfromOPIDs.operand = 'AND';
+            }
+        })
+
+
+
+        var hasBoughtPackageinDuration = Vue.component('hasBoughtPackageinDuration',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.hasBoughtPackageinDuration.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.hasBoughtPackageinDuration.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>hasBoughtPackageinDuration</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('hasBoughtPackageinDuration')" 
+                                        id="hasBoughtPackageinDurationDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Operator ID</div>
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="Value of package name, Can have multiple value"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.hasBoughtPackageinDuration.packageName"
+                                        id="hasBoughtPackageinDurationPackageName"
+                                    /> 
+                                    <input placeholder="0 = will include today’s entries ; 1 = will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.hasBoughtPackageinDuration.startDay"
+                                        id="hasBoughtPackageinDurationStartDay"
+                                    /> 
+                                    <input placeholder="days in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.hasBoughtPackageinDuration.duration"
+                                        id="hasBoughtPackageinDurationDuration"
+                                    /> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'hasBoughtPackageinDuration');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.hasBoughtPackageinDuration.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.hasBoughtPackageinDuration.hasOperand = false;
+                //customUI.hasBoughtPackageinDuration.operand = 'AND';
+            }
+        })
+
+
+
+        var getMonthlyDataPPUSum = Vue.component('getMonthlyDataPPUSum',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.getMonthlyDataPPUSum.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getMonthlyDataPPUSum.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getMonthlyDataPPUSum</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getMonthlyDataPPUSum')" 
+                                        id="getMonthlyDataPPUSumDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Start Month</div>
+                                    <div class="label-component">Number of Months</div>
+                                    <div class="label-component">DA Ids</div>
+                                    <div class="label-component">Key</div>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="yyyymm" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getMonthlyDataPPUSum.startMonth"
+                                        id="getMonthlyDataPPUSumstartMonth"
+                                    /> 
+                                    <input placeholder="number of months to go back in the past" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getMonthlyDataPPUSum.numOfMonth"
+                                        id="getMonthlyDataPPUSumNumOfMonth"
+                                    /> 
+                                    <input placeholder="Can have multiple value"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.getMonthlyDataPPUSum.daId"
+                                        id="getMonthlyDataPPUSumDaId"
+                                    />
+                                    <v-select 
+                                        class="operators"
+                                        :options="store.state.spendOrUsage"
+                                        :clearable="false"
+                                        v-model="customUI.getMonthlyDataPPUSum.key"
+                                    ></v-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getMonthlyDataPPUSum');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getMonthlyDataPPUSum.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.getMonthlyDataPPUSum.hasOperand = false;
+                //customUI.getMonthlyDataPPUSum.operand = 'AND';
+            }
+        })
+
+
+
+        var getDAPackageFrequency = Vue.component('getDAPackageFrequency',
+        {
+            template:
+                `<div>
+                    <div v-if="customUI.getDAPackageFrequency.hasOperand === true">
+                        <div class="operators"> 
+                            <v-select 
+                            :options="store.state.operatorsList"
+                            :clearable="false"
+                            v-model="customUI.getDAPackageFrequency.operand"
+                            ></v-select>
+                        </div>
+                    </div>
+                    <div class="component-card">
+                            <div class="row">
+                                <div class=" col-sm-10 component-title">
+                                    <h6><b>getDAPackageFrequency</b> </h6>
+                                </div>
+                                <div class=" col-sm-2">
+                                    <button v-on:click="removeSpecificComponent('getDAPackageFrequency')" 
+                                        id="getDAPackageFrequencyDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                                </div>
+                            </div>
+                        <hr class="hr-custom">
+                        <div class="component-form">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-component">Indicator Name</div>
+                                    <div class="label-component">DA Id</div>
+                                    <div class="label-component">Package Id</div>
+                                    <div class="label-component">Start Day</div>
+                                    <div class="label-component">Duration</div>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="Indicator Name"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.getDAPackageFrequency.indicatorName"
+                                        id="getDAPackageFrequencyIndicatorName"
+                                    />
+                                    <input placeholder="DA Id"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.getDAPackageFrequency.daId"
+                                        id="getDAPackageFrequencyDaId"
+                                    />
+                                    <input placeholder="Package Id"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model="customUI.getDAPackageFrequency.packageId"
+                                        id="getDAPackageFrequencyPackageId"
+                                    />
+                                    <input placeholder="0=will include today’s entries ; 1 will start from today-1" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getDAPackageFrequency.startDay"
+                                        id="getDAPackageFrequencyStartDay"
+                                    /> 
+                                    <input placeholder="Duration" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        v-model.number="customUI.getDAPackageFrequency.duration"
+                                        id="getDAPackageFrequencyDuration"
+                                    /> 
+                                </div>
+                                {{customUI.getDAPackageFrequency}}
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+            beforeCreate: function() {
+                let indexComponent =  customUI.componentList.findIndex(element => element === 'getDAPackageFrequency');
+                if(indexComponent > 0) {
+                    // customUI.componentList.splice(indexComponent,0,'operators');
+                    customUI.getDAPackageFrequency.hasOperand = true;
+                }
+            },
+            beforeDestroy: function () {
+                customUI.getDAPackageFrequency.hasOperand = false;
+                //customUI.getDAPackageFrequency.operand = 'AND';
             }
         })
 
@@ -3433,7 +4037,66 @@
                 startDay: 0,
                 duration: 0,
                 percentage: 0,
-            }
+            },
+            getIDDBucketPeakStatistic: {
+                hasOperand: false,
+                operand:'AND',
+                country:'Malaysia',
+                index:0,
+                startDay: 0,
+                duration: 0,
+                percentage: 0,
+                mode:'Mean'
+            },
+            packageExclusionCheck: {
+                hasOperand: false,
+                operand:'AND',
+                duration: 0,
+            },
+            isDataVasBoughtinLastXDays : {
+                hasOperand: false,
+                operand:'AND',
+                packageId:'',
+                startDay: 0,
+                duration: 0,
+            },
+            hasDoneinternalSelfServeTopup : {
+                hasOperand: false,
+                operand:'AND',
+                startDay: 0,
+                duration: 0,
+            },
+            hasDoneTopUpfromOPIDs : {
+                hasOperand: false,
+                operand:'AND',
+                opId:'',
+                startDay: 0,
+                duration: 0,
+            },
+            hasBoughtPackageinDuration : {
+                hasOperand: false,
+                operand:'AND',
+                packageName:'',
+                startDay: 0,
+                duration: 0,
+            },
+            getMonthlyDataPPUSum : {
+                hasOperand: false,
+                operand:'AND',
+                startMonth:000000,
+                numOfMonth: 0,
+                daId: '',
+                key:'Spend'
+            },
+            getDAPackageFrequency : {
+                hasOperand: false,
+                operand:'AND',
+                indicatorName: '' ,
+                daId:'',
+                packageId:'',
+                startDay: 0,
+                duration: 0,
+            },
         },
         methods: {
             setSelected(value) {
