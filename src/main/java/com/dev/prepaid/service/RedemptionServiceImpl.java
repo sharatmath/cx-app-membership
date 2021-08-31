@@ -31,8 +31,13 @@ public class RedemptionServiceImpl implements RedemptionService {
 	private PrepaidOfferMembershipRepository prepaidOfferMembershipRepository;
 
 	@Override
+<<<<<<< HEAD
 	public void processByCall(String msisdn) {
 		log.info("msisdn : "+ msisdn);
+=======
+	public void processByCall(String msisdn,String evenType) {
+		log.info("msisdn:"+ msisdn  + " evenType:"+evenType);
+>>>>>>> main
 		
 		ArrayList<PrepaidCxOfferRedemption> prepaidCxOfferRedemptions = (ArrayList<PrepaidCxOfferRedemption>) prepaidCxOfferRedemptionRepository.findAll() ;
 		
@@ -209,10 +214,17 @@ public class RedemptionServiceImpl implements RedemptionService {
 		
 		if (bProcess==true) {
 			if(pCxOfferRedemption.getRedemptionMethod().equalsIgnoreCase("manual")) {
+<<<<<<< HEAD
 				log.info("Process with Manual, for msisdn:"+msisdn+" call API Responsys ");
 			}
 			else if(pCxOfferRedemption.getRedemptionMethod().equalsIgnoreCase("auto")) {
 				log.info("Process with Auto, for msisdn:"+msisdn+" call API Provisoning ");
+=======
+				log.info("Process with Manual, for msisdn:"+msisdn+" call SMS API");
+			}
+			else if(pCxOfferRedemption.getRedemptionMethod().equalsIgnoreCase("auto")) {
+				log.info("Process with Auto, for msisdn:"+msisdn+" call Provisoning API");
+>>>>>>> main
 			}
 		}
 
