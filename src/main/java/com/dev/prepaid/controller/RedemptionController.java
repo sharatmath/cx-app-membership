@@ -314,8 +314,8 @@ public class RedemptionController {
 	
 	@RequestMapping(value = "processRedemption",
 			method = RequestMethod.POST)
-	public ResponseEntity<String> processRedemption(@RequestBody String msisdn){
-		redemptionService.processByCall(msisdn);
+	public ResponseEntity<String> processRedemption(@RequestBody String msisdn,@RequestBody String evenType){
+		redemptionService.processByCall(msisdn,evenType);
 		
 		
 		return ResponseEntity.status(HttpStatus.OK).body("Response:"+msisdn +"redemption done");
