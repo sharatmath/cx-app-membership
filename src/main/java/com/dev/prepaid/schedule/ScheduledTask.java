@@ -28,6 +28,6 @@ public class ScheduledTask {
 	
 	@Scheduled(cron = "${tasks.scheduled.minutely}", zone = "${tasks.scheduled.zone}") /* every 1 minute */
 	public void redemptionScheduler() throws ParseException {
-		redemptionService.processByCall(null);
+		redemptionService.processByCall(null,null);
 	}
 }
