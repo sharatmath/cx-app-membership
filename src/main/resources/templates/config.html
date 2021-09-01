@@ -248,7 +248,7 @@
         }
 
         .customUIcontainer {
-            min-height: 350px;
+            min-height: 380px;
             padding: 10px;
         }
 
@@ -934,17 +934,35 @@
                                                 <div class="customUIcontainer row">
                                                     <div class="selection-card col-4"> 
                                                         <v-select 
-                                                            :options="dropdownfunctionList"
+                                                            :options="dropdownFunctionList"
                                                             placeholder="Select PSM Function"
                                                             label="Select PSM Function" 
-                                                            @input="setSelected"
+                                                            @input="setSelectedFunction"
                                                             :clearable="true"
                                                             v-model="selectedFunction"
                                                             class="select-component-dropdown"
-                                                            ></v-select>
+                                                        ></v-select>
+                                                        <div style="margin:10px"></div>
+                                                        <!-- <v-select 
+                                                            :options="dropdownIndicatorList"
+                                                            placeholder="Select Indicator"
+                                                            label="Select Indicator" 
+                                                            @input="setSelectedIndicator"
+                                                            :clearable="true"
+                                                            v-model="selectedIndicator"
+                                                            class="select-component-dropdown"
+                                                        ></v-select> -->
                                                     </div>
                                                     <div class="config-card col-8">
                                                         <div v-for="component in componentList" v-bind:is="component"></div>
+                                                        <button :disabled="sqlView" class="btn btn-singtel" style="float:right; margin:10px">Generate SQL</button>
+                                                        <textarea 
+                                                            placeholder="View SQL"
+                                                            v-model="sqlView" 
+                                                            :readonly="true" 
+                                                            :rows="6" 
+                                                            style="width:100%;resize: none;" 
+                                                            class="form-control form-control-sm input-custom"></textarea>
                                                     </div>
                                                 </div>
                                             </div> 
@@ -2283,7 +2301,7 @@
     var store = {  
         debug: true,
         state: {
-            dropdownfunctionList: [  //this are individual component
+            dropdownFunctionList: [  //this are individual component
                 'getPackageFrequency',
                 'getTopupFrequency',
                 'getTopupFrequencyMatchForXMonths',
@@ -2314,7 +2332,23 @@
                 'getDailyUsageSum',
                 'isDataUsedinLastXdays',
                 'getAccumulatedMonthlyTopupValue'
-
+            ],
+            dropdownIndicatorList:[
+                'AGE_ON_NETWORK_Lifetime',
+                'CREDIT_ALL_VALUE_Lifetime',
+                'CREDIT_ALL_COUNT_Lifetime',
+                'CREDIT_CDR_COUNT_Lifetime',
+                'LATEST_BALANCE_Lifetime',
+                'PEAK_ACTIVITY_TIME_LifeTime',
+                'SELFSERVE_CREDIT_ALL_Count_Lifetime',
+                'TOTAL_SPEND_Lifetime',
+                'DATA_USER_IDENTIFICATION_LifeTime',
+                'EXPECTED_EXPIRY_DATE_Lifetime',
+                'LAST_LOCAL_CALL_ACTIVITY_LifeTime',
+                'LOCAL_CALL_FULFILMENT_LifeTime',
+                'LAST_LOCAL_CALL_LifeTime',
+                'TOTAL_SPEND_MONTHLY_Lifetime',
+                'SUBSCRIBER_LATEST_ACTION_Lifetime'
             ],
             componentList: [],
             tab: 'customUI',
@@ -2349,7 +2383,7 @@
             meanOrMedian:['Mean','Median'],
             spendOrUsage:['Spend','Usage'],
             expIsTodayOrNot:[{text: "expiration is today",value: true},{text: "expiration is not today",value: false}],
-            equalToOrlessOrEqualTo:['=', '> | ='],
+            equalToOrlessOrEqualTo:['=', '< | ='],
             equalToOrlessOrEqualToOrGreaterOrEqual :['=', '> | =', "< | ="],
             getDailyUsageSumIndexList: [
                 {text: 'Voice All Count', value:0},
@@ -2379,49 +2413,71 @@
             this.state.componentList = newValue;
         },
         setStateComponentDropdownList(newValue) {
-            this.state.dropdownfunctionList = newValue;
+            this.state.dropdownFunctionList = newValue;
         }
     }
 
     // FUNCTIONS START
 
+    var completeDropdownFunctionList = [
+        'getPackageFrequency',
+        'getTopupFrequency',
+        'getTopupFrequencyMatchForXMonths',
+        'hasDonePaidTopupFromTopupCode',
+        'isFirstPaidTopupofMonth',
+        'hasDoneSinglePaidTopup',
+        'hasDoneSelfServeTopup',
+        'getAccumulatedTopups',
+        'isPaidTopupInLastXDays',
+        'getTopupCountforTopupCode',
+        'getIDDSum',
+        'getIDDBucketPeakDetails',
+        'getIDDBucketPeakStatistic',
+        'packageExclusionCheck',
+        'isDataVasBoughtinLastXDays',
+        'hasDoneinternalSelfServeTopup',
+        'hasDoneTopUpfromOPIDs',
+        'hasBoughtPackageinDuration',
+        'getMonthlyDataPPUSum',
+        'getDAPackageFrequency',
+        'getDABalances',
+        'getDAConsumption',
+        'getDAInitialQuota',
+        'getDACurrentExpiryDate',
+        'getLastRechargeDateofDA',
+        'getLastRechargeDateOfDataTopupID',
+        'getDataVasARPU',
+        'getDailyUsageSum',
+        'isDataUsedinLastXdays',
+        'getAccumulatedMonthlyTopupValue'
+    ]
+    
+    var completeDropdownIndicatorList = [
+        'AGE_ON_NETWORK_Lifetime',
+        'CREDIT_ALL_VALUE_Lifetime',
+        'CREDIT_ALL_COUNT_Lifetime',
+        'CREDIT_CDR_COUNT_Lifetime',
+        'LATEST_BALANCE_Lifetime',
+        'PEAK_ACTIVITY_TIME_LifeTime',
+        'SELFSERVE_CREDIT_ALL_Count_Lifetime',
+        'TOTAL_SPEND_Lifetime',
+        'DATA_USER_IDENTIFICATION_LifeTime',
+        'EXPECTED_EXPIRY_DATE_Lifetime',
+        'LAST_LOCAL_CALL_ACTIVITY_LifeTime',
+        'LOCAL_CALL_FULFILMENT_LifeTime',
+        'LAST_LOCAL_CALL_LifeTime',
+        'TOTAL_SPEND_MONTHLY_Lifetime',
+        'SUBSCRIBER_LATEST_ACTION_Lifetime'
+    ]
+
     var emptyComponentList = function() {
         if (customUI.tab === 'customUI') {
             let emptyList = customUI.componentList.splice(0, customUI.componentList.length); // empty the list
-            let completedropdownFunctionList = [
-                'getPackageFrequency',
-                'getTopupFrequency',         
-                'getTopupFrequencyMatchForXMonths',
-                'hasDonePaidTopupFromTopupCode',
-                'isFirstPaidTopupofMonth',
-                'hasDoneSinglePaidTopup',
-                'hasDoneSelfServeTopup',
-                'getAccumulatedTopups',
-                'isPaidTopupInLastXDays',
-                'getTopupCountforTopupCode',
-                'getIDDSum',
-                'getIDDBucketPeakDetails',
-                'getIDDBucketPeakStatistic',
-                'packageExclusionCheck',
-                'isDataVasBoughtinLastXDays',
-                'hasDoneinternalSelfServeTopup',
-                'hasDoneTopUpfromOPIDs',
-                'hasBoughtPackageinDuration',
-                'getMonthlyDataPPUSum',
-                'getDAPackageFrequency',
-                'getDABalances',
-                'getDAConsumption',
-                'getDAInitialQuota',
-                'getDACurrentExpiryDate',
-                'getLastRechargeDateofDA',
-                'getLastRechargeDateOfDataTopupID',
-                'getDataVasARPU',
-                'getDailyUsageSum',
-                'isDataUsedinLastXdays',
-                'getAccumulatedMonthlyTopupValue'
-            ]
-            customUI.dropdownfunctionList.splice(0,customUI.dropdownfunctionList.length);
-            customUI.dropdownfunctionList.push(...completedropdownFunctionList);
+
+            customUI.dropdownFunctionList.splice(0,customUI.dropdownFunctionList.length);
+            customUI.dropdownFunctionList.push(...completeDropdownFunctionList);
+            customUI.dropdownIndicatorList.splice(0,customUI.dropdownIndicatorList.length);
+            customUI.dropdownIndicatorList.push(...completeDropdownIndicatorList);
             customUI.tab = 'customQuery'
         } else {
             customUI.tab = 'customUI'
@@ -2431,12 +2487,19 @@
     var removeSpecificComponent = function(value) {
         var selectedIndex = customUI.componentList.indexOf(value);
         customUI.componentList.splice(selectedIndex, 1);
-        //store.setStateFunctionComponentList(test)
+
+        var isFunction = completeDropdownFunctionList.includes(value)
+
+        if(isFunction) {
+            customUI.dropdownFunctionList.push(value)
+            customUI.dropdownFunctionList.sort()
+        } else {
+            customUI.dropdownIndicatorList.push(value)
+            customUI.dropdownIndicatorList.sort()
+        }
         
-        customUI.dropdownfunctionList.push(value)
-        customUI.dropdownfunctionList.sort()
         if (customUI[customUI.componentList[0]]) {
-            customUI[customUI.componentList[0]].hasOperand = false; // delete the operand on the top
+            customUI[customUI.componentList[0]].hasOperand = false; // hide the operand on the top
         }
     }
 
@@ -2450,6 +2513,7 @@
     //** rule in creating component
     //** 1. varialbe name, component name and parameter name (on removeSpecificComponent function) must be the same
     
+    // PSM-FUNCTION COMPONENT START
     var getTopupFrequencyMatchForXMonths = Vue.component('getTopupFrequencyMatchForXMonths',
         {template:
             `<div>
@@ -2490,6 +2554,7 @@
                                     id="getTopupFrequencyMatchForXMonthsPackageName"
                                 /> 
                                 <input placeholder="yyyymm, freq calculation start from this month"
+                                    :maxlength="6"
                                     class="form-control form-control-sm input-custom"
                                     v-model.number="customUI.getTopupFrequencyMatchForXMonths.startMonth"
                                     id="getTopupFrequencyMatchForXMonthsStartMonth"/>  
@@ -2580,6 +2645,7 @@
                                     id="getTopupFrequencyPackageName"
                                 /> 
                                 <input placeholder="yyyymm, freq calculation start from this month"
+                                    :maxlength="6"
                                     class="form-control form-control-sm input-custom"
                                     v-model.number="customUI.getTopupFrequency.startMonth"
                                     id="getTopupFrequencyStartMonth"/>  
@@ -2671,6 +2737,7 @@
                                     id="getPackageFrequencyPackageName"
                                 /> 
                                 <input placeholder="yyyymm, freq calculation start from this month"
+                                    :maxlength="6"
                                     class="form-control form-control-sm input-custom"
                                     v-model.number="customUI.getPackageFrequency.startMonth"
                                     id="getPackageFrequencyStartMonth"/>  
@@ -3823,6 +3890,7 @@
                             </div>
                             <div class="col-md-8">
                                 <input placeholder="yyyymm" type="number" min="0"
+                                    :maxlength="6"
                                     onkeypress="return event.charCode >= 48"
                                     class="form-control form-control-sm input-custom" 
                                     v-model.number="customUI.getMonthlyDataPPUSum.startMonth"
@@ -4696,6 +4764,1016 @@
             //customUI.getAccumulatedMonthlyTopupValue.operand = 'AND';
         }
     })
+    // PSM-FUNCTION COMPONENT END
+
+
+    // PSM-INDICATOR START
+
+    var AGE_ON_NETWORK_Lifetime = Vue.component('AGE_ON_NETWORK_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.AGE_ON_NETWORK_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.AGE_ON_NETWORK_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>AGE_ON_NETWORK_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('AGE_ON_NETWORK_Lifetime')" 
+                                    id="AGE_ON_NETWORK_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">AGE_ON_NETWORK</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="customUI.AGE_ON_NETWORK_Lifetime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="value can include decimal point"
+                                            type="number" min="0"
+                                            onkeypress="return event.charCode >= 48"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.AGE_ON_NETWORK_Lifetime.value"
+                                        /> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'AGE_ON_NETWORK_Lifetime');
+            if(indexComponent > 0) {
+                customUI.AGE_ON_NETWORK_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.AGE_ON_NETWORK_Lifetime.hasOperand = false;
+            //customUI.AGE_ON_NETWORK_Lifetime.operand = 'AND';
+        }
+    })
+
+
+
+    var CREDIT_ALL_VALUE_Lifetime = Vue.component('CREDIT_ALL_VALUE_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.CREDIT_ALL_VALUE_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.CREDIT_ALL_VALUE_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>CREDIT_ALL_VALUE_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('CREDIT_ALL_VALUE_Lifetime')" 
+                                    id="CREDIT_ALL_VALUE_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">TRANSACTION_VALUE</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="customUI.CREDIT_ALL_VALUE_Lifetime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="value can include decimal point"
+                                            type="number" min="0"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.CREDIT_ALL_VALUE_Lifetime.value"
+                                        /> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'CREDIT_ALL_VALUE_Lifetime');
+            if(indexComponent > 0) {
+                customUI.CREDIT_ALL_VALUE_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.CREDIT_ALL_VALUE_Lifetime.hasOperand = false;
+            //customUI.CREDIT_ALL_VALUE_Lifetime.operand = 'AND';
+        }
+    })
+
+
+    var CREDIT_ALL_COUNT_Lifetime = Vue.component('CREDIT_ALL_COUNT_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.CREDIT_ALL_COUNT_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.CREDIT_ALL_COUNT_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>CREDIT_ALL_COUNT_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('CREDIT_ALL_COUNT_Lifetime')" 
+                                    id="CREDIT_ALL_COUNT_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">COUNTTRANS</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="customUI.CREDIT_ALL_COUNT_Lifetime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="integer"
+                                            type="number" min="0"
+                                            onkeypress="return event.charCode >= 48"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.CREDIT_ALL_COUNT_Lifetime.value"
+                                        /> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'CREDIT_ALL_COUNT_Lifetime');
+            if(indexComponent > 0) {
+                customUI.CREDIT_ALL_COUNT_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.CREDIT_ALL_COUNT_Lifetime.hasOperand = false;
+            //customUI.CREDIT_ALL_COUNT_Lifetime.operand = 'AND';
+        }
+    })
+
+    var CREDIT_CDR_COUNT_Lifetime = Vue.component('CREDIT_CDR_COUNT_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.CREDIT_CDR_COUNT_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.CREDIT_CDR_COUNT_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>CREDIT_CDR_COUNT_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('CREDIT_CDR_COUNT_Lifetime')" 
+                                    id="CREDIT_CDR_COUNT_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">COUNT_DATA</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="customUI.CREDIT_CDR_COUNT_Lifetime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="integer"
+                                            type="number" min="0"
+                                            onkeypress="return event.charCode >= 48"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.CREDIT_CDR_COUNT_Lifetime.value"
+                                        /> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'CREDIT_CDR_COUNT_Lifetime');
+            if(indexComponent > 0) {
+                customUI.CREDIT_CDR_COUNT_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.CREDIT_CDR_COUNT_Lifetime.hasOperand = false;
+            //customUI.CREDIT_CDR_COUNT_Lifetime.operand = 'AND';
+        }
+    })
+
+
+
+    var LATEST_BALANCE_Lifetime = Vue.component('LATEST_BALANCE_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.LATEST_BALANCE_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.LATEST_BALANCE_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>LATEST_BALANCE_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('LATEST_BALANCE_Lifetime')" 
+                                    id="LATEST_BALANCE_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">TRANSACTION_VALUE</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="customUI.LATEST_BALANCE_Lifetime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="value can include decimal point"
+                                            type="number" min="0"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.LATEST_BALANCE_Lifetime.value"
+                                        /> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'LATEST_BALANCE_Lifetime');
+            if(indexComponent > 0) {
+                customUI.LATEST_BALANCE_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.LATEST_BALANCE_Lifetime.hasOperand = false;
+            //customUI.LATEST_BALANCE_Lifetime.operand = 'AND';
+        }
+    })
+
+
+
+    var PEAK_ACTIVITY_TIME_LifeTime = Vue.component('PEAK_ACTIVITY_TIME_LifeTime',
+        {template:
+            `<div>
+                <div v-if="customUI.PEAK_ACTIVITY_TIME_LifeTime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.PEAK_ACTIVITY_TIME_LifeTime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>PEAK_ACTIVITY_TIME_LifeTime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('PEAK_ACTIVITY_TIME_LifeTime')" 
+                                    id="PEAK_ACTIVITY_TIME_LifeTimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">PEAK_FLAG</div>
+                            </div>
+                            <div class="col-md-8">
+                                <input placeholder="Single or multiple value separate by comma"
+                                    class="form-control form-control-sm input-custom" 
+                                    v-model="customUI.PEAK_ACTIVITY_TIME_LifeTime.peakFlag"
+                                    id="PEAK_ACTIVITY_TIME_LifeTimePeakFlag"
+                                /> 
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'PEAK_ACTIVITY_TIME_LifeTime');
+            if(indexComponent > 0) {
+                customUI.PEAK_ACTIVITY_TIME_LifeTime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.PEAK_ACTIVITY_TIME_LifeTime.hasOperand = false;
+            //customUI.PEAK_ACTIVITY_TIME_LifeTime.operand = 'AND';
+        }
+    })
+
+
+    var SELFSERVE_CREDIT_ALL_Count_Lifetime = Vue.component('SELFSERVE_CREDIT_ALL_Count_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.SELFSERVE_CREDIT_ALL_Count_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.SELFSERVE_CREDIT_ALL_Count_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>SELFSERVE_CREDIT_ALL_Count_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('SELFSERVE_CREDIT_ALL_Count_Lifetime')" 
+                                    id="SELFSERVE_CREDIT_ALL_Count_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">COUNT_SELFSERVE</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="customUI.SELFSERVE_CREDIT_ALL_Count_Lifetime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="integer"
+                                            type="number" min="0"
+                                            onkeypress="return event.charCode >= 48"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.SELFSERVE_CREDIT_ALL_Count_Lifetime.value"
+                                        /> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'SELFSERVE_CREDIT_ALL_Count_Lifetime');
+            if(indexComponent > 0) {
+                customUI.SELFSERVE_CREDIT_ALL_Count_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.SELFSERVE_CREDIT_ALL_Count_Lifetime.hasOperand = false;
+            //customUI.SELFSERVE_CREDIT_ALL_Count_Lifetime.operand = 'AND';
+        }
+    })
+
+
+
+    var TOTAL_SPEND_Lifetime = Vue.component('TOTAL_SPEND_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.TOTAL_SPEND_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.TOTAL_SPEND_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>TOTAL_SPEND_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('TOTAL_SPEND_Lifetime')" 
+                                    id="TOTAL_SPEND_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">TOTAL_SPEND</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="customUI.TOTAL_SPEND_Lifetime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="value can include decimal point"
+                                            type="number" min="0"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.TOTAL_SPEND_Lifetime.value"
+                                        /> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'TOTAL_SPEND_Lifetime');
+            if(indexComponent > 0) {
+                customUI.TOTAL_SPEND_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.TOTAL_SPEND_Lifetime.hasOperand = false;
+            //customUI.TOTAL_SPEND_Lifetime.operand = 'AND';
+        }
+    })
+
+
+
+    var DATA_USER_IDENTIFICATION_LifeTime = Vue.component('DATA_USER_IDENTIFICATION_LifeTime',
+        {template:
+            `<div>
+                <div v-if="customUI.DATA_USER_IDENTIFICATION_LifeTime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.DATA_USER_IDENTIFICATION_LifeTime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>DATA_USER_IDENTIFICATION_LifeTime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('DATA_USER_IDENTIFICATION_LifeTime')" 
+                                    id="DATA_USER_IDENTIFICATION_LifeTimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">LAST_USAGE_DATETIME</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div style="align-self:center">Within the last</div>
+                                    <input placeholder="integer" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom"
+                                        style="width:15%" 
+                                        v-model.number="customUI.DATA_USER_IDENTIFICATION_LifeTime.withinLastDay"
+                                        id="DATA_USER_IDENTIFICATION_LifeTimeWithinLastDay"
+                                    /> 
+                                    <div style="align-self:center">days</div>
+                                </div>
+                                <div class="row">
+                                    <div style="align-self:center">More than</div>
+                                    <input placeholder="integer" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        style="width:15%"
+                                        v-model.number="customUI.DATA_USER_IDENTIFICATION_LifeTime.moreThanDays"
+                                        id="DATA_USER_IDENTIFICATION_LifeTimeMoreThanDays"
+                                    />
+                                    <div style="align-self:center">days</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'DATA_USER_IDENTIFICATION_LifeTime');
+            if(indexComponent > 0) {
+                customUI.DATA_USER_IDENTIFICATION_LifeTime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.DATA_USER_IDENTIFICATION_LifeTime.hasOperand = false;
+            //customUI.DATA_USER_IDENTIFICATION_LifeTime.operand = 'AND';
+        }
+    })
+
+
+
+    var EXPECTED_EXPIRY_DATE_Lifetime = Vue.component('EXPECTED_EXPIRY_DATE_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.EXPECTED_EXPIRY_DATE_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.EXPECTED_EXPIRY_DATE_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>EXPECTED_EXPIRY_DATE_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('EXPECTED_EXPIRY_DATE_Lifetime')" 
+                                    id="EXPECTED_EXPIRY_DATE_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="label-component">EXPECTED_EXPIRY_DATE</div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <input
+                                    readonly
+                                    class="form-control form-control-sm input-custom"
+                                    v-model="customUI.EXPECTED_EXPIRY_DATE_Lifetime.dateToday"
+                                />
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.equalToOrlessOrEqualTo"
+                                        :clearable="false"
+                                        v-model="customUI.EXPECTED_EXPIRY_DATE_Lifetime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="Integer, freq required..."
+                                            type="number" min="0"
+                                            onkeypress="return event.charCode >= 48"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.EXPECTED_EXPIRY_DATE_Lifetime.value"
+                                        />
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'EXPECTED_EXPIRY_DATE_Lifetime');
+            if(indexComponent > 0) {
+                customUI.EXPECTED_EXPIRY_DATE_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.EXPECTED_EXPIRY_DATE_Lifetime.hasOperand = false;
+            //customUI.EXPECTED_EXPIRY_DATE_Lifetime.operand = 'AND';
+        }
+    })
+
+
+
+    var LAST_LOCAL_CALL_ACTIVITY_LifeTime = Vue.component('LAST_LOCAL_CALL_ACTIVITY_LifeTime',
+        {template:
+            `<div>
+                <div v-if="customUI.LAST_LOCAL_CALL_ACTIVITY_LifeTime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.LAST_LOCAL_CALL_ACTIVITY_LifeTime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>LAST_LOCAL_CALL_ACTIVITY_LifeTime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('LAST_LOCAL_CALL_ACTIVITY_LifeTime')" 
+                                    id="LAST_LOCAL_CALL_ACTIVITY_LifeTimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">LAST_USAGE_DATETIME</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div style="align-self:center">Within the last</div>
+                                    <input placeholder="integer" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom"
+                                        style="width:15%" 
+                                        v-model.number="customUI.LAST_LOCAL_CALL_ACTIVITY_LifeTime.withinLastDay"
+                                        id="LAST_LOCAL_CALL_ACTIVITY_LifeTimeWithinLastDay"
+                                    /> 
+                                    <div style="align-self:center">days</div>
+                                </div>
+                                <div class="row">
+                                    <div style="align-self:center">More than</div>
+                                    <input placeholder="integer" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        style="width:15%"
+                                        v-model.number="customUI.LAST_LOCAL_CALL_ACTIVITY_LifeTime.moreThanDays"
+                                        id="LAST_LOCAL_CALL_ACTIVITY_LifeTimeMoreThanDays"
+                                    />
+                                    <div style="align-self:center">days</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'LAST_LOCAL_CALL_ACTIVITY_LifeTime');
+            if(indexComponent > 0) {
+                customUI.LAST_LOCAL_CALL_ACTIVITY_LifeTime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.LAST_LOCAL_CALL_ACTIVITY_LifeTime.hasOperand = false;
+            //customUI.LAST_LOCAL_CALL_ACTIVITY_LifeTime.operand = 'AND';
+        }
+    })
+
+
+
+    var LOCAL_CALL_FULFILMENT_LifeTime = Vue.component('LOCAL_CALL_FULFILMENT_LifeTime',
+        {template:
+            `<div>
+                <div v-if="customUI.LOCAL_CALL_FULFILMENT_LifeTime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.LOCAL_CALL_FULFILMENT_LifeTime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>LOCAL_CALL_FULFILMENT_LifeTime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('LOCAL_CALL_FULFILMENT_LifeTime')" 
+                                    id="LOCAL_CALL_FULFILMENT_LifeTimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">LOCAL_CALL</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="customUI.LOCAL_CALL_FULFILMENT_LifeTime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="integer"
+                                            type="number" min="0"
+                                            onkeypress="return event.charCode >= 48"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.LOCAL_CALL_FULFILMENT_LifeTime.value"
+                                        /> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'LOCAL_CALL_FULFILMENT_LifeTime');
+            if(indexComponent > 0) {
+                customUI.LOCAL_CALL_FULFILMENT_LifeTime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.LOCAL_CALL_FULFILMENT_LifeTime.hasOperand = false;
+            //customUI.LOCAL_CALL_FULFILMENT_LifeTime.operand = 'AND';
+        }
+    })
+
+
+
+    var LAST_LOCAL_CALL_LifeTime = Vue.component('LAST_LOCAL_CALL_LifeTime',
+        {template:
+            `<div>
+                <div v-if="customUI.LAST_LOCAL_CALL_LifeTime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.LAST_LOCAL_CALL_LifeTime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>LAST_LOCAL_CALL_LifeTime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('LAST_LOCAL_CALL_LifeTime')" 
+                                    id="LAST_LOCAL_CALL_LifeTimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">LAST_USAGE_DATETIME</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div style="align-self:center">Within the last</div>
+                                    <input placeholder="integer" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom"
+                                        style="width:15%" 
+                                        v-model.number="customUI.LAST_LOCAL_CALL_LifeTime.withinLastDay"
+                                        id="LAST_LOCAL_CALL_LifeTimeWithinLastDay"
+                                    /> 
+                                    <div style="align-self:center">days</div>
+                                </div>
+                                <div class="row">
+                                    <div style="align-self:center">More than</div>
+                                    <input placeholder="integer" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        style="width:15%"
+                                        v-model.number="customUI.LAST_LOCAL_CALL_LifeTime.moreThanDays"
+                                        id="LAST_LOCAL_CALL_LifeTimeMoreThanDays"
+                                    />
+                                    <div style="align-self:center">days</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'LAST_LOCAL_CALL_LifeTime');
+            if(indexComponent > 0) {
+                customUI.LAST_LOCAL_CALL_LifeTime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.LAST_LOCAL_CALL_LifeTime.hasOperand = false;
+            //customUI.LAST_LOCAL_CALL_LifeTime.operand = 'AND';
+        }
+    })
+
+
+
+    var TOTAL_SPEND_MONTHLY_Lifetime = Vue.component('TOTAL_SPEND_MONTHLY_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.TOTAL_SPEND_MONTHLY_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.TOTAL_SPEND_MONTHLY_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>TOTAL_SPEND_MONTHLY_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('TOTAL_SPEND_MONTHLY_Lifetime')" 
+                                    id="TOTAL_SPEND_MONTHLY_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">Start Month</div>
+                                <div class="label-component">Number of months</div>
+                            
+                                <div class="label-component" style="margin-top:17px">Frequency of Package</div>
+                            </div>
+                            <div class="col-md-8">
+                                <input placeholder="yyyymm, freq calculation start from this month"
+                                    :maxlength="6"
+                                    class="form-control form-control-sm input-custom"
+                                    v-model.number="customUI.TOTAL_SPEND_MONTHLY_Lifetime.startMonth"
+                                    id="TOTAL_SPEND_MONTHLY_LifetimeStartMonth"/>  
+                                <input placeholder="Number of Month"
+                                    class="form-control form-control-sm input-custom"
+                                    v-model.number="customUI.TOTAL_SPEND_MONTHLY_Lifetime.numberOfMonth"
+                                    id="TOTAL_SPEND_MONTHLY_LifetimeNumberOfMonth"/>
+                                <div class="row" style="width:104%">
+                                    <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="customUI.TOTAL_SPEND_MONTHLY_Lifetime.valueOperand"
+                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="Integer, freq required..." type="number"
+                                            class="form-control form-control-sm input-custom"
+                                            v-model.number="customUI.TOTAL_SPEND_MONTHLY_Lifetime.value"
+                                        /> 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'TOTAL_SPEND_MONTHLY_Lifetime');
+            if(indexComponent > 0) {
+                customUI.TOTAL_SPEND_MONTHLY_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.TOTAL_SPEND_MONTHLY_Lifetime.hasOperand = false;
+            //customUI.TOTAL_SPEND_MONTHLY_Lifetime.operand = 'AND';
+        }
+    })
+
+
+    var SUBSCRIBER_LATEST_ACTION_Lifetime = Vue.component('SUBSCRIBER_LATEST_ACTION_Lifetime',
+        {template:
+            `<div>
+                <div v-if="customUI.SUBSCRIBER_LATEST_ACTION_Lifetime.hasOperand === true">
+                    <div class="operators"> 
+                        <v-select 
+                        :options="store.state.operatorsList"
+                        :clearable="false"
+                        v-model="customUI.SUBSCRIBER_LATEST_ACTION_Lifetime.operand"
+                        ></v-select>
+                    </div>
+                </div>
+                <div class="component-card">
+                        <div class="row">
+                            <div class=" col-sm-10 component-title">
+                                <h6><b>SUBSCRIBER_LATEST_ACTION_Lifetime</b> </h6>
+                            </div>
+                            <div class=" col-sm-2">
+                                <button v-on:click="removeSpecificComponent('SUBSCRIBER_LATEST_ACTION_Lifetime')" 
+                                    id="SUBSCRIBER_LATEST_ACTION_LifetimeDelete" class="btn btn-danger my-1 delete-component-btn">x</button>
+                            </div>
+                        </div>
+                    <hr class="hr-custom">
+                    <div class="component-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="label-component">LAST_USAGE_DATETIME</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div style="align-self:center">Within the last</div>
+                                    <input placeholder="integer" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom"
+                                        style="width:15%" 
+                                        v-model.number="customUI.SUBSCRIBER_LATEST_ACTION_Lifetime.withinLastDay"
+                                        id="SUBSCRIBER_LATEST_ACTION_LifetimeWithinLastDay"
+                                    /> 
+                                    <div style="align-self:center">days</div>
+                                </div>
+                                <div class="row">
+                                    <div style="align-self:center">More than</div>
+                                    <input placeholder="integer" type="number" min="0"
+                                        onkeypress="return event.charCode >= 48"
+                                        class="form-control form-control-sm input-custom" 
+                                        style="width:15%"
+                                        v-model.number="customUI.SUBSCRIBER_LATEST_ACTION_Lifetime.moreThanDays"
+                                        id="SUBSCRIBER_LATEST_ACTION_LifetimeMoreThanDays"
+                                    />
+                                    <div style="align-self:center">days</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        beforeCreate: function() {
+            let indexComponent =  customUI.componentList.findIndex(element => element === 'SUBSCRIBER_LATEST_ACTION_Lifetime');
+            if(indexComponent > 0) {
+                customUI.SUBSCRIBER_LATEST_ACTION_Lifetime.hasOperand = true;
+            }
+        },
+        beforeDestroy: function () {
+            customUI.SUBSCRIBER_LATEST_ACTION_Lifetime.hasOperand = false;
+            //customUI.SUBSCRIBER_LATEST_ACTION_Lifetime.operand = 'AND';
+        }
+    })
+
+
+    // PSM-INDICATOR END
 
 
         
@@ -4710,10 +5788,14 @@
         el: '#customUIComponent',
         data: {
             componentList: store.state.componentList,
-            dropdownfunctionList: store.state.dropdownfunctionList,
+            dropdownFunctionList: store.state.dropdownFunctionList,
+            dropdownIndicatorList: store.state.dropdownIndicatorList,
             tab: store.state.tab,
             showModal: store.state.showModal,
             selectedFunction: null,
+            selectedIndicator: null,
+            sqlView:'',
+            //functions
             getTopupFrequency:{
                 hasOperand: false,
                 operand:'AND',
@@ -4944,12 +6026,110 @@
                 type:'Direct Datavas',
                 valueOperand:'=',
                 value:0
+            },
+            //Indicators
+            AGE_ON_NETWORK_Lifetime: {
+                hasOperand: false,
+                operand:'AND',
+                valueOperand:'=',
+                value:0
+            },
+            CREDIT_ALL_VALUE_Lifetime: {
+                hasOperand: false,
+                operand:'AND',
+                valueOperand:'=',
+                value:0
+            },
+            CREDIT_ALL_COUNT_Lifetime: {
+                hasOperand: false,
+                operand:'AND',
+                valueOperand:'=',
+                value:0
+            },
+            CREDIT_CDR_COUNT_Lifetime: {
+                hasOperand: false,
+                operand:'AND',
+                valueOperand:'=',
+                value:0
+            },
+            LATEST_BALANCE_Lifetime: {
+                hasOperand: false,
+                operand:'AND',
+                valueOperand:'=',
+                value:0
+            },
+            PEAK_ACTIVITY_TIME_LifeTime: {
+                hasOperand: false,
+                operand:'AND',
+                peakFlag:''
+            },
+            SELFSERVE_CREDIT_ALL_Count_Lifetime: {
+                hasOperand: false,
+                operand:'AND',
+                valueOperand:'=',
+                value:0
+            },
+            TOTAL_SPEND_Lifetime: {
+                hasOperand: false,
+                operand:'AND',
+                valueOperand:'=',
+                value:0
+            },
+            DATA_USER_IDENTIFICATION_LifeTime: {
+                hasOperand: false,
+                operand:'AND',
+                withinLastDay:0,
+                moreThanDays:0
+            },
+            EXPECTED_EXPIRY_DATE_Lifetime: {
+                hasOperand: false,
+                operand:'AND',
+                dateToday: dateToday,
+                valueOperand:'=',
+                value:0
+            },
+            LAST_LOCAL_CALL_ACTIVITY_LifeTime: {
+                hasOperand: false,
+                operand:'AND',
+                withinLastDay:0,
+                moreThanDays:0
+            },
+            LOCAL_CALL_FULFILMENT_LifeTime: {
+                hasOperand: false,
+                operand:'AND',
+                valueOperand:'=',
+                value:0
+            },
+            LAST_LOCAL_CALL_LifeTime: {
+                hasOperand: false,
+                operand:'AND',
+                withinLastDay:0,
+                moreThanDays:0
+            },
+            TOTAL_SPEND_MONTHLY_Lifetime:{
+                hasOperand: false,
+                operand:'AND',
+                startMonth:000000,
+                numberOfMonth:0,
+                valueOperand:'=',
+                value:0,
+            },
+            SUBSCRIBER_LATEST_ACTION_Lifetime: {
+                hasOperand: false,
+                operand:'AND',
+                withinLastDay:0,
+                moreThanDays:0
             }
         },
         methods: {
-            setSelected(value) {
-                var selectedIndex = customUI.dropdownfunctionList.indexOf(value);
-                customUI.dropdownfunctionList.splice(selectedIndex, 1);
+            setSelectedFunction(value) {
+                var selectedIndex = customUI.dropdownFunctionList.indexOf(value);
+                customUI.dropdownFunctionList.splice(selectedIndex, 1);
+                customUI.componentList.push(value)
+            },
+            setSelectedIndicator(value) {
+                var selectedIndex = customUI.dropdownIndicatorList.indexOf(value);
+                customUI.dropdownIndicatorList.splice(selectedIndex, 1);
                 customUI.componentList.push(value)
             }
         },
@@ -4958,6 +6138,10 @@
                 this.selectedFunction = null;
                 return(this.selectedFunction)
             },
+            selectedIndicator: function () {
+                this.selectedIndicator = null;
+                return(this.selectedIndicator)
+            }
         },
        
     })
