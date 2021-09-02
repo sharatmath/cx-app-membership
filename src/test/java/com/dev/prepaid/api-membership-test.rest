@@ -19,3 +19,5 @@ curl -X GET --header 'Accept: application/json' 'https://jihefwrkoypnlto6hgcr6lv
 curl -X GET --header 'Accept: application/json' 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/listProgram'
 
 curl -X GET --header 'Accept: application/json' 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/listCountry'
+
+curl -X GET --header 'Accept: application/json' 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/listOfferType'

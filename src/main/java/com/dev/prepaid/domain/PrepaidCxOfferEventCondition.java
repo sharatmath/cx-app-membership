@@ -1,6 +1,7 @@
 package com.dev.prepaid.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,9 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String offerConfigId;
+    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
     private Date campaignStartDate;
+    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
     private Date campaignEndDate;
     private String eventConditionName;
     private String eventConditionType;

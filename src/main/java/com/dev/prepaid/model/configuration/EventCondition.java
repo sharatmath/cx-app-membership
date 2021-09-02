@@ -1,5 +1,6 @@
 package com.dev.prepaid.model.configuration;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventCondition {
+    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
     @SerializedName("campaignStartDate") private Date campaignStartDate;
+    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
     @SerializedName("campaignEndDate") private  Date campaignEndDate;
     @SerializedName("eventConditionName") private  String eventConditionName;
     @SerializedName("eventConditionType") private  String eventConditionType;

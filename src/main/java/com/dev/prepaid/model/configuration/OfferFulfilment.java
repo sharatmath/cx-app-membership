@@ -52,4 +52,9 @@ public class OfferFulfilment {
     @SerializedName("monitorPeriod") private Integer monitorPeriod;
     @SerializedName("monitorPeriodDayMonth") private String monitorPeriodDayMonth;
 
+    @SerializedName("imei") private  String imei;
+    @SerializedName("daChange") private  String daChange;
+    @SerializedName("chargedAmount") private  String chargedAmount;
+    @SerializedName("aggregationPeriodDays")  private Integer aggregationPeriodDays;
+
 }
