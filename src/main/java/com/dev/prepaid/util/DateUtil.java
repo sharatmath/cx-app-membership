@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -15,7 +16,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DateUtil {
 	static final long ONE_MINUTE_IN_MILLIS=60000;//millisecs
-	
+	public static Date stringToDate(String data){
+		ZoneId zoneId = ZoneId.of( "Asia/Singapore" );
+		String concat = ":10.000Z";
+		String format ="yyyy-MM-ddTHH:mm";
+//        String data = "2021-09-02T13:15:10.249Z";
+//		String data = "2021-09-02T13:15";
+		Instant instant = Instant.parse(data.concat(concat));
+		ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, zoneId );
+		Date date = Date.from(zdt.toInstant());
+		return date;
+	}
+
+	public static String fromDate(Date date) throws ParseException {
+		String f  = DateUtil.dateToString(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+		return  f.substring(0, 16);
+	}
 	public static Date stringToDate(String dateStr,String format) throws ParseException {
 			return new SimpleDateFormat(format).parse(dateStr);//yyyy-MM-dd'T'HH:mm:ss'Z'
 	}

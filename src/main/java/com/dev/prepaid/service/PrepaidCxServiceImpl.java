@@ -1,5 +1,6 @@
 package com.dev.prepaid.service;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.configuration.OfferSelection;
 import com.dev.prepaid.repository.*;
+import com.dev.prepaid.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -370,8 +372,10 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		}
 		prepaidCxOfferEventCondition.setEventConditionType(saveConfigRequest.getPayload().getOfferEventCondition().getEventConditionType());
 		prepaidCxOfferEventCondition.setEventConditionName(saveConfigRequest.getPayload().getOfferEventCondition().getEventConditionName());
-		prepaidCxOfferEventCondition.setCampaignStartDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignStartDate());
-		prepaidCxOfferEventCondition.setCampaignEndDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate());
+
+		prepaidCxOfferEventCondition.setCampaignStartDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignStartDate()));
+		prepaidCxOfferEventCondition.setCampaignEndDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate()));
+
 
 		if("Top-Up".equals(prepaidCxOfferEventCondition.getEventConditionType())){
 			prepaidCxOfferEventCondition.setCreditMethod(saveConfigRequest.getPayload().getOfferEventCondition().getCreditMethod());

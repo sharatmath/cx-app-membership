@@ -9,10 +9,7 @@ import java.util.stream.Collectors;
 
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
-import com.dev.prepaid.model.configuration.OfferFulfilment;
-import com.dev.prepaid.model.configuration.OfferSelection;
-import com.dev.prepaid.model.configuration.ResponSysProgram;
-import com.dev.prepaid.model.configuration.ServiceInstanceConfiguration;
+import com.dev.prepaid.model.configuration.*;
 import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -341,8 +338,43 @@ public class DataController {
 		return offerService.getOfferRedemption(instanceId);
 	}
 	@GetMapping(value = "offerEventCondition")
-	public PrepaidCxOfferEventCondition getOfferEventCondition(@RequestParam(value = "instanceId", required = false) String instanceId){
-		return offerService.getOfferEventCondition(instanceId);
+	public EventCondition getOfferEventCondition(@RequestParam(value = "instanceId", required = false) String instanceId){
+		PrepaidCxOfferEventCondition prepaidCxOfferEventCondition =  offerService.getOfferEventCondition(instanceId);
+		if(prepaidCxOfferEventCondition != null) {
+			try {
+				return EventCondition.builder()
+						.eventConditionName(prepaidCxOfferEventCondition.getEventConditionName())
+						.eventConditionType(prepaidCxOfferEventCondition.getEventConditionType())
+						.eventTypeUsages(prepaidCxOfferEventCondition.getEventTypeUsages())
+						.eventUsagesOp(prepaidCxOfferEventCondition.getEventUsagesOp())
+						.eventUsagesValue(prepaidCxOfferEventCondition.getEventUsagesValue())
+						.arpuOp(prepaidCxOfferEventCondition.getArpuOp())
+						.arpuType(prepaidCxOfferEventCondition.getArpuType())
+						.arpuValue(prepaidCxOfferEventCondition.getArpuValue())
+						.arpuSelectedTopUpCode(prepaidCxOfferEventCondition.getArpuSelectedTopUpCode())
+						.topUpAccBalanceBeforeOp(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeOp())
+						.topUpCode(prepaidCxOfferEventCondition.getTopUpCode())
+						.topUpAccBalanceBeforeValue(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeValue())
+						.topUpCurBalanceValue(prepaidCxOfferEventCondition.getTopUpCurBalanceValue())
+						.topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())
+						.campaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()))
+						.campaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()))
+						.chargedAmount(prepaidCxOfferEventCondition.getChargedAmount())
+						.imei(prepaidCxOfferEventCondition.getImei())
+						.aggregationPeriodDays(prepaidCxOfferEventCondition.getAggregationPeriodDays())
+						.daBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
+						.daChange(prepaidCxOfferEventCondition.getDaChange())
+						.daBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
+						.daId(prepaidCxOfferEventCondition.getDaId())
+						.build();
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return new EventCondition();
+			}
+		}else {
+			return new EventCondition();
+		}
+
 	}
 	@GetMapping(value = "listProgram")
 	public List<ResponSysProgram> listProgram(){
