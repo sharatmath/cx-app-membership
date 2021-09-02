@@ -23,9 +23,9 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String offerConfigId;
-    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private Date campaignStartDate;
-    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private Date campaignEndDate;
     private String eventConditionName;
     private String eventConditionType;

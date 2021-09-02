@@ -13,9 +13,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventCondition {
-    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     @SerializedName("campaignStartDate") private Date campaignStartDate;
-    @JsonFormat(pattern="yyyy-MM-ddTHH:mm")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     @SerializedName("campaignEndDate") private  Date campaignEndDate;
     @SerializedName("eventConditionName") private  String eventConditionName;
     @SerializedName("eventConditionType") private  String eventConditionType;
