@@ -943,7 +943,7 @@
                                                             class="select-component-dropdown"
                                                         ></v-select>
                                                         <div style="margin:10px"></div>
-                                                        <!-- <v-select 
+                                                        <v-select 
                                                             :options="dropdownIndicatorList"
                                                             placeholder="Select Indicator"
                                                             label="Select Indicator" 
@@ -951,7 +951,7 @@
                                                             :clearable="true"
                                                             v-model="selectedIndicator"
                                                             class="select-component-dropdown"
-                                                        ></v-select> -->
+                                                        ></v-select>
                                                     </div>
                                                     <div class="config-card col-8">
                                                         <div v-for="component in componentList" v-bind:is="component"></div>
@@ -2357,7 +2357,8 @@
             operatorsList: ['AND', 'OR',],
             trueOrFalse: [{text: "true",value: true},{text: "false",value: false}],
             //trueOrFalse: ['true','false'],
-            operadSetList: ['=', '> | =', '< | =', '<', '>'],
+            //operadSetList: ['=', '> | =', '< | =', '<', '>'],
+            operadSetList:[ {text:'=', value:'eq'} , {text: '> | =',value:'ge'}, {text:'< | =', value:'le'}, {text:'<', value:'lt'}, {text:'>',value:'gt'}],
             indexList: [
                 {text: 'count', value:0},
                 {text: 'duration in sec', value:1},
@@ -2383,8 +2384,8 @@
             meanOrMedian:['Mean','Median'],
             spendOrUsage:['Spend','Usage'],
             expIsTodayOrNot:[{text: "expiration is today",value: true},{text: "expiration is not today",value: false}],
-            equalToOrlessOrEqualTo:['=', '< | ='],
-            equalToOrlessOrEqualToOrGreaterOrEqual :['=', '> | =', "< | ="],
+            equalToOrlessOrEqualTo:[{text:'=', value:'eq'}, {text:'< | =', value: 'ge'}],
+            equalToOrlessOrEqualToOrGreaterOrEqual :[{text:'=', value:'eq'}, {text:'> | =', value: 'ge'}, {text:'< | =',value:'le'}],
             getDailyUsageSumIndexList: [
                 {text: 'Voice All Count', value:0},
                 {text: 'Voice All Minutes', value:1},
@@ -2563,14 +2564,13 @@
                                     v-model.number="customUI.getTopupFrequencyMatchForXMonths.numberOfMonth"
                                     id="getTopupFrequencyMatchForXMonthsNumberOfMonth"/>
                                 <div class="row" style="width:104%">
-                                    <v-select 
-                                        class="operators"
-                                        style="margin:5px; margin-left:20px;"
-                                        :options="store.state.operadSetList"
-                                        :clearable="false"
-                                        v-model="customUI.getTopupFrequencyMatchForXMonths.valueOperand"
-                                    ></v-select>
-                                    <div class="col-md-6"> 
+                                    <div class="col-md-7"> 
+                                        <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
+                                            class="form-control form-control-sm input-custom"
+                                            v-model="customUI.getTopupFrequencyMatchForXMonths.valueOperand"
+                                        /> 
+                                    </div>
+                                    <div class="col-md-5"> 
                                         <input placeholder="Integer, freq required..." 
                                             class="form-control form-control-sm input-custom"
                                             v-model="customUI.getTopupFrequencyMatchForXMonths.value"
@@ -2654,14 +2654,13 @@
                                     v-model.number="customUI.getTopupFrequency.numberOfMonth"
                                     id="getTopupFrequencyNumberOfMonth"/>
                                 <div class="row" style="width:104%">
-                                    <v-select 
-                                        class="operators"
-                                        style="margin:5px; margin-left:20px;"
-                                        :options="store.state.operadSetList"
-                                        :clearable="false"
-                                        v-model="customUI.getTopupFrequency.valueOperand"
-                                    ></v-select>
-                                    <div class="col-md-6"> 
+                                    <div class="col-md-7"> 
+                                        <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
+                                            class="form-control form-control-sm input-custom"
+                                            v-model="customUI.getTopupFrequency.valueOperand"
+                                        /> 
+                                    </div>
+                                    <div class="col-md-5"> 
                                         <input placeholder="Integer, freq required..." 
                                             class="form-control form-control-sm input-custom"
                                             v-model="customUI.getTopupFrequency.value"
@@ -2746,14 +2745,13 @@
                                     v-model.number="customUI.getPackageFrequency.numberOfMonth"
                                     id="getPackageFrequencyNumberOfMonth"/>
                                 <div class="row" style="width:104%">
-                                    <v-select 
-                                        class="operators"
-                                        style="margin:5px; margin-left:20px;"
-                                        :options="store.state.operadSetList"
-                                        :clearable="false"
-                                        v-model="customUI.getPackageFrequency.valueOperand"
-                                    ></v-select>
-                                    <div class="col-md-6"> 
+                                    <div class="col-md-7"> 
+                                        <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
+                                            class="form-control form-control-sm input-custom"
+                                            v-model="customUI.getPackageFrequency.valueOperand"
+                                        /> 
+                                    </div>
+                                    <div class="col-md-5"> 
                                         <input placeholder="Integer, freq required..." 
                                             class="form-control form-control-sm input-custom"
                                             v-model="customUI.getPackageFrequency.value"
@@ -3095,6 +3093,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.getAccumulatedTopups.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="value can include decimal point"
@@ -3235,6 +3235,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.getTopupCountforTopupCode.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="Integer, freq required..."
@@ -3325,6 +3327,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.getIDDSum.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="Integer, freq required..."
@@ -3964,6 +3968,7 @@
                                 <div class="label-component">Package Id</div>
                                 <div class="label-component">Start Day</div>
                                 <div class="label-component">Duration</div>
+                                <div class="label-component">Frequency</div>
                                 
                             </div>
                             <div class="col-md-8">
@@ -3994,6 +3999,20 @@
                                     v-model.number="customUI.getDAPackageFrequency.duration"
                                     id="getDAPackageFrequencyDuration"
                                 /> 
+                                <div class="row" style="width:104%">
+                                    <div class="col-md-7"> 
+                                        <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
+                                            class="form-control form-control-sm input-custom"
+                                            v-model="customUI.getDAPackageFrequency.valueOperand"
+                                        /> 
+                                    </div>
+                                    <div class="col-md-5"> 
+                                        <input placeholder="Integer, freq required..." 
+                                            class="form-control form-control-sm input-custom"
+                                            v-model="customUI.getDAPackageFrequency.value"
+                                        /> 
+                                    </div>
+                                </div>
                             </div>
                             
                         </div>
@@ -4055,14 +4074,16 @@
                                         style="margin:5px; margin-left:20px;"
                                         :options="store.state.operadSetList"
                                         :clearable="false"
-                                        v-model="customUI.getDABalances.daValueOperand"
+                                        v-model="customUI.getDABalances.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="Integer, freq required..."
                                             type="number" min="0"
                                             onkeypress="return event.charCode >= 48"
                                             class="form-control form-control-sm input-custom"
-                                            v-model.number="customUI.getDABalances.daValue"
+                                            v-model.number="customUI.getDABalances.value"
                                         /> 
                                     </div>
                                 </div>
@@ -4134,15 +4155,14 @@
                                     id="getDAConsumptionDaId"
                                 /> 
                                 <div class="row" style="width:104%">
-                                    <v-select 
-                                        class="operators"
-                                        style="margin:5px; margin-left:20px;"
-                                        :options="store.state.operadSetList"
-                                        :clearable="false"
-                                        v-model="customUI.getDAConsumption.valueOperand"
-                                    ></v-select>
                                     <div class="col-md-6"> 
-                                        <input placeholder="more than 1 package – pipe separated"
+                                        <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
+                                            class="form-control form-control-sm input-custom"
+                                            v-model="customUI.getDAConsumption.valueOperand"
+                                        /> 
+                                    </div>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="more than 1 package – pipe separated" 
                                             class="form-control form-control-sm input-custom"
                                             v-model="customUI.getDAConsumption.value"
                                         /> 
@@ -4203,13 +4223,12 @@
                                     id="getDAInitialQuotaDaId"
                                 /> 
                                 <div class="row" style="width:104%">
-                                    <v-select 
-                                        class="operators"
-                                        style="margin:5px; margin-left:20px;"
-                                        :options="store.state.operadSetList"
-                                        :clearable="false"
-                                        v-model="customUI.getDAInitialQuota.valueOperand"
-                                    ></v-select>
+                                    <div class="col-md-6"> 
+                                        <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
+                                            class="form-control form-control-sm input-custom"
+                                            v-model="customUI.getDAInitialQuota.valueOperand"
+                                        /> 
+                                    </div>
                                     <div class="col-md-6"> 
                                         <input placeholder="Integer, freq required..."
                                             class="form-control form-control-sm input-custom"
@@ -4284,6 +4303,8 @@
                                         :options="store.state.equalToOrlessOrEqualTo"
                                         :clearable="false"
                                         v-model="customUI.getDACurrentExpiryDate.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="Integer"
@@ -4360,6 +4381,8 @@
                                         :options="store.state.equalToOrlessOrEqualToOrGreaterOrEqual"
                                         :clearable="false"
                                         v-model="customUI.getLastRechargeDateofDA.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="Integer, freq required..."
@@ -4437,6 +4460,8 @@
                                         :options="store.state.equalToOrlessOrEqualToOrGreaterOrEqual"
                                         :clearable="false"
                                         v-model="customUI.getLastRechargeDateOfDataTopupID.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="Integer, freq required..."
@@ -4517,6 +4542,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.getDataVasARPU.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="value can include decimal point"
@@ -4605,6 +4632,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.getDailyUsageSum.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="value can include decimal point"
@@ -4738,6 +4767,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.getAccumulatedMonthlyTopupValue.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="value can include decimal point"
@@ -4805,6 +4836,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.AGE_ON_NETWORK_Lifetime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="value can include decimal point"
@@ -4871,6 +4904,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.CREDIT_ALL_VALUE_Lifetime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="value can include decimal point"
@@ -4935,6 +4970,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.CREDIT_ALL_COUNT_Lifetime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="integer"
@@ -4999,6 +5036,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.CREDIT_CDR_COUNT_Lifetime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="integer"
@@ -5065,6 +5104,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.LATEST_BALANCE_Lifetime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="value can include decimal point"
@@ -5183,6 +5224,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.SELFSERVE_CREDIT_ALL_Count_Lifetime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="integer"
@@ -5249,6 +5292,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.TOTAL_SPEND_Lifetime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="value can include decimal point"
@@ -5390,6 +5435,8 @@
                                         :options="store.state.equalToOrlessOrEqualTo"
                                         :clearable="false"
                                         v-model="customUI.EXPECTED_EXPIRY_DATE_Lifetime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="Integer, freq required..."
@@ -5527,6 +5574,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.LOCAL_CALL_FULFILMENT_LifeTime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="integer"
@@ -5676,6 +5725,8 @@
                                         :options="store.state.operadSetList"
                                         :clearable="false"
                                         v-model="customUI.TOTAL_SPEND_MONTHLY_Lifetime.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
                                     ></v-select>
                                     <div class="col-md-6"> 
                                         <input placeholder="Integer, freq required..." type="number"
@@ -5685,7 +5736,7 @@
                                     </div>
                                 </div>
                             </div>
-
+{{customUI.TOTAL_SPEND_MONTHLY_Lifetime}}
                         </div>
                     </div>
                 </div>
@@ -5802,7 +5853,7 @@
                 packageName: '',
                 startMonth:000000,
                 numberOfMonth:0,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:'',
                 otherPackagesAllowed: false
             },
@@ -5812,7 +5863,7 @@
                 packageName: '',
                 startMonth:000000,
                 numberOfMonth:0,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:'',
                 otherPackagesAllowed: false
             },
@@ -5822,7 +5873,7 @@
                 packageName: '',
                 startMonth:000000,
                 numberOfMonth:0,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:'',
                 otherPackagesAllowed: false
             },
@@ -5856,7 +5907,7 @@
                 operand:'AND',
                 startDay: 0,
                 duration: 0,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             isPaidTopupInLastXDays:{
@@ -5870,7 +5921,7 @@
                 startDay: 0,
                 duration: 0,
                 topupCode:'',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             getIDDSum:{
@@ -5879,7 +5930,7 @@
                 index:0,
                 startDay: 0,
                 duration: 0,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             getIDDBucketPeakDetails: {
@@ -5949,13 +6000,15 @@
                 packageId:'',
                 startDay: 0,
                 duration: 0,
+                valueOperand:'eq',
+                value:''
             },
             getDABalances: {
                 hasOperand: false,
                 operand:'AND',
                 daId:'',
-                daValueOperand:'=',
-                daValue:0
+                valueOperand:'eq',
+                value:0
             },
             getDAConsumption: {
                 hasOperand: false,
@@ -5963,14 +6016,14 @@
                 startDay: 0,
                 duration: 0,
                 daId:'',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:''
             },
             getDAInitialQuota: {
                 hasOperand: false,
                 operand:'AND',
                 daId:'',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:''
             },
             getDACurrentExpiryDate: {
@@ -5978,7 +6031,7 @@
                 operand:'AND',
                 daId:'',
                 dateToday: dateToday,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             getLastRechargeDateofDA: {
@@ -5986,7 +6039,7 @@
                 operand:'AND',
                 daId:'',
                 dateToday: dateToday,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             getLastRechargeDateOfDataTopupID: {
@@ -5994,7 +6047,7 @@
                 operand:'AND',
                 daId:'',
                 dateToday: dateToday,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             getDataVasARPU: {
@@ -6002,7 +6055,7 @@
                 operand:'AND',
                 startDay: 0,
                 duration: 0,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             getDailyUsageSum : {
@@ -6011,7 +6064,7 @@
                 startDay: 0,
                 duration: 0,
                 index:0,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             isDataUsedinLastXdays: {
@@ -6024,38 +6077,38 @@
                 operand:'AND',
                 numberOfMonth: 0,
                 type:'Direct Datavas',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             //Indicators
             AGE_ON_NETWORK_Lifetime: {
                 hasOperand: false,
                 operand:'AND',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             CREDIT_ALL_VALUE_Lifetime: {
                 hasOperand: false,
                 operand:'AND',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             CREDIT_ALL_COUNT_Lifetime: {
                 hasOperand: false,
                 operand:'AND',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             CREDIT_CDR_COUNT_Lifetime: {
                 hasOperand: false,
                 operand:'AND',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             LATEST_BALANCE_Lifetime: {
                 hasOperand: false,
                 operand:'AND',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             PEAK_ACTIVITY_TIME_LifeTime: {
@@ -6066,13 +6119,13 @@
             SELFSERVE_CREDIT_ALL_Count_Lifetime: {
                 hasOperand: false,
                 operand:'AND',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             TOTAL_SPEND_Lifetime: {
                 hasOperand: false,
                 operand:'AND',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             DATA_USER_IDENTIFICATION_LifeTime: {
@@ -6085,7 +6138,7 @@
                 hasOperand: false,
                 operand:'AND',
                 dateToday: dateToday,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             LAST_LOCAL_CALL_ACTIVITY_LifeTime: {
@@ -6097,7 +6150,7 @@
             LOCAL_CALL_FULFILMENT_LifeTime: {
                 hasOperand: false,
                 operand:'AND',
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0
             },
             LAST_LOCAL_CALL_LifeTime: {
@@ -6111,7 +6164,7 @@
                 operand:'AND',
                 startMonth:000000,
                 numberOfMonth:0,
-                valueOperand:'=',
+                valueOperand:'eq',
                 value:0,
             },
             SUBSCRIBER_LATEST_ACTION_Lifetime: {
@@ -6141,8 +6194,26 @@
             selectedIndicator: function () {
                 this.selectedIndicator = null;
                 return(this.selectedIndicator)
-            }
+            },
+            // getTopupFrequency: { handler() {
+            //     console.log('watched', this.getTopupFrequency)
+            //     },
+            //     deep: true
+            // },
         },
+
+        // beforeCreate:function () {
+        //     console.log('call api before created')
+        //     fetch(PROD_URL + `offerSelection?instanceId=${INSTANCE_ID}`)
+		// 			.then(res => res.json())
+		// 			.then(data => {
+        //                 this.sqlView = data
+        //                 console.log(this.sqlView)
+		// 			})
+		// 			.catch(error => console.log(error))
+		// 			.finally()
+
+        // }
        
     })
 
