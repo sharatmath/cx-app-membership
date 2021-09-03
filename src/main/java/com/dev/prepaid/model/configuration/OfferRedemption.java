@@ -1,10 +1,13 @@
 package com.dev.prepaid.model.configuration;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
 @Builder
@@ -36,7 +39,7 @@ public class OfferRedemption {
     @SerializedName("timePeriodEvery") Long timePeriodEvery;
 
 // UI Version 4
-    @SerializedName("isRecurringFrequency") private boolean isRecurringFrequency;
+    @SerializedName("isRecurringProvisioning") private boolean isRecurringProvisioning;
     @SerializedName("smsCampaignName") private String smsCampaignName;
     @SerializedName("postSmsCampaignName") private String postSmsCampaignName;
     @SerializedName("dynamicVariable1") private String dynamicVariable1;
@@ -44,4 +47,14 @@ public class OfferRedemption {
     @SerializedName("dynamicVariable3") private String dynamicVariable3;
     @SerializedName("dynamicVariable4") private String dynamicVariable4;
     @SerializedName("dynamicVariable5") private String dynamicVariable5;
+
+    @SerializedName("optKeyword") private String optKeyword;
+    @SerializedName("isDateRange") private boolean isDateRange;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    @SerializedName("optStartDate") private Date optStartDate;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    @SerializedName("optEndDate") private Date optEndDate;
+    @SerializedName("isPeriod") private boolean isPeriod;
+    @SerializedName("optPeriod") private Integer optPeriod;
+
 }

@@ -1,5 +1,6 @@
 package com.dev.prepaid.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,4 +53,17 @@ public class PrepaidCxOfferRedemption extends Auditable{
     private String dynamicVariable3;
     private String dynamicVariable4;
     private String dynamicVariable5;
+
+    private String optKeyword;
+    private boolean isDateRange;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private Date optStartDate;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private Date optEndDate;
+    private boolean isPeriod;
+    private Integer optPeriod;
+
+
+
+
 }
