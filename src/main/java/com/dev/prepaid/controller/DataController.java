@@ -334,8 +334,20 @@ public class DataController {
 		return offerService.getOfferMonitoring(instanceId);
 	}
 	@GetMapping(value = "offerRedemption")
-	public PrepaidCxOfferRedemption getOfferRedemption(@RequestParam(value = "instanceId", required = false) String instanceId){
-		return offerService.getOfferRedemption(instanceId);
+	public OfferRedemption getOfferRedemption(@RequestParam(value = "instanceId", required = false) String instanceId){
+		PrepaidCxOfferRedemption prepaidCxOfferRedemption = offerService.getOfferRedemption(instanceId);
+		if(prepaidCxOfferRedemption != null){
+			return  OfferRedemption.builder()
+					.dynamicVariable1(prepaidCxOfferRedemption.getDynamicVariable1())
+					.dynamicVariable2(prepaidCxOfferRedemption.getDynamicVariable2())
+					.dynamicVariable3(prepaidCxOfferRedemption.getDynamicVariable3())
+					.dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4())
+					.build();
+		}
+
+		return new OfferRedemption();
+
+
 	}
 	@GetMapping(value = "offerEventCondition")
 	public EventCondition getOfferEventCondition(@RequestParam(value = "instanceId", required = false) String instanceId){

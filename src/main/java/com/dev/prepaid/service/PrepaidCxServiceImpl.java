@@ -322,6 +322,13 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferRedemption.setDynamicVariable4(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable4());
 			prepaidCxOfferRedemption.setDynamicVariable5(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable5());
 
+			prepaidCxOfferRedemption.setOptKeyword(saveConfigRequest.getPayload().getOfferRedemption().getOptKeyword());
+			prepaidCxOfferRedemption.setDateRange(saveConfigRequest.getPayload().getOfferRedemption().isDateRange());
+			prepaidCxOfferRedemption.setOptStartDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferRedemption().getOptStartDate()));
+			prepaidCxOfferRedemption.setOptEndDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferRedemption().getOptEndDate()));
+			prepaidCxOfferRedemption.setPeriod(saveConfigRequest.getPayload().getOfferRedemption().isPeriod());
+			prepaidCxOfferRedemption.setOptPeriod(saveConfigRequest.getPayload().getOfferRedemption().getOptPeriod());
+
 		}else {
 			prepaidCxOfferRedemption = PrepaidCxOfferRedemption.builder()
 					.offerConfigId(offerConfigId)
@@ -355,6 +362,13 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.dynamicVariable4(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable4())
 					.dynamicVariable5(saveConfigRequest.getPayload().getOfferRedemption().getDynamicVariable5())
 					.build();
+
+			prepaidCxOfferRedemption.setOptKeyword(saveConfigRequest.getPayload().getOfferRedemption().getOptKeyword());
+			prepaidCxOfferRedemption.setDateRange(saveConfigRequest.getPayload().getOfferRedemption().isDateRange());
+			prepaidCxOfferRedemption.setOptStartDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferRedemption().getOptStartDate()));
+			prepaidCxOfferRedemption.setOptEndDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferRedemption().getOptEndDate()));
+			prepaidCxOfferRedemption.setPeriod(saveConfigRequest.getPayload().getOfferRedemption().isPeriod());
+			prepaidCxOfferRedemption.setOptPeriod(saveConfigRequest.getPayload().getOfferRedemption().getOptPeriod());
 		}
 		prepaidCxOfferRedemptionRepository.save(prepaidCxOfferRedemption);
 	}

@@ -56,9 +56,7 @@ public class PrepaidCxOfferRedemption extends Auditable{
 
     private String optKeyword;
     private boolean isDateRange;
-    @JsonFormat(pattern="yyyy-MM-dd")
     private Date optStartDate;
-    @JsonFormat(pattern="yyyy-MM-dd")
     private Date optEndDate;
     private boolean isPeriod;
     private Integer optPeriod;

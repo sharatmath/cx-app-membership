@@ -50,10 +50,8 @@ public class OfferRedemption {
 
     @SerializedName("optKeyword") private String optKeyword;
     @SerializedName("isDateRange") private boolean isDateRange;
-    @JsonFormat(pattern="yyyy-MM-dd")
-    @SerializedName("optStartDate") private Date optStartDate;
-    @JsonFormat(pattern="yyyy-MM-dd")
-    @SerializedName("optEndDate") private Date optEndDate;
+    @SerializedName("optStartDate") private String optStartDate;
+    @SerializedName("optEndDate") private String optEndDate;
     @SerializedName("isPeriod") private boolean isPeriod;
     @SerializedName("optPeriod") private Integer optPeriod;
 
