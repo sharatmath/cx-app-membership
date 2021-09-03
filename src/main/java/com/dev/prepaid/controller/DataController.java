@@ -338,6 +338,7 @@ public class DataController {
 		PrepaidCxOfferRedemption prepaidCxOfferRedemption = offerService.getOfferRedemption(instanceId);
 		if(prepaidCxOfferRedemption != null){
 			return  OfferRedemption.builder()
+
 					.dynamicVariable1(prepaidCxOfferRedemption.getDynamicVariable1())
 					.dynamicVariable2(prepaidCxOfferRedemption.getDynamicVariable2())
 					.dynamicVariable3(prepaidCxOfferRedemption.getDynamicVariable3())
