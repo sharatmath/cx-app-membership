@@ -1,5 +1,6 @@
 package com.dev.prepaid.service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.configuration.*;
 import com.dev.prepaid.repository.*;
+import com.dev.prepaid.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -193,8 +195,12 @@ public class OfferServiceImpl implements OfferService {
 				if(prepaidCxOfferMonitoring.getPeriodEndDate() != null &&
 					prepaidCxOfferMonitoring.getPeriodStartDate() != null ) {
 					offerFulfilment.setMonitorSpecifiedPeriodRadio(true);
-					offerFulfilment.setMonitorStartDate(prepaidCxOfferMonitoring.getPeriodStartDate());
-					offerFulfilment.setMonitorEndDate(prepaidCxOfferMonitoring.getPeriodEndDate());
+					try {
+						offerFulfilment.setMonitorStartDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodStartDate()));
+						offerFulfilment.setMonitorEndDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodEndDate()));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 				}
 				if(prepaidCxOfferMonitoring.getPeriod() != null &&
 					prepaidCxOfferMonitoring.getPeriodDays() != null) {

@@ -46,8 +46,8 @@ public class OfferFulfilment {
     @SerializedName("countryCode") private String countryCode;
 
     @SerializedName("monitorSpecifiedPeriodRadio") private Boolean monitorSpecifiedPeriodRadio;
-    @SerializedName("monitorStartDate") private Date monitorStartDate;
-    @SerializedName("monitorEndDate") private Date monitorEndDate;
+    @SerializedName("monitorStartDate") private String monitorStartDate;
+    @SerializedName("monitorEndDate") private String monitorEndDate;
     @SerializedName("monitorPeriodRadio") private Boolean monitorPeriodRadio;
     @SerializedName("monitorPeriod") private Integer monitorPeriod;
     @SerializedName("monitorPeriodDayMonth") private String monitorPeriodDayMonth;
