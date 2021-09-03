@@ -337,53 +337,81 @@ public class DataController {
 	public OfferRedemption getOfferRedemption(@RequestParam(value = "instanceId", required = false) String instanceId){
 		PrepaidCxOfferRedemption prepaidCxOfferRedemption = offerService.getOfferRedemption(instanceId);
 		if(prepaidCxOfferRedemption != null){
-			return  OfferRedemption.builder()
 
+			OfferRedemption offerRedemption =  OfferRedemption.builder()
+					.isDateRange(prepaidCxOfferRedemption.isDateRange())
+					.isPeriod(prepaidCxOfferRedemption.isPeriod())
+					.optPeriod(prepaidCxOfferRedemption.getOptPeriod())
+					.smsCampaignName(prepaidCxOfferRedemption.getSmsCampaignName())
+					.postSmsCampaignName(prepaidCxOfferRedemption.getPostSmsCampaignName())
+					.optKeyword(prepaidCxOfferRedemption.getOptKeyword())
+					.isFrequencyAndTime(prepaidCxOfferRedemption.getIsFrequencyAndTime())
+					.isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
+					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
+					.redemptionMethod(prepaidCxOfferRedemption.getRedemptionMethod())
+					.recurringFrequencyDayOfMonth(prepaidCxOfferRedemption.getRecurringFrequencyDayOfMonth())
+					.recurringFrequencyPeriodType(prepaidCxOfferRedemption.getRecurringFrequencyPeriodType())
+					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
+					.recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
+					.totalRecurringFrequency(prepaidCxOfferRedemption.getTotalRecurringFrequency())
+					.totalRedemptionPeriodEvery(prepaidCxOfferRedemption.getTotalRedemptionPeriodEvery())
+					.totalRedemptionPeriodValue(prepaidCxOfferRedemption.getTotalRedemptionPeriodValue())
+					.totalRedemptionPeriodType(prepaidCxOfferRedemption.getTotalRedemptionPeriodType())
 					.dynamicVariable1(prepaidCxOfferRedemption.getDynamicVariable1())
 					.dynamicVariable2(prepaidCxOfferRedemption.getDynamicVariable2())
 					.dynamicVariable3(prepaidCxOfferRedemption.getDynamicVariable3())
 					.dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4())
 					.build();
+			try {
+				offerRedemption.setOptEndDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptEndDate()));
+				offerRedemption.setOptStartDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptStartDate()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			return offerRedemption;
 		}
 
 		return new OfferRedemption();
-
-
 	}
+
 	@GetMapping(value = "offerEventCondition")
 	public EventCondition getOfferEventCondition(@RequestParam(value = "instanceId", required = false) String instanceId){
 		PrepaidCxOfferEventCondition prepaidCxOfferEventCondition =  offerService.getOfferEventCondition(instanceId);
 		if(prepaidCxOfferEventCondition != null) {
+
+			EventCondition eventCondition =  EventCondition.builder()
+					.eventConditionName(prepaidCxOfferEventCondition.getEventConditionName())
+					.eventConditionType(prepaidCxOfferEventCondition.getEventConditionType())
+					.eventTypeUsages(prepaidCxOfferEventCondition.getEventTypeUsages())
+					.eventUsagesOp(prepaidCxOfferEventCondition.getEventUsagesOp())
+					.eventUsagesValue(prepaidCxOfferEventCondition.getEventUsagesValue())
+					.arpuOp(prepaidCxOfferEventCondition.getArpuOp())
+					.arpuType(prepaidCxOfferEventCondition.getArpuType())
+					.arpuValue(prepaidCxOfferEventCondition.getArpuValue())
+					.arpuSelectedTopUpCode(prepaidCxOfferEventCondition.getArpuSelectedTopUpCode())
+					.topUpAccBalanceBeforeOp(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeOp())
+					.topUpCode(prepaidCxOfferEventCondition.getTopUpCode())
+					.topUpAccBalanceBeforeValue(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeValue())
+					.topUpCurBalanceValue(prepaidCxOfferEventCondition.getTopUpCurBalanceValue())
+					.topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())
+					.chargedAmount(prepaidCxOfferEventCondition.getChargedAmount())
+					.imei(prepaidCxOfferEventCondition.getImei())
+					.aggregationPeriodDays(prepaidCxOfferEventCondition.getAggregationPeriodDays())
+					.daBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
+					.daChange(prepaidCxOfferEventCondition.getDaChange())
+					.daBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
+					.daId(prepaidCxOfferEventCondition.getDaId())
+					.build();
 			try {
-				return EventCondition.builder()
-						.eventConditionName(prepaidCxOfferEventCondition.getEventConditionName())
-						.eventConditionType(prepaidCxOfferEventCondition.getEventConditionType())
-						.eventTypeUsages(prepaidCxOfferEventCondition.getEventTypeUsages())
-						.eventUsagesOp(prepaidCxOfferEventCondition.getEventUsagesOp())
-						.eventUsagesValue(prepaidCxOfferEventCondition.getEventUsagesValue())
-						.arpuOp(prepaidCxOfferEventCondition.getArpuOp())
-						.arpuType(prepaidCxOfferEventCondition.getArpuType())
-						.arpuValue(prepaidCxOfferEventCondition.getArpuValue())
-						.arpuSelectedTopUpCode(prepaidCxOfferEventCondition.getArpuSelectedTopUpCode())
-						.topUpAccBalanceBeforeOp(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeOp())
-						.topUpCode(prepaidCxOfferEventCondition.getTopUpCode())
-						.topUpAccBalanceBeforeValue(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeValue())
-						.topUpCurBalanceValue(prepaidCxOfferEventCondition.getTopUpCurBalanceValue())
-						.topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())
-						.campaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()))
-						.campaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()))
-						.chargedAmount(prepaidCxOfferEventCondition.getChargedAmount())
-						.imei(prepaidCxOfferEventCondition.getImei())
-						.aggregationPeriodDays(prepaidCxOfferEventCondition.getAggregationPeriodDays())
-						.daBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
-						.daChange(prepaidCxOfferEventCondition.getDaChange())
-						.daBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
-						.daId(prepaidCxOfferEventCondition.getDaId())
-						.build();
+				eventCondition.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
+				eventCondition.setCampaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
 			} catch (ParseException e) {
 				e.printStackTrace();
-				return new EventCondition();
 			}
+
+			return  eventCondition;
+
 		}else {
 			return new EventCondition();
 		}
