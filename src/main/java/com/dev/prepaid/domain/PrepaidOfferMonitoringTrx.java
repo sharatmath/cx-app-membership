@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
+/**
+ * 06-Sept-2021 comment provisionDate,provisionStatus Sprint 1
+ * 06-Sept-2021 add fulfillmentStatus, fulfillmentDate offerSelectionId Sprint 1
+ */
 @Entity
 @Table(name = "PREPAID_OFFER_MONITORING_TX")
 @Data
@@ -23,6 +27,10 @@ public class PrepaidOfferMonitoringTrx {
     private Long id;
     private Long offerMembershipId;
     private Long msisdn;
-    private Date provisionDate;
-    private String provisionStatus;
+//    private Date provisionDate;
+//    private String provisionStatus;
+
+    private String fulfillmentStatus;
+    private Date fulfillmentDate;
+    private Long offerSelectionId;
 }

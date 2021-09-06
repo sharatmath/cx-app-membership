@@ -192,7 +192,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 .map(dataRowDTO ->
                         PrepaidOfferMembership.builder()
                                 .offerConfigId(prepaidCxOfferConfig.getId())
-                                .offerSelectionId(prepaidCxOfferSelection.getId())
+//                                .offerSelectionId(prepaidCxOfferSelection.getId())
                                 .msisdn(Long.valueOf(dataRowDTO.get(0)))
                                 .build())
                 .collect(Collectors.toList());

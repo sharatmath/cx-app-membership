@@ -9,6 +9,12 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * 06-Sept-2021 remove program_name         sprint1
+ * 06-Sept-2021 add overall_offer_name      sprint1
+ *
+ */
+
 @Entity
 @Table(name = "PREPAID_CX_OFFER_CONFIG")
 @Data
@@ -22,8 +28,9 @@ public class PrepaidCxOfferConfig extends Auditable{
     private String programId;
     private String instanceId;
     private String provisionType;
-    private String programName;
+//    private String programName;
 
+    private String overallOfferName;
     private String deletedBy;
     private Date deletedDate;
 }

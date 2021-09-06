@@ -89,7 +89,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.id(offerConfigId)
 					.instanceId(serviceInstance.getUuid())
 					.programId(serviceInstance.getAssetId())
-					.programName(serviceInstance.getApplicationServiceInstall().getName())
+//					.programName(serviceInstance.getApplicationServiceInstall().getName())
 					.provisionType(serviceInstance.getAssetType())
 					.build();
 
@@ -106,6 +106,11 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		log.debug("get data  {} ", opsFind);
 		if(opsFind.isPresent()) {
 			opsFind.get().setProvisionType(saveConfigRequest.getPayload().getType());
+			if(prepaidCxOfferConfig.getId() != null) {
+				if (saveConfigRequest.getPayload().getOfferSelections() != null) {
+					opsFind.get().setOverallOfferName(saveConfigRequest.getPayload().getOfferSelections().get(0).getOverallOfferName());
+				}
+			}
 			prepaidCxOfferConfig = prepaidCxOfferConfigRepository.save(opsFind.get());
 
 			if(prepaidCxOfferConfig.getId() != null){
