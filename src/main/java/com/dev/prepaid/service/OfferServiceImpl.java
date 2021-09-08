@@ -161,7 +161,11 @@ public class OfferServiceImpl implements OfferService {
 	public List<PrepaidCxOfferSelection> getOfferSelection(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
-			return prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
+			List<PrepaidCxOfferSelection> prepaidCxOfferSelection= prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
+			for(PrepaidCxOfferSelection p : prepaidCxOfferSelection){
+				p.setOverallOfferName(offerConfig.get().getOverallOfferName());
+			}
+			return  prepaidCxOfferSelection;
 		}
 		return null;
 	}
