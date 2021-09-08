@@ -49,4 +49,6 @@ public class PrepaidCampaignOfferDetailDTO {
 	@SerializedName("messageText2") private String messageText2;
 	@SerializedName("messageText3") private String messageText3;
 	@SerializedName("messageText4") private String messageText4;
+
+	@SerializedName("overallOfferName") private String overallOfferName;
 }

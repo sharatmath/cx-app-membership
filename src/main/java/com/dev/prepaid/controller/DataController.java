@@ -311,6 +311,7 @@ public class DataController {
 			offerDetailDTO.setMessageText2(prepaidCxOfferSelection.getMessageText2());
 			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
 			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
+			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
 			log.debug("{}", offerDetailDTO);
 
 			offerDetailDTO = offerDetail(
