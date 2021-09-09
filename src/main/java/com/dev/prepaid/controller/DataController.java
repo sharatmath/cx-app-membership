@@ -364,5 +364,10 @@ public class DataController {
 		log.info("{}", payload);
 		return  ResponseEntity.ok("Success");
 	}
+	
+	@GetMapping(value = "listTest")
+	public List<Country> listTest(){
+		return offerService.listCountry();
+	}
 
 }

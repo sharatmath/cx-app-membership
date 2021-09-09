@@ -56,4 +56,17 @@ public class PrepaidApplication {
         executor.initialize();
         return executor;
     }
+	
+	@Bean(name = "redemptionExecutor")
+    public Executor redemptionExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//		RejectedTaskHandler handler=new RejectedTaskHandler(); 
+//      executor.setRejectedExecutionHandler(handler);
+        executor.setCorePoolSize(10);
+//        executor.setMaxPoolSize(100);
+//        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("RedemptionResponsysThread-");
+        executor.initialize();
+        return executor;
+    }
 }
