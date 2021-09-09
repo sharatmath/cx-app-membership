@@ -1,5 +1,6 @@
 package com.dev.prepaid.service;
 
+import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.invocation.InvocationRequest;
 import com.dev.prepaid.repository.*;
@@ -8,8 +9,12 @@ import com.dev.prepaid.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -235,6 +240,17 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
         //original
 //        prepaidOfferMembershipExclusRepository.saveAll(memberships);
+    }
+
+
+    private ResponseEntity<String> sendToRedemtionQueue( Map<String, Object> payload){
+        rabbitTemplate.convertAndSend(
+                Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+                Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
+                payload
+        );
+        log.info("{}", payload);
+        return  ResponseEntity.ok("Success");
     }
 
 }

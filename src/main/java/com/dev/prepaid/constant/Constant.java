@@ -10,4 +10,5 @@ public class Constant {
   public static final String TOPIC_EXCHANGE_NAME_MEMBERSHIP = "membership.exchange";
   public static final String QUEUE_NAME_MEMBERSHIP_MONITORING = "membership.offer.monitoring.queue";
   public static final String QUEUE_NAME_MEMBERSHIP_SUBSCRIBER = "membership.offer.subscriber.queue";
+  public static final String QUEUE_NAME_REDEMPTION = "redemption.offer.subscriber.queue";
 }
