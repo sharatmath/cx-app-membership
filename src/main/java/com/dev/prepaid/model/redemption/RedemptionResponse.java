@@ -1,7 +1,5 @@
 package com.dev.prepaid.model.redemption;
 
-import com.dev.prepaid.model.invocation.InvocationResponseContent;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
