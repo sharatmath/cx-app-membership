@@ -25,9 +25,5 @@ public class ScheduledTask {
 	public void scheduler() throws ParseException {
 		offerService.evictAllCaches();
 	}
-	
-//	@Scheduled(cron = "${tasks.scheduled.minutely}", zone = "${tasks.scheduled.zone}") /* every 1 minute */
-//	public void redemptionScheduler() throws ParseException {
-//		redemptionService.processByCall(null,null);
-//	}
+
 }
