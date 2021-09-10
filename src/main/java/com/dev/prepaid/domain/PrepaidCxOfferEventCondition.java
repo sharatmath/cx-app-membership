@@ -1,6 +1,7 @@
 package com.dev.prepaid.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,9 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String offerConfigId;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private Date campaignStartDate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private Date campaignEndDate;
     private String eventConditionName;
     private String eventConditionType;
@@ -38,10 +41,13 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private Long topUpAccBalanceBeforeValue;
     private String topUpOp;
     private Long topUpTransactionValue;
-    private String topUpDaId;
-    private String topUpDaBalanceOp;
-    private Long topUpDaBalanceValue;
-    private String topUpTempServiceClass;
+    private String daId;
+    private String daBalanceOp;
+    private Long daBalanceValue;
+    private String tempServiceClass;
+    private  String imei;
+    private  String daChange;
+    private  String chargedAmount;
 
     private Long eventTypeUsages;
     private String eventUsagesOp;

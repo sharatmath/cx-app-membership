@@ -1,5 +1,6 @@
 package com.dev.prepaid.model.configuration;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,8 +13,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventCondition {
-    @SerializedName("campaignStartDate") private Date campaignStartDate;
-    @SerializedName("campaignEndDate") private  Date campaignEndDate;
+    @SerializedName("campaignStartDate") private String campaignStartDate;
+    @SerializedName("campaignEndDate") private  String campaignEndDate;
     @SerializedName("eventConditionName") private  String eventConditionName;
     @SerializedName("eventConditionType") private  String eventConditionType;
 
@@ -33,10 +34,13 @@ public class EventCondition {
     @SerializedName("topupOp") private  String topUpOp;
     @SerializedName("topupTransactionValue") private  Long topUpTransactionValue;
 
-    @SerializedName("topupDaId") private  String topUpDaId;
-    @SerializedName("topupDaBalanceOp") private  String topUpDaBalanceOp;
-    @SerializedName("topupDaBalanceValue") private  Long topUpDaBalanceValue;
-    @SerializedName("topupTempServiceClass") private  String topUpTempServiceClass;
+    @SerializedName("DaId") private  String daId;
+    @SerializedName("DaBalanceOp") private  String daBalanceOp;
+    @SerializedName("DaBalanceValue") private  Long daBalanceValue;
+    @SerializedName("TempServiceClass") private  String tempServiceClass;
+    @SerializedName("imei") private  String imei;
+    @SerializedName("daChange") private  String daChange;
+    @SerializedName("chargedAmount") private  String chargedAmount;
 
     @SerializedName("eventTypeUsages") private  Long eventTypeUsages;
     @SerializedName("eventUsagesOp") private  String eventUsagesOp;

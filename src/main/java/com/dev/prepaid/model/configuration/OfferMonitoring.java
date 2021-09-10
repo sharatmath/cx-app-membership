@@ -19,8 +19,8 @@ public class OfferMonitoring {
     @SerializedName("creditMethod") private  String creditMethod;
     @SerializedName("operatorId") private  String operatorId;
     @SerializedName("periodDays") private  Integer periodDays;
-    @SerializedName("periodStartDate") private  Date periodStartDate;
-    @SerializedName("periodEndDate") private  Date periodEndDate;
+    @SerializedName("periodStartDate") private  String periodStartDate;
+    @SerializedName("periodEndDate") private  String periodEndDate;
     @SerializedName("topupCode") private  String topupCode;
     @SerializedName("usageType") private  String usageType;
     @SerializedName("transactionValue") private  Long transactionValue;
@@ -29,4 +29,7 @@ public class OfferMonitoring {
     @SerializedName("paidArpuValue") private  Long paidArpuValue;
     @SerializedName("isMonitorDateRange") private  Boolean isMonitorDateRange;
     @SerializedName("isMonitorSpecificPeriod") private  Boolean isMonitorSpecificPeriod;
+    @SerializedName("imei") private  String imei;
+    @SerializedName("daChange") private  String daChange;
+    @SerializedName("chargedAmount") private  String chargedAmount;
 }

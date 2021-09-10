@@ -29,4 +29,5 @@ public interface OfferService {
 	public PrepaidCxOfferEventCondition getOfferEventCondition(String instanceId);
 	public List<ResponSysProgram> listProgram();
 	public List<Country> listCountry();
+	public List<PromoCode> listOfferType();
 }

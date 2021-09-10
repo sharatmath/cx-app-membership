@@ -3,8 +3,8 @@ prepaid-cx-api.git
 ##  DOCKER BUILD
 ```sh
 mvn clean package -DskipTests=true
-sudo docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.1.0 .
-sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.1.0
+sudo docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.1.3 .
+sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.1.3
 ```
 
 ##  DEPLOYMENT
@@ -381,4 +381,251 @@ CREATE TABLE PREPAID_PROVISIONED_OFFER(
   OfferMonitoringServiceImpl.java
   pointing after applu policy to redemption process/ queue
   
+```
+
+##  History
+```sh
+
+	1. Repository
+https://singteldevcs-singteloracloud.developer.ocp.oraclecloud.com/singteldevcs-singteloracloud/
+troy.adianto.kartawinata@oracle.com/Welcome1234$$
+2. https://console.eu-frankfurt-1.oraclecloud.com/
+Singteloracloud
+troy.adianto.kartawinata@oracle.com/Welcome1234$$
+
+
+3. Dashboard kubernetes==
+   --script
+   nohup kubectl port-forward svc/dev-queue-rabbitmq 15672:15672 --kubeconfig /home/opc/.kube/config_prepaid_dev &
+   --uri
+   http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=defaul
+   --token
+   eyJhbGciOiJSUzI1NiIsImtpZCI6IjloRUJBbFQ2d3BYNGhka28xQURfYlJmbTVRc1d3djVINFhEcDhqVFRkbGsifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRhc2hib2FyZC1hZG1pbi1zYS10b2tlbi1yODQ3cCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkYXNoYm9hcmQtYWRtaW4tc2EiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJlNzJhOTIzOS0xMTc5LTQwM2MtYTBlNC02ZDQzMTRhNjExZjkiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpkYXNoYm9hcmQtYWRtaW4tc2EifQ.eJqJ-Xv5SFOU6or33ESOb7n_JeaAjCUDLRM5JvfN6TQavt97jW8BsdmZ6iZDjJdy4hZ8H_Afnd6y648xLfTH8sOyqH7oyTKSq1OuY1tQjoqpMhgd-RZNKecstxR92rQEf-1JAVeZbuk6EpC7V7omXC7OWtWeDdgd5CZPDZIanc0gMopfjzp0-AaoqLb4sNM0YV7stUoTbWNHHwGe__hbA1tUUBZwBmzRqj4WUQ16L4I1V8Wiw0KYqDTPDoosau8LIJekH77CcwT1GaCbdTO_BiGh8dLrB2IB_NgiVVukPoMKow7f3piuufheYW9Vnudd7Ko3VpRp2d0E1Mra52R5xA
+
+
+opc@130.61.51.212
+
+http://130.61.15.242/swagger-ui.html
+
+instanceId
+63483226-49f3-48a2-8720-4f4c47021e32
+
+
+akses oracle  bQ6t2l0s97DS
+
+
+=======OFFER SELECTION=====
+{
+  "instanceUuid": "63483226-49f3-48a2-8720-4f4c47021e32",
+  "payload": {
+    "notification": true,
+    "offerSelections": [
+      {
+        "messageText1": "msg1",
+        "messageText2": "msg2",
+        "messageText3": "msg3",
+        "messageText4": "msg4",
+        "offerBucketId": "OMS|261",
+        "offerBucketType": "DA",
+        "offerCampaignId": 401,
+        "offerCampaignName": "Name",
+        "offerType": "DA",
+        "promoCodeList": "F1, F2",
+        "smsCampaignName": "KFC 1"
+      }
+    ],
+    "programId": "string",
+    "programName": "string",
+    "type": "string",
+    "uuid": "string"
+  }
+}
+
+
+{
+  "instanceUuid": "63483226-49f3-48a2-8720-4f4c47021e32",
+  "payload": {
+    "notification": true,
+    "offerMonitoring": {
+      "arpuOp": "string arpu",
+      "arpuSelectedTopUpCode": "string sc",
+      "arpuType": "string type",
+      "arpuValue": 1,
+      "countryCode": "IDN",
+      "eventType": "ARPU",
+      "monitorEndDate": "2021-08-31T03:29:52.939Z",
+      "monitorPeriod": 0,
+      "monitorPeriodDayMonth": "string",
+      "monitorPeriodRadio": true,
+      "monitorSpecifiedPeriodRadio": true,
+      "monitorStartDate": "2021-08-31T03:29:52.939Z",
+      "operatorId": "string",
+      "topUpAccBalanceBeforeOp": "string",
+      "topUpAccBalanceBeforeValue": 0,
+      "topUpCode": "string",
+      "topUpCreditMethod": "string",
+      "topUpCurBalanceOp": "string",
+      "topUpCurBalanceValue": 0,
+      "topUpDaBalanceOp": "string",
+      "topUpDaBalanceValue": 0,
+      "topUpDaId": "string",
+      "topUpOp": "string",
+      "topUpOperator": "string",
+      "topUpTempServiceClass": "string",
+      "topUpTransactionValue": 0,
+      "topUpUsageServiceType": "string",
+      "usageOperator": "string",
+      "usageServiceType": "sms",
+      "usageType": "string",
+      "usageValue": 0
+    }
+  }
+}
+
+=======EVENT CONDITION TOPUP=====
+{
+  "instanceUuid": "63483226-49f3-48a2-8720-4f4c47021e32",
+  "payload": {
+    "notification": true,
+    "offerEventCondition": {
+      "campaignEndDate": "2021-08-31T03:29:52.886Z",
+      "campaignStartDate": "2021-08-31T03:29:52.886Z",
+      "creditMethod": "M1",
+      "daBalanceOp": "lessThan",
+      "daBalanceValue": 0,
+      "daId": "1",
+      "eventConditionName": "Testing1",
+      "eventConditionType": "Top-Up",
+      "operatorId": "Operator 1",
+      "tempServiceClass": "string",
+      "topUpAccBalanceBeforeOp": "lessThan",
+      "topUpAccBalanceBeforeValue": 20,
+      "topUpCode": "TC1",
+      "topUpCurBalanceOp": "lessThan",
+      "topUpCurBalanceValue": 20,
+      "topUpOp": "lessThan",
+      "topUpTransactionValue": 10,
+      "usageServiceType": "string"
+    }
+  }
+}
+
+
+=====OFFER MONITORING TOPUP ====
+
+{
+  "instanceUuid": "63483226-49f3-48a2-8720-4f4c47021e32",
+  "payload": {
+    "notification": true,
+    "offerMonitoring": {
+                "eventType": "string",
+
+          "aggregationPeriodDays": 0,
+          "arpuOp": "string",
+          "arpuSelectedTopUpCode": "string",
+          "arpuType": "string",
+          "arpuValue": 0,
+          "chargedAmount": "string",
+          "countryCode": "string",
+          "daChange": "string",
+          "imei": "string",
+          "monitorEndDate": "2021-09-02T07:53:25.303Z",
+          "monitorPeriod": 0,
+          "monitorPeriodDayMonth": "string",
+          "monitorPeriodRadio": true,
+          "monitorSpecifiedPeriodRadio": true,
+          "monitorStartDate": "2021-09-02T07:53:25.303Z",
+          "operatorId": "string",
+          "topUpAccBalanceBeforeOp": "string",
+          "topUpAccBalanceBeforeValue": 0,
+          "topUpCode": "string",
+          "topUpCreditMethod": "string",
+          "topUpCurBalanceOp": "string",
+          "topUpCurBalanceValue": 0,
+          "topUpDaBalanceOp": "string",
+          "topUpDaBalanceValue": 0,
+          "topUpDaId": "string",
+          "topUpOp": "string",
+          "topUpOperator": "string",
+          "topUpTempServiceClass": "string",
+          "topUpTransactionValue": 0,
+          "topUpUsageServiceType": "string",
+          "usageOperator": "string",
+          "usageServiceType": "string",
+          "usageType": "string",
+          "usageValue": 0
+        }
+  }
+}
+
+
+
+=====OFFER MONITORING USAGE ====
+
+{
+  "instanceUuid": "63483226-49f3-48a2-8720-4f4c47021e32",
+  "payload": {
+    "notification": true,
+    "offerMonitoring": {
+      "eventType": "Usage",
+       "usageOperator": "lessThan",
+          "usageServiceType": "SMS",
+          "usageType": "SMS_C",
+          "usageValue": 10
+          "aggregationPeriodDays": 0,
+           "topUpCurBalanceOp": "string",
+          "topUpCurBalanceValue": 0,
+           "topUpAccBalanceBeforeOp": "string",
+          "topUpAccBalanceBeforeValue": 0,
+            "topUpDaId": "string",
+         
+          "topUpDaBalanceOp": "string",
+          "topUpDaBalanceValue": 0,
+          "topUpTempServiceClass": "string",
+          
+          
+          "chargedAmount": "string",
+          "countryCode": "string",
+          "daChange": "string",
+          
+          "imei": "string",
+          "monitorEndDate": "2021-09-02T07:53:25.303Z",
+          "monitorPeriod": 0,
+          "monitorPeriodDayMonth": "string",
+          "monitorPeriodRadio": true,
+          "monitorSpecifiedPeriodRadio": true,
+          "monitorStartDate": "2021-09-02T07:53:25.303Z",
+          "operatorId": "string",
+         
+         
+         
+        }
+  }
+}
+
+
+
+=====OFFER MONITORING ARPU ====
+{
+  "instanceUuid": "63483226-49f3-48a2-8720-4f4c47021e32",
+  "payload": {
+    "notification": true,
+    "offerMonitoring": {
+      "eventType": "ARPU",
+      "operatorId": "string",
+         "arpuType": "string",
+          "arpuOp": "string",
+          "arpuValue": 0,
+          "aggregationPeriodDays": 0,
+          "monitorEndDate": "2021-09-02T07:53:25.303Z",
+          "monitorPeriod": 0,
+          "monitorPeriodDayMonth": "string",
+          "monitorPeriodRadio": false,
+          "monitorSpecifiedPeriodRadio": true,
+          "monitorStartDate": "2021-09-02T07:53:25.303Z"
+        }
+  }
+}
+
+
 ```

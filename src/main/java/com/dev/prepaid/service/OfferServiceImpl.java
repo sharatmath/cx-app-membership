@@ -1,5 +1,6 @@
 package com.dev.prepaid.service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.configuration.*;
 import com.dev.prepaid.repository.*;
+import com.dev.prepaid.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -59,6 +61,8 @@ public class OfferServiceImpl implements OfferService {
 	private PrepaidCxOfferEventConditionRepository prepaidCxOfferEventConditionRepository;
 	@Autowired
 	private CountryRepository countryRepository;
+	@Autowired
+	private PromoCodeRepository promoCodeRepository;
 
 	@Override
 	public void evictAllCaches() {
@@ -157,7 +161,11 @@ public class OfferServiceImpl implements OfferService {
 	public List<PrepaidCxOfferSelection> getOfferSelection(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
-			return prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
+			List<PrepaidCxOfferSelection> prepaidCxOfferSelection= prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
+			for(PrepaidCxOfferSelection p : prepaidCxOfferSelection){
+				p.setOverallOfferName(offerConfig.get().getOverallOfferName());
+			}
+			return  prepaidCxOfferSelection;
 		}
 		return null;
 	}
@@ -191,8 +199,12 @@ public class OfferServiceImpl implements OfferService {
 				if(prepaidCxOfferMonitoring.getPeriodEndDate() != null &&
 					prepaidCxOfferMonitoring.getPeriodStartDate() != null ) {
 					offerFulfilment.setMonitorSpecifiedPeriodRadio(true);
-					offerFulfilment.setMonitorStartDate(prepaidCxOfferMonitoring.getPeriodStartDate());
-					offerFulfilment.setMonitorEndDate(prepaidCxOfferMonitoring.getPeriodEndDate());
+					try {
+						offerFulfilment.setMonitorStartDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodStartDate()));
+						offerFulfilment.setMonitorEndDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodEndDate()));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 				}
 				if(prepaidCxOfferMonitoring.getPeriod() != null &&
 					prepaidCxOfferMonitoring.getPeriodDays() != null) {
@@ -256,11 +268,20 @@ public class OfferServiceImpl implements OfferService {
 	public List<ResponSysProgram> listProgram() {
 		List<ResponSysProgram> list = new ArrayList<>();
 		for(PrepaidCxOfferConfig d : prepaidCxOfferConfigRepository.findAll()){
-			String programName = d.getProgramName() + "-" + d.getInstanceId();
+			String programName = d.getOverallOfferName();
 			list.add(new ResponSysProgram(String.valueOf(d.getProgramId()), programName));
 		}
 		return list;
 	}
+
+	public List<PromoCode> listOfferType() {
+		List<PromoCode> list  = promoCodeRepository.findEligiblePromo();
+		list.add(new PromoCode("1", "DA Offer", "DA"));
+		list.add(new PromoCode("2", "OMS Offer", "OMS"));
+
+		return list;
+	}
+
 
 	public List<Country> listCountry(){
 		return countryRepository.findAll();
