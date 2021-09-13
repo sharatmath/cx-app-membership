@@ -141,20 +141,60 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 invocation.getUuid(),
                 rows.size());
         List<List<String>> offerLevelRows = new ArrayList<>();
-       //save to db
-        if (rows.size() > 0)
-            processOfferLevelCap(rows, prepaidCxOfferEligibilityList.get(), invocation.getUuid(), instanceConfiguration, prepaidCxOfferSelectionList.get(0));
+        Optional<PrepaidCxOfferEligibility> prepaidCxOfferEligibilityList = prepaidCxOfferEligibilityRepository.findByOfferConfigId(instanceConfiguration.getId());
+        List<PrepaidCxOfferSelection> prepaidCxOfferSelectionList = prepaidCxOfferSelectionRepository.findByOfferConfigId(instanceConfiguration.getId());
 
+        if (rows.size() > 0){
+            List<List<String>> offerMembershipRows = new ArrayList<>();
+            List<List<String>> offerMembershipExcluseRows = new ArrayList<>();
+            PrepaidCxOfferEligibility prepaidCxOfferEligibility = prepaidCxOfferEligibilityList.get();
 
-        if (instanceConfiguration != null) {
-            if (ProvisionType.DIRECT_PROVISION.getDescription().equals(instanceConfiguration.getProvisionType())) {
-                Map<String, Object> o = new HashMap<>();
-                o.put("msisdn", rows);
-                o.put("offerMembershipId", rows);
-                o.put("smsKeyword", "");
-                sendToRedemptionQueue(o);
+            if (prepaidCxOfferEligibility.getIsOfferLevelCapOnly()) {
+                int currentCap = countOfferCapPerOfferConfigId(instanceConfiguration.getId());
+                log.info("invId|{}|confId|{}|processLevelCapOnly|eligible|{}|currentCap|{}|maximumCapValue|{}",
+                        invocation.getUuid(),
+                        instanceConfiguration.getId(),
+                        rows.size(),
+                        currentCap,
+                        prepaidCxOfferEligibility.getOfferLevelCapValue()
+                );
+                if (currentCap >= prepaidCxOfferEligibility.getOfferLevelCapValue()) {
+                    offerMembershipExcluseRows = rows;
+                } else {
+                    int capacityCap = prepaidCxOfferEligibility.getOfferLevelCapValue().intValue() - currentCap;
+                    if (rows.size() <= capacityCap) {
+                        offerMembershipRows = rows;
+                    } else {
+                        offerMembershipRows = rows.subList(0, capacityCap);
+                        offerMembershipExcluseRows = rows.subList(capacityCap, rows.size());
+                    }
+                }
+            } else if (prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod()) {
+                int currentCap = countOfferCapPerOfferConfigIdAndRangePeriod(instanceConfiguration.getId(), prepaidCxOfferEligibility);
+                log.info("invId|{}|confId|{}|processLevelCapAndPeriod|eligible|{}|currentCap|{}|maximumCapValue|{}|in|{}|period_days",
+                        invocation.getUuid(),
+                        instanceConfiguration.getId(),
+                        rows.size(),
+                        currentCap,
+                        prepaidCxOfferEligibility.getOfferLevelCapPeriodValue(),
+                        prepaidCxOfferEligibility.getOfferLevelCapPeriodDays()
+                );
+                if (currentCap >= prepaidCxOfferEligibility.getOfferLevelCapPeriodValue()) {
+                    offerMembershipRows = rows;
+                } else {
+                    int capacityCap = prepaidCxOfferEligibility.getOfferLevelCapPeriodValue().intValue() - currentCap;
+                    offerMembershipRows = rows.subList(0, capacityCap);
+                    offerMembershipExcluseRows = rows.subList(capacityCap, rows.size());
+                }
             }
+            //save to db
+            log.info("invId|{}|confId|{}|processLevelCapOnly|eligible|{}|membership|{}|membership_exclus|{}", invocation.getUuid(), instanceConfiguration.getId(), rows.size(), offerMembershipRows.size(), offerMembershipExcluseRows.size());
+            if (offerMembershipRows.size() > 0)
+                saveToPrepaidOfferMembership(offerMembershipRows, invocation.getUuid(), instanceConfiguration, prepaidCxOfferSelectionList.get(0));
+            if (offerMembershipExcluseRows.size() > 0)
+                saveToPrepaidOfferMembershipExclus(offerMembershipExcluseRows, invocation.getUuid(), instanceConfiguration, prepaidCxOfferSelectionList.get(0));
         }
+
         log.info("process#4|END|evaluationOfferLevelCondition|type|{}|id|{}|rows_in|{}|rows_out|{}",
                 instanceConfiguration.getProvisionType(),
                 invocation.getUuid(),
@@ -189,7 +229,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         }
     }
 
-    private void processOfferLevelCap(List<List<String>> eligibleRows, PrepaidCxOfferEligibility prepaidCxOfferEligibility, String invId, PrepaidCxOfferConfig prepaidCxOfferConfig, PrepaidCxOfferSelection prepaidCxOfferSelection) throws Exception {
+    /*private void processOfferLevelCap(List<List<String>> eligibleRows, PrepaidCxOfferEligibility prepaidCxOfferEligibility, String invId, PrepaidCxOfferConfig prepaidCxOfferConfig, PrepaidCxOfferSelection prepaidCxOfferSelection) throws Exception {
         List<List<String>> offerMembershipRows = new ArrayList<>();
         List<List<String>> offerMembershipExcluseRows = new ArrayList<>();
 
@@ -223,7 +263,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             saveToPrepaidOfferMembership(offerMembershipRows, invId, prepaidCxOfferConfig, prepaidCxOfferSelection);
         if (offerMembershipExcluseRows.size() > 0)
             saveToPrepaidOfferMembershipExclus(offerMembershipExcluseRows, invId, prepaidCxOfferConfig, prepaidCxOfferSelection);
-    }
+    }*/
 
     private Boolean subscriberLevel(String msisdn, PrepaidCxOfferEligibility prepaidCxOfferEligibility) {
         if (prepaidCxOfferEligibility.getIsFrequencyOnly()) {
@@ -321,13 +361,28 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         for (int i = 0; i < totalObjects; i += batchSize) {
             if (i + batchSize > totalObjects) {
                 List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, totalObjects);
-                prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
+                List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
+                for(PrepaidOfferMembership p: saved){
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("offerMembershipId", p.getId());
+                    map.put("msisdn", p.getMsisdn());
+                    map.put("smsKeyword", "");
+                    sendToRedemptionQueue(map);
+                }
+
                 break;
             }
             List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, i + batchSize);
-            prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
+            List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
+            for(PrepaidOfferMembership p: saved){
+                Map<String, Object> map = new HashMap<>();
+                map.put("offerMembershipId", p.getId());
+                map.put("msisdn", p.getMsisdn());
+                map.put("smsKeyword", "");
+                sendToRedemptionQueue(map);
+            }
         }
-        //orinal
+        //original
 //        prepaidOfferMembershipRepository.saveAll(memberships);
     }
 
@@ -359,10 +414,10 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
 
-    private ResponseEntity<String> sendToRedemptionQueue(Map<String, Object> payload) {
+    public ResponseEntity<String> sendToRedemptionQueue(Map<String, Object> payload) {
         rabbitTemplate.convertAndSend(
                 Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
-                Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
+                Constant.QUEUE_NAME_SINGTEL_REDEMPTION,
                 payload
         );
         log.info("{}", payload);
