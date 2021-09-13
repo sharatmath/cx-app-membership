@@ -304,6 +304,13 @@ public class DataController {
 		for (PrepaidCxOfferSelection prepaidCxOfferSelection: data){
 			log.debug("{}", prepaidCxOfferSelection);
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
+			offerDetailDTO = offerDetail(
+					prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()),
+					String.valueOf(prepaidCxOfferSelection.getOfferId()));
+//			offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()));
+//			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
+//			offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferType());
+//			offerDetailDTO.setOfferCampaignId(Long.valueOf(prepaidCxOfferSelection.getOfferId()));
 			offerDetailDTO.setSmsCampaignName(prepaidCxOfferSelection.getSmsCampaignName());
 			offerDetailDTO.setOfferType(prepaidCxOfferSelection.getOfferType());
 			offerDetailDTO.setPromoCodeList(prepaidCxOfferSelection.getPromoCodeList());
@@ -313,15 +320,6 @@ public class DataController {
 			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
 			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
 			log.debug("{}", offerDetailDTO);
-
-			offerDetailDTO = offerDetail(
-					prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()),
-					String.valueOf(prepaidCxOfferSelection.getOfferId()));
-//			offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()));
-//			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
-//			offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferType());
-//			offerDetailDTO.setOfferCampaignId(Long.valueOf(prepaidCxOfferSelection.getOfferId()));
-
 			list.add(offerDetailDTO);
 		}
 		return  list;

@@ -108,14 +108,14 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferConfig = opsFind.get();
 			opsFind.get().setProvisionType(saveConfigRequest.getPayload().getType());
 			if(prepaidCxOfferConfig.getId() != null) {
-				if (saveConfigRequest.getPayload().getOfferSelections() != null) {
-					opsFind.get().setOverallOfferName(saveConfigRequest.getPayload().getOfferSelections().get(0).getOverallOfferName());
+				if (saveConfigRequest.getPayload().getOfferSelection() != null) {
+					opsFind.get().setOverallOfferName(saveConfigRequest.getPayload().getOfferSelection().get(0).getOverallOfferName());
 				}
 			}
 			prepaidCxOfferConfig = prepaidCxOfferConfigRepository.save(opsFind.get());
 
 			if(prepaidCxOfferConfig.getId() != null){
-				if(saveConfigRequest.getPayload().getOfferSelections() !=null ) {
+				if(saveConfigRequest.getPayload().getOfferSelection() !=null ) {
 					saveOfferSelection(prepaidCxOfferConfig.getId(), saveConfigRequest);
 				}
 				if(saveConfigRequest.getPayload().getOfferEligibility() != null) {
@@ -187,7 +187,11 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	}
 
 	private void saveOfferSelection(String offerConfigId, SaveConfigRequest saveConfigRequest){
-		for(OfferSelection offerSelection: saveConfigRequest.getPayload().getOfferSelections()){
+		List<PrepaidCxOfferSelection> currents = prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfigId);
+		for(PrepaidCxOfferSelection c : currents){
+			prepaidCxOfferSelectionRepository.deleteById(c.getId());
+		}
+		for(OfferSelection offerSelection: saveConfigRequest.getPayload().getOfferSelection()){
 			Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository.findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(
 					offerConfigId,
 					offerSelection.getOfferBucketType(),
@@ -263,7 +267,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferMonitoring.setTopUpCode(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCode());
 
 			prepaidCxOfferMonitoring.setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
-			prepaidCxOfferMonitoring.setTopUpCurBalanceValue(Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue()));
+			if(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue() != null) {
+				prepaidCxOfferMonitoring.setTopUpCurBalanceValue(Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue()));
+			}
 			prepaidCxOfferMonitoring.setTopUpAccBalanceBeforeOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpAccBalanceBeforeOp());
 			prepaidCxOfferMonitoring.setTopUpAccBalanceBeforeValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpAccBalanceBeforeValue());
 			prepaidCxOfferMonitoring.setTopUpOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpOp());
