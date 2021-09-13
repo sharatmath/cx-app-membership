@@ -224,7 +224,7 @@ CREATE TABLE PREPAID_PROVISIONED_OFFER(
 
 ```
 
-##  Sample Invocation Request
+##  Sample Eligibility Request
 ```sh
 	{
 	  "dataSet": {

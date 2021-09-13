@@ -29,7 +29,7 @@ public class PrepaidOfferMembership extends Auditable{
     private String offerConfigId;
     private Long msisdn;
     private Date offerDate;
-    private Date redemptionDate;
+//    private Date redemptionDate;
 //    private Date topupDate;
 //    private Long couponCodeId;
 //    private Long couponCodeStatus;
