@@ -33,6 +33,11 @@ public class AmqpConfig {
 	@Value("${membership.queue.concurent:1}")
 	private Integer membershipQueueConcurent;
 	
+	@Value("${redemption.queue.prefetch:1}")
+	private Integer redemptionQueuePrefetch;
+	@Value("${redemption.queue.concurent:1}")
+	private Integer redemptionQueueConcurent;
+
 	//============================================================================= //
 	//queue
 	@Bean
@@ -60,6 +65,36 @@ public class AmqpConfig {
 		return factory;
 	}
 	//============================================================================= //
+	
+	//REDEMPTION
+	// ============================================================================= //
+	//queue
+	@Bean
+	public Queue queueSingtelRedemption() {
+			Map<String, Object> args = new HashMap<String, Object>();
+			args.put("x-max-priority", 1);
+			Queue queue = new Queue(Constant.QUEUE_NAME_SINGTEL_REDEMPTION, true, false, false, args);
+			return queue;
+		}
+	//binding
+	@Bean
+	public Binding bindingSingtelRedemptionAll(Queue queueSingtelRedemption, TopicExchange exchangeSingtel) {
+		return BindingBuilder.bind(queueSingtelRedemption).to(exchangeSingtel)
+				.with(Constant.QUEUE_NAME_SINGTEL_REDEMPTION); //route.key.name=queue.name
+	}
+	//container factory
+	@Bean
+	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
+	rabbitListenerContainerFactoryForRedemption(
+			ConnectionFactory rabbitConnectionFactory) {
+		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+		factory.setConnectionFactory(rabbitConnectionFactory);
+		factory.setPrefetchCount(redemptionQueuePrefetch);
+		factory.setConcurrentConsumers(redemptionQueueConcurent);
+		factory.setMessageConverter(jackson2MessageConverter());
+		return factory;
+	}
+	//============================================================================= //	
 	
 	//PGS
 	// ============================================================================= //

@@ -57,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// dont authenticate this particular request
 				.authorizeRequests()
 				.antMatchers("/data/**",
+						"/redemption/**",
 						"/configureDummy",
 						"/auths",
 						"/invoke",

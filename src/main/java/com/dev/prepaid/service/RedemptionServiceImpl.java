@@ -1,24 +1,30 @@
 package com.dev.prepaid.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
 import com.dev.prepaid.domain.PrepaidOfferMembership;
+import com.dev.prepaid.model.redemption.RedemptionRequest;
 import com.dev.prepaid.repository.PrepaidCxOfferRedemptionRepository;
 import com.dev.prepaid.repository.PrepaidOfferMembershipRepository;
+import com.dev.prepaid.util.BaseRabbitTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class RedemptionServiceImpl implements RedemptionService {	
+public class RedemptionServiceImpl extends BaseRabbitTemplate  implements RedemptionService {	
 
 	@Autowired
 	EntityManager em;
@@ -31,8 +37,9 @@ public class RedemptionServiceImpl implements RedemptionService {
 	private PrepaidOfferMembershipRepository prepaidOfferMembershipRepository;
 
 	@Override
-	public void processByCall(String msisdn,String evenType) {
-		log.info("msisdn:"+ msisdn  + " evenType:"+evenType);
+	@Async("redemptionExecutor")
+	public void processRedemption(Long msisdn, Long offerMembershipId, String smsKeyword) {
+		log.info("msisdn:"+ msisdn  +" Membership Id:"+ offerMembershipId + " smsKeyword:"+smsKeyword);
 		
 		ArrayList<PrepaidCxOfferRedemption> prepaidCxOfferRedemptions = (ArrayList<PrepaidCxOfferRedemption>) prepaidCxOfferRedemptionRepository.findAll() ;
 		
@@ -216,6 +223,25 @@ public class RedemptionServiceImpl implements RedemptionService {
 			}
 		}
 
+		
+	}
+
+	@Override
+	@Async("redemptionExecutor")
+	public void redemptionQueue(RedemptionRequest redemptionRequest) {
+		//payload redemption Queue
+		Map<String, Object> qRedem = new HashMap<>();
+		qRedem.put("msisdn", redemptionRequest.getMsisdn());
+		qRedem.put("offerMembershipId", redemptionRequest.getOfferMembershipId());
+		qRedem.put("smsKeyword", redemptionRequest.getSmsKeyword());        
+		
+		log.info("Redemption to Queueu:"+qRedem.toString());
+		
+		//send to Redemption Queue
+		rabbitTemplateConvertAndSendWithPriority (Constant.TOPIC_EXCHANGE_NAME_SINGTEL,
+				Constant.QUEUE_NAME_SINGTEL_REDEMPTION,
+				qRedem,
+				0);
 		
 	}
 	 
