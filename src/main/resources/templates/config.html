@@ -2222,6 +2222,7 @@
                 const offerRedemption = {
                     "totalRecurringFrequency": this.redemptionData.totalRecurringFrequency,
                     "redemptionMethod": this.redemptionData.redemptionMethod,
+                    "recurringProvisioning": this.redemptionData.recurringProvisioning,
                 };
                 if (this.totalRedemptionCapRadio === 'redemption-only') {
                     offerRedemption.isRedemptionCapOnly = true;
@@ -2299,18 +2300,18 @@
                     offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
                 }
                 if (this.recurringProvisioning === 'no') {
-                    offerRedemption.isRedemptionCapOnly = false;
-                    offerRedemption.isRedemptionCapAndPeriod = false;
-                    offerRedemption.redemptionCapValue = null;
-                    offerRedemption.totalRedemptionPeriodValue = null;
-                    offerRedemption.totalRedemptionPeriodEvery = null;
-                    offerRedemption.totalRedemptionPeriodType = null;
-                    offerRedemption.isFrequencyOnly = false;
-                    offerRedemption.isFrequencyAndTime = false;
-                    offerRedemption.frequencyValue = null;
-                    offerRedemption.timePeriodValue = null;
-                    offerRedemption.timePeriodEvery = null;
-                    offerRedemption.timePeriodType = null;
+                    offerRedemption.isRedemptionCapOnly         = false;
+                    offerRedemption.isRedemptionCapAndPeriod    = false;
+                    offerRedemption.redemptionCapValue          = null;
+                    offerRedemption.totalRedemptionPeriodValue  = null;
+                    offerRedemption.totalRedemptionPeriodEvery  = null;
+                    offerRedemption.totalRedemptionPeriodType   = null;
+                    offerRedemption.isFrequencyOnly             = false;
+                    offerRedemption.isFrequencyAndTime          = false;
+                    offerRedemption.frequencyValue              = null;
+                    offerRedemption.timePeriodValue             = null;
+                    offerRedemption.timePeriodEvery             = null;
+                    offerRedemption.timePeriodType              = null;
                 }
 
                 var request = { "amsAction" : "save", "requestId" : "save",
