@@ -367,6 +367,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     map.put("offerMembershipId", p.getId());
                     map.put("msisdn", p.getMsisdn());
                     map.put("smsKeyword", "");
+                    map.put("instanceId", prepaidCxOfferConfig.getInstanceId());
                     sendToRedemptionQueue(map);
                 }
 
@@ -379,6 +380,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 map.put("offerMembershipId", p.getId());
                 map.put("msisdn", p.getMsisdn());
                 map.put("smsKeyword", "");
+                map.put("instanceId", prepaidCxOfferConfig.getInstanceId());
                 sendToRedemptionQueue(map);
             }
         }
