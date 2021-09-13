@@ -2268,12 +2268,49 @@
                 }
                 if (this.redemptionMethod === 'AutoRedemption') {
                     offerRedemption.redemptionMethod = 'AutoRedemption';
-                    offerRedemption.smsKeyword = null;
-                    offerRedemption.smsKeywordValidityDays = null;
+                    offerRedemption.smsCampaignName = this.redemptionData.smsCampaignName;
+                    offerRedemption.dynamicVariable1 = this.redemptionData.dynamicVariable1;
+                    offerRedemption.dynamicVariable2 = this.redemptionData.dynamicVariable2;
+                    offerRedemption.dynamicVariable3 = this.redemptionData.dynamicVariable3;
+                    offerRedemption.dynamicVariable4 = this.redemptionData.dynamicVariable4;
+                    offerRedemption.dynamicVariable5 = this.redemptionData.dynamicVariable5;
                 } else if (this.redemptionMethod === 'ManualRedemption') {
-                    offerRedemption.redemptionMethod = 'ManualRedemption';
-                    offerRedemption.smsKeyword = this.redemptionData.smsKeyword;
-                    offerRedemption.smsKeywordValidityDays = this.redemptionData.smsKeywordValidityDays;
+                    offerRedemption.redemptionMethod    = 'ManualRedemption';
+                    offerRedemption.optKeyword          = this.redemptionData.optKeyword;
+                    if (this.redemptionOptKeywordRadio == 'period-only') {
+                        offerRedemption.dateRange       = true;
+                        offerRedemption.optStartDate    = this.redemptionData.optStartDate;
+                        offerRedemption.optEndDate      = this.redemptionData.optEndDate;
+                        offerRedemption.period          = null;
+                        offerRedemption.optPeriod       = null;
+                    } else {
+                        offerRedemption.dateRange       = false;
+                        offerRedemption.optStartDate    = null;
+                        offerRedemption.optEndDate      = null;
+                        offerRedemption.period          = this.redemptionData.period;
+                        offerRedemption.optPeriod       = this.redemptionData.optPeriod;
+                    }
+                    offerRedemption.postSmsCampaignName = this.redemptionData.postSmsCampaignName;
+                    offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
+                    offerRedemption.dynamicVariable1    = this.redemptionData.dynamicVariable1;
+                    offerRedemption.dynamicVariable2    = this.redemptionData.dynamicVariable2;
+                    offerRedemption.dynamicVariable3    = this.redemptionData.dynamicVariable3;
+                    offerRedemption.dynamicVariable4    = this.redemptionData.dynamicVariable4;
+                    offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
+                }
+                if (this.recurringProvisioning === 'no') {
+                    offerRedemption.isRedemptionCapOnly = false;
+                    offerRedemption.isRedemptionCapAndPeriod = false;
+                    offerRedemption.redemptionCapValue = null;
+                    offerRedemption.totalRedemptionPeriodValue = null;
+                    offerRedemption.totalRedemptionPeriodEvery = null;
+                    offerRedemption.totalRedemptionPeriodType = null;
+                    offerRedemption.isFrequencyOnly = false;
+                    offerRedemption.isFrequencyAndTime = false;
+                    offerRedemption.frequencyValue = null;
+                    offerRedemption.timePeriodValue = null;
+                    offerRedemption.timePeriodEvery = null;
+                    offerRedemption.timePeriodType = null;
                 }
 
                 var request = { "amsAction" : "save", "requestId" : "save",

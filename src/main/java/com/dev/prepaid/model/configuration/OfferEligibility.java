@@ -32,6 +32,6 @@ public class OfferEligibility {
     @SerializedName("offerLevelCapPeriodDays")
     private Long offerLevelCapPeriodDays;
 
-    @SerializedName("excludeSelectedProgramId")
+    @SerializedName("excludeProgramId")
     private String excludeProgramId;
 }

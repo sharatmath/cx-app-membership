@@ -28,4 +28,5 @@ public class PrepaidCxOfferEligibility extends Auditable {
     private Long offerLevelCapValue;
     private Long offerLevelCapPeriodValue;
     private Long offerLevelCapPeriodDays;
+    private String excludeProgramId;
 }

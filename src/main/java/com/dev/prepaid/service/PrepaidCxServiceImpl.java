@@ -185,6 +185,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		prepaidCxOfferEligibility.setIsOfferLevelCapAndPeriod(saveConfigRequest.getPayload().getOfferEligibility().getIsOfferLevelCapAndPeriod());
 		prepaidCxOfferEligibility.setOfferLevelCapPeriodValue(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodValue());
 		prepaidCxOfferEligibility.setOfferLevelCapPeriodDays(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodDays());
+		prepaidCxOfferEligibility.setExcludeProgramId(saveConfigRequest.getPayload().getOfferEligibility().getExcludeProgramId());
 		prepaidCxOfferEligibilityRepository.save(prepaidCxOfferEligibility);
 	}
 
