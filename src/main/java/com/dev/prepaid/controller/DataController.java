@@ -364,8 +364,11 @@ public class DataController {
 					.dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4())
 					.build();
 			try {
-				offerRedemption.setOptEndDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptEndDate()));
-				offerRedemption.setOptStartDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptStartDate()));
+				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
+				if(prepaidCxOfferRedemption.getOptEndDate() != null)
+					offerRedemption.setOptEndDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptEndDate()));
+				if(prepaidCxOfferRedemption.getOptStartDate() != null)
+					offerRedemption.setOptStartDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptStartDate()));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -405,8 +408,13 @@ public class DataController {
 					.daId(prepaidCxOfferEventCondition.getDaId())
 					.build();
 			try {
-				eventCondition.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
-				eventCondition.setCampaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
+				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
+				if(prepaidCxOfferEventCondition.getCampaignEndDate() != null) {
+					eventCondition.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
+				}
+				if(prepaidCxOfferEventCondition.getCampaignStartDate() != null) {
+					eventCondition.setCampaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
+				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
