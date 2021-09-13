@@ -101,7 +101,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	public void appConfigurationAddEntity(SaveConfigRequest saveConfigRequest) {
 		Boolean notification = (saveConfigRequest.getPayload().getNotification() != null) ? saveConfigRequest.getPayload().getNotification() : false;
 		// TODO update entity
-		Optional<PrepaidCxOfferConfig> opsFind = prepaidCxOfferConfigRepository.findByInstanceId(saveConfigRequest.getInstanceUuid());
+//		Optional<PrepaidCxOfferConfig> opsFind = prepaidCxOfferConfigRepository.findByInstanceId(saveConfigRequest.getInstanceUuid());
+		Optional<PrepaidCxOfferConfig> opsFind = prepaidCxOfferConfigRepository.findByInstanceId(saveConfigRequest.getPayload().getUuid());
+
 		PrepaidCxOfferConfig prepaidCxOfferConfig = null;
 		log.debug("get data  {} ", opsFind);
 		if(opsFind.isPresent()) {

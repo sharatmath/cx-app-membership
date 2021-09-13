@@ -194,7 +194,7 @@
                             <div id="eventConditionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseSix"><h5><i class="fa fa-plus"></i> Event Condition - Not Applicable</h5></div>
                         </div>
                         <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#directProvisioning">
-                            <div class="card-body"x-show="type === 'eventConditionDirectProvisioning' || type === 'offerMonitoring'">
+                            <div class="card-body" x-show="type === 'eventConditionDirectProvisioning' || type === 'offerMonitoring'">
                                 <template x-if="eventConditionData">
                                     <div>
                                         <div class="form-group row">
@@ -751,8 +751,8 @@
                                             </template>
                                         </div>
                                         <div class="container">
-                                            <template x-if="offerTypeDropdown === 'PROMO'">
-                                                <div class="manualRedemptionSelection">
+<!--                                            <template x-if="offerTypeDropdown === 'PROMO'">-->
+                                                <div class="manualRedemptionSelection" x-show="offerTypeDropdown === 'PROMO'">
                                                     <div class="form-group row">
                                                         <b>Unique Promo Code Message</b><br><br>
                                                         <div class="form-group row">
@@ -764,12 +764,12 @@
                                                     </div>
                                                     <div class="form-group row">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-2 col-form-label col-form-label">Promo Code List<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                            <label class="col-sm-2 col-form-label col-form-label">Promo Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                                             <div class="col-sm-4">
-                                                                <select id="promoCode" class="form-control" x-model="offerSelectionPromoCode">
+                                                                <select multiple id="promoCodeMultiple" class="w-100" x-model="offerSelectionPromoCode" name="offerSelectionPromoCode">
                                                                     <option>Choose...</option>
                                                                     <template x-for="list in promoList">
-                                                                        <option x-model="list.id"><span x-text="list.name"></span></option>
+                                                                        <option :key="list.id" :value="list.id" x-text="list.name"></option>
                                                                     </template>
                                                                 </select>
                                                             </div>
@@ -777,7 +777,7 @@
                                                     </div>
                                                     <div class="form-group row">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
+                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 1</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic1">
                                                             </div>
@@ -785,7 +785,7 @@
                                                     </div>
                                                     <div class="form-group row">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
+                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 2</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic2">
                                                             </div>
@@ -793,7 +793,7 @@
                                                     </div>
                                                     <div class="form-group row">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
+                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 3</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic3">
                                                             </div>
@@ -801,14 +801,14 @@
                                                     </div>
                                                     <div class="form-group row">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
+                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 4</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic4">
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </template>
+<!--                                            </template>-->
                                         </div>
                                     </div>
                                 </div>
@@ -836,27 +836,27 @@
                                         <div id="subsOfferEligibilityForm">
                                             <b>Total Offer Eligibility - For Configured Offer</b><br><br>
                                             <div class="form-group row">
-                                                <label for="isOfferLevelCapOnly" class="col-sm-4 col-form-label col-form-label">Total Offer Cap (max number of subscriber who can receive this offer)
-                                                </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
                                                         <input type="radio" id="isOfferLevelCapOnly" name="radioSubscriberOffer" class="custom-control-input" x-model="offerLevelType" value="cap-only">
                                                         <label class="custom-control-label" for="isOfferLevelCapOnly"></label>
                                                     </div>
                                                 </div>
+                                                <label for="isOfferLevelCapOnly" class="col-sm-4 col-form-label col-form-label">Total Offer Cap (max number of subscriber who can receive this offer)
+                                                </label>
                                                 <div class="col-sm-4">
                                                     <input type="number" :disabled="!offerLevelType || offerLevelType === 'cap-period'" class="form-control form-control-sm" id="offerLevelCapValue" x-model="eligibilityData.offerLevelCapValue">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label col-form-label">Totally Offer Cap and Period
-                                                </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
                                                         <input type="radio" id="isOfferLevelCapAndPeriod" name="radioSubscriberOffer" class="custom-control-input" x-model="offerLevelType" value="cap-period">
                                                         <label class="custom-control-label" for="isOfferLevelCapAndPeriod"></label>
                                                     </div>
                                                 </div>
+                                                <label class="col-sm-4 col-form-label col-form-label">Totally Offer Cap and Period
+                                                </label>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="offerLevelCapPeriodValue">Name</label>
                                                     <input type="number" :disabled="!offerLevelType || offerLevelType === 'cap-only'" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodValue" x-model="eligibilityData.offerLevelCapPeriodValue">
@@ -864,7 +864,7 @@
                                                 <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="offerLevelCapPeriodDays">Name</label>
-                                                    <input type="number" :disabled="!offerLevelType || offerLevelType === 'cap-only'" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodDays" x-model="eligibilityData.offerLevelCapPeriodDays">
+                                                    <input type="number" max="31" :disabled="!offerLevelType || offerLevelType === 'cap-only'" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodDays" x-model="eligibilityData.offerLevelCapPeriodDays">
                                                 </div>
                                                 <p>Days</p>
                                             </div>
@@ -887,7 +887,8 @@
                                             <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> in &nbsp;
 
                                             <label class="sr-only" for="inputFrequencyIn">Name</label>
-                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
+                                            <input type="number" max="31" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
+                                        Days
                                         </form><br>
                                         <div id="excludeSubsForm">
                                             <b>Exclude Subscriber from this if they are in the following Program</b><br><br>
@@ -896,7 +897,7 @@
                                                 <template x-for="list in programList">
                                                     <option :key="list.programId" :value="list.programId" x-text="list.programName"></option>
                                                 </template>
-                                            </select><span x-html="excludeSubscriber"></span>
+                                            </select>
                                         </div><br>
                                     </div>
 								</template>
@@ -908,7 +909,7 @@
 							<div id="fulfillmentAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseFour"><h5><i class="fa fa-plus"></i> Offer Monitoring - Not Applicable</h5></div>
 						</div>
 						<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#directProvisioning">
-                            <div class="card-body"x-show="type === 'offerMonitoringWithAssignment'">
+                            <div class="card-body" x-show="type === 'offerMonitoringWithAssignment'">
                                 <template x-if="monitoringData">
                                     <div>
                                         <div class="form-group">
@@ -1358,12 +1359,12 @@
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isRedemptionCapOnlyID" name="radioTotalRedemption" class="custom-control-input" value="redemption-only" x-model="totalRedemptionCapRadio">
+                                                        <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isRedemptionCapOnlyID" name="radioTotalRedemption" class="custom-control-input" value="redemption-only" x-model="totalRedemptionCapRadio">
                                                         <label class="custom-control-label" for="isRedemptionCapOnlyID"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-time-period'" type="text" class="form-control form-control-sm" id="redemptionCapValue" x-model="redemptionData.redemptionCapValue">
+                                                    <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-time-period' || recurringProvisioning === 'yes'" type="text" class="form-control form-control-sm" id="redemptionCapValue" x-model="redemptionData.redemptionCapValue">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -1371,21 +1372,21 @@
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isRedemptionCapAndPeriodID" name="radioTotalRedemption" class="custom-control-input" value="redemption-time-period" x-model="totalRedemptionCapRadio">
+                                                        <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isRedemptionCapAndPeriodID" name="radioTotalRedemption" class="custom-control-input" value="redemption-time-period" x-model="totalRedemptionCapRadio">
                                                         <label class="custom-control-label" for="isRedemptionCapAndPeriodID"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="totalRedemptionPeriodValue">Name</label>
-                                                    <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only'" type="text" class="form-control mb-2 mr-sm-2" id="totalRedemptionPeriodValue" x-model="redemptionData.totalRedemptionPeriodValue">
+                                                    <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="text" class="form-control mb-2 mr-sm-2" id="totalRedemptionPeriodValue" x-model="redemptionData.totalRedemptionPeriodValue">
                                                 </div>
                                                 <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="timePeriodValueEvery">Name</label>
-                                                    <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValueEvery" x-model="redemptionData.totalRedemptionPeriodEvery">
+                                                    <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValueEvery" x-model="redemptionData.totalRedemptionPeriodEvery">
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <select :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.totalRedemptionPeriodType">
+                                                    <select :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.totalRedemptionPeriodType">
                                                         <option>Choose...</option>
                                                         <option value="Days">Days</option>
                                                         <option value="Month">Month</option>
@@ -1401,12 +1402,12 @@
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isFrequencyOnlyID" name="radioSubscriberRedemption" class="custom-control-input" value="freq-only" x-model="subscriberRedemptionCapRadio">
+                                                        <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isFrequencyOnlyID" name="radioSubscriberRedemption" class="custom-control-input" value="freq-only" x-model="subscriberRedemptionCapRadio">
                                                         <label class="custom-control-label" for="isFrequencyOnlyID"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-timeperiod'" type="text" class="form-control form-control-sm" id="frequencyValue" x-model="redemptionData.frequencyValue">
+                                                    <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-timeperiod' || recurringProvisioning === 'yes'" type="text" class="form-control form-control-sm" id="frequencyValue" x-model="redemptionData.frequencyValue">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -1415,21 +1416,21 @@
                                                 </label>
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" id="isFrequencyAndTime" name="radioSubscriberRedemption" class="custom-control-input" value="freq-timeperiod" x-model="subscriberRedemptionCapRadio">
+                                                        <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isFrequencyAndTime" name="radioSubscriberRedemption" class="custom-control-input" value="freq-timeperiod" x-model="subscriberRedemptionCapRadio">
                                                         <label class="custom-control-label" for="isFrequencyAndTime"></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="timePeriodValue">Name</label>
-                                                    <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue" x-model="redemptionData.timePeriodValue">
+                                                    <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue" x-model="redemptionData.timePeriodValue">
                                                 </div>
                                                 <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                                 <div class="col-sm-2">
                                                     <label class="sr-only" for="timePeriodValue2">Name</label>
-                                                    <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue2" x-model="redemptionData.timePeriodEvery">
+                                                    <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue2" x-model="redemptionData.timePeriodEvery">
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <select :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.timePeriodType">
+                                                    <select :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.timePeriodType">
                                                         <option>Choose...</option>
                                                         <option value="Days">Days</option>
                                                         <option value="Month">Month</option>
@@ -1761,6 +1762,7 @@
     function jQuery() {
         $(document).ready(function() {
             $('#select2multiple').select2();
+            $('#promoCodeMultiple').select2();
         });
 
         $(document).ready(function(){
@@ -2037,6 +2039,7 @@
 					.then(res => res.json())
 					.then(data => {
 						this.offers = data
+                        // this.overallOfferName = data.overallOfferName
 					})
 					.catch(error => console.log(error))
 					.finally()
@@ -2276,8 +2279,6 @@
                 var request = { "amsAction" : "save", "requestId" : "save",
                     "payload": {
                         "type": this.type,
-                        "programId": "",
-                        "programName": "",
                         "uuid": INSTANCE_ID,
                         "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
                             return {
@@ -2291,7 +2292,7 @@
                                 "messageText4": this.offerSelectionDynamic4,
                                 "offerType": this.offerTypeDropdown,
                                 "overallOfferName": this.overallOfferName,
-                                "promoCodeList": this.offerSelectionPromoCode,
+                                "promoCodeList": $('#promoCodeMultiple').select2("val").toString(),
                                 "smsCampaignName": this.offerSelectionSmsCampaignName
                             }
                         }),

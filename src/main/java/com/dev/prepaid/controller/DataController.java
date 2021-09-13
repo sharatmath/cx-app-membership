@@ -302,7 +302,7 @@ public class DataController {
 		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
 		List<PrepaidCxOfferSelection>  data = offerService.getOfferSelection(instanceId);
 		for (PrepaidCxOfferSelection prepaidCxOfferSelection: data){
-			log.debug("{}", prepaidCxOfferSelection);
+			log.info("{}", prepaidCxOfferSelection);
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
 			offerDetailDTO = offerDetail(
 					prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()),
@@ -319,7 +319,7 @@ public class DataController {
 			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
 			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
 			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
-			log.debug("{}", offerDetailDTO);
+			log.info("{}", offerDetailDTO);
 			list.add(offerDetailDTO);
 		}
 		return  list;
