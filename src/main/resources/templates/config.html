@@ -943,7 +943,7 @@
                                                             class="select-component-dropdown"
                                                         ></v-select>
                                                         <div style="margin:10px"></div>
-                                                        <!-- <v-select 
+                                                        <v-select 
                                                             :options="dropdownCustomTimeIndicatorList"
                                                             placeholder="Select Custom Time Indicator"
                                                             label="Select Custom Time Indicator" 
@@ -951,7 +951,7 @@
                                                             :clearable="true"
                                                             v-model="selectedIndicator"
                                                             class="select-component-dropdown"
-                                                        ></v-select> -->
+                                                        ></v-select>
                                                     </div>
                                                     <div class="config-card col-8">
                                                         <div v-for="component in componentList" v-bind:is="component"></div>
@@ -973,7 +973,7 @@
 
                                     <div v-show="tab === 'customQuery'"> 
                                         <div class="card-body tab-card"> 
-                                            <!-- <div class="customUIcontainer row">
+                                            <div class="customUIcontainer row">
                                                 <div class="selection-card col-4"> 
                                                     <v-select 
                                                         :options="dropdownTableList"
@@ -1005,7 +1005,7 @@
                                                     </textarea>
                                                     <button :disabled="sqlInputFunction.length === 0" class="btn btn-singtel" style="float:right; margin:10px">Check SQL</button>
                                                 </div>
-                                            </div> -->
+                                            </div>
                                         </div>
                                     </div>
                                 
@@ -1117,27 +1117,27 @@
                                                 <option>Program 4</option>
                                                 <option>Program 5</option>
                                             </select>
-<!--                                            <div class="flex h-screen items-center justify-center gap-4">-->
+                                           <div class="flex h-screen items-center justify-center gap-4">
 
-<!--                                                <div-->
-<!--                                                        x-data="combobox()"-->
-<!--                                                        x-init="items = ['Banana', 'Apple', 'Pear', 'Orange']"-->
-<!--                                                        class="relative">-->
-<!--                                                    <button x-on:click="showCheckboxes = !showCheckboxes" class="bg-white p-1 rounded border border-grey-500 inline-flex">-->
-<!--                                                        <div class="px-2 mr-auto" x-text="buttonLabel()"></div>-->
-<!--                                                        <div class="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded px-1 ml-4" x-text="showCheckboxes ? '▴' : '▾'"></div>-->
-<!--                                                    </button>-->
-<!--                                                    <div x-show.transition="showCheckboxes" class="absolute my-2 border border-grey-500 p-4" style="top:100%;">-->
-<!--                                                        <template x-for="item in items">-->
-<!--                                                            <label class="block">-->
-<!--                                                                <input type="checkbox" x-bind:checked="itemSelected(item)" x-on:change="toggleItem(item)">-->
-<!--                                                                <span x-text="item"></span>-->
-<!--                                                            </label>-->
-<!--                                                        </template>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
+                                               <div
+                                                       x-data="combobox()"
+                                                       x-init="items = ['Banana', 'Apple', 'Pear', 'Orange']"
+                                                       class="relative">
+                                                   <button x-on:click="showCheckboxes = !showCheckboxes" class="bg-white p-1 rounded border border-grey-500 inline-flex">
+                                                       <div class="px-2 mr-auto" x-text="buttonLabel()"></div>
+                                                       <div class="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded px-1 ml-4" x-text="showCheckboxes ? '▴' : '▾'"></div>
+                                                   </button>
+                                                   <div x-show.transition="showCheckboxes" class="absolute my-2 border border-grey-500 p-4" style="top:100%;">
+                                                       <template x-for="item in items">
+                                                           <label class="block">
+                                                               <input type="checkbox" x-bind:checked="itemSelected(item)" x-on:change="toggleItem(item)">
+                                                               <span x-text="item"></span>
+                                                           </label>
+                                                       </template>
+                                                   </div>
+                                               </div>
 
-<!--                                            </div>-->
+                                           </div>
                                         </div><br>
                                     </div>
 								</template>
