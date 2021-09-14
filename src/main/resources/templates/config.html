@@ -628,45 +628,41 @@
 						<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#directProvisioning">
 							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
                                 <div>
-                                    <div class="container">
-                                        <div class="form-group row">
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label col-form-label">Overall Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                <div class="col-sm-4">
-                                                    <input type="text" class="form-control form-control-sm" x-model="overallOfferName">
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="form-inline col-sm-12">
+                                        <label for="overallOfferName">Overall Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                        <input id="overallOfferName" type="text" class="form-control" x-model="overallOfferName">
                                     </div>
-                                    <form class="form-inline">
-                                        <label for="offerType" class="my-1 mr-2">Offer Type<sup><i class="fas fa-asterisk"></i></sup></label>
-                                        <select id="offerType" class="custom-select my-1 mr-sm-2 col-sm-2" x-model="offerTypeDropdown">
-                                            <option>Choose...</option>
-                                            <option value="DA">DA Offer</option>
-                                            <option value="OMS">OMS Offer</option>
-                                            <option value="PROMO">Unique Promo Code</option>
-                                        </select>
-                                        <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS'">
+                                    <div class="form-inline col-sm-12">
+                                        <div class="col-sm-4 row">
+                                            <label for="offerType">Offer Type<sup><i class="fas fa-asterisk"></i></sup></label>
+                                            <select id="offerType" class="custom-select" x-model="offerTypeDropdown">
+                                                <option>Choose...</option>
+                                                <option value="DA">DA Offer</option>
+                                                <option value="OMS">OMS Offer</option>
+                                                <option value="PROMO">Unique Promo Code</option>
+                                            </select>
+                                        </div>
+                                        <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS'" class="col-sm-8 row">
                                             <div class="form-group row">
-                                                <label for="offerBucket" class="my-1 mr-2">&nbsp;&nbsp;&nbsp;Offer Bucket<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                <select id="offerBucket" x-ref="selectBucket" class="custom-select my-1 mr-sm-2 col-sm-4" >
+                                                <label for="offerBucket">Offer Bucket<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <select id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
                                                     <option>Choose...</option>
                                                     <template x-for="offerList in offerBucketList">
                                                         <option x-model="offerList.id"><span x-text="offerList.text"></span></option>
                                                     </template>
                                                 </select>
-                                                <label class="my-1 mr-2" for="offersCampaign">Campaign Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                <select id="offersCampaign" x-ref="selectCampaign" class="custom-select my-1 mr-sm-2 col-sm-4">
+                                                <label for="offersCampaign">Campaign Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <select id="offersCampaign" x-ref="selectCampaign" class="custom-select col-sm-3">
                                                     <option>Choose...</option>
                                                     <template x-for="campaignList in campaignOfferList">
                                                         <option x-model="campaignList.id"><span x-text="campaignList.text"></span></option>
                                                     </template>
                                                 </select>
                                             </div>
-                                        </div>&nbsp;&nbsp;&nbsp;
+                                        </div>
                                         <button type="button" class="btn btn-singtel my-1 add-direct-prov" @click="addNewData()"><i class="fas fa-plus-circle"></i>
                                         </button>
-                                    </form>
+                                    </div>
                                     <hr>
                                     <div id="main">
                                         <div class="container" id="campaignDetailList">
@@ -1969,7 +1965,7 @@
             offerSelectionDynamic2: null,
             offerSelectionDynamic3: null,
             offerSelectionDynamic4: null,
-            offerSelectionPromoCode: null,
+            offerSelectionPromoCode: [],
             // Offer Selection END
             // Redemption BEGIN
             redemptionOptKeywordRadio: null,
@@ -2039,7 +2035,20 @@
 					.then(res => res.json())
 					.then(data => {
 						this.offers = data
-                        // this.overallOfferName = data.overallOfferName
+                        this.overallOfferName = data[0].overallOfferName
+
+                        // console.log(data[0].promoCodeList)
+                        // this.offerSelectionPromoCode = JSON.stringify(data[0].promoCodeList.split(', '))
+                        // $('#promoCodeMultiple').val(JSON.stringify(data[0].promoCodeList.split(', ')))
+                        // $("#promoCodeMultiple").select2("val", ['0590','4217'])
+                        // $.each($('#promoCodeMultiple'), function(){
+                        //     $("#promoCodeMultiple").select2("val", ['0590','4217'])
+                        // });
+                        // $('#promoCodeMultiple').select2();
+                        // $('#promoCodeMultiple').val(['0590','4217']);
+                        // $('#promoCodeMultiple').val(['0590','4217']).trigger("change");
+                        $('#promoCodeMultiple').val(JSON.stringify(data[0].promoCodeList.split(','))).trigger("change");
+                        // console.log(this.offerSelectionPromoCode)
 					})
 					.catch(error => console.log(error))
 					.finally()
@@ -2049,6 +2058,27 @@
 					.then(res => res.json())
 					.then(data => {
 						this.eligibilityData = data
+
+                        // this.excludeSubscriber = JSON.parse("[" + data.excludeProgramId + "]")
+                        // this.excludeSubscriber = JSON.parse("[" + "3774508,3892948" + "]")
+                        // this.excludeSubscriber = ("3774508,3892948").split(",")
+                        this.excludeSubscriber = JSON.stringify(data.excludeProgramId.split(', '))
+
+
+                        // for Radio in Total Eligibility
+                        if (data.isOfferLevelCapOnly == true){
+                            this.offerLevelType = 'cap-only'
+                        } else {
+                            this.offerLevelType = 'cap-period'
+                        }
+
+                        // for Radio in Subscriber
+                        if (data.isFrequencyOnly == true) {
+                            this.subscriberOfferEligibility = 'freq-only'
+                        } else {
+                            this.subscriberOfferEligibility = 'freq-timeperiod'
+                        }
+
 					})
 					.catch(error => console.log(error))
 					.finally()
@@ -2058,6 +2088,13 @@
 					.then(res => res.json())
 					.then(data => {
 						this.monitoringData = data
+
+                        // for Radio Monitoring Fulfillment Period
+                        if (data.monitorPeriodRadio == true) {
+                            this.monitoringFulfillmentRadio = 'period-only'
+                        } else {
+                            this.monitoringFulfillmentRadio = 'specified-period'
+                        }
 					})
 					.catch(error => console.log(error))
 					.finally()
@@ -2076,6 +2113,27 @@
                     .then(res => res.json())
                     .then(data => {
                         this.redemptionData = data
+
+                        // for Radio in Total Redemption Cap
+                        if (data.isRedemptionCapOnly == true) {
+                            this.totalRedemptionCapRadio = 'redemption-only'
+                        } else {
+                            this.totalRedemptionCapRadio = 'redemption-time-period'
+                        }
+
+                        // for Radio Subcriber Redemption Cap
+                        if (data.isFrequencyOnly == true) {
+                            this.subscriberRedemptionCapRadio = 'freq-only'
+                        } else {
+                            this.subscriberRedemptionCapRadio = 'freq-timeperiod'
+                        }
+
+                        // for Radio is Recurring Provisioning
+                        if (data.recurringProvisioning == true) {
+                            this.recurringProvisioning = 'yes'
+                        } else {
+                            this.recurringProvisioning = 'no'
+                        }
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -2222,7 +2280,7 @@
                 const offerRedemption = {
                     "totalRecurringFrequency": this.redemptionData.totalRecurringFrequency,
                     "redemptionMethod": this.redemptionData.redemptionMethod,
-                    "recurringProvisioning": this.redemptionData.recurringProvisioning,
+                    "recurringProvisioning": true,
                 };
                 if (this.totalRedemptionCapRadio === 'redemption-only') {
                     offerRedemption.isRedemptionCapOnly = true;
@@ -2300,6 +2358,7 @@
                     offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
                 }
                 if (this.recurringProvisioning === 'no') {
+                    offerRedemption.recurringProvisioning       = false;
                     offerRedemption.isRedemptionCapOnly         = false;
                     offerRedemption.isRedemptionCapAndPeriod    = false;
                     offerRedemption.redemptionCapValue          = null;
