@@ -294,11 +294,13 @@ public class OfferServiceImpl implements OfferService {
 					.name(overallOfferName)
 					.isUnique(false)
 					.status("SUCCESS")
+					.message("data already exist")
 					.build();
 		}else{
 			return OverallOfferName.builder()
 					.name(overallOfferName)
 					.isUnique(true)
+					.message("data Overall Offer Name eligible to use")
 					.status("SUCCESS")
 					.build();
 		}

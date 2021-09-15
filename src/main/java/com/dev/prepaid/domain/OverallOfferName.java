@@ -13,4 +13,5 @@ public class OverallOfferName {
     String status;
     boolean isUnique;
     String name;
+    String message;
 }
