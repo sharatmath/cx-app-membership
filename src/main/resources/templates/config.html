@@ -626,14 +626,24 @@
 						<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#directProvisioning">
 							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
                                 <div>
-                                    <div class="form-inline col-sm-12">
-                                        <label for="overallOfferName">Overall Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                        <input id="overallOfferName" type="text" class="form-control" x-model="overallOfferName">
+                                    <div class="form-inline">
+                                        <div class="col-sm-2">
+                                            <label for="overallOfferName">Overall Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input id="overallOfferName" type="text" class="form-control" x-model="overallOfferName">
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button @click="checkUniqueOfferName" class="btn btn-singtel">Check Overall Offer Name</button>
+                                        </div>
+                                        <div x-show="uniqueData == false" class="col-sm-4">
+                                            <span x-text="uniqueMessage" style="color:red"></span>
+                                        </div>
                                     </div><br>
                                     <div class="form-inline col-sm-12">
                                         <div class="col-sm-4 row">
                                             <label for="offerType">Offer Type<sup><i class="fas fa-asterisk"></i></sup></label>
-                                            <select id="offerType" class="custom-select col-sm-7" x-model="offerTypeDropdown">
+                                            <select :disabled="uniqueData == false || !offerSelectionSmsCampaignName" id="offerType" class="custom-select col-sm-7" x-model="offerTypeDropdown">
                                                 <option>Choose...</option>
                                                 <option value="DA">DA Offer</option>
                                                 <option value="OMS">OMS Offer</option>
@@ -643,14 +653,14 @@
                                         <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS'" class="col-sm-7 row" style="margin-right: 75px">
                                             <div class="form-group row">
                                                 <label for="offerBucket">Offer Bucket<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                <select id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
+                                                <select :disabled="uniqueData == false || !offerSelectionSmsCampaignName" id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
                                                     <option>Choose...</option>
                                                     <template x-for="offerList in offerBucketList">
                                                         <option x-model="offerList.id"><span x-text="offerList.text"></span></option>
                                                     </template>
                                                 </select>
                                                 <label for="offersCampaign">Campaign Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                <select id="offersCampaign" x-ref="selectCampaign" class="custom-select col-sm-3">
+                                                <select :disabled="uniqueData == false || !offerSelectionSmsCampaignName" id="offersCampaign" x-ref="selectCampaign" class="custom-select col-sm-3">
                                                     <option>Choose...</option>
                                                     <template x-for="campaignList in campaignOfferList">
                                                         <option x-model="campaignList.id"><span x-text="campaignList.text"></span></option>
@@ -658,7 +668,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <button type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+                                        <button :disabled="uniqueData == false || !offerSelectionSmsCampaignName" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
                                         </button>
                                     </div>
                                     <hr>
@@ -1904,55 +1914,62 @@
 
 <!--AlpineJS BEGIN-->
 <script>
-	// const INSTANCE_ID = $("#instanceId").text();
-	const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
+	const INSTANCE_ID = $("#instanceId").text();
+	// const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
 	const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
 
 	function configureMembership() {
 		return {
-			offers: [],
-			offerBucketList: [],
-			campaignOfferList: [],
-            programList: [],
-            countryList: [],
-            promoList: [],
-            excludeSubscriber: [],
-            selectedType: null,
-			selectedBucket: null,
-			selectedBucketLabel: null,
-			selectedCampaign: null,
-            offerTypeDropdown: 'DA',
-			configureMembership: null,
-			eligibilityData: {},
-			monitoringData: {},
-            redemptionData: {},
-            eventConditionData: {},
-            redemptionMethod: 'Auto',
-            type: 'directProvisioning',
-            eventTypeData: 'Top-Up',
-            eventConditionTypeData: 'Top-Up',
-            offerLevelType: null,
-            subscriberOfferEligibility: null,
-            monitoringFulfillmentRadio: null,
-            totalRedemptionCapRadio: null,
-            subscriberRedemptionCapRadio: null,
-            recurringProvisioning: null,
-            recurringRedemptionRadio: null,
+			offers                          : [],
+			offerBucketList                 : [],
+			campaignOfferList               : [],
+            programList                     : [],
+            countryList                     : [],
+            promoList                       : [],
+            excludeSubscriber               : [],
+            selectedType                    : null,
+			selectedBucket                  : null,
+			selectedBucketLabel             : null,
+			selectedCampaign                : null,
+            offerTypeDropdown               : 'DA',
+			configureMembership             : null,
+			eligibilityData                 : {},
+			monitoringData                  : {},
+            redemptionData                  : {},
+            uniqueData                      : {},
+            eventConditionData              : {},
+            redemptionMethod                : 'Auto',
+            type                            : 'directProvisioning',
+            eventTypeData                   : 'Top-Up',
+            eventConditionTypeData          : 'Top-Up',
+            offerLevelType                  : null,
+            subscriberOfferEligibility      : null,
+            monitoringFulfillmentRadio      : null,
+            totalRedemptionCapRadio         : null,
+            subscriberRedemptionCapRadio    : null,
+            recurringProvisioning           : null,
+            recurringRedemptionRadio        : null,
             // Offer Selection BEGIN
-            overallOfferName: null,
-            offerSelectionSmsCampaignName: null,
-            offerSelectionDynamic1: null,
-            offerSelectionDynamic2: null,
-            offerSelectionDynamic3: null,
-            offerSelectionDynamic4: null,
-            offerSelectionPromoCode: [],
+            overallOfferName                : null,
+            offerSelectionSmsCampaignName   : null,
+            offerSelectionDynamic1          : null,
+            offerSelectionDynamic2          : null,
+            offerSelectionDynamic3          : null,
+            offerSelectionDynamic4          : null,
+            offerSelectionPromoCode         : [],
             // Offer Selection END
+
+            // Check Duplicate Offer Name BEGIN
+            uniqueData                      : null,
+            uniqueMessage                   : null,
+            // Check Duplicate Offer Name END
+
             // Redemption BEGIN
-            redemptionOptKeywordRadio: null,
+            redemptionOptKeywordRadio       : null,
             // Redemption END
 
             uncheckTotalOffer() {
-                this.offerLevelType = null
+                this.offerLevelType         = null
             },
 
             uncheckSubscriber() {
@@ -1960,11 +1977,22 @@
             },
 
             uncheckTotalRedemption() {
-                this.totalRedemptionCapRadio = null
+                this.totalRedemptionCapRadio    = null
             },
 
             uncheckSubscriberRedemption() {
               this.subscriberRedemptionCapRadio = null
+            },
+
+            checkUniqueOfferName() {
+                fetch(PROD_URL + `checkUniqueOverallOfferName?overallOfferName=${this.overallOfferName}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        this.uniqueData = data.unique
+                        this.uniqueMessage = data.message
+                    })
+                    .catch(error => console.log(error))
+                    .finally()
             },
 
 			addNewData() {
