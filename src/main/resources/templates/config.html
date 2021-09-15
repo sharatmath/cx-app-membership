@@ -6,8 +6,6 @@
 
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
-<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">-->
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.2.0/tailwind.min.css">-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
@@ -183,7 +181,7 @@
 							<option value="directProvisioning">Direct Provisioning</option>
 							<option value="offerMonitoringWithAssignment">Offer Monitoring with Offer Assignment</option>
                             <option value="eventConditionDirectProvisioning">Event Condition With Direct Provisioning</option>
-							<option value="offerMonitoring">Event Condition Only</option>
+							<option value="eventCondition">Event Condition Only</option>
 						</select>
 					</div>
 				</div>
@@ -194,7 +192,7 @@
                             <div id="eventConditionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseSix"><h5><i class="fa fa-plus"></i> Event Condition - Not Applicable</h5></div>
                         </div>
                         <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#directProvisioning">
-                            <div class="card-body" x-show="type === 'eventConditionDirectProvisioning' || type === 'offerMonitoring'">
+                            <div class="card-body" x-show="type === 'eventConditionDirectProvisioning' || type === 'eventCondition'">
                                 <template x-if="eventConditionData">
                                     <div>
                                         <div class="form-group row">
@@ -244,7 +242,7 @@
                                                         <select class="form-control" id="eventConditionTypeData" x-model="eventConditionTypeData">
                                                             <option value="Top-Up">Top-Up</option>
                                                             <option value="Usage">Usage</option>
-                                                            <option value="arpu">ARPU</option>
+                                                            <option value="ARPU">ARPU</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -564,7 +562,7 @@
                                                 </div>
                                             </div>
                                         </template>
-                                        <template x-if="eventConditionTypeData === 'arpu'">
+                                        <template x-if="eventConditionTypeData === 'ARPU'">
                                             <div class="eventConditionFulfillmentMonitoring" id="eventConditionDataARPUForm">
                                                 <div class="mb-3 row">
                                                     <label for="operators" class="col-sm-2 col-form-label">OPID</label>
@@ -631,18 +629,18 @@
                                     <div class="form-inline col-sm-12">
                                         <label for="overallOfferName">Overall Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
                                         <input id="overallOfferName" type="text" class="form-control" x-model="overallOfferName">
-                                    </div>
+                                    </div><br>
                                     <div class="form-inline col-sm-12">
                                         <div class="col-sm-4 row">
                                             <label for="offerType">Offer Type<sup><i class="fas fa-asterisk"></i></sup></label>
-                                            <select id="offerType" class="custom-select" x-model="offerTypeDropdown">
+                                            <select id="offerType" class="custom-select col-sm-7" x-model="offerTypeDropdown">
                                                 <option>Choose...</option>
                                                 <option value="DA">DA Offer</option>
                                                 <option value="OMS">OMS Offer</option>
                                                 <option value="PROMO">Unique Promo Code</option>
                                             </select>
                                         </div>
-                                        <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS'" class="col-sm-8 row">
+                                        <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS'" class="col-sm-7 row" style="margin-right: 75px">
                                             <div class="form-group row">
                                                 <label for="offerBucket">Offer Bucket<sup><i class="fas fa-asterisk"></i></sup></label>
                                                 <select id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
@@ -660,7 +658,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <button type="button" class="btn btn-singtel my-1 add-direct-prov" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+                                        <button type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
                                         </button>
                                     </div>
                                     <hr>
@@ -747,8 +745,7 @@
                                             </template>
                                         </div>
                                         <div class="container">
-<!--                                            <template x-if="offerTypeDropdown === 'PROMO'">-->
-                                                <div class="manualRedemptionSelection" x-show="offerTypeDropdown === 'PROMO'">
+                                            <div class="manualRedemptionSelection" x-show="offerTypeDropdown === 'PROMO' || offerSelectionSmsCampaignName != null">
                                                     <div class="form-group row">
                                                         <b>Unique Promo Code Message</b><br><br>
                                                         <div class="form-group row">
@@ -765,7 +762,7 @@
                                                                 <select multiple id="promoCodeMultiple" class="w-100" x-model="offerSelectionPromoCode" name="offerSelectionPromoCode">
                                                                     <option>Choose...</option>
                                                                     <template x-for="list in promoList">
-                                                                        <option :key="list.id" :value="list.id" x-text="list.name"></option>
+                                                                        <option :key="list.name" :value="list.name" x-text="list.name"></option>
                                                                     </template>
                                                                 </select>
                                                             </div>
@@ -804,7 +801,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-<!--                                            </template>-->
                                         </div>
                                     </div>
                                 </div>
@@ -826,11 +822,14 @@
 							<div id="eligibilityPolicyAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseThree"><h5><i class="fa fa-plus"></i> Eligibility Policy - Optional</h5></div>
 						</div>
 						<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#directProvisioning">
-							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning' || type === 'offerMonitoring'">
+							<div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning' || type === 'eventCondition'">
 								<template x-if="eligibilityData">
                                     <div>
                                         <div id="subsOfferEligibilityForm">
                                             <b>Total Offer Eligibility - For Configured Offer</b><br><br>
+                                            <div class="form-group row">
+                                                <button @click="uncheckTotalOffer" class="btn btn-singtel">Uncheck Total Offer</button>
+                                            </div>
                                             <div class="form-group row">
                                                 <div class="col-sm-1">
                                                     <div class="custom-control custom-radio">
@@ -838,7 +837,7 @@
                                                         <label class="custom-control-label" for="isOfferLevelCapOnly"></label>
                                                     </div>
                                                 </div>
-                                                <label for="isOfferLevelCapOnly" class="col-sm-4 col-form-label col-form-label">Total Offer Cap (max number of subscriber who can receive this offer)
+                                                <label for="isOfferLevelCapOnly" class="col-sm-4">Total Offer Cap (max number of subscriber who can receive this offer)
                                                 </label>
                                                 <div class="col-sm-4">
                                                     <input type="number" :disabled="!offerLevelType || offerLevelType === 'cap-period'" class="form-control form-control-sm" id="offerLevelCapValue" x-model="eligibilityData.offerLevelCapValue">
@@ -866,32 +865,46 @@
                                             </div>
                                         </div><br>
                                         <b>Subscriber Offer Eligibility - For Configured Offer</b><br><br>
-                                        <form class="form-inline">
-                                            <div class="custom-control custom-radio my-1 mr-sm-2">
-                                                <input type="radio" class="custom-control-input" id="frequencyOnly" name="radioSubscriberOfferEligibility" x-model="subscriberOfferEligibility" value="freq-only">
-                                                <label class="custom-control-label" for="frequencyOnly">Frequency Only</label>
+                                        <div class="form-group row">
+                                            <button @click="uncheckSubscriber" class="btn btn-singtel">Uncheck Subscriber Offer</button>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1">
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" class="custom-control-input" id="frequencyOnly" name="radioSubscriberOfferEligibility" x-model="subscriberOfferEligibility" value="freq-only">
+                                                    <label class="custom-control-label" for="frequencyOnly"></label>
+                                                </div>
                                             </div>
-                                            <label class="sr-only" for="inputFrequency">Name</label>
-                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-timeperiod'"  class="form-control mb-2 mr-sm-2" id="inputFrequency" x-model="eligibilityData.frequency">
-                                        </form>
-                                        <form class="form-inline">
-                                            <div class="custom-control custom-radio my-1 mr-sm-2">
-                                                <input type="radio" class="custom-control-input" name="radioSubscriberOfferEligibility" id="frequencyTimePeriod" x-model="subscriberOfferEligibility" value="freq-timeperiod">
-                                                <label class="custom-control-label" for="frequencyTimePeriod">Frequency and Time Period</label>
+                                            <label class="col-sm-4" for="frequencyOnly">Frequency Only</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-timeperiod'"  class="form-control form-control-sm" id="inputFrequency" x-model="eligibilityData.frequency">
                                             </div>
-                                            <label class="sr-only" for="inputFrequencyTimePeriod">Name</label>
-                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> in &nbsp;
-
-                                            <label class="sr-only" for="inputFrequencyIn">Name</label>
-                                            <input type="number" max="31" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control mb-2 mr-sm-2" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
-                                        Days
-                                        </form><br>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1">
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" class="custom-control-input" name="radioSubscriberOfferEligibility" id="frequencyTimePeriod" x-model="subscriberOfferEligibility" value="freq-timeperiod">
+                                                    <label class="custom-control-label" for="frequencyTimePeriod"></label>
+                                                </div>
+                                            </div>
+                                            <label class="col-sm-4 col-form-label col-form-label">Frequency and Time Period</label>
+                                            <div class="col-sm-2">
+                                                <label class="sr-only" for="inputFrequencyTimePeriod">Name</label>
+                                                <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> &nbsp;
+                                            </div>
+                                            <label class="col-sm-1 col-form-label col-form-label">in</label>
+                                            <div class="col-sm-2">
+                                                <label class="sr-only" for="inputFrequencyIn">Name</label>
+                                                <input type="number" max="31" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
+                                            </div>
+                                            <p>Days</p>
+                                        </div><br>
                                         <div id="excludeSubsForm">
                                             <b>Exclude Subscriber from this if they are in the following Program</b><br><br>
                                             <select multiple id="select2multiple" class="w-100" x-model="excludeSubscriber" name="excludeSubscriber">
                                                 <option>Choose...</option>
                                                 <template x-for="list in programList">
-                                                    <option :key="list.programId" :value="list.programId" x-text="list.programName"></option>
+                                                    <option :key="list.programName" :value="list.programName" x-text="list.programName"></option>
                                                 </template>
                                             </select>
                                         </div><br>
@@ -916,7 +929,7 @@
                                                         <select :disabled="type === 'directProvisioning'" id="eventTypeData" class="form-control" x-model="eventTypeData">
                                                             <option value="Top-Up">Top-Up</option>
                                                             <option value="Usage">Usage</option>
-                                                            <option value="arpu">ARPU</option>
+                                                            <option value="ARPU">ARPU</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -1232,7 +1245,7 @@
                                                 </div>
                                             </div>
                                         </template>
-                                        <template x-if="eventTypeData === 'arpu'">
+                                        <template x-if="eventTypeData === 'ARPU'">
                                             <div class="eventTypeFulfillmentMonitoring" id="ARPUForm">
                                                 <div class="mb-3 row">
                                                     <label for="operators" class="col-sm-2 col-form-label">OPID</label>
@@ -1350,6 +1363,9 @@
                                         <div id="redemptionCapForm">
                                             <b>Total Redemption Cap</b><br><br>
                                             <div class="form-group row">
+                                                <button @click="uncheckTotalRedemption" class="btn btn-singtel">Uncheck Total Redemption</button>
+                                            </div>
+                                            <div class="form-group row">
                                                 <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
                                                     Total Number of Redemption
                                                 </label>
@@ -1392,6 +1408,9 @@
                                         </div><br>
                                         <div id="subscriberRedemptionCapForm">
                                             <b>Subscriber Redemption Cap</b><br><br>
+                                            <div class="form-group row">
+                                                <button @click="uncheckSubscriberRedemption" class="btn btn-singtel">Uncheck Subscriber Redemption</button>
+                                            </div>
                                             <div class="form-group row">
                                                 <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
                                                     Frequency Only
@@ -1486,12 +1505,12 @@
                                                 <label class="col-sm-2 col-form-label col-form-label"><b>Redemption Method</b></label>
                                                 <div class="col-sm-3">
                                                     <select class="form-control mb-2 mr-sm-2" id="redemptionAutoOrManual" x-model="redemptionMethod">
-                                                        <option value="AutoRedemption">Auto Redemption</option>
-                                                        <option value="ManualRedemption">Manual Redemption</option>
+                                                        <option value="Auto">Auto Redemption</option>
+                                                        <option value="Manual">Manual Redemption</option>
                                                     </select>
                                                 </div>
                                             </div>
-                                            <template x-if="redemptionMethod === 'AutoRedemption'">
+                                            <template x-if="redemptionMethod === 'Auto'">
                                                 <div>
                                                     <div class="form-group row">
                                                         <b>Post Provision Message</b><br><br>
@@ -1544,7 +1563,7 @@
                                                     </div>
                                                 </div>
                                             </template>
-                                            <template x-if="redemptionMethod === 'ManualRedemption'">
+                                            <template x-if="redemptionMethod === 'Manual'">
                                                 <div class="manualRedemptionSelection">
                                                     <div class="form-group row">
                                                         <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
@@ -1558,14 +1577,6 @@
                                                             <label class="sr-only">Name</label>
                                                             <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordDP" x-model="redemptionData.optKeyword">
                                                         </div>
-<!--                                                        <label class="col-sm-2 col-form-label col-form-label">Keyword Validity<sup><i class="fas fa-asterisk"></i></sup></label>-->
-<!--                                                        <div class="col-sm-2">-->
-<!--                                                            <label class="sr-only" for="inputKeywordValidityDP">Name</label>-->
-<!--                                                            <input type="text" class="form-control mb-2 mr-sm-2" id="inputKeywordValidityDP" x-model="redemptionData.smsKeywordValidityDays">-->
-<!--                                                        </div>-->
-<!--                                                        <div class="col-sm-2">-->
-<!--                                                            Days-->
-<!--                                                        </div>-->
                                                     </div>
                                                     <div id="redemptionOPTinKeyword">
                                                         <b>Opt in Keyword Valdity<sup><i class="fas fa-asterisk"></i></sup>:</b>
@@ -1617,10 +1628,6 @@
                                                                     </div>
                                                                     <div class="col-sm-3">
                                                                         Days
-<!--                                                                        <select :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" class="form-control" x-model="monitoringData.monitorPeriodDayMonth">-->
-<!--                                                                            <option value="month">Month</option>-->
-<!--                                                                            <option value="days">Days</option>-->
-<!--                                                                        </select>-->
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1720,7 +1727,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>-->
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
@@ -1729,32 +1735,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <!--jQUERY BEGIN-->
 <script>
-    function combobox() {
-        return {
-            items: [],
-            selectedItems: [],
-            buttonLabel() {
-                if (this.selectedItems.length > 0) {
-                    return this.selectedItems.join(', ');
-                }
-                else {
-                    return "Please select...";
-                }
-            },
-            itemSelected(item) {
-                return this.selectedItems.indexOf(item) > -1;
-            },
-            toggleItem(item) {
-                if (this.itemSelected(item)) {
-                    this.selectedItems.filter(i => i !== item);
-                }
-                else {
-                    this.selectedItems.push(item);
-                }
-            },
-            showCheckboxes: false
-        }
-    }
     function jQuery() {
         $(document).ready(function() {
             $('#select2multiple').select2();
@@ -1798,7 +1778,7 @@
                     $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Not Applicable</h5>");
                     $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
                 }
-                if (this.value == 'offerMonitoring')
+                if (this.value == 'eventCondition')
                 {
                     $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Required</h5>");
                     $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Not Applicable</h5>");
@@ -1844,7 +1824,7 @@
                 {
                     $("#usageForm").show();
                 }
-                if (this.value == 'arpu')
+                if (this.value == 'ARPU')
                 {
                     $("#ARPUForm").show();
                 }
@@ -1869,7 +1849,7 @@
                 {
                     $("#eventConditionDataUsageForm").show();
                 }
-                if (this.value == 'arpu')
+                if (this.value == 'ARPU')
                 {
                     $("#eventConditionDataARPUForm").show();
                 }
@@ -1884,11 +1864,11 @@
             $('#redemptionAutoOrManual').on('change', function() {
                 $(".manualRedemptionSelection").hide();
 
-                if (this.value == 'AutoRedemption')
+                if (this.value == 'Auto')
                 {
                     $(".manualRedemptionSelection").hide();
                 }
-                if (this.value == 'ManualRedemption')
+                if (this.value == 'Manual')
                 {
                     $(".manualRedemptionSelection").show();
                 }
@@ -1924,8 +1904,8 @@
 
 <!--AlpineJS BEGIN-->
 <script>
-	const INSTANCE_ID = $("#instanceId").text();
-	// const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
+	// const INSTANCE_ID = $("#instanceId").text();
+	const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
 	const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
 
 	function configureMembership() {
@@ -1947,7 +1927,7 @@
 			monitoringData: {},
             redemptionData: {},
             eventConditionData: {},
-            redemptionMethod: 'AutoRedemption',
+            redemptionMethod: 'Auto',
             type: 'directProvisioning',
             eventTypeData: 'Top-Up',
             eventConditionTypeData: 'Top-Up',
@@ -1970,6 +1950,23 @@
             // Redemption BEGIN
             redemptionOptKeywordRadio: null,
             // Redemption END
+
+            uncheckTotalOffer() {
+                this.offerLevelType = null
+            },
+
+            uncheckSubscriber() {
+                this.subscriberOfferEligibility = null
+            },
+
+            uncheckTotalRedemption() {
+                this.totalRedemptionCapRadio = null
+            },
+
+            uncheckSubscriberRedemption() {
+              this.subscriberRedemptionCapRadio = null
+            },
+
 			addNewData() {
 			    let campaignID = this.selectedCampaign;
 			    let data = JSON.parse(JSON.stringify(this.offers));
@@ -2034,21 +2031,17 @@
 				fetch(PROD_URL + `offerSelection?instanceId=${INSTANCE_ID}`)
 					.then(res => res.json())
 					.then(data => {
-						this.offers = data
-                        this.overallOfferName = data[0].overallOfferName
+						this.offers                             = data
+                        this.overallOfferName                   = data[0].overallOfferName
+                        this.offerSelectionSmsCampaignName      = data[0].smsCampaignName
+                        this.offerSelectionDynamic1             = data[0].messageText1
+                        this.offerSelectionDynamic2             = data[0].messageText2
+                        this.offerSelectionDynamic3             = data[0].messageText3
+                        this.offerSelectionDynamic4             = data[0].messageText4
 
-                        // console.log(data[0].promoCodeList)
-                        // this.offerSelectionPromoCode = JSON.stringify(data[0].promoCodeList.split(', '))
-                        // $('#promoCodeMultiple').val(JSON.stringify(data[0].promoCodeList.split(', ')))
-                        // $("#promoCodeMultiple").select2("val", ['0590','4217'])
-                        // $.each($('#promoCodeMultiple'), function(){
-                        //     $("#promoCodeMultiple").select2("val", ['0590','4217'])
-                        // });
-                        // $('#promoCodeMultiple').select2();
-                        // $('#promoCodeMultiple').val(['0590','4217']);
-                        // $('#promoCodeMultiple').val(['0590','4217']).trigger("change");
-                        $('#promoCodeMultiple').val(JSON.stringify(data[0].promoCodeList.split(','))).trigger("change");
-                        // console.log(this.offerSelectionPromoCode)
+                        if (data[0].promoCodeList != null) {
+                            $('#promoCodeMultiple').val(JSON.stringify(data[0].promoCodeList.split(','))).trigger("change");
+                        }
 					})
 					.catch(error => console.log(error))
 					.finally()
@@ -2059,23 +2052,21 @@
 					.then(data => {
 						this.eligibilityData = data
 
-                        // this.excludeSubscriber = JSON.parse("[" + data.excludeProgramId + "]")
-                        // this.excludeSubscriber = JSON.parse("[" + "3774508,3892948" + "]")
-                        // this.excludeSubscriber = ("3774508,3892948").split(",")
-                        this.excludeSubscriber = JSON.stringify(data.excludeProgramId.split(', '))
-
+                        if (data.excludeProgramId != null) {
+                            $('#select2multiple').val(JSON.stringify(data.excludeProgramId.split(','))).trigger("change");
+                        }
 
                         // for Radio in Total Eligibility
                         if (data.isOfferLevelCapOnly == true){
                             this.offerLevelType = 'cap-only'
-                        } else {
+                        } else if (data.isOfferLevelCapAndPeriod == true) {
                             this.offerLevelType = 'cap-period'
                         }
 
                         // for Radio in Subscriber
                         if (data.isFrequencyOnly == true) {
                             this.subscriberOfferEligibility = 'freq-only'
-                        } else {
+                        } else if (data.isFrequencyAndTime == true) {
                             this.subscriberOfferEligibility = 'freq-timeperiod'
                         }
 
@@ -2089,10 +2080,13 @@
 					.then(data => {
 						this.monitoringData = data
 
+                        // for event type
+                        this.eventTypeData = data.eventType
+
                         // for Radio Monitoring Fulfillment Period
                         if (data.monitorPeriodRadio == true) {
                             this.monitoringFulfillmentRadio = 'period-only'
-                        } else {
+                        } else if (data.monitorSpecifiedPeriodRadio == true) {
                             this.monitoringFulfillmentRadio = 'specified-period'
                         }
 					})
@@ -2114,25 +2108,34 @@
                     .then(data => {
                         this.redemptionData = data
 
+                        this.redemptionMethod = data.redemptionMethod
+
                         // for Radio in Total Redemption Cap
                         if (data.isRedemptionCapOnly == true) {
                             this.totalRedemptionCapRadio = 'redemption-only'
-                        } else {
+                        } else if (data.isRedemptionCapAndPeriod == true) {
                             this.totalRedemptionCapRadio = 'redemption-time-period'
                         }
 
                         // for Radio Subcriber Redemption Cap
                         if (data.isFrequencyOnly == true) {
                             this.subscriberRedemptionCapRadio = 'freq-only'
-                        } else {
+                        } else if (data.isFrequencyAndTime == true) {
                             this.subscriberRedemptionCapRadio = 'freq-timeperiod'
                         }
 
                         // for Radio is Recurring Provisioning
                         if (data.recurringProvisioning == true) {
                             this.recurringProvisioning = 'yes'
-                        } else {
+                        } else if (data.recurringProvisioning == false) {
                             this.recurringProvisioning = 'no'
+                        }
+
+                        //for Radio Opt in Keyword
+                        if (data.dateRange == true) {
+                            this.redemptionOptKeywordRadio = 'date-range'
+                        } else if (data.period == true) {
+                            this.redemptionOptKeywordRadio = 'period-only'
                         }
                     })
                     .catch(error => console.log(error))
@@ -2168,173 +2171,173 @@
             saveConfiguration() {
                 var message = { amsAction : "save", requestId : "save" };
                 const offerEventCondition = {
-                    "eventType": this.eventConditionTypeData,
-                    "campaignStartDate": this.eventConditionData.campaignStartDate,
-                    "campaignEndDate": this.eventConditionData.campaignEndDate,
-                    "eventConditionName": this.eventConditionData.eventConditionName,
+                    "eventType"             : this.eventConditionTypeData,
+                    "campaignStartDate"     : this.eventConditionData.campaignStartDate,
+                    "campaignEndDate"       : this.eventConditionData.campaignEndDate,
+                    "eventConditionName"    : this.eventConditionData.eventConditionName,
                 };
                 if (this.eventConditionTypeData === 'Top-Up') {
-                    offerEventCondition.creditMethod = this.eventConditionData.creditMethod;
-                    offerEventCondition.usageServiceType = this.eventConditionData.usageServiceType;
-                    offerEventCondition.operatorId = this.eventConditionData.operatorId;
-                    offerEventCondition.topUpCode = this.eventConditionData.topUpCode;
-                    offerEventCondition.topUpCurBalanceOp = this.eventConditionData.topUpCurBalanceOp || 'AllTopUp';
-                    offerEventCondition.topUpCurBalanceValue = this.eventConditionData.topUpCurBalanceValue;
-                    offerEventCondition.topUpAccBalanceBeforeOp = this.eventConditionData.topUpAccBalanceBeforeOp || 'AllTopUp';
-                    offerEventCondition.topUpAccBalanceBeforeValue = this.eventConditionData.topUpAccBalanceBeforeValue;
-                    offerEventCondition.topUpOp = this.eventConditionData.topUpOp || 'lessThan';
-                    offerEventCondition.topUpTransactionValue = this.eventConditionData.topUpTransactionValue;
-                    offerEventCondition.topUpDaId = this.eventConditionData.daId;
-                    offerEventCondition.topUpDaBalanceOp = this.eventConditionData.daBalanceOp || 'lessThan';
-                    offerEventCondition.topUpDaBalanceValue = this.eventConditionData.daBalanceValue;
-                    offerEventCondition.topUpTempServiceClass = this.eventConditionData.tempServiceClass;
+                    offerEventCondition.creditMethod                = this.eventConditionData.creditMethod;
+                    offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
+                    offerEventCondition.operatorId                  = this.eventConditionData.operatorId;
+                    offerEventCondition.topUpCode                   = this.eventConditionData.topUpCode;
+                    offerEventCondition.topUpCurBalanceOp           = this.eventConditionData.topUpCurBalanceOp || 'AllTopUp';
+                    offerEventCondition.topUpCurBalanceValue        = this.eventConditionData.topUpCurBalanceValue;
+                    offerEventCondition.topUpAccBalanceBeforeOp     = this.eventConditionData.topUpAccBalanceBeforeOp || 'AllTopUp';
+                    offerEventCondition.topUpAccBalanceBeforeValue  = this.eventConditionData.topUpAccBalanceBeforeValue;
+                    offerEventCondition.topUpOp                     = this.eventConditionData.topUpOp || 'lessThan';
+                    offerEventCondition.topUpTransactionValue       = this.eventConditionData.topUpTransactionValue;
+                    offerEventCondition.topUpDaId                   = this.eventConditionData.daId;
+                    offerEventCondition.topUpDaBalanceOp            = this.eventConditionData.daBalanceOp || 'lessThan';
+                    offerEventCondition.topUpDaBalanceValue         = this.eventConditionData.daBalanceValue;
+                    offerEventCondition.topUpTempServiceClass       = this.eventConditionData.tempServiceClass;
                 } else if (this.eventConditionTypeData === 'Usage') {
-                    offerEventCondition.usageServiceType = this.eventConditionData.usageServiceType;
-                    offerEventCondition.eventTypeUsages = this.eventConditionData.eventTypeUsages;
-                    offerEventCondition.eventUsagesOp = this.eventConditionData.eventUsagesOp;
-                    offerEventCondition.eventUsagesValue = this.eventConditionData.eventUsagesValue;
-                    offerEventCondition.aggregationPeriodDays = this.eventConditionData.aggregationPeriodDays;
-                } else if (this.eventConditionTypeData === 'arpu') {
-                    offerEventCondition.operatorId = this.eventConditionData.operatorId;
-                    offerEventCondition.arpuType = this.eventConditionData.arpuType;
+                    offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
+                    offerEventCondition.eventTypeUsages             = this.eventConditionData.eventTypeUsages;
+                    offerEventCondition.eventUsagesOp               = this.eventConditionData.eventUsagesOp;
+                    offerEventCondition.eventUsagesValue            = this.eventConditionData.eventUsagesValue;
+                    offerEventCondition.aggregationPeriodDays       = this.eventConditionData.aggregationPeriodDays;
+                } else if (this.eventConditionTypeData === 'ARPU') {
+                    offerEventCondition.operatorId                  = this.eventConditionData.operatorId;
+                    offerEventCondition.arpuType                    = this.eventConditionData.arpuType;
                     if (this.eventConditionData.arpuType === 'others') {
-                        offerEventCondition.arpuSelectedTopUpCode = this.eventConditionData.arpuSelectedTopUpCode;
+                        offerEventCondition.arpuSelectedTopUpCode   = this.eventConditionData.arpuSelectedTopUpCode;
                     } else {
-                        offerEventCondition.arpuSelectedTopUpCode = null;
+                        offerEventCondition.arpuSelectedTopUpCode   = null;
                     }
-                    offerEventCondition.arpuOp = this.eventConditionData.arpuOp;
-                    offerEventCondition.arpuValue = this.eventConditionData.arpuValue;
-                    offerEventCondition.aggregationPeriodDays = this.eventConditionData.aggregationPeriodDays;
+                    offerEventCondition.arpuOp                      = this.eventConditionData.arpuOp;
+                    offerEventCondition.arpuValue                   = this.eventConditionData.arpuValue;
+                    offerEventCondition.aggregationPeriodDays       = this.eventConditionData.aggregationPeriodDays;
                 };
                 const offerMonitoring = {
                     "eventType": this.eventTypeData,
                 };
                 if (this.monitoringFulfillmentRadio === 'specified-period') {
-                    offerMonitoring.monitorPeriodRadio = false;
-                    offerMonitoring.monitorSpecifiedPeriodRadio = true;
-                    offerMonitoring.monitorStartDate = this.monitoringData.monitorStartDate;
-                    offerMonitoring.monitorEndDate = this.monitoringData.monitorEndDate;
-                    offerMonitoring.monitorPeriod = null;
-                    offerMonitoring.monitorPeriodDayMonth = null;
+                    offerMonitoring.monitorPeriodRadio              = false;
+                    offerMonitoring.monitorSpecifiedPeriodRadio     = true;
+                    offerMonitoring.monitorStartDate                = this.monitoringData.monitorStartDate;
+                    offerMonitoring.monitorEndDate                  = this.monitoringData.monitorEndDate;
+                    offerMonitoring.monitorPeriod                   = null;
+                    offerMonitoring.monitorPeriodDayMonth           = null;
                 } else if (this.monitoringFulfillmentRadio === 'period-only') {
-                    offerMonitoring.monitorPeriodRadio = true;
-                    offerMonitoring.monitorSpecifiedPeriodRadio = false;
-                    offerMonitoring.monitorStartDate = null;
-                    offerMonitoring.monitorEndDate = null;
-                    offerMonitoring.monitorPeriod = this.monitoringData.monitorPeriod;
+                    offerMonitoring.monitorPeriodRadio              = true;
+                    offerMonitoring.monitorSpecifiedPeriodRadio     = false;
+                    offerMonitoring.monitorStartDate                = null;
+                    offerMonitoring.monitorEndDate                  = null;
+                    offerMonitoring.monitorPeriod                   = this.monitoringData.monitorPeriod;
                     if (this.monitoringData.monitorPeriodDayMonth === 'string') {
-                        offerMonitoring.monitorPeriodDayMonth = 'month';
+                        offerMonitoring.monitorPeriodDayMonth       = 'month';
                     } else {
-                        offerMonitoring.monitorPeriodDayMonth = this.monitoringData.monitorPeriodDayMonth;
+                        offerMonitoring.monitorPeriodDayMonth       = this.monitoringData.monitorPeriodDayMonth;
                     }
                 };
                 if (this.eventTypeData === 'Top-Up') {
-                    offerMonitoring.topUpCreditMethod = this.monitoringData.topUpCreditMethod;
-                    offerMonitoring.topUpUsageServiceType = this.monitoringData.topUpUsageServiceType;
-                    offerMonitoring.topUpOperator = this.monitoringData.topUpOperator;
-                    offerMonitoring.topUpCode = this.monitoringData.topUpCode;
-                    offerMonitoring.topUpCurBalanceOp = this.monitoringData.topUpCurBalanceOp || 'AllTopUp';
-                    offerMonitoring.topUpCurBalanceValue = this.monitoringData.topUpCurBalanceValue;
-                    offerMonitoring.topUpAccBalanceBeforeOp = this.monitoringData.topUpAccBalanceBeforeOp || 'AllTopUp';
-                    offerMonitoring.topUpAccBalanceBeforeValue = this.monitoringData.topUpAccBalanceBeforeValue;
-                    offerMonitoring.topUpOp = this.monitoringData.topUpOp || 'lessThan';
-                    offerMonitoring.topUpTransactionValue = this.monitoringData.topUpTransactionValue;
-                    offerMonitoring.topUpDaId = this.monitoringData.topUpDaId;
-                    offerMonitoring.topUpDaBalanceOp = this.monitoringData.topUpDaBalanceOp || 'lessThan';
-                    offerMonitoring.topUpDaBalanceValue = this.monitoringData.topUpDaBalanceValue;
-                    offerMonitoring.topUpTempServiceClass = this.monitoringData.topUpTempServiceClass;
+                    offerMonitoring.topUpCreditMethod           = this.monitoringData.topUpCreditMethod;
+                    offerMonitoring.topUpUsageServiceType       = this.monitoringData.topUpUsageServiceType;
+                    offerMonitoring.topUpOperator               = this.monitoringData.topUpOperator;
+                    offerMonitoring.topUpCode                   = this.monitoringData.topUpCode;
+                    offerMonitoring.topUpCurBalanceOp           = this.monitoringData.topUpCurBalanceOp || 'AllTopUp';
+                    offerMonitoring.topUpCurBalanceValue        = this.monitoringData.topUpCurBalanceValue;
+                    offerMonitoring.topUpAccBalanceBeforeOp     = this.monitoringData.topUpAccBalanceBeforeOp || 'AllTopUp';
+                    offerMonitoring.topUpAccBalanceBeforeValue  = this.monitoringData.topUpAccBalanceBeforeValue;
+                    offerMonitoring.topUpOp                     = this.monitoringData.topUpOp || 'lessThan';
+                    offerMonitoring.topUpTransactionValue       = this.monitoringData.topUpTransactionValue;
+                    offerMonitoring.topUpDaId                   = this.monitoringData.topUpDaId;
+                    offerMonitoring.topUpDaBalanceOp            = this.monitoringData.topUpDaBalanceOp || 'lessThan';
+                    offerMonitoring.topUpDaBalanceValue         = this.monitoringData.topUpDaBalanceValue;
+                    offerMonitoring.topUpTempServiceClass       = this.monitoringData.topUpTempServiceClass;
                 } else if (this.eventTypeData === 'Usage') {
-                    offerMonitoring.usageServiceType = this.monitoringData.usageServiceType;
-                    offerMonitoring.usageType = this.monitoringData.usageType;
-                    offerMonitoring.countryCode = this.monitoringData.countryCode;
-                    offerMonitoring.usageOperator = this.monitoringData.usageOperator;
-                    offerMonitoring.usageValue = this.monitoringData.usageValue;
-                } else if (this.eventTypeData === 'arpu') {
-                    offerMonitoring.arpuOp = this.monitoringData.arpuOp;
-                    offerMonitoring.arpuType = this.monitoringData.arpuType;
-                    offerMonitoring.arpuSelectedTopUpCode = this.monitoringData.arpuSelectedTopUpCode;
-                    offerMonitoring.arpuValue = this.monitoringData.arpuValue;
+                    offerMonitoring.usageServiceType            = this.monitoringData.usageServiceType;
+                    offerMonitoring.usageType                   = this.monitoringData.usageType;
+                    offerMonitoring.countryCode                 = this.monitoringData.countryCode;
+                    offerMonitoring.usageOperator               = this.monitoringData.usageOperator;
+                    offerMonitoring.usageValue                  = this.monitoringData.usageValue;
+                } else if (this.eventTypeData === 'ARPU') {
+                    offerMonitoring.arpuOp                      = this.monitoringData.arpuOp;
+                    offerMonitoring.arpuType                    = this.monitoringData.arpuType;
+                    offerMonitoring.arpuSelectedTopUpCode       = this.monitoringData.arpuSelectedTopUpCode;
+                    offerMonitoring.arpuValue                   = this.monitoringData.arpuValue;
                 };
                 const offerEligibility = {
-                    "isFrequencyOnly": this.eligibilityData.isFrequencyOnly,
+                    "isFrequencyOnly"   : this.eligibilityData.isFrequencyOnly,
                     "isFrequencyAndTime": this.eligibilityData.isFrequencyAndTime,
-                    "frequency": this.eligibilityData.frequency,
-                    "numberOfFrequency": this.eligibilityData.numberOfFrequency,
-                    "numberOfDays": this.eligibilityData.numberOfDays,
-                    "excludeProgramId": $('#select2multiple').select2("val").toString(),
+                    "frequency"         : this.eligibilityData.frequency,
+                    "numberOfFrequency" : this.eligibilityData.numberOfFrequency,
+                    "numberOfDays"      : this.eligibilityData.numberOfDays,
+                    "excludeProgramId"  : $('#select2multiple').select2("val").toString(),
                 };
                 if (this.offerLevelType === 'cap-only') {
-                    offerEligibility.isOfferLevelCapOnly = true;
-                    offerEligibility.isOfferLevelCapAndPeriod = false;
-                    offerEligibility.offerLevelCapValue = this.eligibilityData.offerLevelCapValue;
-                    offerEligibility.offerLevelCapPeriodValue = null;
-                    offerEligibility.offerLevelCapPeriodDays = null;
+                    offerEligibility.isOfferLevelCapOnly        = true;
+                    offerEligibility.isOfferLevelCapAndPeriod   = false;
+                    offerEligibility.offerLevelCapValue         = this.eligibilityData.offerLevelCapValue;
+                    offerEligibility.offerLevelCapPeriodValue   = null;
+                    offerEligibility.offerLevelCapPeriodDays    = null;
                 } else if (this.offerLevelType === 'cap-period') {
-                    offerEligibility.isOfferLevelCapOnly = false;
-                    offerEligibility.isOfferLevelCapAndPeriod = true;
-                    offerEligibility.offerLevelCapValue = null;
-                    offerEligibility.offerLevelCapPeriodValue = this.eligibilityData.offerLevelCapPeriodValue;
-                    offerEligibility.offerLevelCapPeriodDays = this.eligibilityData.offerLevelCapPeriodDays;
+                    offerEligibility.isOfferLevelCapOnly        = false;
+                    offerEligibility.isOfferLevelCapAndPeriod   = true;
+                    offerEligibility.offerLevelCapValue         = null;
+                    offerEligibility.offerLevelCapPeriodValue   = this.eligibilityData.offerLevelCapPeriodValue;
+                    offerEligibility.offerLevelCapPeriodDays    = this.eligibilityData.offerLevelCapPeriodDays;
                 }
 
                 const offerRedemption = {
-                    "totalRecurringFrequency": this.redemptionData.totalRecurringFrequency,
-                    "redemptionMethod": this.redemptionData.redemptionMethod,
-                    "recurringProvisioning": true,
+                    "totalRecurringFrequency"   : this.redemptionData.totalRecurringFrequency,
+                    "redemptionMethod"          : this.redemptionData.redemptionMethod,
+                    "recurringProvisioning"     : true,
                 };
                 if (this.totalRedemptionCapRadio === 'redemption-only') {
-                    offerRedemption.isRedemptionCapOnly = true;
-                    offerRedemption.isRedemptionCapAndPeriod = false;
-                    offerRedemption.redemptionCapValue = this.redemptionData.redemptionCapValue;
-                    offerRedemption.totalRedemptionPeriodValue = null;
-                    offerRedemption.totalRedemptionPeriodEvery = null;
-                    offerRedemption.totalRedemptionPeriodType = null;
+                    offerRedemption.isRedemptionCapOnly         = true;
+                    offerRedemption.isRedemptionCapAndPeriod    = false;
+                    offerRedemption.redemptionCapValue          = this.redemptionData.redemptionCapValue;
+                    offerRedemption.totalRedemptionPeriodValue  = null;
+                    offerRedemption.totalRedemptionPeriodEvery  = null;
+                    offerRedemption.totalRedemptionPeriodType   = null;
                 } else if (this.totalRedemptionCapRadio === 'redemption-time-period') {
-                    offerRedemption.isRedemptionCapOnly = false;
-                    offerRedemption.isRedemptionCapAndPeriod = true;
-                    offerRedemption.redemptionCapValue = null;
-                    offerRedemption.totalRedemptionPeriodValue = this.redemptionData.totalRedemptionPeriodValue;
-                    offerRedemption.totalRedemptionPeriodEvery = this.redemptionData.totalRedemptionPeriodEvery;
-                    offerRedemption.totalRedemptionPeriodType = this.redemptionData.totalRedemptionPeriodType;
+                    offerRedemption.isRedemptionCapOnly         = false;
+                    offerRedemption.isRedemptionCapAndPeriod    = true;
+                    offerRedemption.redemptionCapValue          = null;
+                    offerRedemption.totalRedemptionPeriodValue  = this.redemptionData.totalRedemptionPeriodValue;
+                    offerRedemption.totalRedemptionPeriodEvery  = this.redemptionData.totalRedemptionPeriodEvery;
+                    offerRedemption.totalRedemptionPeriodType   = this.redemptionData.totalRedemptionPeriodType;
                 };
                 if (this.subscriberRedemptionCapRadio === 'freq-only') {
-                    offerRedemption.isFrequencyOnly = true;
-                    offerRedemption.isFrequencyAndTime = false;
-                    offerRedemption.frequencyValue = this.redemptionData.frequencyValue;
-                    offerRedemption.timePeriodValue = null;
-                    offerRedemption.timePeriodEvery = null;
-                    offerRedemption.timePeriodType = null;
+                    offerRedemption.isFrequencyOnly     = true;
+                    offerRedemption.isFrequencyAndTime  = false;
+                    offerRedemption.frequencyValue      = this.redemptionData.frequencyValue;
+                    offerRedemption.timePeriodValue     = null;
+                    offerRedemption.timePeriodEvery     = null;
+                    offerRedemption.timePeriodType      = null;
                 } else if (this.subscriberRedemptionCapRadio === 'freq-timeperiod') {
-                    offerRedemption.isFrequencyOnly = false;
-                    offerRedemption.isFrequencyAndTime = true;
-                    offerRedemption.frequencyValue = null;
-                    offerRedemption.timePeriodValue = this.redemptionData.timePeriodValue;
-                    offerRedemption.timePeriodEvery = this.redemptionData.timePeriodEvery;
-                    offerRedemption.timePeriodType = this.redemptionData.timePeriodType;
+                    offerRedemption.isFrequencyOnly     = false;
+                    offerRedemption.isFrequencyAndTime  = true;
+                    offerRedemption.frequencyValue      = null;
+                    offerRedemption.timePeriodValue     = this.redemptionData.timePeriodValue;
+                    offerRedemption.timePeriodEvery     = this.redemptionData.timePeriodEvery;
+                    offerRedemption.timePeriodType      = this.redemptionData.timePeriodType;
                 };
                 if (this.recurringRedemptionRadio === 'req-day') {
-                    offerRedemption.isRecurringFrequencyAndPeriod = true;
-                    offerRedemption.isRecurringFrequencyEachMonth = false;
-                    offerRedemption.recurringFrequencyValue = this.redemptionData.recurringFrequencyValue;
-                    offerRedemption.recurringFrequencyPeriodValue = this.redemptionData.recurringFrequencyPeriodValue;
-                    offerRedemption.recurringFrequencyDayOfMonth = null;
+                    offerRedemption.isRecurringFrequencyAndPeriod   = true;
+                    offerRedemption.isRecurringFrequencyEachMonth   = false;
+                    offerRedemption.recurringFrequencyValue         = this.redemptionData.recurringFrequencyValue;
+                    offerRedemption.recurringFrequencyPeriodValue   = this.redemptionData.recurringFrequencyPeriodValue;
+                    offerRedemption.recurringFrequencyDayOfMonth    = null;
                 } else if (this.recurringRedemptionRadio === 'req-month') {
-                    offerRedemption.isRecurringFrequencyAndPeriod = false;
-                    offerRedemption.isRecurringFrequencyEachMonth = true;
-                    offerRedemption.recurringFrequencyValue = null;
-                    offerRedemption.recurringFrequencyPeriodValue = null;
-                    offerRedemption.recurringFrequencyDayOfMonth = this.redemptionData.recurringFrequencyDayOfMonth;
+                    offerRedemption.isRecurringFrequencyAndPeriod   = false;
+                    offerRedemption.isRecurringFrequencyEachMonth   = true;
+                    offerRedemption.recurringFrequencyValue         = null;
+                    offerRedemption.recurringFrequencyPeriodValue   = null;
+                    offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
                 }
-                if (this.redemptionMethod === 'AutoRedemption') {
-                    offerRedemption.redemptionMethod = 'AutoRedemption';
-                    offerRedemption.smsCampaignName = this.redemptionData.smsCampaignName;
-                    offerRedemption.dynamicVariable1 = this.redemptionData.dynamicVariable1;
-                    offerRedemption.dynamicVariable2 = this.redemptionData.dynamicVariable2;
-                    offerRedemption.dynamicVariable3 = this.redemptionData.dynamicVariable3;
-                    offerRedemption.dynamicVariable4 = this.redemptionData.dynamicVariable4;
-                    offerRedemption.dynamicVariable5 = this.redemptionData.dynamicVariable5;
-                } else if (this.redemptionMethod === 'ManualRedemption') {
-                    offerRedemption.redemptionMethod    = 'ManualRedemption';
+                if (this.redemptionMethod === 'Auto') {
+                    offerRedemption.redemptionMethod    = 'Auto';
+                    offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
+                    offerRedemption.dynamicVariable1    = this.redemptionData.dynamicVariable1;
+                    offerRedemption.dynamicVariable2    = this.redemptionData.dynamicVariable2;
+                    offerRedemption.dynamicVariable3    = this.redemptionData.dynamicVariable3;
+                    offerRedemption.dynamicVariable4    = this.redemptionData.dynamicVariable4;
+                    offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
+                } else if (this.redemptionMethod === 'Manual') {
+                    offerRedemption.redemptionMethod    = 'Manual';
                     offerRedemption.optKeyword          = this.redemptionData.optKeyword;
                     if (this.redemptionOptKeywordRadio == 'period-only') {
                         offerRedemption.dateRange       = true;
@@ -2379,18 +2382,18 @@
                         "uuid": INSTANCE_ID,
                         "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
                             return {
-                                offerBucketId: item.offerBucketId,
-                                offerBucketType: item.offerBucketType,
-                                offerCampaignId: item.offerCampaignId,
-                                offerCampaignName: item.offerCampaignName,
-                                "messageText1": this.offerSelectionDynamic1,
-                                "messageText2": this.offerSelectionDynamic2,
-                                "messageText3": this.offerSelectionDynamic3,
-                                "messageText4": this.offerSelectionDynamic4,
-                                "offerType": this.offerTypeDropdown,
-                                "overallOfferName": this.overallOfferName,
-                                "promoCodeList": $('#promoCodeMultiple').select2("val").toString(),
-                                "smsCampaignName": this.offerSelectionSmsCampaignName
+                                offerBucketId       : item.offerBucketId,
+                                offerBucketType     : item.offerBucketType,
+                                offerCampaignId     : item.offerCampaignId,
+                                offerCampaignName   : item.offerCampaignName,
+                                "messageText1"      : this.offerSelectionDynamic1,
+                                "messageText2"      : this.offerSelectionDynamic2,
+                                "messageText3"      : this.offerSelectionDynamic3,
+                                "messageText4"      : this.offerSelectionDynamic4,
+                                "offerType"         : this.offerTypeDropdown,
+                                "overallOfferName"  : this.overallOfferName,
+                                "promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
+                                "smsCampaignName"   : this.offerSelectionSmsCampaignName
                             }
                         }),
                         offerEventCondition,

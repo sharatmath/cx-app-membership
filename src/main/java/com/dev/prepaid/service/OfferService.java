@@ -30,4 +30,5 @@ public interface OfferService {
 	public List<ResponSysProgram> listProgram();
 	public List<Country> listCountry();
 	public List<PromoCode> listOfferType();
+	public OverallOfferName checkOverallOfferName(String overallOfferName);
 }

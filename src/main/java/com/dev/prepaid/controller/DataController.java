@@ -465,4 +465,10 @@ public class DataController {
 	public List<PromoCode> listOfferType(){
 		return offerService.listOfferType();
 	}
+
+	@GetMapping(value = "checkUniqueOverallOfferName")
+	public OverallOfferName checkUniqueOverallOfferName(
+			@RequestParam(value = "overallOfferName", required = true) String overallOfferName) throws ParseException {
+		return offerService.checkOverallOfferName(overallOfferName);
+	}
 }

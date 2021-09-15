@@ -287,6 +287,22 @@ public class OfferServiceImpl implements OfferService {
 		return list;
 	}
 
+	public OverallOfferName checkOverallOfferName(String overallOfferName) {
+		Optional<PrepaidCxOfferConfig> opsFind = prepaidCxOfferConfigRepository.findByOverallOfferName(overallOfferName);
+		if(opsFind.isPresent()){
+			return OverallOfferName.builder()
+					.name(overallOfferName)
+					.isUnique(false)
+					.status("SUCCESS")
+					.build();
+		}else{
+			return OverallOfferName.builder()
+					.name(overallOfferName)
+					.isUnique(true)
+					.status("SUCCESS")
+					.build();
+		}
+	}
 
 	public List<Country> listCountry(){
 		return countryRepository.findAll();
