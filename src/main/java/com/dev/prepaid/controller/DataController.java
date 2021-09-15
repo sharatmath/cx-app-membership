@@ -296,12 +296,18 @@ public class DataController {
     public void evict(){
 		offerService.evictAllCaches();
 	}
+
+
+	@GetMapping(value = "offerPromoCode")
+	public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+		return offerService.getOfferPromoCode(instanceId);
+	}
     		
     @GetMapping(value = "offerSelection")
 	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
-		List<PrepaidCxOfferSelection>  data = offerService.getOfferSelection(instanceId);
-		for (PrepaidCxOfferSelection prepaidCxOfferSelection: data){
+		List<OfferSelection>  data = offerService.getOfferSelection(instanceId);
+		for (OfferSelection prepaidCxOfferSelection: data){
 			log.info("{}", prepaidCxOfferSelection);
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
 			offerDetailDTO = offerDetail(
@@ -311,14 +317,14 @@ public class DataController {
 //			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
 //			offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferType());
 //			offerDetailDTO.setOfferCampaignId(Long.valueOf(prepaidCxOfferSelection.getOfferId()));
-			offerDetailDTO.setSmsCampaignName(prepaidCxOfferSelection.getSmsCampaignName());
-			offerDetailDTO.setOfferType(prepaidCxOfferSelection.getOfferType());
-			offerDetailDTO.setPromoCodeList(prepaidCxOfferSelection.getPromoCodeList());
-			offerDetailDTO.setMessageText1(prepaidCxOfferSelection.getMessageText1());
-			offerDetailDTO.setMessageText2(prepaidCxOfferSelection.getMessageText2());
-			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
-			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
-			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
+//			offerDetailDTO.setSmsCampaignName(prepaidCxOfferSelection.getSmsCampaignName());
+//			offerDetailDTO.setOfferType(prepaidCxOfferSelection.getOfferType());
+//			offerDetailDTO.setPromoCodeList(prepaidCxOfferSelection.getPromoCodeList());
+//			offerDetailDTO.setMessageText1(prepaidCxOfferSelection.getMessageText1());
+//			offerDetailDTO.setMessageText2(prepaidCxOfferSelection.getMessageText2());
+//			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
+//			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
+//			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
 			log.info("{}", offerDetailDTO);
 			list.add(offerDetailDTO);
 		}

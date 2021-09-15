@@ -24,6 +24,9 @@ public class Config {
 	@SerializedName("offerSelection")
 	private List<OfferSelection> offerSelection;
 
+	@SerializedName("offerPromoCode")
+	private OfferPromoCode offerPromoCode;
+
 	@SerializedName("offerEligibility")
 	private OfferEligibility offerEligibility;
 

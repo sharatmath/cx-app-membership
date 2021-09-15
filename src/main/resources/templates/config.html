@@ -166,7 +166,7 @@
 </head>
 
 <body><br>
-<div class="container" x-data="{...configureMembership(), ...jQuery()}" x-init="[eventTypeDropdown(), offerBucketDropdown(), campaignOfferDropdown(), getOfferSelection(), eligibilityPolicy(), monitoringPolicy(), redemptionPolicy(), eventConditionPolicy(), getProgramList(), getCountryList(), getPromoList()]">
+<div class="container" x-data="{...configureMembership(), ...jQuery()}" x-init="[eventTypeDropdown(), offerBucketDropdown(), campaignOfferDropdown(), getOfferSelection(), eligibilityPolicy(), monitoringPolicy(), redemptionPolicy(), eventConditionPolicy(), getProgramList(), getCountryList(), getPromoList(), getPromoCodeList()]">
 	<div class="row">
 		<div class="col-md-12 mt-12 card">
 
@@ -2012,6 +2012,7 @@
                         .finally()
                 }
 			},
+
             eventTypeDropdown() {
                 if(this.offerTypeDropdown == 'DA' || this.offerTypeDropdown == 'OMS') {
                     this.$watch("offerTypeDropdown", (value) => {
@@ -2019,6 +2020,7 @@
                     });
                 }
             },
+
 			offerBucketDropdown() {
 				this.select2 = $(this.$refs.selectBucket).select2();
 				this.select2.on("select2:select", (event) => {
@@ -2036,6 +2038,7 @@
 					.catch(error => console.log(error))
 					.finally()
 			},
+
 			campaignOfferDropdown() {
 				this.select2 = $(this.$refs.selectCampaign).select2();
 				this.select2.on("select2:select", (event) => {
@@ -2054,28 +2057,40 @@
 						.finally()
 				}
 			},
+
 			removeOffer(index) {
 				this.offers.splice(index, 1)
 			},
+
 			getOfferSelection() {
 				fetch(PROD_URL + `offerSelection?instanceId=${INSTANCE_ID}`)
 					.then(res => res.json())
 					.then(data => {
-						this.offers                             = data
-                        this.overallOfferName                   = data[0].overallOfferName
-                        this.offerSelectionSmsCampaignName      = data[0].smsCampaignName
-                        this.offerSelectionDynamic1             = data[0].messageText1
-                        this.offerSelectionDynamic2             = data[0].messageText2
-                        this.offerSelectionDynamic3             = data[0].messageText3
-                        this.offerSelectionDynamic4             = data[0].messageText4
-
-                        if (data[0].promoCodeList != null) {
-                            $('#promoCodeMultiple').val(JSON.stringify(data[0].promoCodeList.split(','))).trigger("change");
-                        }
+						this.offers = data
 					})
 					.catch(error => console.log(error))
 					.finally()
 			},
+
+            getPromoCodeList() {
+                fetch(PROD_URL + `offerPromoCode?instanceId=${INSTANCE_ID}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        this.overallOfferName                   = data.overallOfferName
+                        this.offerSelectionSmsCampaignName      = data.smsCampaignName
+                        this.offerSelectionDynamic1             = data.messageText1
+                        this.offerSelectionDynamic2             = data.messageText2
+                        this.offerSelectionDynamic3             = data.messageText3
+                        this.offerSelectionDynamic4             = data.messageText4
+
+                        if (data.promoCodeList != null) {
+                            $('#promoCodeMultiple').val(JSON.stringify(data.promoCodeList.split(','))).trigger("change");
+                        }
+                    })
+                    .catch(error => console.log(error))
+                    .finally()
+            },
+
 			eligibilityPolicy() {
 				fetch(PROD_URL + `offerEligibility?instanceId=${INSTANCE_ID}`)
 					.then(res => res.json())
@@ -2104,6 +2119,7 @@
 					.catch(error => console.log(error))
 					.finally()
 			},
+
 			monitoringPolicy() {
 				fetch(PROD_URL + `offerMonitoring?instanceId=${INSTANCE_ID}`)
 					.then(res => res.json())
@@ -2123,6 +2139,7 @@
 					.catch(error => console.log(error))
 					.finally()
 			},
+
             eventConditionPolicy() {
                 fetch(PROD_URL + `offerEventCondition?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
@@ -2132,6 +2149,7 @@
                     .catch(error => console.log(error))
                     .finally()
             },
+
             redemptionPolicy() {
                 fetch(PROD_URL + `offerRedemption?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
@@ -2171,6 +2189,7 @@
                     .catch(error => console.log(error))
                     .finally()
             },
+
             getProgramList() {
                 fetch(PROD_URL + `listProgram`)
                     .then(res => res.json())
@@ -2180,6 +2199,7 @@
                     .catch(error => console.log(error))
                     .finally()
             },
+
             getCountryList() {
                 fetch(PROD_URL + `listCountry`)
                     .then(res => res.json())
@@ -2189,6 +2209,7 @@
                     .catch(error => console.log(error))
                     .finally()
             },
+
             getPromoList() {
                 fetch(PROD_URL + `listOfferType`)
                     .then(res => res.json())
@@ -2198,6 +2219,7 @@
                     .catch(error => console.log(error))
                     .finally()
             },
+
             saveConfiguration() {
                 var message = { amsAction : "save", requestId : "save" };
                 const offerEventCondition = {
@@ -2206,6 +2228,7 @@
                     "campaignEndDate"       : this.eventConditionData.campaignEndDate,
                     "eventConditionName"    : this.eventConditionData.eventConditionName,
                 };
+
                 if (this.eventConditionTypeData === 'Top-Up') {
                     offerEventCondition.creditMethod                = this.eventConditionData.creditMethod;
                     offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
@@ -2239,6 +2262,7 @@
                     offerEventCondition.arpuValue                   = this.eventConditionData.arpuValue;
                     offerEventCondition.aggregationPeriodDays       = this.eventConditionData.aggregationPeriodDays;
                 };
+
                 const offerMonitoring = {
                     "eventType": this.eventTypeData,
                 };
@@ -2288,12 +2312,8 @@
                     offerMonitoring.arpuSelectedTopUpCode       = this.monitoringData.arpuSelectedTopUpCode;
                     offerMonitoring.arpuValue                   = this.monitoringData.arpuValue;
                 };
+
                 const offerEligibility = {
-                    "isFrequencyOnly"   : this.eligibilityData.isFrequencyOnly,
-                    "isFrequencyAndTime": this.eligibilityData.isFrequencyAndTime,
-                    "frequency"         : this.eligibilityData.frequency,
-                    "numberOfFrequency" : this.eligibilityData.numberOfFrequency,
-                    "numberOfDays"      : this.eligibilityData.numberOfDays,
                     "excludeProgramId"  : $('#select2multiple').select2("val").toString(),
                 };
                 if (this.offerLevelType === 'cap-only') {
@@ -2308,12 +2328,36 @@
                     offerEligibility.offerLevelCapValue         = null;
                     offerEligibility.offerLevelCapPeriodValue   = this.eligibilityData.offerLevelCapPeriodValue;
                     offerEligibility.offerLevelCapPeriodDays    = this.eligibilityData.offerLevelCapPeriodDays;
+                } else if (!this.offerLevelType) {
+                    offerEligibility.isOfferLevelCapOnly        = null;
+                    offerEligibility.isOfferLevelCapAndPeriod   = null;
+                    offerEligibility.offerLevelCapValue         = null;
+                    offerEligibility.offerLevelCapPeriodValue   = null;
+                    offerEligibility.offerLevelCapPeriodDays    = null;
+                }
+
+                if (this.subscriberOfferEligibility === 'freq-only') {
+                    offerEligibility.isFrequencyOnly   = true;
+                    offerEligibility.isFrequencyAndTime= false;
+                    offerEligibility.frequency         = this.eligibilityData.frequency;
+                    offerEligibility.numberOfFrequency = null;
+                    offerEligibility.numberOfDays      = null;
+                } else if (this.subscriberOfferEligibility === 'freq-timeperiod') {
+                    offerEligibility.isFrequencyOnly   = false;
+                    offerEligibility.isFrequencyAndTime= true;
+                    offerEligibility.frequency         = null;
+                    offerEligibility.numberOfFrequency = this.eligibilityData.numberOfFrequency;
+                    offerEligibility.numberOfDays      = this.eligibilityData.numberOfDays;
+                } else if (!this.subscriberOfferEligibility) {
+                    offerEligibility.isFrequencyOnly   = null;
+                    offerEligibility.isFrequencyAndTime= null;
+                    offerEligibility.frequency         = null;
+                    offerEligibility.numberOfFrequency = null;
+                    offerEligibility.numberOfDays      = null;
                 }
 
                 const offerRedemption = {
-                    "totalRecurringFrequency"   : this.redemptionData.totalRecurringFrequency,
                     "redemptionMethod"          : this.redemptionData.redemptionMethod,
-                    "recurringProvisioning"     : true,
                 };
                 if (this.totalRedemptionCapRadio === 'redemption-only') {
                     offerRedemption.isRedemptionCapOnly         = true;
@@ -2329,7 +2373,15 @@
                     offerRedemption.totalRedemptionPeriodValue  = this.redemptionData.totalRedemptionPeriodValue;
                     offerRedemption.totalRedemptionPeriodEvery  = this.redemptionData.totalRedemptionPeriodEvery;
                     offerRedemption.totalRedemptionPeriodType   = this.redemptionData.totalRedemptionPeriodType;
+                } else if (!this.totalRedemptionCapRadio) {
+                    offerRedemption.isRedemptionCapOnly         = null;
+                    offerRedemption.isRedemptionCapAndPeriod    = null;
+                    offerRedemption.redemptionCapValue          = null;
+                    offerRedemption.totalRedemptionPeriodValue  = null;
+                    offerRedemption.totalRedemptionPeriodEvery  = null;
+                    offerRedemption.totalRedemptionPeriodType   = null;
                 };
+
                 if (this.subscriberRedemptionCapRadio === 'freq-only') {
                     offerRedemption.isFrequencyOnly     = true;
                     offerRedemption.isFrequencyAndTime  = false;
@@ -2344,20 +2396,15 @@
                     offerRedemption.timePeriodValue     = this.redemptionData.timePeriodValue;
                     offerRedemption.timePeriodEvery     = this.redemptionData.timePeriodEvery;
                     offerRedemption.timePeriodType      = this.redemptionData.timePeriodType;
+                } else if (!this.subscriberRedemptionCapRadio) {
+                    offerRedemption.isFrequencyOnly     = null;
+                    offerRedemption.isFrequencyAndTime  = null;
+                    offerRedemption.frequencyValue      = null;
+                    offerRedemption.timePeriodValue     = null;
+                    offerRedemption.timePeriodEvery     = null;
+                    offerRedemption.timePeriodType      = null;
                 };
-                if (this.recurringRedemptionRadio === 'req-day') {
-                    offerRedemption.isRecurringFrequencyAndPeriod   = true;
-                    offerRedemption.isRecurringFrequencyEachMonth   = false;
-                    offerRedemption.recurringFrequencyValue         = this.redemptionData.recurringFrequencyValue;
-                    offerRedemption.recurringFrequencyPeriodValue   = this.redemptionData.recurringFrequencyPeriodValue;
-                    offerRedemption.recurringFrequencyDayOfMonth    = null;
-                } else if (this.recurringRedemptionRadio === 'req-month') {
-                    offerRedemption.isRecurringFrequencyAndPeriod   = false;
-                    offerRedemption.isRecurringFrequencyEachMonth   = true;
-                    offerRedemption.recurringFrequencyValue         = null;
-                    offerRedemption.recurringFrequencyPeriodValue   = null;
-                    offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
-                }
+
                 if (this.redemptionMethod === 'Auto') {
                     offerRedemption.redemptionMethod    = 'Auto';
                     offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
@@ -2369,26 +2416,33 @@
                 } else if (this.redemptionMethod === 'Manual') {
                     offerRedemption.redemptionMethod    = 'Manual';
                     offerRedemption.optKeyword          = this.redemptionData.optKeyword;
-                    if (this.redemptionOptKeywordRadio == 'period-only') {
+                    if (this.redemptionOptKeywordRadio == 'date-range') {
                         offerRedemption.dateRange       = true;
                         offerRedemption.optStartDate    = this.redemptionData.optStartDate;
                         offerRedemption.optEndDate      = this.redemptionData.optEndDate;
                         offerRedemption.period          = null;
                         offerRedemption.optPeriod       = null;
-                    } else {
+                        offerRedemption.postSmsCampaignName = this.redemptionData.postSmsCampaignName;
+                        offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
+                        offerRedemption.dynamicVariable1    = this.redemptionData.dynamicVariable1;
+                        offerRedemption.dynamicVariable2    = this.redemptionData.dynamicVariable2;
+                        offerRedemption.dynamicVariable3    = this.redemptionData.dynamicVariable3;
+                        offerRedemption.dynamicVariable4    = this.redemptionData.dynamicVariable4;
+                        offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
+                    } else if (this.redemptionOptKeywordRadio == 'period-only') {
                         offerRedemption.dateRange       = false;
                         offerRedemption.optStartDate    = null;
                         offerRedemption.optEndDate      = null;
                         offerRedemption.period          = this.redemptionData.period;
                         offerRedemption.optPeriod       = this.redemptionData.optPeriod;
+                        offerRedemption.postSmsCampaignName = this.redemptionData.postSmsCampaignName;
+                        offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
+                        offerRedemption.dynamicVariable1    = this.redemptionData.dynamicVariable1;
+                        offerRedemption.dynamicVariable2    = this.redemptionData.dynamicVariable2;
+                        offerRedemption.dynamicVariable3    = this.redemptionData.dynamicVariable3;
+                        offerRedemption.dynamicVariable4    = this.redemptionData.dynamicVariable4;
+                        offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
                     }
-                    offerRedemption.postSmsCampaignName = this.redemptionData.postSmsCampaignName;
-                    offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
-                    offerRedemption.dynamicVariable1    = this.redemptionData.dynamicVariable1;
-                    offerRedemption.dynamicVariable2    = this.redemptionData.dynamicVariable2;
-                    offerRedemption.dynamicVariable3    = this.redemptionData.dynamicVariable3;
-                    offerRedemption.dynamicVariable4    = this.redemptionData.dynamicVariable4;
-                    offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
                 }
                 if (this.recurringProvisioning === 'no') {
                     offerRedemption.recurringProvisioning       = false;
@@ -2404,6 +2458,24 @@
                     offerRedemption.timePeriodValue             = null;
                     offerRedemption.timePeriodEvery             = null;
                     offerRedemption.timePeriodType              = null;
+                    offerRedemption.totalRecurringFrequency     = null;
+                } else if (this.recurringProvisioning === 'yes') {
+                    offerRedemption.recurringProvisioning           = true;
+                    if (this.recurringRedemptionRadio === 'req-day') {
+                        offerRedemption.isRecurringFrequencyAndPeriod   = true;
+                        offerRedemption.isRecurringFrequencyEachMonth   = false;
+                        offerRedemption.recurringFrequencyValue         = this.redemptionData.recurringFrequencyValue;
+                        offerRedemption.recurringFrequencyPeriodValue   = this.redemptionData.recurringFrequencyPeriodValue;
+                        offerRedemption.recurringFrequencyDayOfMonth    = null;
+                        offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
+                    } else if (this.recurringRedemptionRadio === 'req-month') {
+                        offerRedemption.isRecurringFrequencyAndPeriod   = false;
+                        offerRedemption.isRecurringFrequencyEachMonth   = true;
+                        offerRedemption.recurringFrequencyValue         = null;
+                        offerRedemption.recurringFrequencyPeriodValue   = null;
+                        offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
+                        offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
+                    }
                 }
 
                 var request = { "amsAction" : "save", "requestId" : "save",
@@ -2416,6 +2488,10 @@
                                 offerBucketType     : item.offerBucketType,
                                 offerCampaignId     : item.offerCampaignId,
                                 offerCampaignName   : item.offerCampaignName,
+                            }
+                        }),
+                        "offerPromoCode":
+                            {
                                 "messageText1"      : this.offerSelectionDynamic1,
                                 "messageText2"      : this.offerSelectionDynamic2,
                                 "messageText3"      : this.offerSelectionDynamic3,
@@ -2424,8 +2500,7 @@
                                 "overallOfferName"  : this.overallOfferName,
                                 "promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
                                 "smsCampaignName"   : this.offerSelectionSmsCampaignName
-                            }
-                        }),
+                            },
                         offerEventCondition,
                         offerEligibility,
                         offerMonitoring,

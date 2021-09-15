@@ -43,12 +43,12 @@ public class PrepaidCampaignOfferDetailDTO {
 	@SerializedName("offerCampaignName") private String offerCampaignName;
 
 	// UI Version 4
-	@SerializedName("smsCampaignName") private String smsCampaignName;
-	@SerializedName("promoCodeList") private String promoCodeList;
-	@SerializedName("messageText1") private String messageText1;
-	@SerializedName("messageText2") private String messageText2;
-	@SerializedName("messageText3") private String messageText3;
-	@SerializedName("messageText4") private String messageText4;
-
-	@SerializedName("overallOfferName") private String overallOfferName;
+//	@SerializedName("smsCampaignName") private String smsCampaignName;
+//	@SerializedName("promoCodeList") private String promoCodeList;
+//	@SerializedName("messageText1") private String messageText1;
+//	@SerializedName("messageText2") private String messageText2;
+//	@SerializedName("messageText3") private String messageText3;
+//	@SerializedName("messageText4") private String messageText4;
+//
+//	@SerializedName("overallOfferName") private String overallOfferName;
 }
