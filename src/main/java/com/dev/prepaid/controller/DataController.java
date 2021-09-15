@@ -366,6 +366,10 @@ public class DataController {
 					.dynamicVariable2(prepaidCxOfferRedemption.getDynamicVariable2())
 					.dynamicVariable3(prepaidCxOfferRedemption.getDynamicVariable3())
 					.dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4())
+					.isRedemptionCapOnly(prepaidCxOfferRedemption.getIsRedemptionCapOnly())
+					.redemptionCapValue(prepaidCxOfferRedemption.getRedemptionCapValue())
+					.isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
+					.frequencyValue(prepaidCxOfferRedemption.getFrequencyValue())
 					.build();
 			try {
 				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
