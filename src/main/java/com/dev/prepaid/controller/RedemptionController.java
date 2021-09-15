@@ -31,7 +31,7 @@ public class RedemptionController {
 	@Autowired
 	private OfferService offerService;
 	
-	@RequestMapping(value = "redemptionqueue",
+	@RequestMapping(value = "redemptionQueue",
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RedemptionResponse> redemptionQueue(@RequestBody RedemptionRequest redemReq){
