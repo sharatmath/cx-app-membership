@@ -643,7 +643,7 @@
                                     <div class="form-inline col-sm-12">
                                         <div class="col-sm-4 row">
                                             <label for="offerType">Offer Type<sup><i class="fas fa-asterisk"></i></sup></label>
-                                            <select :disabled="uniqueData == false || !offerSelectionSmsCampaignName" id="offerType" class="custom-select col-sm-7" x-model="offerTypeDropdown">
+                                            <select :disabled="uniqueData == false" id="offerType" class="custom-select col-sm-7" x-model="offerTypeDropdown">
                                                 <option>Choose...</option>
                                                 <option value="DA">DA Offer</option>
                                                 <option value="OMS">OMS Offer</option>
@@ -653,14 +653,14 @@
                                         <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS'" class="col-sm-7 row" style="margin-right: 75px">
                                             <div class="form-group row">
                                                 <label for="offerBucket">Offer Bucket<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                <select :disabled="uniqueData == false || !offerSelectionSmsCampaignName" id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
+                                                <select :disabled="uniqueData == false" id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
                                                     <option>Choose...</option>
                                                     <template x-for="offerList in offerBucketList">
                                                         <option x-model="offerList.id"><span x-text="offerList.text"></span></option>
                                                     </template>
                                                 </select>
                                                 <label for="offersCampaign">Campaign Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                <select :disabled="uniqueData == false || !offerSelectionSmsCampaignName" id="offersCampaign" x-ref="selectCampaign" class="custom-select col-sm-3">
+                                                <select :disabled="uniqueData == false" id="offersCampaign" x-ref="selectCampaign" class="custom-select col-sm-3">
                                                     <option>Choose...</option>
                                                     <template x-for="campaignList in campaignOfferList">
                                                         <option x-model="campaignList.id"><span x-text="campaignList.text"></span></option>
@@ -668,7 +668,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <button :disabled="uniqueData == false || !offerSelectionSmsCampaignName" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+                                        <button :disabled="uniqueData == false" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
                                         </button>
                                     </div>
                                     <hr>
