@@ -1748,7 +1748,9 @@
     function jQuery() {
         $(document).ready(function() {
             $('#select2multiple').select2();
-            $('#promoCodeMultiple').select2();
+            $('#promoCodeMultiple').select2({
+                maximumSelectionLength: 2
+            });
         });
 
         $(document).ready(function(){
