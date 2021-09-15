@@ -352,7 +352,6 @@ public class DataController {
 					.optKeyword(prepaidCxOfferRedemption.getOptKeyword())
 					.isFrequencyAndTime(prepaidCxOfferRedemption.getIsFrequencyAndTime())
 					.isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
-					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
 					.redemptionMethod(prepaidCxOfferRedemption.getRedemptionMethod())
 					.recurringFrequencyDayOfMonth(prepaidCxOfferRedemption.getRecurringFrequencyDayOfMonth())
 					.recurringFrequencyPeriodType(prepaidCxOfferRedemption.getRecurringFrequencyPeriodType())
@@ -370,6 +369,15 @@ public class DataController {
 					.redemptionCapValue(prepaidCxOfferRedemption.getRedemptionCapValue())
 					.isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
 					.frequencyValue(prepaidCxOfferRedemption.getFrequencyValue())
+					.timePeriodEvery(prepaidCxOfferRedemption.getTimePeriodEvery())
+					.timePeriodType(prepaidCxOfferRedemption.getTimePeriodType())
+					.timePeriodValue(prepaidCxOfferRedemption.getTimePeriodValue())
+					.totalRecurringFrequency(prepaidCxOfferRedemption.getTotalRecurringFrequency())
+					.recurringFrequencyDayOfMonth(prepaidCxOfferRedemption.getRecurringFrequencyDayOfMonth())
+					.isRecurringFrequencyEachMonth(prepaidCxOfferRedemption.getIsRecurringFrequencyEachMonth())
+					.recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
+					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
+					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
 					.build();
 			try {
 				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
