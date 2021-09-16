@@ -769,7 +769,7 @@
                                                         <div class="form-group row">
                                                             <label class="col-sm-2 col-form-label col-form-label">Promo Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                                             <div class="col-sm-4">
-                                                                <select multiple id="promoCodeMultiple" class="w-100" x-model="offerSelectionPromoCode" name="offerSelectionPromoCode">
+                                                                <select multiple id="promoCodeMultiple" class="w-100">
                                                                     <option>Choose...</option>
                                                                     <template x-for="list in promoList">
                                                                         <option :key="list.name" :value="list.name" x-text="list.name"></option>
@@ -911,7 +911,7 @@
                                         </div><br>
                                         <div id="excludeSubsForm">
                                             <b>Exclude Subscriber from this if they are in the following Program</b><br><br>
-                                            <select multiple id="select2multiple" class="w-100" x-model="excludeSubscriber" name="excludeSubscriber">
+                                            <select multiple id="select2multiple" class="w-100">
                                                 <option>Choose...</option>
                                                 <template x-for="list in programList">
                                                     <option :key="list.programName" :value="list.programName" x-text="list.programName"></option>
@@ -1928,6 +1928,7 @@
             programList                     : [],
             countryList                     : [],
             promoList                       : [],
+            // promoCodeList                   : [],
             excludeSubscriber               : [],
             selectedType                    : null,
 			selectedBucket                  : null,
@@ -1972,6 +1973,7 @@
 
             uncheckTotalOffer() {
                 this.offerLevelType         = null
+                // $('#promoCodeMultiple').val(JSON.stringify(this.promoCodeList)).trigger("change");
             },
 
             uncheckSubscriber() {
@@ -2082,6 +2084,7 @@
                         this.offerSelectionDynamic2             = data.messageText2
                         this.offerSelectionDynamic3             = data.messageText3
                         this.offerSelectionDynamic4             = data.messageText4
+                        // this.promoCodeList                      = data.promoCodeList.split(',')
 
                         if (data.promoCodeList != null) {
                             $('#promoCodeMultiple').val(JSON.stringify(data.promoCodeList.split(','))).trigger("change");
@@ -2127,8 +2130,9 @@
 						this.monitoringData = data
 
                         // for event type
-                        this.eventTypeData = data.eventType
-
+                        if (!this.eventTypeData) {
+                            this.eventTypeData = data.eventType
+                        }
                         // for Radio Monitoring Fulfillment Period
                         if (data.monitorPeriodRadio == true) {
                             this.monitoringFulfillmentRadio = 'period-only'
@@ -2156,7 +2160,9 @@
                     .then(data => {
                         this.redemptionData = data
 
-                        this.redemptionMethod = data.redemptionMethod
+                        if (!this.redemptionMethod) {
+                            this.redemptionMethod = data.redemptionMethod
+                        }
 
                         // for Radio in Total Redemption Cap
                         if (data.isRedemptionCapOnly == true) {
@@ -2415,37 +2421,31 @@
                     offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
                 } else if (this.redemptionMethod === 'Manual') {
                     offerRedemption.redemptionMethod    = 'Manual';
+                    offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
                     offerRedemption.optKeyword          = this.redemptionData.optKeyword;
-                    if (this.redemptionOptKeywordRadio == 'date-range') {
+                    offerRedemption.postSmsCampaignName = this.redemptionData.postSmsCampaignName;
+                    offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
+                    offerRedemption.dynamicVariable1    = this.redemptionData.dynamicVariable1;
+                    offerRedemption.dynamicVariable2    = this.redemptionData.dynamicVariable2;
+                    offerRedemption.dynamicVariable3    = this.redemptionData.dynamicVariable3;
+                    offerRedemption.dynamicVariable4    = this.redemptionData.dynamicVariable4;
+                    offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
+                    if (this.redemptionOptKeywordRadio === 'date-range') {
                         offerRedemption.dateRange       = true;
                         offerRedemption.optStartDate    = this.redemptionData.optStartDate;
                         offerRedemption.optEndDate      = this.redemptionData.optEndDate;
                         offerRedemption.period          = null;
                         offerRedemption.optPeriod       = null;
-                        offerRedemption.postSmsCampaignName = this.redemptionData.postSmsCampaignName;
-                        offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
-                        offerRedemption.dynamicVariable1    = this.redemptionData.dynamicVariable1;
-                        offerRedemption.dynamicVariable2    = this.redemptionData.dynamicVariable2;
-                        offerRedemption.dynamicVariable3    = this.redemptionData.dynamicVariable3;
-                        offerRedemption.dynamicVariable4    = this.redemptionData.dynamicVariable4;
-                        offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
-                    } else if (this.redemptionOptKeywordRadio == 'period-only') {
+                    } else if (this.redemptionOptKeywordRadio === 'period-only') {
                         offerRedemption.dateRange       = false;
                         offerRedemption.optStartDate    = null;
                         offerRedemption.optEndDate      = null;
                         offerRedemption.period          = this.redemptionData.period;
                         offerRedemption.optPeriod       = this.redemptionData.optPeriod;
-                        offerRedemption.postSmsCampaignName = this.redemptionData.postSmsCampaignName;
-                        offerRedemption.smsCampaignName     = this.redemptionData.smsCampaignName;
-                        offerRedemption.dynamicVariable1    = this.redemptionData.dynamicVariable1;
-                        offerRedemption.dynamicVariable2    = this.redemptionData.dynamicVariable2;
-                        offerRedemption.dynamicVariable3    = this.redemptionData.dynamicVariable3;
-                        offerRedemption.dynamicVariable4    = this.redemptionData.dynamicVariable4;
-                        offerRedemption.dynamicVariable5    = this.redemptionData.dynamicVariable5;
                     }
                 }
-                if (this.recurringProvisioning === 'no') {
-                    offerRedemption.recurringProvisioning       = false;
+                if (this.recurringProvisioning === 'yes') {
+                    offerRedemption.recurringProvisioning       = true;
                     offerRedemption.isRedemptionCapOnly         = false;
                     offerRedemption.isRedemptionCapAndPeriod    = false;
                     offerRedemption.redemptionCapValue          = null;
@@ -2459,23 +2459,24 @@
                     offerRedemption.timePeriodEvery             = null;
                     offerRedemption.timePeriodType              = null;
                     offerRedemption.totalRecurringFrequency     = null;
-                } else if (this.recurringProvisioning === 'yes') {
-                    offerRedemption.recurringProvisioning           = true;
-                    if (this.recurringRedemptionRadio === 'req-day') {
-                        offerRedemption.isRecurringFrequencyAndPeriod   = true;
-                        offerRedemption.isRecurringFrequencyEachMonth   = false;
-                        offerRedemption.recurringFrequencyValue         = this.redemptionData.recurringFrequencyValue;
-                        offerRedemption.recurringFrequencyPeriodValue   = this.redemptionData.recurringFrequencyPeriodValue;
-                        offerRedemption.recurringFrequencyDayOfMonth    = null;
-                        offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
-                    } else if (this.recurringRedemptionRadio === 'req-month') {
-                        offerRedemption.isRecurringFrequencyAndPeriod   = false;
-                        offerRedemption.isRecurringFrequencyEachMonth   = true;
-                        offerRedemption.recurringFrequencyValue         = null;
-                        offerRedemption.recurringFrequencyPeriodValue   = null;
-                        offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
-                        offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
-                    }
+                } else if (this.recurringProvisioning === 'no') {
+                    offerRedemption.recurringProvisioning       = false;
+                }
+
+                if (this.recurringRedemptionRadio === 'req-day') {
+                    offerRedemption.isRecurringFrequencyAndPeriod   = true;
+                    offerRedemption.isRecurringFrequencyEachMonth   = false;
+                    offerRedemption.recurringFrequencyValue         = this.redemptionData.recurringFrequencyValue;
+                    offerRedemption.recurringFrequencyPeriodValue   = this.redemptionData.recurringFrequencyPeriodValue;
+                    offerRedemption.recurringFrequencyDayOfMonth    = null;
+                    offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
+                } else if (this.recurringRedemptionRadio === 'req-month') {
+                    offerRedemption.isRecurringFrequencyAndPeriod   = false;
+                    offerRedemption.isRecurringFrequencyEachMonth   = true;
+                    offerRedemption.recurringFrequencyValue         = null;
+                    offerRedemption.recurringFrequencyPeriodValue   = null;
+                    offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
+                    offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
                 }
 
                 var request = { "amsAction" : "save", "requestId" : "save",
@@ -2488,17 +2489,18 @@
                                 offerBucketType     : item.offerBucketType,
                                 offerCampaignId     : item.offerCampaignId,
                                 offerCampaignName   : item.offerCampaignName,
+                                offerType           : item.offerTypeDropdown,
                             }
                         }),
                         "offerPromoCode":
                             {
+                                "promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
                                 "messageText1"      : this.offerSelectionDynamic1,
                                 "messageText2"      : this.offerSelectionDynamic2,
                                 "messageText3"      : this.offerSelectionDynamic3,
                                 "messageText4"      : this.offerSelectionDynamic4,
                                 "offerType"         : this.offerTypeDropdown,
                                 "overallOfferName"  : this.overallOfferName,
-                                "promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
                                 "smsCampaignName"   : this.offerSelectionSmsCampaignName
                             },
                         offerEventCondition,
