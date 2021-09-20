@@ -177,7 +177,7 @@ public class PrepaidController {
 					.instanceId(req.getInstanceContext().getInstanceId())
 					.invocationId(req.getUuid())
 					.build();
-			
+			log.info("responseContent {}", responseContent);
 			InvocationResponse response = InvocationResponse.builder()
 					.successful(true)
 					.content(responseContent)

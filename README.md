@@ -629,3 +629,92 @@ akses oracle  bQ6t2l0s97DS
 
 
 ```
+```
+
+##  Sample
+```sh
+
+{
+"instanceContext": {
+"appId": "97d16835-90a8-43a6-9a96-dddeacfa9362",
+"installId": "eb2121ee-7675-4c87-9b0a-a2502892cf8f",
+"instanceId": "d5d234de-9269-4aa5-a3e7-fad3eb42b3ed",
+"serviceId": "aec078a8-1a61-43bd-ad5e-01043ebb6454",
+"tenantId": "80578",
+"productId": "6798e522-deb5-488f-bf22-c29e13254b8f",
+"maxPushBatchSize": 1,
+"secret": "16620479-5822-4403-a53e-ac42d1a1abbe-16d5232a-0e6b-4fa1-b800-3208be76c0f3",
+"recordDefinition": {
+"inputParameters": [
+{
+"name": "appcloud_row_correlation_id",
+"dataType": "Text",
+"width": 40,
+"unique": true,
+"required": true
+},
+{
+"name": "CUSTOMER_ID_",
+"dataType": "Text",
+"width": 40,
+"required": true,
+"readOnly": true
+}
+],
+"outputParameters": [
+{
+"name": "appcloud_row_correlation_id",
+"dataType": "Text",
+"width": 40,
+"readOnly": false
+},
+{
+"name": "appcloud_row_status",
+"dataType": "Text",
+"width": 40,
+"readOnly": false
+},
+{
+"name": "appcloud_row_errormessage",
+"dataType": "Text",
+"width": 255,
+"readOnly": false
+},
+{
+"name": "STATUS",
+"dataType": "Text",
+"width": 40,
+"readOnly": false
+}
+]
+},
+"maxBatchSize": 1
+},
+"dataSet": {
+"id": "456080a4-dcc5-4e9d-887c-fca6ac1df8c8",
+"rows": [
+[
+"139690706268;8;1632118865",
+"1234567890"
+]
+],
+"size": 1
+},
+"productImportEndpoint": {
+"url": "https://rest002.rsys8.net/rest/appcloud/v1/tenants/80578/datasets/456080a4-dcc5-4e9d-887c-fca6ac1df8c8-20210921-4375688",
+"method": "POST",
+"headers": {}
+},
+"onCompletionCallbackEndpoint": {
+"url": "https://rest002.rsys8.net/rest/appcloud/v1/tenants/80578/executions/456080a4-dcc5-4e9d-887c-fca6ac1df8c8-20210921-4375688",
+"method": "PATCH",
+"headers": {}
+},
+"maxPullPageSize": 10000,
+"maxPushBatchSize": 10000
+}
+
+```
+
+##  History
+```sh

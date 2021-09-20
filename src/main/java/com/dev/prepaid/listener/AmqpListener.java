@@ -2,10 +2,14 @@ package com.dev.prepaid.listener;
 
 import java.util.Map;
 import com.dev.prepaid.constant.Constant;
+import com.dev.prepaid.model.invocation.InvocationRequest;
+import com.dev.prepaid.service.InvocationService;
+import com.dev.prepaid.service.OfferEligibilityService;
 import com.dev.prepaid.service.OfferMonitoringService;
 import com.dev.prepaid.type.EventType;
 import com.dev.prepaid.util.BaseRabbitTemplate;
 import com.dev.prepaid.util.GUIDUtil;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +21,13 @@ public class AmqpListener extends BaseRabbitTemplate {
 
     @Autowired
     OfferMonitoringService offerMonitoringService;
+    @Autowired
+    InvocationService invocationService;
 
     @RabbitListener(queues = Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
-            containerFactory = "rabbitListenerContainerFactoryForMembership",
+            containerFactory = Constant.CONNECTION_FACTORY_NAME_MEMBERSHIP_MONITORING,
             id = Constant.QUEUE_NAME_MEMBERSHIP_MONITORING)
-    public void receivedMessage(final Map<String, Object> request) throws Exception {
+    public void receivedMessageOfferMonitoring(final Map<String, Object> request) throws Exception {
         String requestId = getRequestId(request);
         log.debug("{}|Event type|{}|Membership data|{}", requestId, request.get("evenType"), request);
         EventType eventType = EventType.get((String) request.get("eventType"));
@@ -45,4 +51,17 @@ public class AmqpListener extends BaseRabbitTemplate {
 
         return requestId;
     }
+
+    @RabbitListener(queues = Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY,
+            containerFactory = Constant.CONNECTION_FACTORY_NAME_MEMBERSHIP_ELIGIBILITY,
+            id = Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY)
+    public void receivedMessageEligibility(final Message message) throws Exception {
+        log.info("{}",request);
+        String source = (String) request.get("source");
+        log.info("{}",source);
+        InvocationRequest invocationRequest = (InvocationRequest) request.get("invocationRequest");
+        log.info("invoke from queue {}",invocationRequest);
+        invocationService.processData(invocationRequest);
+    }
+
 }
