@@ -25,10 +25,4 @@ public class ScheduledTask {
 	public void scheduler() throws ParseException {
 		offerService.evictAllCaches();
 	}
-
-	@Scheduled(cron = "${tasks.notification.1minute}", zone = "${tasks.scheduled.zone}") /* every 5 minute */
-	public void nofification() throws ParseException {
-		offerService.evictAllCaches();
-	}
-
 }
