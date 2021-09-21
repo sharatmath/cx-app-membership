@@ -26,7 +26,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     static final String DATE_FORMAT = "yyyyMMdd";
     static final String DATETIME_FORMAT = "yyyyMMdd'|'HHmmss";
 
-    @Value("${spring.jpa.properties.hibernate.jdbc.batch_size}")
+    @Value("${eligibility.batch_size:100}")
     private int batchSize;
     @Autowired
     private OfferService offerService;

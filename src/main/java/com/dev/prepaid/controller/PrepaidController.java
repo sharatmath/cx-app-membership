@@ -162,12 +162,13 @@ public class PrepaidController {
 			// Async
 			// Invoke without data will have DataSet with size, but no rows in DataSet
 			if (req.getDataSet().getRows() == null || req.getDataSet().getRows().isEmpty()) {
-				log.debug("rows null");
+				log.debug("invoke without data, rows null");
 				// Async
 				// Export DataSet rows from Product
 				// exportProcessAndImportData(invocation, serviceInvocationDto);
 //				invocationService.exportProcessAndImportData(req);
 			} else {
+				log.debug("invoke with data");
 				// Async
 				// Process data and Import data to Product
 				invocationService.processData(req);

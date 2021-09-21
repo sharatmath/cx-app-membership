@@ -13,9 +13,9 @@ public class InvocationRequest {
 	private String uuid;
 	private InstanceContext instanceContext;
 	private DataSet dataSet;
-	 private ProductExpImpEndpoint productExportEndpoint;
-	 private ProductExpImpEndpoint productImportEndpoint;
-	 private OnCompletionCallbackEndpoint onCompletionCallbackEndpoint;
-	 private Integer maxPullPageSize;
-	 private Integer maxPushBatchSize;
+	private ProductExpImpEndpoint productExportEndpoint;
+	private ProductExpImpEndpoint productImportEndpoint;
+	private OnCompletionCallbackEndpoint onCompletionCallbackEndpoint;
+	private Integer maxPullPageSize;
+	private Integer maxPushBatchSize;
 }

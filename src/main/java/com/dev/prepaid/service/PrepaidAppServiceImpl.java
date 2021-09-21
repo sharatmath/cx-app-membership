@@ -170,7 +170,7 @@ public class PrepaidAppServiceImpl extends BaseRabbitTemplate implements Prepaid
 					requestPGS.put("notification", notification);
 
 					
-					//send to PGS Queue
+//					//send to PGS Queue
 //					rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_SINGTEL,
 //							Constant.QUEUE_NAME_SINGTEL_PGS,
 //							requestPGS,
