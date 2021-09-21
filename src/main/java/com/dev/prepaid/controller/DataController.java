@@ -365,6 +365,7 @@ public class DataController {
 					.dynamicVariable2(prepaidCxOfferRedemption.getDynamicVariable2())
 					.dynamicVariable3(prepaidCxOfferRedemption.getDynamicVariable3())
 					.dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4())
+					.dynamicVariable5(prepaidCxOfferRedemption.getDynamicVariable5())
 					.isRedemptionCapOnly(prepaidCxOfferRedemption.getIsRedemptionCapOnly())
 					.redemptionCapValue(prepaidCxOfferRedemption.getRedemptionCapValue())
 					.isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
@@ -378,6 +379,7 @@ public class DataController {
 					.recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
 					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
 					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
+					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod())
 					.build();
 			try {
 				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
