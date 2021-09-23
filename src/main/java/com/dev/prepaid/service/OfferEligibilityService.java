@@ -28,7 +28,7 @@ public interface OfferEligibilityService {
 
     public List<List<String>> evaluationOfferLevelCondition(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 
-    public List<List<String>> callbackProductComEndpoint(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
+    public void callbackProductComEndpoint(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 
-    public ResponseEntity<String> sendToRedemptionQueue(Map<String, Object> payload);
+    public ResponseEntity<String> sendToRedemptionQueue(String invId, Map<String, Object> payload);
 }

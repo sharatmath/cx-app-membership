@@ -634,13 +634,7 @@
                                         <input id="overallOfferName" type="text" class="form-control" x-model="overallOfferName">
                                     </div>
                                     <div class="col-sm-3">
-                                        <button @click="checkUniqueOfferName" class="btn btn-singtel">Check Overall Offer Name</button>
-                                    </div>
-                                    <div x-show="uniqueData == false" class="col-sm-4">
-                                        <span x-text="uniqueMessage" style="color:red"></span>
-                                    </div>
-                                    <div x-show="uniqueData == true" class="col-sm-4">
-                                        <span x-text="uniqueMessage"></span>
+                                        <button @click="checkUniqueOfferName" class="btn btn-singtel">Validate</button>
                                     </div>
                                 </div><br>
                                 <div class="form-inline col-sm-12">
@@ -867,12 +861,12 @@
                                             </label>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="offerLevelCapPeriodValue">Name</label>
-                                                <input type="number" :disabled="!offerLevelType || offerLevelType === 'cap-only'" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodValue" x-model="eligibilityData.offerLevelCapPeriodValue">
+                                                <input type="number" min="1" max="31" :disabled="!offerLevelType || offerLevelType === 'cap-only'" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodValue" x-model="eligibilityData.offerLevelCapPeriodValue">
                                             </div>
                                             <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="offerLevelCapPeriodDays">Name</label>
-                                                <input type="number" max="31" :disabled="!offerLevelType || offerLevelType === 'cap-only'" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodDays" x-model="eligibilityData.offerLevelCapPeriodDays">
+                                                <input type="number" min="1" max="31" :disabled="!offerLevelType || offerLevelType === 'cap-only'" class="form-control mb-2 mr-sm-2" id="offerLevelCapPeriodDays" x-model="eligibilityData.offerLevelCapPeriodDays">
                                             </div>
                                             <p>Days</p>
                                         </div>
@@ -903,12 +897,12 @@
                                         <label class="col-sm-4 col-form-label col-form-label">Frequency and Time Period</label>
                                         <div class="col-sm-2">
                                             <label class="sr-only" for="inputFrequencyTimePeriod">Name</label>
-                                            <input type="number" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> &nbsp;
+                                            <input type="number" min="1" max="31" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control mb-2 mr-sm-2" id="inputFrequencyTimePeriod" x-model="eligibilityData.numberOfFrequency"> &nbsp;
                                         </div>
                                         <label class="col-sm-1 col-form-label col-form-label">in</label>
                                         <div class="col-sm-2">
                                             <label class="sr-only" for="inputFrequencyIn">Name</label>
-                                            <input type="number" max="31" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
+                                            <input type="number" min="1" max="31" :disabled="!subscriberOfferEligibility || subscriberOfferEligibility === 'freq-only'" class="form-control" id="inputFrequencyIn" x-model="eligibilityData.numberOfDays">
                                         </div>
                                         <p>Days</p>
                                     </div><br>
@@ -1348,7 +1342,7 @@
                                             <div class="col-sm-8">
                                                 <div class="row">
                                                     <div class="col-sm-4">
-                                                        <input :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" type="text" class="form-control" id="periodValue" x-model="monitoringData.monitorPeriod">
+                                                        <input min="1" max="31" :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" type="number" class="form-control" id="periodValue" x-model="monitoringData.monitorPeriod">
                                                     </div>
                                                     <div class="col-sm-3">
                                                         <select :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" id="monitorPeriodDropdown" class="form-control" x-model="monitoringData.monitorPeriodDayMonth">
@@ -1389,7 +1383,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-time-period' || recurringProvisioning === 'yes'" type="text" class="form-control form-control-sm" id="redemptionCapValue" x-model="redemptionData.redemptionCapValue">
+                                                <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-time-period' || recurringProvisioning === 'yes'" type="number" class="form-control form-control-sm" id="redemptionCapValue" x-model="redemptionData.redemptionCapValue">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -1403,12 +1397,12 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="totalRedemptionPeriodValue">Name</label>
-                                                <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="text" class="form-control mb-2 mr-sm-2" id="totalRedemptionPeriodValue" x-model="redemptionData.totalRedemptionPeriodValue">
+                                                <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="totalRedemptionPeriodValue" x-model="redemptionData.totalRedemptionPeriodValue">
                                             </div>
                                             <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="timePeriodValueEvery">Name</label>
-                                                <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValueEvery" x-model="redemptionData.totalRedemptionPeriodEvery">
+                                                <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="timePeriodValueEvery" x-model="redemptionData.totalRedemptionPeriodEvery">
                                             </div>
                                             <div class="col-sm-2">
                                                 <select :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.totalRedemptionPeriodType">
@@ -1435,7 +1429,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-timeperiod' || recurringProvisioning === 'yes'" type="text" class="form-control form-control-sm" id="frequencyValue" x-model="redemptionData.frequencyValue">
+                                                <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-timeperiod' || recurringProvisioning === 'yes'" type="number" class="form-control form-control-sm" id="frequencyValue" x-model="redemptionData.frequencyValue">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -1450,12 +1444,12 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="timePeriodValue">Name</label>
-                                                <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue" x-model="redemptionData.timePeriodValue">
+                                                <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="timePeriodValue" x-model="redemptionData.timePeriodValue">
                                             </div>
                                             <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="timePeriodValue2">Name</label>
-                                                <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="text" class="form-control mb-2 mr-sm-2" id="timePeriodValue2" x-model="redemptionData.timePeriodEvery">
+                                                <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="timePeriodValue2" x-model="redemptionData.timePeriodEvery">
                                             </div>
                                             <div class="col-sm-2">
                                                 <select :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.timePeriodType">
@@ -1475,7 +1469,7 @@
                                         <div class="form-group row">
                                             <label for="totalRecurringFrequency" class="col-sm-2 col-form-label col-form-label">Total Frequency</label>
                                             <div class="col-sm-4">
-                                                <input type="text" class="form-control form-control-sm" id="totalRecurringFrequency" x-model="redemptionData.totalRecurringFrequency">
+                                                <input type="number" class="form-control form-control-sm" id="totalRecurringFrequency" x-model="redemptionData.totalRecurringFrequency">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -1488,12 +1482,12 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="inputRecFreqDP">Name</label>
-                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="text" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
+                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
                                             </div>
                                             <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="inputRecFreqDPIn">Name</label>
-                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="text" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
+                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
                                             </div>
                                             <div class="col-sm-2"> Day
                                             </div>
@@ -1508,7 +1502,7 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="dayRecFreq">Day</label>
-                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="text" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
                                             </div>
                                             <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
                                         </div>
@@ -1518,6 +1512,7 @@
                                             <label class="col-sm-2 col-form-label col-form-label"><b>Redemption Method</b></label>
                                             <div class="col-sm-3">
                                                 <select class="form-control mb-2 mr-sm-2" id="redemptionAutoOrManual" x-model="redemptionMethod">
+                                                    <option>Choose...</option>
                                                     <option value="Auto">Auto Redemption</option>
                                                     <option value="Manual">Manual Redemption</option>
                                                 </select>
@@ -1735,6 +1730,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -1746,20 +1742,16 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <!--jQUERY BEGIN-->
 <script>
     function jQuery() {
 
         $(document).ready(function() {
             $('#select2multiple').select2();
-            $('#selectedEx').select2();
             $('#promoCodeMultiple').select2({
                 maximumSelectionLength: 2
             });
-        });
-
-        $(document).ready(function () {
-            $("#make").select2();
         });
 
         $(document).ready(function(){
@@ -1949,7 +1941,7 @@
             monitoringData                  : {},
             redemptionData                  : {},
             eventConditionData              : {},
-            redemptionMethod                : 'Auto',
+            redemptionMethod                : null,
             type                            : 'directProvisioning',
             eventTypeData                   : 'Top-Up',
             eventConditionTypeData          : 'Top-Up',
@@ -1981,25 +1973,25 @@
 
             init() {
                 this.eventTypeDropdown(),
-                    this.offerBucketDropdown(),
-                    this.campaignOfferDropdown(),
-                    this.getOfferSelection(),
-                    this.monitoringPolicy(),
-                    this.redemptionPolicy(),
-                    this.eventConditionPolicy(),
-                    this.getCountryList()
+                this.offerBucketDropdown(),
+                this.campaignOfferDropdown(),
+                this.getOfferSelection(),
+                this.monitoringPolicy(),
+                this.redemptionPolicy(),
+                this.eventConditionPolicy(),
+                this.getCountryList()
             },
 
             initPage(){
                 Promise.all([
                     this.getProgramList(),
                     this.getPromoList(),
-                    this.checkUniqueOfferName()
+                    // this.checkUniqueOfferName()
                 ])
-                    .then(data => {
-                        this.eligibilityPolicy()
-                        this.getPromoCodeList()
-                    })
+                .then(data => {
+                    this.eligibilityPolicy()
+                    this.getPromoCodeList()
+                })
             },
 
             uncheckTotalOffer() {
@@ -2019,21 +2011,24 @@
             },
 
             checkUniqueOfferName() {
-                return new Promise((resolve, reject) => {
-                    fetch(PROD_URL + `checkUniqueOverallOfferName?overallOfferName=${this.overallOfferName}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            // console.log('success: checkUniqueOfferName')
-                            this.uniqueData = data.unique
-                            this.uniqueMessage = data.message
-                            resolve('checkUnique')
-                        })
-                        .catch(error => {
-                            // console.log(error)
-                            reject(error)
-                        })
-                        .finally()
-                })
+                fetch(PROD_URL + `checkUniqueOverallOfferName?overallOfferName=${this.overallOfferName}`)
+                    .then(res => res.json())
+                    .then(data => {
+
+                        this.uniqueData = data.unique
+                        this.uniqueMessage = data.message
+
+                        if (this.uniqueData == false) {
+                            swal("Error!", "Data Already Exist", "error");
+                        } else if (this.uniqueData == true) {
+                            swal("Success!", "Data Eligible to Use", "success");
+                        }
+
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally()
             },
 
             addNewData() {
