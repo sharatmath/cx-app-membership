@@ -13,4 +13,5 @@ public class RedemptionRequest {
 	private Long offerMembershipId;
 	private Long msisdn;
 	private String smsKeyword;
+	private String instanceId;
 }
