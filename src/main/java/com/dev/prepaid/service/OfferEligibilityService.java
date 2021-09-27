@@ -16,6 +16,7 @@ public interface OfferEligibilityService {
     public List<List<String>> processData(
             List<List<String>> rows,
             InvocationRequest invocation,
+            InvocationRequest invocationOri,
             PrepaidCxOfferConfig instanceConfiguration,
             String groupId,
             Long dataSetSize) throws Exception;
@@ -28,7 +29,7 @@ public interface OfferEligibilityService {
 
     public List<List<String>> evaluationOfferLevelCondition(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 
-    public void callbackProductComEndpoint(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
+    public void productImportEndpoint(List<List<String>> rows, InvocationRequest invocation, InvocationRequest invocationOri,  PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 
     public ResponseEntity<String> sendToRedemptionQueue(String invId, Map<String, Object> payload);
 }

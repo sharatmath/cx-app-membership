@@ -31,6 +31,17 @@ public class RESTUtil {
                 c);
         return status;
     }
+
+	@SuppressWarnings("rawtypes")
+	public static ResponseEntity productExportEndpoint(InvocationRequest invocation, String token,String host, Object object, Class c, String contentType) {
+		ResponseEntity status = restServiceExchange(
+				RequestUtil.getClientJWTHttpInterceptor(invocation, contentType, token),
+				host,
+				HttpMethod.valueOf(invocation.getProductExportEndpoint().getMethod()),
+				new HttpEntity<>(object),
+				c);
+		return status;
+	}
 	
 	@SuppressWarnings("rawtypes")
 	public static ResponseEntity getExportData(InvocationRequest invocation, String token,String host, Object object, Class c, String contentType) {
@@ -48,7 +59,7 @@ public class RESTUtil {
 		ResponseEntity status = restServiceExchange(
 	            RequestUtil.getClientJWTHttpInterceptor(invocation, contentType, token),
 	    		host,
-	            HttpMethod.POST,
+	            HttpMethod.valueOf(invocation.getProductImportEndpoint().getMethod()),
 	            new HttpEntity<>(object),
 	            c);
 	    return status;
@@ -142,7 +153,7 @@ public class RESTUtil {
 	    restTemplate.setInterceptors(interceptors);        
 	    restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 	    	        
-	    
+	    log.info("restServiceExchange {} body {}", httpMethod , request);
         return restTemplate.exchange(host, httpMethod, request, c, varargs);
     }
 }

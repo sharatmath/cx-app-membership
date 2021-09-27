@@ -1,22 +1,23 @@
 package com.dev.prepaid.service;
 
+import com.dev.prepaid.InitData;
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.imports.DataImportDTO;
 import com.dev.prepaid.model.invocation.DataSet;
+import com.dev.prepaid.model.invocation.InstanceContext;
 import com.dev.prepaid.model.invocation.InvocationRequest;
 import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferMembershipStatus;
-import com.dev.prepaid.type.ProvisionType;
 import com.dev.prepaid.util.BaseRabbitTemplate;
-import com.dev.prepaid.util.GsonUtils;
+import com.dev.prepaid.util.JwtTokenUtil;
+import com.dev.prepaid.util.RESTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,8 +30,6 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
     @Value("${eligibility.batch_size:100}")
     private int batchSize;
-    @Autowired
-    private OfferService offerService;
     @Autowired
     private PrepaidCxOfferEligibilityRepository prepaidCxOfferEligibilityRepository;
     @Autowired
@@ -46,17 +45,19 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     @Autowired
     private PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
     @Autowired
-    private RetryableService retryableService;
+    private JwtTokenUtil jwtTokenUtil;
 
     @Override
     public List<List<String>> processData(List<List<String>> rows,
                                           InvocationRequest invocation,
+                                          InvocationRequest invocationOri,
                                           PrepaidCxOfferConfig instanceConfiguration,
                                           String groupId,
                                           Long dataSetSize) throws Exception {
 
         log.info("startProcess");
         log.info("rows {}", rows);
+
         //1
         List<List<String>> exclusionRows = new ArrayList<>();
         exclusionRows = evaluationSubscriberExclusion(rows, invocation, instanceConfiguration);
@@ -74,8 +75,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             List<PrepaidCxOfferSelection> prepaidCxOfferSelectionList = prepaidCxOfferSelectionRepository.findByOfferConfigId(instanceConfiguration.getId());
             saveToPrepaidOfferMembership(offerLevelRows, invocation.getUuid(), instanceConfiguration, prepaidCxOfferSelectionList.get(0));
         }
+
         //7
-        callbackProductComEndpoint(offerLevelRows, invocation, instanceConfiguration);
+        productImportEndpoint(offerLevelRows, invocation, invocationOri, instanceConfiguration);
 
         //finish
         try {
@@ -99,19 +101,29 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
         log.info("process#1|rows|{}", rows);
         Optional<PrepaidCxOfferEligibility> opsFind = prepaidCxOfferEligibilityRepository.findByOfferConfigId(instanceConfiguration.getId());
-        String[] excludeOverallOfferName ;
-        if(opsFind.isPresent()){
-            excludeOverallOfferName = opsFind.get().getExcludeProgramId().split(",");
-            for(String overallOfferName : excludeOverallOfferName){
-                Optional<PrepaidCxOfferConfig> excludeConfig = prepaidCxOfferConfigRepository.findByOverallOfferName(overallOfferName);
-                for(List<String> row : rows){
-                    List<PrepaidOfferMembership> data= prepaidOfferMembershipRepository.findByMsisdnAndOfferConfigId(Long.valueOf(row.get(1)), excludeConfig.get().getId());
-                    if(data.isEmpty()){
-                        resultRows.add(row);
-                    }else{
-                        log.info("evaluationSubscriberExclusion|{}|INVALID", row.get(1));
+        log.info("process#1|PrepaidCxOfferEligibility|{}|config|{}", opsFind, instanceConfiguration.getId());
+        String[] excludeOverallOfferName;
+        if (opsFind.isPresent()) {
+            if (opsFind.get().getExcludeProgramId() != null) {
+                excludeOverallOfferName = opsFind.get().getExcludeProgramId().split(",");
+                for (String overallOfferName : excludeOverallOfferName) {
+                    Optional<PrepaidCxOfferConfig> excludeConfig = prepaidCxOfferConfigRepository.findByOverallOfferName(overallOfferName);
+                    for (List<String> row : rows) {
+                        if (excludeConfig.isPresent()) {
+                            List<PrepaidOfferMembership> data = prepaidOfferMembershipRepository.findByMsisdnAndOfferConfigId(Long.valueOf(row.get(1)), excludeConfig.get().getId());
+                            if (data.isEmpty()) {
+                                resultRows.add(row);
+                            } else {
+                                log.info("evaluationSubscriberExclusion|{}|INVALID", row.get(1));
+                            }
+                        } else {
+                            resultRows.add(row);
+
+                        }
                     }
                 }
+            } else {
+                resultRows.addAll(rows);
             }
         }
 
@@ -179,12 +191,10 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         List<List<String>> offerMembershipRows = new ArrayList<>();
         List<List<String>> offerMembershipExcluseRows = new ArrayList<>();
         Optional<PrepaidCxOfferEligibility> prepaidCxOfferEligibilityList = prepaidCxOfferEligibilityRepository.findByOfferConfigId(instanceConfiguration.getId());
+        log.info("process#4|PrepaidCxOfferEligibility|{}|config|{}", prepaidCxOfferEligibilityList, instanceConfiguration.getId());
         List<PrepaidCxOfferSelection> prepaidCxOfferSelectionList = prepaidCxOfferSelectionRepository.findByOfferConfigId(instanceConfiguration.getId());
-
-        if (rows.size() > 0){
-
+        if (rows.size() > 0) {
             PrepaidCxOfferEligibility prepaidCxOfferEligibility = prepaidCxOfferEligibilityList.get();
-
             if (prepaidCxOfferEligibility.getIsOfferLevelCapOnly()) {
                 int currentCap = countOfferCapPerOfferConfigId(instanceConfiguration.getId());
                 log.info("invId|{}|confId|{}|processLevelCapOnly|eligible|{}|currentCap|{}|maximumCapValue|{}",
@@ -236,14 +246,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 offerLevelRows.size()
         );
 
-
-
         return offerMembershipRows;
     }
 
     @Override
-    public void callbackProductComEndpoint(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception {
-        log.info("process#1|callbackProductComEndpoint|START|type|{}|id|{}|rows_in|{}",
+    public void productImportEndpoint(List<List<String>> rows, InvocationRequest invocation, InvocationRequest invocationOri, PrepaidCxOfferConfig instanceConfiguration) throws Exception {
+        log.info("process#7|productImportEndpoint|START|type|{}|id|{}|rows_in|{}",
                 instanceConfiguration.getProvisionType(),
                 invocation.getUuid(),
                 rows.size());
@@ -255,6 +263,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
         InvocationRequest newInvocationRequest = InvocationRequest.builder()
                 .uuid(invocation.getUuid())
+                .instanceContext(invocation.getInstanceContext())
                 .onCompletionCallbackEndpoint(invocation.getOnCompletionCallbackEndpoint())
                 .productExportEndpoint(invocation.getProductExportEndpoint())
                 .productImportEndpoint(invocation.getProductImportEndpoint())
@@ -263,9 +272,32 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 .dataSet(dataSet)
                 .build();
 
-        retryableService.callProductOnCompletionCallbackEndpoint(invocation);
 
-        log.info("process#1|callbackProductComEndpoint|END|type|{}|id|{}|rows_in|{}",
+        ResponseEntity response = null;
+        log.info("generateTokenProduct {}", invocationOri);
+        String token = jwtTokenUtil.generateTokenProduct(invocationOri, invocationOri.getInstanceContext());
+        String url = invocation.getProductImportEndpoint().getUrl();
+
+        invocation.getDataSet().getRows().forEach(row -> {
+            Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
+            Map<String, Object> output = invocation.getInstanceContext().getRecordDefinition().generateOutputRowAsNewMap(input);
+            List<String> listOutput = List.of(
+                    output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
+                    "success", //appcloud_row_status
+                    "", //appcloud_row_errormessage
+                    "success"); //STATUS
+            rows.add(listOutput);
+        });
+
+        DataImportDTO data = DataImportDTO.builder()
+                .fieldDefinitions(InitData.recordDefinition.getOutputParameters())
+                .dataSet(dataSet)
+                .build();
+
+        response = RESTUtil.productImportPost(invocationOri, token, url, data, null, "application/json");
+        log.debug("productImportPost response : {}", response.getStatusCode());
+
+        log.info("process#7|productImportEndpoint|END|type|{}|id|{}|rows_in|{}",
                 instanceConfiguration.getProvisionType(),
                 invocation.getUuid(),
                 rows.size());
@@ -313,7 +345,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         start.set(Calendar.HOUR, 0);
         start.set(Calendar.MINUTE, 0);
         start.set(Calendar.SECOND, 0);
-        start.add(Calendar.DATE, - prepaidCxOfferEligibility.getOfferLevelCapPeriodDays().intValue());
+        start.add(Calendar.DATE, -prepaidCxOfferEligibility.getOfferLevelCapPeriodDays().intValue());
         return prepaidOfferMembershipRepository.countByOfferConfigIdAndCreatedDateBetween(offerConfigId, start.getTime(), now.getTime());
     }
 
@@ -381,7 +413,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             if (i + batchSize > totalObjects) {
                 List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, totalObjects);
                 List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
-                for(PrepaidOfferMembership p: saved){
+                for (PrepaidOfferMembership p : saved) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("offerMembershipId", p.getId());
                     map.put("msisdn", p.getMsisdn());
@@ -394,7 +426,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             }
             List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, i + batchSize);
             List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
-            for(PrepaidOfferMembership p: saved){
+            for (PrepaidOfferMembership p : saved) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("offerMembershipId", p.getId());
                 map.put("msisdn", p.getMsisdn());
@@ -436,7 +468,6 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         //original
 //        prepaidOfferMembershipExclusRepository.saveAll(memberships);
     }
-
 
     public ResponseEntity<String> sendToRedemptionQueue(String invId, Map<String, Object> payload) {
         log.info("process#6|START|sendToRedemptionQueue|id|{}|payload|{}",

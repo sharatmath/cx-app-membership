@@ -1,5 +1,6 @@
 package com.dev.prepaid.controller;
 
+import com.dev.prepaid.model.invocation.InstanceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,9 @@ import com.dev.prepaid.model.JwtRequest;
 import com.dev.prepaid.model.JwtResponse;
 import com.dev.prepaid.service.JwtUserDetailsService;
 import com.dev.prepaid.util.JwtTokenUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Controller
@@ -30,6 +34,14 @@ public class JwtAuthenticationController {
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
+
+		return ResponseEntity.ok(new JwtResponse(token));
+	}
+
+	@PostMapping("generateTokenExportProduct")
+	public ResponseEntity<?> createJwtAuthorizationHeader(@RequestBody InstanceContext instanceContext) throws Exception {
+		Map<String, Object> claims = new HashMap<>();
+		String token = jwtTokenUtil.generateTokenExportProduct(null, instanceContext);
 
 		return ResponseEntity.ok(new JwtResponse(token));
 	}

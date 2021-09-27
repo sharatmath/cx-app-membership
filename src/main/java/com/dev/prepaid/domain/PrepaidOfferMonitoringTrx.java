@@ -21,7 +21,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrepaidOfferMonitoringTrx {
+public class PrepaidOfferMonitoringTrx extends Auditable{
     @Id
     @Column(name = "OFFER_MONITORING_ID")
     private Long id;

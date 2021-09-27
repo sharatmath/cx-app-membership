@@ -14,8 +14,9 @@ import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.PrepaidCxOfferConfig;
 import com.dev.prepaid.domain.PrepaidOfferMembership;
 import com.dev.prepaid.domain.PrepaidOfferMembershipExclus;
+import com.dev.prepaid.model.invocation.*;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
-import com.dev.prepaid.util.BaseRabbitTemplate;
+import com.dev.prepaid.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +27,7 @@ import com.dev.prepaid.InitData;
 import com.dev.prepaid.domain.PrepaidCxProvInstances;
 import com.dev.prepaid.model.DataRowDTO;
 import com.dev.prepaid.model.imports.DataImportDTO;
-import com.dev.prepaid.model.invocation.DataSet;
-import com.dev.prepaid.model.invocation.InstanceContext;
-import com.dev.prepaid.model.invocation.InvocationRequest;
 import com.dev.prepaid.repository.PrepaidCxProvInstancesRepository;
-import com.dev.prepaid.util.AppUtil;
-import com.dev.prepaid.util.JwtTokenUtil;
-import com.dev.prepaid.util.RESTUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,14 +39,6 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
     private JwtTokenUtil jwtTokenUtil;
     @Value("${eligibility.batch_size:100}")
     private int batchSize;
-
-//	@Autowired
-//	private PrepaidAppService prepaidAppService;
-
-//	@Autowired
-//	private PrepaidCxProvInstancesRepository prepaidCxProvInstancesRepository;
-//
-
     @Autowired
     private PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
     @Autowired
@@ -59,10 +46,68 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
     @Autowired
     private OfferEligibilityService offerEligibilityService;
 
-    //with data
     @Override
     @Async("CXInvocationExecutor")
-    public void processData(InvocationRequest invocation) throws Exception {
+    public void invoke(InvocationRequest invocation) throws Exception {
+        String instanceId = invocation.getInstanceContext().getInstanceId();
+        PrepaidCxOfferConfig instanceConfiguration = prepaidCxOfferConfigRepository.findOneByInstanceIdAndDeletedDateIsNull(instanceId);
+        List<List<String>> rows = invocation.getDataSet().getRows();
+        // Async
+        // Invoke without data will have DataSet with size, but no rows in DataSet
+        if (invocation.getDataSet().getRows() == null || invocation.getDataSet().getRows().isEmpty()) {
+            log.debug("invoke without data, rows null");
+            BigDecimal batchCount = new BigDecimal(invocation.getDataSet().getSize()).divide(new BigDecimal(batchSize));
+            batchCount = batchCount.setScale(0, RoundingMode.UP);
+            int count = batchCount.intValue();
+            int totalObjects = invocation.getDataSet().getSize().intValue();
+            log.info("batch size {} count {} total {}", batchSize, count, totalObjects);
+            int countBatch = 0;
+            for (int i = 0; i < totalObjects; i += batchSize) {
+                int limit = batchSize;
+                int offset = countBatch * batchSize;
+                log.info("========================================START BATCH {}=====================================",
+                        countBatch);
+                ProductExportEndpointResponse response = productExportEndpoint(invocation, limit, offset);
+                log.info("BATCH RESPONSE {}",response);
+                InstanceContext newInstanceContext = InstanceContext
+                        .builder()
+                        .instanceId(invocation.getInstanceContext().getInstanceId())
+                        .recordDefinition(invocation.getInstanceContext().getRecordDefinition())
+                        .appId(invocation.getInstanceContext().getAppId())
+                        .appVersion(invocation.getInstanceContext().getAppVersion())
+                        .installId(invocation.getInstanceContext().getInstallId())
+                        .maxBatchSize(invocation.getInstanceContext().getMaxBatchSize())
+                        .productId(invocation.getInstanceContext().getProductId())
+                        .secret(invocation.getInstanceContext().getSecret())
+                        .build();
+                InvocationRequest newInvocationPerBatch = InvocationRequest
+                        .builder()
+                        .dataSet(response.getDataSet()) // new
+                        .instanceContext(newInstanceContext) // new
+                        .uuid(invocation.getUuid())
+                        .maxPullPageSize(invocation.getMaxPullPageSize())
+                        .maxPushBatchSize(invocation.getMaxPushBatchSize())
+                        .productExportEndpoint(invocation.getProductExportEndpoint())
+                        .productImportEndpoint(invocation.getProductImportEndpoint())
+                        .onCompletionCallbackEndpoint(invocation.getOnCompletionCallbackEndpoint())
+                        .build();
+                processData(newInvocationPerBatch, invocation);
+                log.info("========================================END BATCH {}=====================================",
+                        countBatch);
+                countBatch++;
+            }
+        } else {
+            log.debug("invoke with data");
+            processData(invocation, invocation);
+        }
+
+        onCompletionCallbackEndpoint(invocation);
+    }
+
+    @Override
+    public void processData(InvocationRequest invocation, InvocationRequest invocationOri) throws Exception {
+        log.debug("call processData");
+
         String instanceId = invocation.getInstanceContext().getInstanceId();
         PrepaidCxOfferConfig instanceConfiguration = prepaidCxOfferConfigRepository.findOneByInstanceIdAndDeletedDateIsNull(instanceId);
         List<List<String>> rows = invocation.getDataSet().getRows();
@@ -75,37 +120,11 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
         }
 
         try {
-            BigDecimal batchCount = new BigDecimal(invocation.getDataSet().getSize()).divide(new BigDecimal(batchSize));
-            batchCount = batchCount.setScale(0, RoundingMode.UP);
-            int count = batchCount.intValue();
-            int totalObjects = invocation.getDataSet().getSize().intValue();
-            //optimize
-            log.info("batch size {} count {} total {}", batchSize, count, totalObjects);
-            for (int i = 0; i < totalObjects; i+= batchSize) {
-                if (i + batchSize > totalObjects) {
-                    DataSet dataSet = new DataSet();
-                    dataSet.setId(invocation.getDataSet().getId());
-                    dataSet.setRows(invocation.getDataSet().getRows().subList(i, totalObjects));
-                    dataSet.setSize(Long.valueOf(dataSet.getRows().size()));
-
-                    log.info("dataSet from {} to {}", i, totalObjects);
-					sendToEligibilityQueue(dataSet, invocation);
-
-                    break;
-                }
-                DataSet dataSet = new DataSet();
-                dataSet.setId(invocation.getDataSet().getId());
-                dataSet.setRows(invocation.getDataSet().getRows().subList(i, i + batchSize));
-                dataSet.setSize(Long.valueOf(batchSize));
-
-                log.info("dataSet from {} to {}", i, i + batchSize);
-				sendToEligibilityQueue(dataSet, invocation);
-            }
-
+            DataSet dataSet = invocation.getDataSet();
 
             Instant start = Instant.now();
             log.info("invId|{}|confId|{}|start_process|{}|total_rows|{}", invocation.getUuid(), instanceConfiguration.getId(), start, rows.size());
-
+            sendToEligibilityQueue(dataSet, invocation, invocationOri);
             Duration duration = Duration.between(start, Instant.now());
             log.info("invId|{}|confId|{}|end_process|{}|total_rows|{}", invocation.getUuid(), instanceConfiguration.getId(), TimeUnit.MILLISECONDS.convert(duration), rows.size());
 
@@ -113,23 +132,41 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
             // TODO: handle exception
             log.error("Exception occurred while processing rows for invocationUuid:" + invocation.getUuid(), e);
         }
-
-        //finish
-//		if(!instanceConfiguration.getNotification()) {
-        //callProductOnCompletionCallbackEndpoint
-        //callProductOnCompletionCallbackEndpoint(invocation);
-//			retryableService.callProductOnCompletionCallbackEndpoint(invocation);
-//		}else {
-//			//for TESTING
-//			//callProductImportEndpoint
-//			callProductImportEndpoint(invocation);
-//			//callProductOnCompletionCallbackEndpoint
-//			callProductOnCompletionCallbackEndpoint(invocation);
-//		}
-
     }
 
-    private void callProductImportEndpoint(InvocationRequest invocation) {
+    @Override
+    public ProductExportEndpointResponse productExportEndpoint(InvocationRequest invocation, int limit, int offset) throws Exception {
+        log.debug("call productExportEndpoint");
+
+        InstanceContext instanceContext = invocation.getInstanceContext();
+        String token = jwtTokenUtil.generateTokenProduct(invocation, instanceContext);
+        String url = invocation.getProductImportEndpoint().getUrl() + "?offset=" + offset + "&limit=" + limit;
+        ResponseEntity<String> responseEntity = RESTUtil.productExportEndpoint(
+                invocation,
+                token,
+                url,
+                null,
+                String.class,
+                "application/json");
+
+        log.debug(responseEntity.getBody().toString());
+
+        int statusCode = responseEntity.getStatusCodeValue();
+        if (statusCode >= 400) {
+            String msg = "Calling Product Export Endpoint: " + invocation.getProductExportEndpoint().getUrl()
+                    + " resulted in an error status: " + statusCode;
+            log.error(msg);
+            throw new RuntimeException(msg);
+        }
+
+        ProductExportEndpointResponse data = (ProductExportEndpointResponse) GsonUtils.serializeObjectFromJSON(responseEntity.getBody().toString(), ProductExportEndpointResponse.class);
+        return data;
+    }
+
+    @Override
+    public void productImportEndpoint(InvocationRequest invocation) throws Exception {
+        log.debug("call productImportEndpoint");
+
         ResponseEntity response = null;
         InstanceContext instanceContext = invocation.getInstanceContext();
         String token = jwtTokenUtil.generateTokenProduct(invocation, instanceContext);
@@ -165,7 +202,9 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
 
     }
 
-    private void callProductOnCompletionCallbackEndpoint(InvocationRequest invocation) {
+    @Override
+    public void onCompletionCallbackEndpoint(InvocationRequest invocation) throws Exception {
+        log.debug("call onCompletionCallbackEndpoint");
         ResponseEntity response = null;
         InstanceContext instanceContext = invocation.getInstanceContext();
         String token = jwtTokenUtil.generateTokenProduct(invocation, instanceContext);
@@ -185,27 +224,27 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
 
     }
 
-    private void sendToEligibilityQueue(DataSet dataSet, InvocationRequest invocation){
-		InvocationRequest newInvocation = InvocationRequest.builder()
+    private void sendToEligibilityQueue(DataSet dataSet, InvocationRequest invocation, InvocationRequest invocationOri) {
+        InvocationRequest newInvocation = InvocationRequest.builder()
                 .uuid(invocation.getUuid())
-				.instanceContext(invocation.getInstanceContext())
-				.dataSet(dataSet)
-				.maxPullPageSize(invocation.getMaxPullPageSize())
-				.maxPushBatchSize(invocation.getMaxPushBatchSize())
-				.productImportEndpoint(invocation.getProductImportEndpoint())
-				.productExportEndpoint(invocation.getProductExportEndpoint())
-				.onCompletionCallbackEndpoint(invocation.getOnCompletionCallbackEndpoint())
-				.build();
+                .instanceContext(invocation.getInstanceContext())
+                .dataSet(dataSet)
+                .maxPullPageSize(invocation.getMaxPullPageSize())
+                .maxPushBatchSize(invocation.getMaxPushBatchSize())
+                .productImportEndpoint(invocation.getProductImportEndpoint())
+                .productExportEndpoint(invocation.getProductExportEndpoint())
+                .onCompletionCallbackEndpoint(invocation.getOnCompletionCallbackEndpoint())
+                .build();
 
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("source", "responsys");
-		map.put("invocationRequest", newInvocation);
-		//send to Redemption Queue
-		rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
-				Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY,
-				map,
-				0);
-	}
-
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("source", "responsys");
+        map.put("invocationRequest", newInvocation);
+        map.put("originalInvocationRequest", invocationOri);
+        //send to Redemption Queue
+        rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+                Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY,
+                map,
+                0);
+    }
 
 }
