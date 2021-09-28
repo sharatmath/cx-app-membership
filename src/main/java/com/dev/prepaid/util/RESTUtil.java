@@ -68,7 +68,7 @@ public class RESTUtil {
 	@SuppressWarnings("rawtypes")
 	public static ResponseEntity onCompletionCallbackPatch(InvocationRequest invocation, String token,String host, Object object, Class c, String contentType) {
     	ResponseEntity status = restServiceExchange(
-                RequestUtil.getClientJWTHttpInterceptor(invocation, contentType, token),
+                RequestUtil.getClientOnCompletionCallbackJWTHttpInterceptor(invocation, contentType, token),
         		host,
                 HttpMethod.PATCH,
                 new HttpEntity<>(object),

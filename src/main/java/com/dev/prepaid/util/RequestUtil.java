@@ -55,7 +55,7 @@ public class RequestUtil {
         return interceptors;
     }
     
-    public static ArrayList<ClientHttpRequestInterceptor> getClientImportProductJWTHttpInterceptor(InvocationRequest invocation, String contentType, String token) {
+    public static ArrayList<ClientHttpRequestInterceptor> getClientOnCompletionCallbackJWTHttpInterceptor(InvocationRequest invocation, String contentType, String token) {
         ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
 	    interceptors.add(new HeaderRequestInterceptor("Authorization", "Bearer " + token));
 	    interceptors.add(new HeaderRequestInterceptor("Content-Type", contentType));

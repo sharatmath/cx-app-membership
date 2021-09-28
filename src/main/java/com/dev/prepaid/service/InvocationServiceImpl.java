@@ -204,10 +204,18 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
 
     @Override
     public void onCompletionCallbackEndpoint(InvocationRequest invocation) throws Exception {
+        BigDecimal batchCount = new BigDecimal(invocation.getDataSet().getSize()).divide(new BigDecimal(batchSize));
+        batchCount = batchCount.setScale(0, RoundingMode.UP);
+        int count = batchCount.intValue();
+        Thread.sleep(count * 5000);
+        log.info("{}", invocation.getInstanceContext());
+        Thread.sleep(9000);
         log.debug("call onCompletionCallbackEndpoint");
+
         ResponseEntity response = null;
         InstanceContext instanceContext = invocation.getInstanceContext();
-        String token = jwtTokenUtil.generateTokenProduct(invocation, instanceContext);
+//        String token = jwtTokenUtil.generateTokenProduct(invocation, instanceContext);
+        String token = jwtTokenUtil.generateTokenExportProduct(null, instanceContext);
         String url = invocation.getOnCompletionCallbackEndpoint().getUrl();
 
         Map<String, Object> body = new HashMap<>();
