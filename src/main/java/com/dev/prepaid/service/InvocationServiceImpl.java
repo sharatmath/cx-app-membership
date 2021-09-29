@@ -108,6 +108,7 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
             }
         } else {
             log.debug("invoke with data");
+            invocation.setBatchId(0);
             processData(invocation, invocation);
         }
 
