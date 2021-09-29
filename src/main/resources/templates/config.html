@@ -188,8 +188,8 @@
 
             <div class="accordion DPForm" id="directProvisioning">
                 <div class="card">
-                    <div id="headingSix">
-                        <div id="eventConditionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseSix"><h5><i class="fa fa-plus"></i> Event Condition - Not Applicable</h5></div>
+                    <div class="card-header" id="headingSix">
+                        <div id="eventConditionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseSix"><h5><i class="fa fa-plus"></i> Event Condition - Not Applicable</h5></div>
                     </div>
                     <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#directProvisioning">
                         <div class="card-body" x-show="type === 'eventConditionDirectProvisioning' || type === 'eventCondition'">
@@ -620,8 +620,8 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div id="headingOne">
-                        <div id="offerSelectionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseOne"><h5><i class="fa fa-plus"></i> Offer Selection - Required</h5></div>
+                    <div class="card-header" id="headingOne">
+                        <div id="offerSelectionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseOne"><h5><i class="fa fa-plus"></i> Offer Selection - Required</h5></div>
                     </div>
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#directProvisioning">
                         <div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
@@ -634,7 +634,7 @@
                                         <input id="overallOfferName" type="text" class="form-control" x-model="overallOfferName">
                                     </div>
                                     <div class="col-sm-3">
-                                        <button @click="checkUniqueOfferName" class="btn btn-singtel">Validate</button>
+                                        <button @click="checkUniqueOfferName" class="btn btn-singtel"><i class="fas fa-check-double"></i> Validate</button>
                                     </div>
                                 </div><br>
                                 <div class="form-inline col-sm-12">
@@ -815,8 +815,8 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div id="headingTwo">
-                        <div id="advancedFilterAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseTwo"><h5><i class="fa fa-plus"></i> Advanced Filter - Optional</h5></div>
+                    <div class="card-header" id="headingTwo">
+                        <div id="advancedFilterAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseTwo"><h5><i class="fa fa-plus"></i> Advanced Filter - Optional</h5></div>
                     </div>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#directProvisioning">
                         <div class="card-body">
@@ -825,8 +825,8 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div id="headingThree">
-                        <div id="eligibilityPolicyAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseThree"><h5><i class="fa fa-plus"></i> Eligibility Policy - Optional</h5></div>
+                    <div class="card-header" id="headingThree">
+                        <div id="eligibilityPolicyAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseThree"><h5><i class="fa fa-plus"></i> Eligibility Policy - Optional</h5></div>
                     </div>
                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#directProvisioning">
                         <div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning' || type === 'eventCondition'">
@@ -921,8 +921,8 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div id="headingFour">
-                        <div id="fulfillmentAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseFour"><h5><i class="fa fa-plus"></i> Offer Monitoring - Not Applicable</h5></div>
+                    <div class="card-header" id="headingFour">
+                        <div id="fulfillmentAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseFour"><h5><i class="fa fa-plus"></i> Offer Monitoring - Not Applicable</h5></div>
                     </div>
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#directProvisioning">
                         <div class="card-body" x-show="type === 'offerMonitoringWithAssignment'">
@@ -1360,8 +1360,8 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div id="headingFive">
-                        <div id="redemptionAccordion" class="toggle-title card-header collapsed" data-toggle="collapse" data-target="#collapseFive"><h5><i class="fa fa-plus"></i> Redemption Policy - Required</h5></div>
+                    <div class="card-header" id="headingFive">
+                        <div id="redemptionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseFive"><h5><i class="fa fa-plus"></i> Redemption Policy - Required</h5></div>
                     </div>
                     <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#directProvisioning">
                         <div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
@@ -1741,7 +1741,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>-->
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <!--jQUERY BEGIN-->
 <script>
@@ -1973,13 +1973,13 @@
 
             init() {
                 this.eventTypeDropdown(),
-                this.offerBucketDropdown(),
-                this.campaignOfferDropdown(),
-                this.getOfferSelection(),
-                this.monitoringPolicy(),
-                this.redemptionPolicy(),
-                this.eventConditionPolicy(),
-                this.getCountryList()
+                    this.offerBucketDropdown(),
+                    this.campaignOfferDropdown(),
+                    this.getOfferSelection(),
+                    this.monitoringPolicy(),
+                    this.redemptionPolicy(),
+                    this.eventConditionPolicy(),
+                    this.getCountryList()
             },
 
             initPage(){
@@ -1988,10 +1988,10 @@
                     this.getPromoList(),
                     // this.checkUniqueOfferName()
                 ])
-                .then(data => {
-                    this.eligibilityPolicy()
-                    this.getPromoCodeList()
-                })
+                    .then(data => {
+                        this.eligibilityPolicy()
+                        this.getPromoCodeList()
+                    })
             },
 
             uncheckTotalOffer() {
