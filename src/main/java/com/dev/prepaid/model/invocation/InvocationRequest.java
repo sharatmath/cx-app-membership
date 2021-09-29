@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InvocationRequest {	
 	private String uuid;
+	private Integer batchId;
 	private InstanceContext instanceContext;
 	private DataSet dataSet;
 	private ProductExpImpEndpoint productExportEndpoint;

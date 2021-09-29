@@ -11,11 +11,10 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.dev.prepaid.constant.Constant;
-import com.dev.prepaid.domain.PrepaidCxOfferConfig;
-import com.dev.prepaid.domain.PrepaidOfferMembership;
-import com.dev.prepaid.domain.PrepaidOfferMembershipExclus;
+import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.invocation.*;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
+import com.dev.prepaid.repository.PrepaidOfferEligibilityTrxRepository;
 import com.dev.prepaid.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +23,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.dev.prepaid.InitData;
-import com.dev.prepaid.domain.PrepaidCxProvInstances;
 import com.dev.prepaid.model.DataRowDTO;
 import com.dev.prepaid.model.imports.DataImportDTO;
 import com.dev.prepaid.repository.PrepaidCxProvInstancesRepository;
@@ -45,6 +43,8 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
     private RetryableService retryableService;
     @Autowired
     private OfferEligibilityService offerEligibilityService;
+    @Autowired
+    private PrepaidOfferEligibilityTrxRepository prepaidOfferEligibilityTrxRepository;
 
     @Override
     @Async("CXInvocationExecutor")
@@ -85,12 +85,22 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
                         .dataSet(response.getDataSet()) // new
                         .instanceContext(newInstanceContext) // new
                         .uuid(invocation.getUuid())
+                        .batchId(countBatch)
                         .maxPullPageSize(invocation.getMaxPullPageSize())
                         .maxPushBatchSize(invocation.getMaxPushBatchSize())
                         .productExportEndpoint(invocation.getProductExportEndpoint())
                         .productImportEndpoint(invocation.getProductImportEndpoint())
                         .onCompletionCallbackEndpoint(invocation.getOnCompletionCallbackEndpoint())
                         .build();
+
+                PrepaidOfferEligibilityTrx tx = PrepaidOfferEligibilityTrx.builder()
+                        .batchId(Long.valueOf(countBatch))
+                        .invocationId(invocation.getUuid())
+                        .isEvaluated(false)
+                        .build();
+                invocation.setBatchId(countBatch);
+
+                prepaidOfferEligibilityTrxRepository.save(tx);
                 processData(newInvocationPerBatch, invocation);
                 log.info("========================================END BATCH {}=====================================",
                         countBatch);
@@ -235,6 +245,7 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
     private void sendToEligibilityQueue(DataSet dataSet, InvocationRequest invocation, InvocationRequest invocationOri) {
         InvocationRequest newInvocation = InvocationRequest.builder()
                 .uuid(invocation.getUuid())
+                .batchId(invocationOri.getBatchId())
                 .instanceContext(invocation.getInstanceContext())
                 .dataSet(dataSet)
                 .maxPullPageSize(invocation.getMaxPullPageSize())
