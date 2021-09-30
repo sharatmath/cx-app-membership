@@ -96,14 +96,15 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
                 PrepaidOfferEligibilityTrx tx = PrepaidOfferEligibilityTrx.builder()
                         .batchId(Long.valueOf(countBatch))
                         .invocationId(invocation.getUuid())
+                        .instanceId(instanceId)
                         .isEvaluated(false)
                         .data(newInvocationPerBatch.getDataSet().toString())
                         .batchSize(newInvocationPerBatch.getDataSet().getSize())
                         .totalRow(invocation.getDataSet().getSize())
                         .build();
                 invocation.setBatchId(countBatch);
-
                 prepaidOfferEligibilityTrxRepository.save(tx);
+                invocation.setOfferEligibilityTxId(tx.getId());
                 processData(newInvocationPerBatch, invocation);
                 log.info("========================================END BATCH {}=====================================",
                         countBatch);
@@ -111,7 +112,18 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
             }
         } else {
             log.debug("invoke with data");
+            PrepaidOfferEligibilityTrx tx = PrepaidOfferEligibilityTrx.builder()
+                    .batchId(Long.valueOf(0))
+                    .invocationId(invocation.getUuid())
+                    .instanceId(instanceId)
+                    .isEvaluated(false)
+                    .data(invocation.getDataSet().toString())
+                    .batchSize(invocation.getDataSet().getSize())
+                    .totalRow(invocation.getDataSet().getSize())
+                    .build();
             invocation.setBatchId(0);
+            prepaidOfferEligibilityTrxRepository.save(tx);
+            invocation.setOfferEligibilityTxId(tx.getId());
             processData(invocation, invocation);
         }
 

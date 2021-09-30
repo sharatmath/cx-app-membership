@@ -54,40 +54,35 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                           PrepaidCxOfferConfig instanceConfiguration,
                                           String groupId,
                                           Long dataSetSize) throws Exception {
-        Long offerEligibilityTxId = Long.valueOf(0);
+
         log.info("FindBatchId|Request|{}|{}", invocationOri.getUuid(), invocation.getBatchId());
-        Optional<PrepaidOfferEligibilityTrx> opsFind = prepaidOfferEligibilityTrxRepository.findByInvocationIdAndBatchId(
-                invocationOri.getUuid(),
-                Long.valueOf(invocationOri.getBatchId())
-        );
-        if(opsFind.isPresent()){
-            offerEligibilityTxId = opsFind.get().getId();
-        }
         //1
         List<List<String>> exclusionRows = new ArrayList<>();
-        exclusionRows = evaluationSubscriberExclusion(rows, invocation, offerEligibilityTxId, instanceConfiguration);
+        exclusionRows = evaluationSubscriberExclusion(rows, invocation, instanceConfiguration);
         //2
         List<List<String>> eligibleRows = new ArrayList<>();
-        eligibleRows = evaluationSubscriberLevel(exclusionRows, invocation, offerEligibilityTxId,  instanceConfiguration);
+        eligibleRows = evaluationSubscriberLevel(exclusionRows, invocation,  instanceConfiguration);
         //3
         List<List<String>> advanceFilterRows = new ArrayList<>();
-        advanceFilterRows = evaluationAdvanceFilter(eligibleRows, invocation, offerEligibilityTxId,  instanceConfiguration);
+        advanceFilterRows = evaluationAdvanceFilter(eligibleRows, invocation,  instanceConfiguration);
         //4
         List<List<String>> offerLevelRows = new ArrayList<>();
-        offerLevelRows = evaluationOfferLevelCondition(advanceFilterRows, invocation, offerEligibilityTxId,  instanceConfiguration);
+        offerLevelRows = evaluationOfferLevelCondition(advanceFilterRows, invocation,  instanceConfiguration);
         //5&6
 
-
+        Optional<PrepaidOfferEligibilityTrx> opsFind = prepaidOfferEligibilityTrxRepository.findByInvocationIdAndBatchId(
+          invocation.getUuid(),
+          Long.valueOf(invocation.getBatchId())
+        );
         log.info("FindBatchId|Response|{}", opsFind);
         if (opsFind.isPresent()) {
             opsFind.get().setIsEvaluated(true);
-            offerEligibilityTxId = opsFind.get().getId();
             prepaidOfferEligibilityTrxRepository.save(opsFind.get());
             log.info("FindBatchId|Update|{}", opsFind.get());
         }
 
         if (offerLevelRows.size() > 0) {
-            saveToPrepaidOfferMembership(offerLevelRows, invocation.getUuid(), offerEligibilityTxId, instanceConfiguration);
+            saveToPrepaidOfferMembership(offerLevelRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration);
         }
 
 
@@ -112,7 +107,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
     @Override
-    public List<List<String>> evaluationSubscriberExclusion(List<List<String>> rows, InvocationRequest invocation, Long offerEligibilityTxId,  PrepaidCxOfferConfig instanceConfiguration) throws Exception {
+    public List<List<String>> evaluationSubscriberExclusion(List<List<String>> rows, InvocationRequest invocation,  PrepaidCxOfferConfig instanceConfiguration) throws Exception {
         List<List<String>> resultRows = new ArrayList<>();
         List<List<String>> excluseRows = new ArrayList<>();
         log.info("process#1|evaluationSubscriberExclusion|START|type|{}", instanceConfiguration.getProvisionType());
@@ -164,7 +159,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#1|SUMMARY_OUT|{}|rows|{}", resultRows.size(), resultRows);
         log.info("process#1|SUMMARY_EXCLUSE|{}|rows|{}", excluseRows.size(), excluseRows);
         if(excluseRows.size() > 0){
-            saveToPrepaidOfferMembershipExclus(excluseRows, invocation.getUuid(), offerEligibilityTxId, instanceConfiguration,
+            saveToPrepaidOfferMembershipExclus(excluseRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                     "evaluationSubscriberExclusion",
                     "FAILED"
                     );
@@ -174,7 +169,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
     @Override
-    public List<List<String>> evaluationSubscriberLevel(List<List<String>> rows, InvocationRequest invocation, Long offerEligibilityTxId, PrepaidCxOfferConfig instanceConfiguration) throws Exception {
+    public List<List<String>> evaluationSubscriberLevel(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception {
         log.info("process#2|evaluationSubscriberLevel|START|type|{}", instanceConfiguration.getProvisionType());
         log.info("process#2|DATA|{}", rows);
         List<List<String>> eligibleRows = new ArrayList<>();
@@ -199,7 +194,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#2|SUMMARY_OUT|{}|rows|{}", eligibleRows.size(), eligibleRows);
         log.info("process#2|SUMMARY_EXCLUSE|{}|rows|{}", notEligibleRows.size(), notEligibleRows);
         if(notEligibleRows.size() > 0){
-            saveToPrepaidOfferMembershipExclus(notEligibleRows, invocation.getUuid(), offerEligibilityTxId, instanceConfiguration,
+            saveToPrepaidOfferMembershipExclus(notEligibleRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                     "evaluationSubscriberLevel",
                     "FAILED");
         }
@@ -208,7 +203,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
     @Override
-    public List<List<String>> evaluationAdvanceFilter(List<List<String>> rows, InvocationRequest invocation, Long offerEligibilityTxId, PrepaidCxOfferConfig instanceConfiguration) throws Exception {
+    public List<List<String>> evaluationAdvanceFilter(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception {
         List<List<String>> resultRows = new ArrayList<>();
         log.info("process#3|evaluationAdvanceFilter|START|type|{}", instanceConfiguration.getProvisionType());
         log.info("process#3|DATA|{}", rows);
@@ -216,7 +211,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#3|SUMMARY_OUT|{}|rows|{}", rows.size(), rows);
         log.info("process#3|SUMMARY_EXCLUSE|{}|rows|{}", resultRows.size(), resultRows);
         if(resultRows.size() > 0){
-            saveToPrepaidOfferMembershipExclus(resultRows, invocation.getUuid(), offerEligibilityTxId, instanceConfiguration,
+            saveToPrepaidOfferMembershipExclus(resultRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                     "evaluationAdvanceFilter",
                     "FAILED");
         }
@@ -225,7 +220,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
     @Override
-    public List<List<String>> evaluationOfferLevelCondition(List<List<String>> rows, InvocationRequest invocation, Long offerEligibilityTxId, PrepaidCxOfferConfig instanceConfiguration) throws Exception {
+    public List<List<String>> evaluationOfferLevelCondition(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception {
         log.info("process#4|evaluationOfferLevelCondition|START|type|{}", instanceConfiguration.getProvisionType());
         log.info("process#4|DATA|{}", rows);
         List<List<String>> offerMembershipRows = new ArrayList<>();
@@ -281,7 +276,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             }
 
             if (offerMembershipExcluseRows.size() > 0)
-                saveToPrepaidOfferMembershipExclus(offerMembershipExcluseRows, invocation.getUuid(), offerEligibilityTxId, instanceConfiguration,
+                saveToPrepaidOfferMembershipExclus(offerMembershipExcluseRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                         "evaluationOfferLevelCondition",
                         "FAILED"
                         );

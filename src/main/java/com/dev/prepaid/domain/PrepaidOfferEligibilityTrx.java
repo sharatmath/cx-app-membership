@@ -19,6 +19,7 @@ public class PrepaidOfferEligibilityTrx extends Auditable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String invocationId;
+    private String instanceId;
     private Long batchId;
     private Long batchSize;
     private Long totalRow;
