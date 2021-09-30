@@ -262,6 +262,7 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
         InvocationRequest newInvocation = InvocationRequest.builder()
                 .uuid(invocation.getUuid())
                 .batchId(invocationOri.getBatchId())
+                .offerEligibilityTxId(invocationOri.getOfferEligibilityTxId())
                 .instanceContext(invocation.getInstanceContext())
                 .dataSet(dataSet)
                 .maxPullPageSize(invocation.getMaxPullPageSize())

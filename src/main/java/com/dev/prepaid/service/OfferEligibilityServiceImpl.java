@@ -473,11 +473,13 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     @Async
     private void saveToPrepaidOfferMembershipExclus(List<List<String>> membershipExclusRows, String invId, Long offerEligibilityTxId, PrepaidCxOfferConfig prepaidCxOfferConfig, String evaluationType, String evaluationStatus) throws Exception {
         int totalObjects = membershipExclusRows.size();
+        Date offerDate = new Date();
         List<PrepaidOfferMembershipExclus> memberships = membershipExclusRows
                 .stream()
                 .map(dataRowDTO ->
                         PrepaidOfferMembershipExclus.builder()
 //                                .offerSelectionId(prepaidCxOfferSelection.getId())
+                                .offerDate(offerDate)
                                 .invocationId(invId)
                                 .offerEligibilityTxId(offerEligibilityTxId)
                                 .evaluationType(evaluationType)
