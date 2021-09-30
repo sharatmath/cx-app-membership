@@ -23,7 +23,6 @@ public class PrepaidOfferMembershipExclus extends Auditable{
     private Long offerEligibilityTxId;
     private Long msisdn;
     private Date offerDate;
-//    private Date topupDate;
     private Boolean isControlFlag;
     private Boolean isGcgFlag;
     private String holdoutGroupId;
