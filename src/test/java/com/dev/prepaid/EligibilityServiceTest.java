@@ -278,7 +278,6 @@ public class EligibilityServiceTest {
                 .stream()
                 .map(dataRowDTO ->
                         PrepaidOfferMembershipExclus.builder()
-                                .offerSelectionId(prepaidCxOfferSelection.getId())
                                 .msisdn(Long.valueOf(dataRowDTO.get(1)))
                                 .build())
                 .collect(Collectors.toList());

@@ -17,15 +17,16 @@ import java.util.Date;
 public class PrepaidOfferMembershipExclus extends Auditable{
     @Id
     @Column(name = "OFFER_MEMBERSHIP_EXCL_ID")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqGen")
-    @SequenceGenerator(name = "seqGen", sequenceName = "OFFER_MEMBERSHIP_EXCL_ID_SEQ", initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long offerSelectionId;
+    private String invocationId;
+    private Long offerEligibilityTxId;
     private Long msisdn;
     private Date offerDate;
-    private Date topupDate;
+//    private Date topupDate;
     private Boolean isControlFlag;
     private Boolean isGcgFlag;
     private String holdoutGroupId;
+    private String evaluationType;
+    private String evaluationStatus;
 }

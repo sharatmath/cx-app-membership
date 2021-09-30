@@ -20,5 +20,8 @@ public class PrepaidOfferEligibilityTrx extends Auditable{
     private Long id;
     private String invocationId;
     private Long batchId;
+    private Long batchSize;
+    private Long totalRow;
+    private String data;
     private Boolean isEvaluated;
 }

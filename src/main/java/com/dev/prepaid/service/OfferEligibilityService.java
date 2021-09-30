@@ -21,13 +21,13 @@ public interface OfferEligibilityService {
             String groupId,
             Long dataSetSize) throws Exception;
 
-    public List<List<String>> evaluationSubscriberExclusion(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
+    public List<List<String>> evaluationSubscriberExclusion(List<List<String>> rows, InvocationRequest invocation, Long offerEligibilityTxId, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 
-    public List<List<String>> evaluationSubscriberLevel(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
+    public List<List<String>> evaluationSubscriberLevel(List<List<String>> rows, InvocationRequest invocation, Long offerEligibilityTxId, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 
-    public List<List<String>> evaluationAdvanceFilter(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
+    public List<List<String>> evaluationAdvanceFilter(List<List<String>> rows, InvocationRequest invocation, Long offerEligibilityTxId, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 
-    public List<List<String>> evaluationOfferLevelCondition(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
+    public List<List<String>> evaluationOfferLevelCondition(List<List<String>> rows, InvocationRequest invocation, Long offerEligibilityTxId, PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 
     public void productImportEndpoint(List<List<String>> rows, InvocationRequest invocation, InvocationRequest invocationOri,  PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 

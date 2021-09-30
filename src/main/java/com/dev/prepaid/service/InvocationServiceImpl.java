@@ -97,6 +97,9 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
                         .batchId(Long.valueOf(countBatch))
                         .invocationId(invocation.getUuid())
                         .isEvaluated(false)
+                        .data(newInvocationPerBatch.getDataSet().toString())
+                        .batchSize(newInvocationPerBatch.getDataSet().getSize())
+                        .totalRow(invocation.getDataSet().getSize())
                         .build();
                 invocation.setBatchId(countBatch);
 
