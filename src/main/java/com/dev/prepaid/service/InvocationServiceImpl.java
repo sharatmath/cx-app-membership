@@ -67,7 +67,7 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
                 int offset = countBatch * batchSize;
                 log.info("========================================START BATCH {}=====================================",
                         countBatch);
-                ProductExportEndpointResponse response = productExportEndpoint(invocation, limit, offset);
+                ProductExportEndpointResponse response = callProductExportEndpoint(invocation, limit, offset);
                 log.info("BATCH RESPONSE {}",response);
                 InstanceContext newInstanceContext = InstanceContext
                         .builder()
@@ -161,7 +161,7 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
     }
 
     @Override
-    public ProductExportEndpointResponse productExportEndpoint(InvocationRequest invocation, int limit, int offset) throws Exception {
+    public ProductExportEndpointResponse callProductExportEndpoint(InvocationRequest invocation, int limit, int offset) throws Exception {
         log.debug("call productExportEndpoint");
 
         InstanceContext instanceContext = invocation.getInstanceContext();
@@ -190,7 +190,7 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
     }
 
     @Override
-    public void productImportEndpoint(InvocationRequest invocation) throws Exception {
+    public void callProductImportEndpoint(InvocationRequest invocation) throws Exception {
         log.debug("call productImportEndpoint");
 
         ResponseEntity response = null;
@@ -199,7 +199,9 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
         String url = invocation.getProductImportEndpoint().getUrl();
 
         List<List<String>> rows = new ArrayList<List<String>>();
-
+        PrepaidCxOfferConfig config =  prepaidCxOfferConfigRepository.findOneByInstanceIdAndDeletedDateIsNull(
+          invocation.getInstanceContext().getInstanceId()
+        );
         invocation.getDataSet().getRows().forEach(row -> {
             Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
             Map<String, Object> output = invocation.getInstanceContext().getRecordDefinition().generateOutputRowAsNewMap(input);
@@ -207,9 +209,23 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
                     output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
                     "success", //appcloud_row_status
                     "", //appcloud_row_errormessage
+                    config.getOverallOfferName(), //overallOfferName
                     "success"); //STATUS
             rows.add(listOutput);
         });
+
+
+
+
+/*
+        {
+            "name": "OVERALL_OFFER_NAME",
+                "dataType": "Text",
+                "width": 200,
+                "required": true,
+                "readOnly": true
+        }
+*/
 
         DataSet dataSet = DataSet.builder()
                 .id(invocation.getDataSet().getId())

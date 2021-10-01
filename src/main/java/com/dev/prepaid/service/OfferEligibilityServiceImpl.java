@@ -325,6 +325,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
                     "success", //appcloud_row_status
                     "", //appcloud_row_errormessage
+                    instanceConfiguration.getOverallOfferName(),
                     "success"); //STATUS
             rows.add(listOutput);
         });
