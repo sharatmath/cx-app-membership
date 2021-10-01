@@ -214,19 +214,6 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
             rows.add(listOutput);
         });
 
-
-
-
-/*
-        {
-            "name": "OVERALL_OFFER_NAME",
-                "dataType": "Text",
-                "width": 200,
-                "required": true,
-                "readOnly": true
-        }
-*/
-
         DataSet dataSet = DataSet.builder()
                 .id(invocation.getDataSet().getId())
                 .rows(rows)
@@ -238,10 +225,14 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
                 .dataSet(dataSet)
                 .build();
 
-        response = RESTUtil.productImportPost(invocation, token, url, data, null, "application/json");
+        try {
+            response = RESTUtil.productImportPost(invocation, token, url, data, null, "application/json");
+        }catch (Exception ex){
+            log.error("productImportPost init Retry : {}", response.getStatusCode());
+            retryableService.callProductImportEndpoint(invocation);
+
+        }
         log.debug("productImportPost response : {}", response.getStatusCode());
-
-
     }
 
     @Override

@@ -1,12 +1,18 @@
 package com.dev.prepaid.service;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dev.prepaid.InitData;
+import com.dev.prepaid.domain.PrepaidCxOfferConfig;
+import com.dev.prepaid.model.imports.DataImportDTO;
+import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.dev.prepaid.model.invocation.DataExportDTO;
@@ -26,6 +32,8 @@ public class RetryableServiceImpl implements RetryableService {
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -99,6 +107,47 @@ public class RetryableServiceImpl implements RetryableService {
 	    	log.debug("onCompletionCallbackPost response : {}",response.getStatusCode());
 	    }
 		
+	}
+
+	@Override
+	@Async
+	public void callProductImportEndpoint(InvocationRequest invocation) throws Exception {
+		log.debug("call Retry_productImportEndpoint");
+		Thread.sleep(60000);
+		ResponseEntity response = null;
+		InstanceContext instanceContext = invocation.getInstanceContext();
+		String token = jwtTokenUtil.generateTokenProduct(invocation, instanceContext);
+		String url = invocation.getProductImportEndpoint().getUrl();
+
+		List<List<String>> rows = new ArrayList<List<String>>();
+		PrepaidCxOfferConfig config =  prepaidCxOfferConfigRepository.findOneByInstanceIdAndDeletedDateIsNull(
+				invocation.getInstanceContext().getInstanceId()
+		);
+		invocation.getDataSet().getRows().forEach(row -> {
+			Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
+			Map<String, Object> output = invocation.getInstanceContext().getRecordDefinition().generateOutputRowAsNewMap(input);
+			List<String> listOutput = List.of(
+					output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
+					"success", //appcloud_row_status
+					"", //appcloud_row_errormessage
+					config.getOverallOfferName(), //overallOfferName
+					"success"); //STATUS
+			rows.add(listOutput);
+		});
+
+		DataSet dataSet = DataSet.builder()
+				.id(invocation.getDataSet().getId())
+				.rows(rows)
+				.size(null)
+				.build();
+
+		DataImportDTO data = DataImportDTO.builder()
+				.fieldDefinitions(InitData.recordDefinition.getOutputParameters())
+				.dataSet(dataSet)
+				.build();
+
+		response = RESTUtil.productImportPost(invocation, token, url, data, null, "application/json");
+		log.debug("productImportPost response : {}", response.getStatusCode());
 	}
 
 	

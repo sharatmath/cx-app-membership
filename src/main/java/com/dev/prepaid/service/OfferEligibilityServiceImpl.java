@@ -46,6 +46,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private PrepaidOfferEligibilityTrxRepository prepaidOfferEligibilityTrxRepository;
+    @Autowired
+    RetryableService retryableService;
 
     @Override
     public List<List<String>> processData(List<List<String>> rows,
@@ -87,13 +89,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
 
         //7
-        try {
-            productImportEndpoint(offerLevelRows, invocation, invocationOri, instanceConfiguration);
-        }catch (Exception ex){
-            log.error("productImportEndpoint Failed ", ex);
-        }
 
-
+        productImportEndpoint(offerLevelRows, invocation, invocationOri, instanceConfiguration);
 
         try {
             PrepaidCxProvInvocations prepaidCxProvInvocations = prepaidCxProvInvocationsRepository.findOneById(invocation.getUuid());
@@ -334,9 +331,13 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 .fieldDefinitions(InitData.recordDefinition.getOutputParameters())
                 .dataSet(dataSet)
                 .build();
-
-        response = RESTUtil.productImportPost(invocationOri, token, url, data, null, "application/json");
-        log.debug("process#7|productImportPost response : {}", response.getStatusCode());
+        try {
+            response = RESTUtil.productImportPost(invocationOri, token, url, data, null, "application/json");
+            log.debug("process#7|productImportPost response : {}", response.getStatusCode());
+        }catch (Exception ex){
+            log.error("productImportPost FAILED and INIT RETRY IN 1 minute", ex);
+            retryableService.callProductImportEndpoint(invocation);
+        }
 
         log.info("process#7|productImportEndpoint|END|type|{}|id|{}|rows_in|{}",
                 instanceConfiguration.getProvisionType(),
