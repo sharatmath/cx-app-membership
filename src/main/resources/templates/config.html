@@ -1005,7 +1005,7 @@
                                                         class="select-component-dropdown"
                                                     ></v-select>
                                                     <div style="margin:10px"></div>
-                                                    <v-select 
+                                                    <!-- <v-select 
                                                         :options="dropdownCustomTimeIndicatorList"
                                                         placeholder="Select Custom Time Indicator"
                                                         label="Select Custom Time Indicator" 
@@ -1013,11 +1013,11 @@
                                                         :clearable="true"
                                                         v-model="selectedIndicator"
                                                         class="select-component-dropdown"
-                                                    ></v-select>
+                                                    ></v-select> -->
                                                 </div>
                                                 <div class="config-card col-8">
                                                     <div v-for="component in componentList" v-bind:is="component"></div>
-                                                    <button :disabled="sqlView" class="btn btn-singtel" style="float:right; margin:10px">Generate SQL</button>
+                                                    <button  class="btn btn-singtel" style="float:right; margin:10px" v-on:click="generateSQL">Generate SQL</button>
                                                     <textarea 
                                                         placeholder="View SQL"
                                                         v-model="sqlView" 
@@ -1037,7 +1037,7 @@
                                     <div class="card-body tab-card"> 
                                         <div class="customUIcontainer row">
                                             <div class="selection-card col-4"> 
-                                                <v-select 
+                                                <!-- <v-select 
                                                     :options="dropdownTableList"
                                                     placeholder="Select Table"
                                                     label="Select Table" 
@@ -1055,7 +1055,7 @@
                                                     
                                                     v-model="selectedField"
                                                     class="select-component-dropdown"
-                                                ></v-select>
+                                                ></v-select> -->
                                             </div>
                                             <div class="selection-card col-8">
                                                 <textarea 
@@ -2876,22 +2876,22 @@
                 'getIDDBucketPeakDetails',
                 'getIDDBucketPeakStatistic',
                 'packageExclusionCheck',
-                'isDataVasBoughtinLastXDays',
-                'hasDoneinternalSelfServeTopup',
-                'hasDoneTopUpfromOPIDs',
-                'hasBoughtPackageinDuration',
-                'getMonthlyDataPPUSum',
-                'getDAPackageFrequency',
-                'getDABalances',
-                'getDAConsumption',
-                'getDAInitialQuota',
-                'getDACurrentExpiryDate',
-                'getLastRechargeDateofDA',
-                'getLastRechargeDateOfDataTopupID',
-                'getDataVasARPU',
-                'getDailyUsageSum',
-                'isDataUsedinLastXdays',
-                'getAccumulatedMonthlyTopupValue'
+                // 'isDataVasBoughtinLastXDays',
+                // 'hasDoneinternalSelfServeTopup',
+                // 'hasDoneTopUpfromOPIDs',
+                // 'hasBoughtPackageinDuration',
+                // 'getMonthlyDataPPUSum',
+                // 'getDAPackageFrequency',
+                // 'getDABalances',
+                // 'getDAConsumption',
+                // 'getDAInitialQuota',
+                // 'getDACurrentExpiryDate',
+                // 'getLastRechargeDateofDA',
+                // 'getLastRechargeDateOfDataTopupID',
+                // 'getDataVasARPU',
+                // 'getDailyUsageSum',
+                // 'isDataUsedinLastXdays',
+                // 'getAccumulatedMonthlyTopupValue'
             ],
             dropdownCustomTimeIndicatorList:[
                 'AGE_ON_NETWORK_Lifetime',
@@ -6423,9 +6423,11 @@
             dropdown3FieldList: store.state.dropdown3FieldList,
 
             selectedField: null,
+            componentListToGenerateSQL:[],
 
             //functions
             getTopupFrequency:{
+                name: "getTopupFrequency",
                 indicator:'MONTHLY_RECHARGE_PACKAGES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
@@ -6434,9 +6436,11 @@
                 numberOfMonth:0,
                 valueOperand:'eq',
                 value:'',
-                otherPackagesAllowed: false
+                otherPackagesAllowed: false,
+                type:'function'
             },
             getTopupFrequencyMatchForXMonths:{
+                name:'getTopupFrequencyMatchForXMonths',
                 indicator:'MONTHLY_RECHARGE_PACKAGES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
@@ -6445,9 +6449,11 @@
                 numberOfMonth:0,
                 valueOperand:'eq',
                 value:'',
-                otherPackagesAllowed: false
+                otherPackagesAllowed: false,
+                type:'function'
             },
             getPackageFrequency:{
+                name:'getPackageFrequency',
                 indicator:'MONTHLY_RECHARGE_PACKAGES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
@@ -6456,53 +6462,67 @@
                 numberOfMonth:0,
                 valueOperand:'eq',
                 value:'',
-                otherPackagesAllowed: false
+                otherPackagesAllowed: false,
+                type:'function'
             },
             hasDonePaidTopupFromTopupCode:{
+                name:'hasDonePaidTopupFromTopupCode',
                 indicator:'CREDIT_SERIES_LifeTime ',
                 hasOperand: false,
                 operand:'AND',
                 startDay: 0,
                 duration: 0,
-                topupCode: ''
+                topupCode: '',
+                type:'function'
             },
             isFirstPaidTopupofMonth: {
+                name:'isFirstPaidTopupofMonth',
                 indicator:'CREDIT_SERIES_LifeTime ',
                 hasOperand: false,
                 operand:'AND',
-                firstPaidTopup: false
+                firstPaidTopup: false,
+                type:'function'
             },
             hasDoneSinglePaidTopup: {
+                name:'hasDoneSinglePaidTopup',
                 indicator:'CREDIT_SERIES_LifeTime ',
                 hasOperand: false,
                 operand:'AND',
                 startDay: 0,
                 duration: 0,
-                moneyValue:0
+                moneyValue:0,
+                type:'function'
             },
             hasDoneSelfServeTopup:{
+                name:'hasDoneSelfServeTopup',
                 indicator:'CREDIT_SERIES_LifeTime ',
                 hasOperand: false,
                 operand:'AND',
                 startDay: 0,
                 duration: 0,
+                type:'function'
             },
             getAccumulatedTopups:{
+                name:'getAccumulatedTopups',
                 indicator:'CREDIT_SERIES_LifeTime ',
                 hasOperand: false,
                 operand:'AND',
                 startDay: 0,
                 duration: 0,
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             isPaidTopupInLastXDays:{
+                name:'isPaidTopupInLastXDays',
                 indicator:'CREDIT_SERIES_LifeTime ',
                 hasOperand: false,
                 operand:'AND',
                 duration: 0,
+                type:'function'
             },
             getTopupCountforTopupCode:{
+                name:'getTopupCountforTopupCode',
                 indicator:'CREDIT_SERIES_LifeTime ',
                 hasOperand: false,
                 operand:'AND',
@@ -6510,9 +6530,11 @@
                 duration: 0,
                 topupCode:'',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             getIDDSum:{
+                name:'getIDDSum',
                 indicator:'IDD_DAILY_USAGE_SERIES',
                 hasOperand: false,
                 operand:'AND',
@@ -6520,9 +6542,11 @@
                 startDay: 0,
                 duration: 0,
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             getIDDBucketPeakDetails: {
+                name:'getIDDBucketPeakDetails',
                 indicator:'IDD_DAILY_USAGE_SERIES',
                 hasOperand: false,
                 operand:'AND',
@@ -6531,8 +6555,10 @@
                 startDay: 0,
                 duration: 0,
                 percentage: 0,
+                type:'function'
             },
             getIDDBucketPeakStatistic: {
+                name:'getIDDBucketPeakStatistic',
                 indicator:'IDD_DAILY_USAGE_SERIES',
                 hasOperand: false,
                 operand:'AND',
@@ -6541,55 +6567,69 @@
                 startDay: 0,
                 duration: 0,
                 percentage: 0,
-                mode:'Mean'
+                mode:'Mean',
+                type:'function'
             },
             packageExclusionCheck: {
+                name:'packageExclusionCheck',
                 indicator:'PACKAGE_PURCHASE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 duration: 0,
+                type:'function'
             },
             isDataVasBoughtinLastXDays : {
+                name:'isDataVasBoughtinLastXDays',
                 indicator:'PACKAGE_PURCHASE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 packageId:'',
                 startDay: 0,
                 duration: 0,
+                type:'function'
             },
             hasDoneinternalSelfServeTopup : {
+                name:'hasDoneinternalSelfServeTopup',
                 indicator:'PACKAGE_PURCHASE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 startDay: 0,
                 duration: 0,
+                type:'function'
             },
             hasDoneTopUpfromOPIDs : {
+                name:'hasDoneTopUpfromOPIDs',
                 indicator:'PACKAGE_PURCHASE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 opId:'',
                 startDay: 0,
                 duration: 0,
+                type:'function'
             },
             hasBoughtPackageinDuration : {
+                name:'hasBoughtPackageinDuration',
                 indicator:'PACKAGE_PURCHASE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 packageName:'',
                 startDay: 0,
                 duration: 0,
+                type:'function'
             },
             getMonthlyDataPPUSum : {
+                name:'getMonthlyDataPPUSum',
                 indicator:'DATA_PPU_USAGE_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 startMonth:000000,
                 numOfMonth: 0,
                 daId: '',
-                key:'Spend'
+                key:'Spend',
+                type:'function'
             },
             getDAPackageFrequency : {
+                name:'getMonthlyDataPPUSum',
                 indicator:'DA_USAGE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
@@ -6599,17 +6639,21 @@
                 startDay: 0,
                 duration: 0,
                 valueOperand:'eq',
-                value:''
+                value:'',
+                type:'function'
             },
             getDABalances: {
+                name:'getDABalances',
                 indicator:'DA_USAGE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 daId:'',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             getDAConsumption: {
+                name:'getDAConsumption',
                 indicator:'DA_USAGE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
@@ -6617,53 +6661,65 @@
                 duration: 0,
                 daId:'',
                 valueOperand:'eq',
-                value:''
+                value:'',
+                type:'function'
             },
             getDAInitialQuota: {
+                name:'getDAInitialQuota',
                 indicator:'DA_USAGE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 daId:'',
                 valueOperand:'eq',
-                value:''
+                value:'',
+                type:'function'
             },
             getDACurrentExpiryDate: {
+                name:'getDACurrentExpiryDate',
                 indicator:'DA_USAGE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 daId:'',
                 dateToday: dateToday,
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             getLastRechargeDateofDA: {
+                name:'getLastRechargeDateofDA',
                 indicator:'DA_USAGE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 daId:'',
                 dateToday: dateToday,
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             getLastRechargeDateOfDataTopupID: {
+                name:'getLastRechargeDateOfDataTopupID',
                 indicator:'DA_USAGE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 daId:'',
                 dateToday: dateToday,
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             getDataVasARPU: {
+                name:'getDataVasARPU',
                 indicator:'DATAVAS_PACKAGE_DETAILS',
                 hasOperand: false,
                 operand:'AND',
                 startDay: 0,
                 duration: 0,
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             getDailyUsageSum : {
+                name:'getDailyUsageSum',
                 indicator:'DAILY_USAGE_SERIES_LifeTime',
                 hasOperand: false,
                 operand:'AND',
@@ -6671,115 +6727,150 @@
                 duration: 0,
                 index:0,
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             isDataUsedinLastXdays: {
+                name:'isDataUsedinLastXdays',
                 indicator:'DATA_USER_IDENTIFICATION_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 duration: 0,
+                type:'function'
             },
             getAccumulatedMonthlyTopupValue: {
+                name:'getAccumulatedMonthlyTopupValue',
                 indicator:'MONTHLY_TOPUP_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 numberOfMonth: 0,
                 type:'Direct Datavas',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'function'
             },
             //Custom Time Indicators
             AGE_ON_NETWORK_Lifetime: {
+                name:'AGE_ON_NETWORK_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'indicator',
             },
             CREDIT_ALL_VALUE_Lifetime: {
+                name:'CREDIT_ALL_VALUE_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'indicator',
             },
             CREDIT_ALL_COUNT_Lifetime: {
+                name:'CREDIT_ALL_COUNT_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'indicator',
             },
             CREDIT_CDR_COUNT_Lifetime: {
+                name:'CREDIT_CDR_COUNT_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'indicator',
             },
             LATEST_BALANCE_Lifetime: {
+                name:'LATEST_BALANCE_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'indicator',
             },
             PEAK_ACTIVITY_TIME_LifeTime: {
+                name:'PEAK_ACTIVITY_TIME_LifeTime',
                 hasOperand: false,
                 operand:'AND',
-                peakFlag:''
+                peakFlag:'',
+                type:'indicator',
             },
             SELFSERVE_CREDIT_ALL_Count_Lifetime: {
+                name:'SELFSERVE_CREDIT_ALL_Count_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'indicator',
             },
             TOTAL_SPEND_Lifetime: {
+                name:'TOTAL_SPEND_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'indicator',
             },
             DATA_USER_IDENTIFICATION_LifeTime: {
+                name:'DATA_USER_IDENTIFICATION_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 withinLastDay:0,
-                moreThanDays:0
+                moreThanDays:0,
+                type:'indicator',
             },
             EXPECTED_EXPIRY_DATE_Lifetime: {
+                name:'EXPECTED_EXPIRY_DATE_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 dateToday: dateToday,
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'indicator',
             },
             LAST_LOCAL_CALL_ACTIVITY_LifeTime: {
+                name:'LAST_LOCAL_CALL_ACTIVITY_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 withinLastDay:0,
-                moreThanDays:0
+                moreThanDays:0,
+                type:'indicator',
             },
             LOCAL_CALL_FULFILMENT_LifeTime: {
+                name:'LOCAL_CALL_FULFILMENT_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 valueOperand:'eq',
-                value:0
+                value:0,
+                type:'indicator',
             },
             LAST_LOCAL_CALL_LifeTime: {
+                name:'LAST_LOCAL_CALL_LifeTime',
                 hasOperand: false,
                 operand:'AND',
                 withinLastDay:0,
-                moreThanDays:0
+                moreThanDays:0,
+                type:'indicator',
             },
             TOTAL_SPEND_MONTHLY_Lifetime:{
+                name:'TOTAL_SPEND_MONTHLY_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 startMonth:000000,
                 numberOfMonth:0,
                 valueOperand:'eq',
                 value:0,
+                type:'indicator',
             },
             SUBSCRIBER_LATEST_ACTION_Lifetime: {
+                name:'SUBSCRIBER_LATEST_ACTION_Lifetime',
                 hasOperand: false,
                 operand:'AND',
                 withinLastDay:0,
-                moreThanDays:0
+                moreThanDays:0,
+                type:'indicator',
             }
         },
         methods: {
@@ -6825,6 +6916,16 @@
                 }
                 console.log(customUI.sqlInputFunction)
                 console.log(customUI.dropdownFieldList)
+            },
+            generateSQL() {
+                console.log('test');
+                console.log(customUI.componentList);
+
+                const test = customUI.componentList.map( x => {
+                        customUI.componentListToGenerateSQL.push(customUI[x])   
+                    }
+                )
+                console.log(customUI.componentListToGenerateSQL)
             }
         },
         watch: {
