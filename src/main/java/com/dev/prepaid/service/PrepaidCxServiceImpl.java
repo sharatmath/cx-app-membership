@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.configuration.OfferEligibility;
 import com.dev.prepaid.model.configuration.OfferPromoCode;
 import com.dev.prepaid.model.configuration.OfferSelection;
 import com.dev.prepaid.repository.*;
@@ -169,8 +170,17 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 	private void saveOfferEligibility(String offerConfigId, SaveConfigRequest saveConfigRequest){
 		PrepaidCxOfferEligibility prepaidCxOfferEligibility;
+		OfferEligibility offerEligibility = saveConfigRequest.getPayload().getOfferEligibility();
+		log.info("offerEligibility {}", offerEligibility);
+		if(offerEligibility != null){
+			if(offerEligibility.getIsOfferLevelCapAndPeriod() == null
+					&& offerEligibility.getIsFrequencyOnly() == null
+					&& offerEligibility.getIsOfferLevelCapOnly() == null
+					&& offerEligibility.getIsOfferLevelCapAndPeriod() == null)
+				log.info("Skip saved Eligibility {} ", offerEligibility);
+			return;
+		}
 		Optional<PrepaidCxOfferEligibility> optionalPrepaidCxOfferEligibility =  prepaidCxOfferEligibilityRepository.findByOfferConfigId(offerConfigId);
-
 		if(optionalPrepaidCxOfferEligibility.isPresent()){
 			prepaidCxOfferEligibility = optionalPrepaidCxOfferEligibility.get();
 
@@ -192,6 +202,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		prepaidCxOfferEligibility.setOfferLevelCapPeriodValue(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodValue());
 		prepaidCxOfferEligibility.setOfferLevelCapPeriodDays(saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodDays());
 		prepaidCxOfferEligibility.setExcludeProgramId(saveConfigRequest.getPayload().getOfferEligibility().getExcludeProgramId());
+
 		prepaidCxOfferEligibilityRepository.save(prepaidCxOfferEligibility);
 	}
 

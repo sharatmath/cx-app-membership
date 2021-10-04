@@ -89,7 +89,6 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
 
         //7
-
         productImportEndpoint(offerLevelRows, invocation, invocationOri, instanceConfiguration);
 
         try {
@@ -176,6 +175,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         // Process a page of data
         PrepaidCxOfferEligibility e = prepaidCxOfferEligibilityList.get();
         log.info("process#2|OFFER_CONFIG_ID|{}", e.getOfferConfigId());
+        if(e.getIsFrequencyAndTime() == null && e.getIsFrequencyOnly() == null){
+            log.info("process#2|SKIP|evaluationSubscriberLevel|getIsFrequencyOnly|{}|getIsFrequencyAndTime|{}", e.getIsFrequencyOnly(), e.getIsFrequencyAndTime());
+            return rows;
+        }
+
+
         log.info("process#2|IS_FREQUENCY_ONLY|{}|VALUE|{}", e.getIsFrequencyOnly(), e.getFrequency());
         log.info("process#2|IS_FREQUENCY_AND_TIME|{}|VALUE|{} IN {} Days", e.getIsFrequencyAndTime(), e.getNumberOfFrequency(), e.getNumberOfDays());
         for (List<String> row : rows) {
