@@ -3,6 +3,7 @@ package com.dev.prepaid.service;
 import com.dev.prepaid.InitData;
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.DataRowDTO;
 import com.dev.prepaid.model.imports.DataImportDTO;
 import com.dev.prepaid.model.invocation.DataSet;
 import com.dev.prepaid.model.invocation.InvocationRequest;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,18 +65,18 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         exclusionRows = evaluationSubscriberExclusion(rows, invocation, instanceConfiguration);
         //2
         List<List<String>> eligibleRows = new ArrayList<>();
-        eligibleRows = evaluationSubscriberLevel(exclusionRows, invocation,  instanceConfiguration);
+        eligibleRows = evaluationSubscriberLevel(exclusionRows, invocation, instanceConfiguration);
         //3
         List<List<String>> advanceFilterRows = new ArrayList<>();
-        advanceFilterRows = evaluationAdvanceFilter(eligibleRows, invocation,  instanceConfiguration);
+        advanceFilterRows = evaluationAdvanceFilter(eligibleRows, invocation, instanceConfiguration);
         //4
         List<List<String>> offerLevelRows = new ArrayList<>();
-        offerLevelRows = evaluationOfferLevelCondition(advanceFilterRows, invocation,  instanceConfiguration);
+        offerLevelRows = evaluationOfferLevelCondition(advanceFilterRows, invocation, instanceConfiguration);
         //5&6
 
         Optional<PrepaidOfferEligibilityTrx> opsFind = prepaidOfferEligibilityTrxRepository.findByInvocationIdAndBatchId(
-          invocation.getUuid(),
-          Long.valueOf(invocation.getBatchId())
+                invocation.getUuid(),
+                Long.valueOf(invocation.getBatchId())
         );
         log.info("FindBatchId|Response|{}", opsFind);
         if (opsFind.isPresent()) {
@@ -103,7 +105,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
     @Override
-    public List<List<String>> evaluationSubscriberExclusion(List<List<String>> rows, InvocationRequest invocation,  PrepaidCxOfferConfig instanceConfiguration) throws Exception {
+    public List<List<String>> evaluationSubscriberExclusion(List<List<String>> rows, InvocationRequest invocation, PrepaidCxOfferConfig instanceConfiguration) throws Exception {
         List<List<String>> resultRows = new ArrayList<>();
         List<List<String>> excluseRows = new ArrayList<>();
         log.info("process#1|evaluationSubscriberExclusion|START|type|{}", instanceConfiguration.getProvisionType());
@@ -129,7 +131,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                 excludeConfig.get().getId()
                         );
                         if (data.isEmpty()) {
-                        }else{
+                        } else {
                             checkIsExist = true;
                         }
                     } else {
@@ -154,11 +156,11 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#1|SUMMARY_IN|{}", rows.size());
         log.info("process#1|SUMMARY_OUT|{}|rows|{}", resultRows.size(), resultRows);
         log.info("process#1|SUMMARY_EXCLUSE|{}|rows|{}", excluseRows.size(), excluseRows);
-        if(excluseRows.size() > 0){
+        if (excluseRows.size() > 0) {
             saveToPrepaidOfferMembershipExclus(excluseRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                     "evaluationSubscriberExclusion",
                     "FAILED"
-                    );
+            );
         }
         log.info("process#1|evaluationSubscriberExclusion|END");
         return resultRows;
@@ -171,15 +173,18 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         List<List<String>> eligibleRows = new ArrayList<>();
         List<List<String>> notEligibleRows = new ArrayList<>();
         Optional<PrepaidCxOfferEligibility> prepaidCxOfferEligibilityList = prepaidCxOfferEligibilityRepository.findByOfferConfigId(instanceConfiguration.getId());
+        if (!prepaidCxOfferEligibilityList.isPresent()) {
+            log.info("process#2|evaluationSubscriberLevel|SKIP|eligibility not found");
+            return rows;
+        }
         List<PrepaidCxOfferSelection> prepaidCxOfferSelectionList = prepaidCxOfferSelectionRepository.findByOfferConfigId(instanceConfiguration.getId());
         // Process a page of data
         PrepaidCxOfferEligibility e = prepaidCxOfferEligibilityList.get();
         log.info("process#2|OFFER_CONFIG_ID|{}", e.getOfferConfigId());
-        if(e.getIsFrequencyAndTime() == null && e.getIsFrequencyOnly() == null){
+        if (e.getIsFrequencyAndTime() == null && e.getIsFrequencyOnly() == null) {
             log.info("process#2|SKIP|evaluationSubscriberLevel|getIsFrequencyOnly|{}|getIsFrequencyAndTime|{}", e.getIsFrequencyOnly(), e.getIsFrequencyAndTime());
             return rows;
         }
-
 
         log.info("process#2|IS_FREQUENCY_ONLY|{}|VALUE|{}", e.getIsFrequencyOnly(), e.getFrequency());
         log.info("process#2|IS_FREQUENCY_AND_TIME|{}|VALUE|{} IN {} Days", e.getIsFrequencyAndTime(), e.getNumberOfFrequency(), e.getNumberOfDays());
@@ -195,7 +200,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#2|SUMMARY_IN|{}|", rows.size());
         log.info("process#2|SUMMARY_OUT|{}|rows|{}", eligibleRows.size(), eligibleRows);
         log.info("process#2|SUMMARY_EXCLUSE|{}|rows|{}", notEligibleRows.size(), notEligibleRows);
-        if(notEligibleRows.size() > 0){
+        if (notEligibleRows.size() > 0) {
             saveToPrepaidOfferMembershipExclus(notEligibleRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                     "evaluationSubscriberLevel",
                     "FAILED");
@@ -212,7 +217,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#3|SUMMARY_IN|{}|", rows.size());
         log.info("process#3|SUMMARY_OUT|{}|rows|{}", rows.size(), rows);
         log.info("process#3|SUMMARY_EXCLUSE|{}|rows|{}", resultRows.size(), resultRows);
-        if(resultRows.size() > 0){
+        if (resultRows.size() > 0) {
             saveToPrepaidOfferMembershipExclus(resultRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                     "evaluationAdvanceFilter",
                     "FAILED");
@@ -228,6 +233,10 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         List<List<String>> offerMembershipRows = new ArrayList<>();
         List<List<String>> offerMembershipExcluseRows = new ArrayList<>();
         Optional<PrepaidCxOfferEligibility> prepaidCxOfferEligibilityList = prepaidCxOfferEligibilityRepository.findByOfferConfigId(instanceConfiguration.getId());
+        if (!prepaidCxOfferEligibilityList.isPresent()) {
+            log.info("process#4|evaluationOfferLevelCondition|Skip|");
+            return rows;
+        }
         log.info("process#4|{}|config|{}", prepaidCxOfferEligibilityList, instanceConfiguration.getId());
         PrepaidCxOfferEligibility prepaidCxOfferEligibility = prepaidCxOfferEligibilityList.get();
         log.info("process#4|OFFER_CONFIG_ID|{}", prepaidCxOfferEligibility.getOfferConfigId());
@@ -281,7 +290,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 saveToPrepaidOfferMembershipExclus(offerMembershipExcluseRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                         "evaluationOfferLevelCondition",
                         "FAILED"
-                        );
+                );
         }
         log.info("process#4|SUMMARY_IN|{}|", rows.size());
         log.info("process#4|SUMMARY_OUT|{}|rows|{}", offerMembershipRows.size(), offerMembershipRows);
@@ -296,6 +305,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 instanceConfiguration.getProvisionType(),
                 invocation.getUuid(),
                 rows.size());
+
         DataSet dataSet = DataSet.builder()
                 .rows(rows)
                 .id(invocation.getDataSet().getId())
@@ -318,9 +328,13 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#7|generateTokenProduct {}", invocationOri);
         String token = jwtTokenUtil.generateTokenProduct(invocationOri, invocationOri.getInstanceContext());
         String url = invocation.getProductImportEndpoint().getUrl();
-
-        invocation.getDataSet().getRows().forEach(row -> {
-            log.info("process#7|productImportEndpoint|row {}", row);
+        List<List<String>> dataRows = invocation.getDataSet().getRows();
+        log.info("process#7|dataRows|{}", dataRows);
+        int total_row = invocation.getDataSet().getRows().size();
+        DataSet dataSetTemp = invocation.getDataSet();
+        for (int i = 0; i < total_row; i++) {
+            List<String> row = dataSetTemp.getRows().get(i);
+            log.info("process#7|productImportEndpoint|index|{}|row|{}", i, row);
             Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
             Map<String, Object> output = invocation.getInstanceContext().getRecordDefinition().generateOutputRowAsNewMap(input);
             List<String> listOutput = List.of(
@@ -330,7 +344,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     instanceConfiguration.getOverallOfferName(),
                     "success"); //STATUS
             rows.add(listOutput);
-        });
+        }
 
         DataImportDTO data = DataImportDTO.builder()
                 .fieldDefinitions(InitData.recordDefinition.getOutputParameters())
@@ -339,7 +353,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         try {
             response = RESTUtil.productImportPost(invocationOri, token, url, data, null, "application/json");
             log.debug("process#7|productImportPost response : {}", response.getStatusCode());
-        }catch (Exception ex){
+        } catch (Exception ex) {
             log.error("productImportPost FAILED and INIT RETRY IN 1 minute", ex);
             retryableService.callProductImportEndpoint(invocation);
         }
