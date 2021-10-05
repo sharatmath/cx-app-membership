@@ -1036,36 +1036,44 @@
                                 <div v-show="tab === 'customQuery'"> 
                                     <div class="card-body tab-card"> 
                                         <div class="customUIcontainer row">
-                                            <div class="selection-card col-4"> 
-                                                <!-- <v-select 
-                                                    :options="dropdownTableList"
-                                                    placeholder="Select Table"
-                                                    label="Select Table" 
-                                                    @input="setSelectedTable"
-                                                    :clearable="true"
-                                                    v-model="selectedTable"
-                                                    class="select-component-dropdown"
-                                                ></v-select>
-                                                <div style="margin:10px"></div>
-                                                <v-select 
-                                                    :options="dropdownFieldList"
-                                                    placeholder="Select Field"
-                                                    label="Select Field" 
-                                                    :clearable="false"
-                                                    
-                                                    v-model="selectedField"
-                                                    class="select-component-dropdown"
-                                                ></v-select> -->
+                                            <div class="selection-card col-2"> 
+                                               
                                             </div>
-                                            <div class="selection-card col-8">
+                                            <div class="selection-card col-10">
+                                                <div class="row" style="margin-left:10px">
+                                                    <v-select 
+                                                        :options="dropdownTableList"
+                                                        placeholder="Select Table"
+                                                        label="Select Table" 
+                                                        
+                                                        :clearable="false"
+                                                        v-model="selectedTable"
+                                                        class="select-component-dropdown"
+                                                        style="width:45%; margin-right:10px; height:33px"
+                                                    ></v-select>
+                                                    <button v-on:click="addSelectedTable" class="btn btn-singtel">Add Table</button>
+                                                </div>
+                                            
+                                                <div v-for="table in selectedTableList" style="margin: 8px;" >
+                                                    {{table}}
+                                                </div>
+                                                <div style="margin:10px">
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-3"> <b>Create Relationship</b></div>
+                                                        <div class="col-7"></div>
+                                                        <div class="col-2"> <button class="btn btn-singtel" style="float:right">Create</button> </div>
+                                                    </div>
+                                                </div>
+                                            
                                                 <textarea 
                                                     placeholder="Input SQL Function..."
                                                     v-model="sqlInputFunction" 
-                                                    :rows="8"
-                                                    style="width:100%;resize: none;" 
+                                                    :rows="4"
+                                                    style="width:100%;resize: none; margin-top:20px" 
                                                     class="form-control form-control-sm input-custom">
                                                 </textarea>
-                                                <button :disabled="sqlInputFunction.length === 0" class="btn btn-singtel" style="float:right; margin:10px">Check SQL</button>
+                                                <button :disabled="sqlInputFunction.length === 0" class="btn btn-singtel" style="float:right; margin:10px">validate SQL</button>
                                             </div>
                                         </div>
                                     </div>
@@ -2970,7 +2978,8 @@
             TopupType:['Direct datavas', 'Paid', 'All'],
             dropdownTableList:['Sample Table 1', 'Sample Table 2', 'Sample Table 3'],
             selectedTableList:[],
-            selectedTable: null,
+
+
             dropdownFieldList:[],
             dropdown1FieldList:['Table1 FieldA','Table1 FieldB'],
             dropdown2FieldList:['Table2 FieldA','Table2 FieldB','Table2 FieldC'],
@@ -3050,9 +3059,7 @@
         } else {
             customUI.tab = 'customUI'
             customUI.sqlInputFunction = '';
-            customUI.selectedTable = '';
             customUI.dropdownFieldList = [];
-            customUI.selectedField = null;
         }
     }
 
@@ -6405,6 +6412,7 @@
     var customUI = new Vue({
         el: '#advanceFilterComponent',
         data: {
+            //custom UI data
             componentList: store.state.componentList,
             dropdownFunctionList: store.state.dropdownFunctionList,
             dropdownCustomTimeIndicatorList: store.state.dropdownCustomTimeIndicatorList,
@@ -6413,17 +6421,20 @@
             selectedFunction: null,
             selectedIndicator: null,
             sqlView:'',
-            dropdownTableList:store.state.dropdownTableList,
-            selectedTableList:store.state.selectedTableList,
-            selectedTable: null,
+            componentListToGenerateSQL:[],
+            
+            //custom query data
+            dropdownTableList:store.state.dropdownTableList, // list of tables from BE
+            selectedTableList:store.state.selectedTableList, 
+            selectedTable:null,
             sqlInputFunction:'',
+
+
             dropdownFieldList: store.state.dropdownFieldList,
             dropdown1FieldList: store.state.dropdown1FieldList,
             dropdown2FieldList: store.state.dropdown2FieldList,
             dropdown3FieldList: store.state.dropdown3FieldList,
 
-            selectedField: null,
-            componentListToGenerateSQL:[],
 
             //functions
             getTopupFrequency:{
@@ -6885,38 +6896,15 @@
                 customUI.componentList.push(value)
             },
             setSelectedTable(value) {
-                console.log('selected table', value)
-                if(value !== null) {
-                    customUI.sqlInputFunction = customUI.sqlInputFunction.concat(value);
-
-                    switch(value){
-                        case 'Sample Table 1':
-                            customUI.dropdownFieldList = [];
-                            customUI.selectedField = null;
-                            customUI.dropdownFieldList.push.apply(customUI.dropdownFieldList,customUI.dropdown1FieldList);
-                            break;
-                        
-                        case 'Sample Table 2':
-                            customUI.dropdownFieldList = [];
-                            customUI.selectedField = null;
-                            customUI.dropdownFieldList.push.apply(customUI.dropdownFieldList,customUI.dropdown2FieldList);
-                            break;
-                        
-                        case 'Sample Table 3':
-                            customUI.dropdownFieldList = [];
-                            customUI.selectedField = null;
-                            customUI.dropdownFieldList.push.apply(customUI.dropdownFieldList,customUI.dropdown3FieldList);
-                            break;
-
-                        default: 
-                            customUI.dropdownFieldList = [];
-                            customUI.selectedField = null;
-                            break;    
-                    }       
-                }
-                console.log(customUI.sqlInputFunction)
-                console.log(customUI.dropdownFieldList)
+                console.log('selected', value)
+                // customUI.selectedTableList.push(value)
+                console.log(customUI.selectedTableList,'selected table list');
+                console.log(customUI.selectedTable)
             },
+            addSelectedTable(){
+                customUI.selectedTableList.push(customUI.selectedTable)
+                customUI.selectedTable = null;
+            },            
             generateSQL() {
                 console.log('test');
                 console.log(customUI.componentList);
@@ -6937,15 +6925,6 @@
                 this.selectedIndicator = null;
                 return(this.selectedIndicator)
             },
-            selectedTable: function () {
-                // this.selectedTable = null;
-                // return(this.selectedTable)
-            },
-            // getTopupFrequency: { handler() {
-            //     console.log('watched', this.getTopupFrequency)
-            //     },
-            //     deep: true
-            // },
         },
 
         // beforeCreate:function () {
