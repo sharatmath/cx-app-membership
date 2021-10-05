@@ -122,25 +122,6 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 			if(prepaidCxOfferConfig.getId() != null){
 				try {
-
-					if(ProvisionType.DIRECT_PROVISION.getDescription().equals(saveConfigRequest.getPayload().getType())) {
-						if (saveConfigRequest.getPayload().getOfferSelection() != null) {
-							saveOfferSelection(prepaidCxOfferConfig.getId(), saveConfigRequest);
-						}
-						if (saveConfigRequest.getPayload().getOfferRedemption() != null) {
-							saveOfferRedemption(prepaidCxOfferConfig.getId(), saveConfigRequest);
-						}
-						if (saveConfigRequest.getPayload().getOfferEligibility() != null) {
-							saveOfferEligibility(prepaidCxOfferConfig.getId(), saveConfigRequest);
-						}
-					}else if(ProvisionType.EVENT_CONDITION.getDescription().equals(saveConfigRequest.getPayload().getType())){
-						if (saveConfigRequest.getPayload().getOfferEventCondition() != null) {
-							saveOfferEventCondition(prepaidCxOfferConfig.getId(), saveConfigRequest);
-						}
-						if (saveConfigRequest.getPayload().getOfferEligibility() != null) {
-							saveOfferEligibility(prepaidCxOfferConfig.getId(), saveConfigRequest);
-						}
-					}else{
 						if (saveConfigRequest.getPayload().getOfferSelection() != null) {
 							saveOfferSelection(prepaidCxOfferConfig.getId(), saveConfigRequest);
 						}
@@ -156,7 +137,6 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 						if (saveConfigRequest.getPayload().getOfferEventCondition() != null) {
 							saveOfferEventCondition(prepaidCxOfferConfig.getId(), saveConfigRequest);
 						}
-					}
 
 				}catch (Exception ex){
 					log.error("", ex);
@@ -481,6 +461,12 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 
 	private void saveOfferEventCondition(String offerConfigId, SaveConfigRequest saveConfigRequest) {
+		if(ProvisionType.DIRECT_PROVISION.equals(saveConfigRequest.getPayload().getType())
+			|| ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.equals(saveConfigRequest.getPayload().getType())
+		){
+			log.info("saveOfferEventCondition skip process or not applicable for type{}", saveConfigRequest.getPayload().getOfferMonitoring(), saveConfigRequest.getPayload().getType());
+			return;
+		}
 		log.info("saveOfferEventCondition {}", saveConfigRequest.getPayload().getOfferEventCondition());
 		Optional<PrepaidCxOfferEventCondition> opsFind = prepaidCxOfferEventConditionRepository.findByOfferConfigId(offerConfigId);
 		PrepaidCxOfferEventCondition prepaidCxOfferEventCondition;
