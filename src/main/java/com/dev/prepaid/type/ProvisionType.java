@@ -6,9 +6,9 @@ import java.util.Map;
 public enum ProvisionType {
 
     DIRECT_PROVISION("directProvisioning"),
-    OFFER_MONITORING_WITH_OFFER_ASSIGNMENT("Offer Monitoring with Offer Assignment"),
+    OFFER_MONITORING_WITH_OFFER_ASSIGNMENT("offerMonitoringWithAssignment"),
     EVENT_CONDITION_WITH_DIRECT_PROVISION("eventConditionDirectProvisioning"),
-    EVENT("Event");
+    EVENT_CONDITION("eventCondition");
 
     private String description;
 

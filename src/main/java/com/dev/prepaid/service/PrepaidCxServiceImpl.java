@@ -11,6 +11,7 @@ import com.dev.prepaid.model.configuration.OfferPromoCode;
 import com.dev.prepaid.model.configuration.OfferSelection;
 import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferType;
+import com.dev.prepaid.type.ProvisionType;
 import com.dev.prepaid.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import oracle.ucp.proxy.annotation.Pre;
@@ -121,21 +122,42 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 			if(prepaidCxOfferConfig.getId() != null){
 				try {
-					if (saveConfigRequest.getPayload().getOfferSelection() != null) {
-						saveOfferSelection(prepaidCxOfferConfig.getId(), saveConfigRequest);
+
+					if(ProvisionType.DIRECT_PROVISION.getDescription().equals(saveConfigRequest.getPayload().getType())) {
+						if (saveConfigRequest.getPayload().getOfferSelection() != null) {
+							saveOfferSelection(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
+						if (saveConfigRequest.getPayload().getOfferRedemption() != null) {
+							saveOfferRedemption(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
+						if (saveConfigRequest.getPayload().getOfferEligibility() != null) {
+							saveOfferEligibility(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
+					}else if(ProvisionType.EVENT_CONDITION.getDescription().equals(saveConfigRequest.getPayload().getType())){
+						if (saveConfigRequest.getPayload().getOfferEventCondition() != null) {
+							saveOfferEventCondition(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
+						if (saveConfigRequest.getPayload().getOfferEligibility() != null) {
+							saveOfferEligibility(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
+					}else{
+						if (saveConfigRequest.getPayload().getOfferSelection() != null) {
+							saveOfferSelection(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
+						if (saveConfigRequest.getPayload().getOfferRedemption() != null) {
+							saveOfferRedemption(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
+						if (saveConfigRequest.getPayload().getOfferEligibility() != null) {
+							saveOfferEligibility(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
+						if (saveConfigRequest.getPayload().getOfferMonitoring() != null) {
+							saveOfferMonitoring(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
+						if (saveConfigRequest.getPayload().getOfferEventCondition() != null) {
+							saveOfferEventCondition(prepaidCxOfferConfig.getId(), saveConfigRequest);
+						}
 					}
-					if (saveConfigRequest.getPayload().getOfferRedemption() != null) {
-						saveOfferRedemption(prepaidCxOfferConfig.getId(), saveConfigRequest);
-					}
-					if (saveConfigRequest.getPayload().getOfferEligibility() != null) {
-						saveOfferEligibility(prepaidCxOfferConfig.getId(), saveConfigRequest);
-					}
-					if (saveConfigRequest.getPayload().getOfferMonitoring() != null) {
-						saveOfferMonitoring(prepaidCxOfferConfig.getId(), saveConfigRequest);
-					}
-					if (saveConfigRequest.getPayload().getOfferEventCondition() != null) {
-						saveOfferEventCondition(prepaidCxOfferConfig.getId(), saveConfigRequest);
-					}
+
 				}catch (Exception ex){
 					log.error("", ex);
 				}
@@ -207,6 +229,10 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	}
 
 	private void saveOfferSelection(String offerConfigId, SaveConfigRequest saveConfigRequest){
+		if(ProvisionType.EVENT_CONDITION.equals(saveConfigRequest.getPayload().getType())){
+			log.info("saveOfferSelection skip process or not applicable for type{}", saveConfigRequest.getPayload().getOfferMonitoring(), saveConfigRequest.getPayload().getType());
+			return;
+		}
 		log.info("saveOfferSelection {}", saveConfigRequest.getPayload().getOfferSelection());
 		List<PrepaidCxOfferSelection> currents = prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfigId);
 		for(PrepaidCxOfferSelection c : currents){
@@ -278,6 +304,10 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	}
 
 	private void saveOfferMonitoring(String offerConfigId, SaveConfigRequest saveConfigRequest) {
+		if(!ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.equals(saveConfigRequest.getPayload().getType())){
+			log.info("saveOfferMonitoring skip process or not applicable for type{}", saveConfigRequest.getPayload().getOfferMonitoring(), saveConfigRequest.getPayload().getType());
+			return;
+		}
 		log.info("saveOfferMonitoring {}", saveConfigRequest.getPayload().getOfferMonitoring());
 		Optional<PrepaidCxOfferMonitoring> opsFind = prepaidCxOfferMonitoringRepository.findByOfferConfigId(offerConfigId);
 		PrepaidCxOfferMonitoring prepaidCxOfferMonitoring;
@@ -347,6 +377,11 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	}
 
 	private void saveOfferRedemption(String offerConfigId, SaveConfigRequest saveConfigRequest){
+		if(ProvisionType.EVENT_CONDITION.equals(saveConfigRequest.getPayload().getType())){
+			log.info("saveOfferRedemption skip process or not applicable for type{}", saveConfigRequest.getPayload().getOfferMonitoring(), saveConfigRequest.getPayload().getType());
+			return;
+		}
+
 		log.info("saveOfferRedemption {}", saveConfigRequest.getPayload().getOfferRedemption());
 		Optional<PrepaidCxOfferRedemption> opsFind = prepaidCxOfferRedemptionRepository.findByOfferConfigId(offerConfigId);
 		PrepaidCxOfferRedemption prepaidCxOfferRedemption;
