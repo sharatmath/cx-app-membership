@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Data;
-import oracle.nosql.driver.NoSQLHandle;
+//import oracle.nosql.driver.NoSQLHandle;
 
 @Data
 @ConfigurationProperties(prefix = "nosql")
