@@ -18,7 +18,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrepaidProvisionedOffer extends Auditable implements Serializable {
+public class PrepaidProvisionedOffer implements Serializable {
     @Id
     @Column(name = "PROVISIONED_OFFER_ID")
     private Long id;
