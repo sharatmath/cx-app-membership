@@ -113,7 +113,7 @@ public class RetryableServiceImpl implements RetryableService {
 	@Async
 	public void callProductImportEndpoint(InvocationRequest invocation) throws Exception {
 		log.debug("call Retry_productImportEndpoint");
-		Thread.sleep(60000);
+//		Thread.sleep(60000);
 		ResponseEntity response = null;
 		InstanceContext instanceContext = invocation.getInstanceContext();
 		String token = jwtTokenUtil.generateTokenProduct(invocation, instanceContext);
