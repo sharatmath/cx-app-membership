@@ -354,7 +354,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             response = RESTUtil.productImportPost(invocationOri, token, url, data, null, "application/json");
             log.debug("process#7|productImportPost response : {}", response.getStatusCode());
         } catch (Exception ex) {
-            log.error("productImportPost FAILED and INIT RETRY IN 1 minute", ex);
+            log.error("productImportPost FAILED and INIT RETRY IN 3 times", ex);
             retryableService.callProductImportEndpoint(invocation);
         }
 
