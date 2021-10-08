@@ -21,8 +21,11 @@ import java.util.List;
 @AllArgsConstructor
 public class Config {
 	// DROP 1
-	@SerializedName("offerSelections")
-	private List<OfferSelection> offerSelections;
+	@SerializedName("offerSelection")
+	private List<OfferSelection> offerSelection;
+
+	@SerializedName("offerPromoCode")
+	private OfferPromoCode offerPromoCode;
 
 	@SerializedName("offerEligibility")
 	private OfferEligibility offerEligibility;
@@ -43,12 +46,12 @@ public class Config {
     private String uuid;
 
 	//DROP 2 1
-	@SerializedName("programId")
-	private String programId;
+//	@SerializedName("programId")
+//	private String programId;
 	@SerializedName("type")
 	private String type;
-	@SerializedName("programName")
-	private String programName;
+//	@SerializedName("programName")
+//	private String programName;
 
 
 

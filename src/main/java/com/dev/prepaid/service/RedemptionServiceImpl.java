@@ -238,7 +238,7 @@ public class RedemptionServiceImpl extends BaseRabbitTemplate  implements Redemp
 		log.info("Redemption to Queueu:"+qRedem.toString());
 		
 		//send to Redemption Queue
-		rabbitTemplateConvertAndSendWithPriority (Constant.TOPIC_EXCHANGE_NAME_SINGTEL,
+		rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
 				Constant.QUEUE_NAME_SINGTEL_REDEMPTION,
 				qRedem,
 				0);

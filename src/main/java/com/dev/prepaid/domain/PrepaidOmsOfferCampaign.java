@@ -25,7 +25,7 @@ public class PrepaidOmsOfferCampaign implements Serializable {
 	private String name;
 	private Long offerId;
 	private String description;
-	private double value;
+	private Double value;
 	private String valueUnit;
 	private String counterId;
 	private Long counterValue;

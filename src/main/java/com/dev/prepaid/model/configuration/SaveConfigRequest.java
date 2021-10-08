@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SaveConfigRequest {
-	private String instanceUuid;
+//	private String instanceUuid;
 	private Config payload;
 
 }

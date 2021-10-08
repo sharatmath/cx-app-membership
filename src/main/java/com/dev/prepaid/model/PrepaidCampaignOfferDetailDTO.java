@@ -22,7 +22,7 @@ public class PrepaidCampaignOfferDetailDTO {
 	@SerializedName("offerId") private Long offerId;
 	@SerializedName("offerType") private String offerType;
 	@SerializedName("description") private String description;
-	@SerializedName("value") private double value;
+	@SerializedName("value") private Double value;
 	@SerializedName("valueUnit") private String valueUnit;
 	@SerializedName("counterId") private String counterId;
 	@SerializedName("counterValue") private Long counterValue;
@@ -43,12 +43,12 @@ public class PrepaidCampaignOfferDetailDTO {
 	@SerializedName("offerCampaignName") private String offerCampaignName;
 
 	// UI Version 4
-	@SerializedName("smsCampaignName") private String smsCampaignName;
-	@SerializedName("promoCodeList") private String promoCodeList;
-	@SerializedName("messageText1") private String messageText1;
-	@SerializedName("messageText2") private String messageText2;
-	@SerializedName("messageText3") private String messageText3;
-	@SerializedName("messageText4") private String messageText4;
-
-	@SerializedName("overallOfferName") private String overallOfferName;
+//	@SerializedName("smsCampaignName") private String smsCampaignName;
+//	@SerializedName("promoCodeList") private String promoCodeList;
+//	@SerializedName("messageText1") private String messageText1;
+//	@SerializedName("messageText2") private String messageText2;
+//	@SerializedName("messageText3") private String messageText3;
+//	@SerializedName("messageText4") private String messageText4;
+//
+//	@SerializedName("overallOfferName") private String overallOfferName;
 }

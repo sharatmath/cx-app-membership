@@ -13,12 +13,12 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "PREPAID_OFFER_PROVISION_TRX")
+@Table(name = "PREPAID_OFFER_PROVISION_TX")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrepaidOfferProvisionTrx {
+public class PrepaidOfferProvisionTrx extends Auditable{
     @Id
     @Column(name = "OFFER_PROVISION_ID")
     private Long id;

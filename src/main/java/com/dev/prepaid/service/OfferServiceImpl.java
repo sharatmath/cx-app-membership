@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.configuration.*;
 import com.dev.prepaid.repository.*;
+import com.dev.prepaid.type.OfferType;
 import com.dev.prepaid.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -158,17 +159,59 @@ public class OfferServiceImpl implements OfferService {
 		return prepaidDaOfferBucketRepository.findOneByCode(code);
 	}
 
-	public List<PrepaidCxOfferSelection> getOfferSelection(String instanceId){
+	public List<OfferSelection> getOfferSelection(String instanceId){
+		List<OfferSelection> listOfferOnly = new ArrayList<>();
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
 			List<PrepaidCxOfferSelection> prepaidCxOfferSelection= prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
 			for(PrepaidCxOfferSelection p : prepaidCxOfferSelection){
-				p.setOverallOfferName(offerConfig.get().getOverallOfferName());
+				if(p.getOfferBucketType().equals(OfferType.PROMO.toString())){
+					// do nothing
+				}else{
+					OfferSelection s = OfferSelection.builder()
+							.offerBucketType(p.getOfferBucketType())
+							.offerBucketId(p.getOfferBucketId())
+							.offerCampaignName(p.getSmsCampaignName())
+							.offerId(p.getOfferId())
+							.build();
+
+					listOfferOnly.add(s);
+				}
 			}
-			return  prepaidCxOfferSelection;
+			return  listOfferOnly;
 		}
-		return null;
+		return listOfferOnly;
 	}
+
+	public OfferPromoCode getOfferPromoCode(String instanceId){
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			List<PrepaidCxOfferSelection> prepaidCxOfferSelection= prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
+			for(PrepaidCxOfferSelection p : prepaidCxOfferSelection){
+				if(p.getOfferBucketType().equals(OfferType.PROMO.toString())) {
+					return OfferPromoCode.builder()
+							.smsCampaignName(p.getSmsCampaignName())
+							.messageText1(p.getMessageText1())
+							.messageText2(p.getMessageText2())
+							.messageText3(p.getMessageText3())
+							.messageText4(p.getMessageText4())
+							.offerType(p.getOfferBucketType())
+							.promoCodeList(p.getPromoCodeList())
+							.overallOfferName(p.getOverallOfferName())
+							.overallOfferName(offerConfig.get().getOverallOfferName())
+							.build();
+				}
+			}
+
+			return OfferPromoCode.builder()
+					.overallOfferName(offerConfig.get().getOverallOfferName())
+					.build();
+		}
+
+		return OfferPromoCode.builder()
+				.build();
+	}
+
 	public PrepaidCxOfferEventCondition getOfferEventCondition(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
@@ -200,8 +243,13 @@ public class OfferServiceImpl implements OfferService {
 					prepaidCxOfferMonitoring.getPeriodStartDate() != null ) {
 					offerFulfilment.setMonitorSpecifiedPeriodRadio(true);
 					try {
-						offerFulfilment.setMonitorStartDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodStartDate()));
-						offerFulfilment.setMonitorEndDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodEndDate()));
+						log.info("getOfferMonitoring DateUtil.fromDate {}",prepaidCxOfferMonitoring);
+						if(prepaidCxOfferMonitoring.getPeriodStartDate() != null) {
+							offerFulfilment.setMonitorStartDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodStartDate()));
+						}
+						if(prepaidCxOfferMonitoring.getPeriodEndDate() != null){
+							offerFulfilment.setMonitorEndDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodEndDate()));
+						}
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
@@ -282,6 +330,24 @@ public class OfferServiceImpl implements OfferService {
 		return list;
 	}
 
+	public OverallOfferName checkOverallOfferName(String overallOfferName) {
+		Optional<PrepaidCxOfferConfig> opsFind = prepaidCxOfferConfigRepository.findByOverallOfferName(overallOfferName);
+		if(opsFind.isPresent()){
+			return OverallOfferName.builder()
+					.name(overallOfferName)
+					.isUnique(false)
+					.status("SUCCESS")
+					.message("data already exist")
+					.build();
+		}else{
+			return OverallOfferName.builder()
+					.name(overallOfferName)
+					.isUnique(true)
+					.message("data Overall Offer Name eligible to use")
+					.status("SUCCESS")
+					.build();
+		}
+	}
 
 	public List<Country> listCountry(){
 		return countryRepository.findAll();

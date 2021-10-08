@@ -10,12 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvocationRequest {	
-	private String uuid;
+	private String uuid;  // invocation ID
+	private Integer batchId; // batch Id
+	private Long offerEligibilityTxId; //ID prepaid_offer_eligibility_tx
 	private InstanceContext instanceContext;
 	private DataSet dataSet;
-	 private ProductExpImpEndpoint productExportEndpoint;
-	 private ProductExpImpEndpoint productImportEndpoint;
-	 private OnCompletionCallbackEndpoint onCompletionCallbackEndpoint;
-	 private Integer maxPullPageSize;
-	 private Integer maxPushBatchSize;
+	private ProductExpImpEndpoint productExportEndpoint;
+	private ProductExpImpEndpoint productImportEndpoint;
+	private OnCompletionCallbackEndpoint onCompletionCallbackEndpoint;
+	private Integer maxPullPageSize;
+	private Integer maxPushBatchSize;
 }

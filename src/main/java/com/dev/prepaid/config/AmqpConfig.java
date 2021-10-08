@@ -1,8 +1,6 @@
 package com.dev.prepaid.config;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -16,56 +14,27 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import com.dev.prepaid.constant.Constant;
 
 
 @Configuration
 public class AmqpConfig {
-	
-	@Value("${pgs.queue.prefetch:1}")
-	private Integer pgsQueuePrefetch;
-	@Value("${pgs.queue.concurent:1}")
-	private Integer pgsQueueConcurent;
+	@Value("${offer.monitoring.queue.prefetch:1}")
+	private Integer offerMonitoringQueuePrefetch;
+	@Value("${offer.monitoring.queue.concurrent:1}")
+	private Integer offerMonitoringQueueConcurrent;
 
-	@Value("${membership.queue.prefetch:1}")
-	private Integer membershipQueuePrefetch;
-	@Value("${membership.queue.concurent:1}")
-	private Integer membershipQueueConcurent;
+	@Value("${offer.eligibility.queue.prefetch:1}")
+	private Integer offerEligibilityQueuePrefetch;
+	@Value("${offer.monitoring.queue.concurrent:1}")
+	private Integer offerEligibilityQueueConcurrent;
 	
 	@Value("${redemption.queue.prefetch:1}")
 	private Integer redemptionQueuePrefetch;
-	@Value("${redemption.queue.concurent:1}")
-	private Integer redemptionQueueConcurent;
+	@Value("${redemption.queue.concurrent:1}")
+	private Integer redemptionQueueConcurrent;
 
-	//============================================================================= //
-	//queue
-	@Bean
-	public Queue queueSingtelPrepaid() {
-		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("x-max-priority", 1);
-		Queue queue = new Queue(Constant.QUEUE_NAME, true, false, false, args);
-		return queue;
-	}
-	//binding
-	@Bean
-	public Binding bindingSingtelPrepaidSubscriberQualificationEvaluation(Queue queueSingtelPrepaid, TopicExchange exchangeSingtel) {
-		return BindingBuilder.bind(queueSingtelPrepaid).to(exchangeSingtel)
-				.with(Constant.QUEUE_NAME); //route.key.name=queue.name
-	}
-	//container factory
-	@Bean
-	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
-	rabbitListenerContainerFactoryForSingtelPrepaid(ConnectionFactory rabbitConnectionFactory) {
-		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-		factory.setConnectionFactory(rabbitConnectionFactory);
-		factory.setPrefetchCount(pgsQueuePrefetch);
-		factory.setConcurrentConsumers(pgsQueueConcurent);
-		factory.setMessageConverter(jackson2MessageConverter());
-		return factory;
-	}
-	//============================================================================= //
-	
+
 	//REDEMPTION
 	// ============================================================================= //
 	//queue
@@ -90,73 +59,14 @@ public class AmqpConfig {
 		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
 		factory.setConnectionFactory(rabbitConnectionFactory);
 		factory.setPrefetchCount(redemptionQueuePrefetch);
-		factory.setConcurrentConsumers(redemptionQueueConcurent);
+		factory.setConcurrentConsumers(redemptionQueueConcurrent);
 		factory.setMessageConverter(jackson2MessageConverter());
 		return factory;
 	}
-	//============================================================================= //	
-	
-	//PGS
-	// ============================================================================= //
-	//queue
-	@Bean
-	public Queue queueSingtelPgs() {
-		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("x-max-priority", 1);
-		Queue queue = new Queue(Constant.QUEUE_NAME_SINGTEL_PGS, true, false, false, args);
-		return queue;
-	}
-	//binding
-	@Bean
-	public Binding bindingSingtelPgsAll(Queue queueSingtelPgs, TopicExchange exchangeSingtel) {
-		return BindingBuilder.bind(queueSingtelPgs).to(exchangeSingtel)
-				.with(Constant.QUEUE_NAME_SINGTEL_PGS); //route.key.name=queue.name
-	}
-	//container factory
-	@Bean
-	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
-	rabbitListenerContainerFactoryForPgs(
-			ConnectionFactory rabbitConnectionFactory) {
-		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-		factory.setConnectionFactory(rabbitConnectionFactory);
-		factory.setPrefetchCount(pgsQueuePrefetch);
-		factory.setConcurrentConsumers(pgsQueueConcurent);
-		factory.setMessageConverter(jackson2MessageConverter());
-		return factory;
-	}
-	//============================================================================= //	
-	
-	//PVAS
 	//============================================================================= //
-	//queue
+	// offerMonitoring
 	@Bean
-	public Queue queueSingtelPvas() {
-		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("x-max-priority", 1);
-		Queue queue = new Queue(Constant.QUEUE_NAME_SINGTEL_PVAS, true, false, false, args);
-		return queue;
-	}
-	//binding
-	@Bean
-	public Binding bindingSingtelPvasAll(Queue queueSingtelPvas, TopicExchange exchangeSingtel) {
-		return BindingBuilder.bind(queueSingtelPvas).to(exchangeSingtel)
-				.with(Constant.QUEUE_NAME_SINGTEL_PVAS); //route.key.name=queue.name
-	}
-	//container factory
-	@Bean
-	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
-	rabbitListenerContainerFactoryForMembership(
-			ConnectionFactory rabbitConnectionFactory) {
-		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-		factory.setConnectionFactory(rabbitConnectionFactory);
-		factory.setPrefetchCount(membershipQueuePrefetch);
-		factory.setConcurrentConsumers(membershipQueueConcurent);
-		factory.setMessageConverter(jackson2MessageConverter());
-		return factory;
-	}
-
-	@Bean
-	public Queue queueMembershipOfferMonitoring() {
+	public Queue queueOfferMonitoring() {
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("x-max-priority", 1);
 		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_MONITORING, true, false, false, args);
@@ -164,11 +74,12 @@ public class AmqpConfig {
 	}
 
 	@Bean
-	public Binding bindingMembershipOfferMonitoring(Queue queueMembershipOfferMonitoring, TopicExchange exchangeMembership) {
-		return BindingBuilder.bind(queueMembershipOfferMonitoring).to(exchangeMembership)
+	public Binding bindingOfferMonitoring(Queue queueOfferMonitoring, TopicExchange exchangeMembership) {
+		return BindingBuilder.bind(queueOfferMonitoring).to(exchangeMembership)
 				.with(Constant.QUEUE_NAME_MEMBERSHIP_MONITORING); //route.key.name=queue.name
 	}
-
+	//============================================================================= //
+	// Subscriber
 	@Bean
 	public Queue queueMembershipOfferSubscriber() {
 		Map<String, Object> args = new HashMap<String, Object>();
@@ -182,19 +93,25 @@ public class AmqpConfig {
 		return BindingBuilder.bind(queueMembershipOfferSubscriber).to(exchangeMembership)
 				.with(Constant.QUEUE_NAME_MEMBERSHIP_SUBSCRIBER); //route.key.name=queue.name
 	}
+	//============================================================================= //
+	//Eligibility
+	@Bean
+	public Queue queueMembershipOfferEligibility() {
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("x-max-priority", 1);
+		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY, true, false, false, args);
+		return queue;
+	}
+
+	@Bean
+	public Binding bindingMembershipOfferEligibility(Queue queueMembershipOfferEligibility, TopicExchange exchangeMembership) {
+		return BindingBuilder.bind(queueMembershipOfferEligibility).to(exchangeMembership)
+				.with(Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY);
+	}
 
 	@Bean
 	public TopicExchange exchangeMembership() {
 		return new TopicExchange(Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP);
-	}
-
-	//============================================================================= //
-	
-	
-	// ============================================================================= //
-	@Bean
-	public TopicExchange exchangeSingtel() {
-		return new TopicExchange(Constant.TOPIC_EXCHANGE_NAME_SINGTEL);
 	}
 	
 	@Bean
@@ -208,5 +125,27 @@ public class AmqpConfig {
 	public Jackson2JsonMessageConverter jackson2MessageConverter() {
 		return new Jackson2JsonMessageConverter();
 	}
-	// ============================================================================= //
+
+	@Bean
+	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
+	rabbitListenerContainerFactoryForOfferMonitoring(ConnectionFactory rabbitConnectionFactory) {
+		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+		factory.setConnectionFactory(rabbitConnectionFactory);
+		factory.setPrefetchCount(offerMonitoringQueuePrefetch);
+		factory.setConcurrentConsumers(offerMonitoringQueueConcurrent);
+		factory.setMessageConverter(jackson2MessageConverter());
+		return factory;
+	}
+
+	@Bean
+	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
+	rabbitListenerContainerFactoryForOfferEligibility(ConnectionFactory rabbitConnectionFactory) {
+		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+		factory.setConnectionFactory(rabbitConnectionFactory);
+		factory.setPrefetchCount(offerEligibilityQueuePrefetch);
+		factory.setConcurrentConsumers(offerEligibilityQueueConcurrent);
+		factory.setMessageConverter(jackson2MessageConverter());
+		return factory;
+	}
+
 }

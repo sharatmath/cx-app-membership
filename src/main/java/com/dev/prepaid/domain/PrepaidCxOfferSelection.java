@@ -35,6 +35,4 @@ public class PrepaidCxOfferSelection extends Auditable{
 
     @Transient
     private String overallOfferName;
-
-
 }

@@ -9,11 +9,6 @@ import java.util.Optional;
 @Repository
 public interface PrepaidCxOfferConfigRepository extends CrudRepository<PrepaidCxOfferConfig, String> {
     Optional<PrepaidCxOfferConfig> findByInstanceId(@Param("instanceId") String instanceId);
-//    //CREATE
-//    PrepaidCxOfferConfig findOneByServiceIdAndInstanceIdAndDeletedDateIsNull(String serviceId, String instanceId);
-//    PrepaidCxOfferConfig findOneByApplicationIdAndServiceIdAndInstanceIdAndDeletedDateIsNull
-//            (String applicationId, String serviceId, String instanceId);
-
-    //CONFIGURE //INVOKE //DELETE
     PrepaidCxOfferConfig findOneByInstanceIdAndDeletedDateIsNull(@Param("instanceId") String instanceId);
+    Optional<PrepaidCxOfferConfig> findByOverallOfferName(@Param("overallOfferName") String overallOfferName);
 }

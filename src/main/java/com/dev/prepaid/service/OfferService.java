@@ -21,8 +21,8 @@ public interface OfferService {
 	public PrepaidDaOfferBucket getDaOfferBucketByCode(String code);
 	
 	public void evictAllCaches();
-
-	public List<PrepaidCxOfferSelection> getOfferSelection(String instanceId);
+	public OfferPromoCode getOfferPromoCode(String instanceId);
+	public List<OfferSelection> getOfferSelection(String instanceId);
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId);
 	public OfferFulfilment getOfferMonitoring(String instanceId);
 	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId);
@@ -30,4 +30,5 @@ public interface OfferService {
 	public List<ResponSysProgram> listProgram();
 	public List<Country> listCountry();
 	public List<PromoCode> listOfferType();
+	public OverallOfferName checkOverallOfferName(String overallOfferName);
 }

@@ -296,24 +296,20 @@ public class DataController {
     public void evict(){
 		offerService.evictAllCaches();
 	}
+
+
+	@GetMapping(value = "offerPromoCode")
+	public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+		return offerService.getOfferPromoCode(instanceId);
+	}
     		
     @GetMapping(value = "offerSelection")
 	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
-		List<PrepaidCxOfferSelection>  data = offerService.getOfferSelection(instanceId);
-		for (PrepaidCxOfferSelection prepaidCxOfferSelection: data){
-			log.debug("{}", prepaidCxOfferSelection);
+		List<OfferSelection>  data = offerService.getOfferSelection(instanceId);
+		for (OfferSelection prepaidCxOfferSelection: data){
+			log.info("{}", prepaidCxOfferSelection);
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
-			offerDetailDTO.setSmsCampaignName(prepaidCxOfferSelection.getSmsCampaignName());
-			offerDetailDTO.setOfferType(prepaidCxOfferSelection.getOfferType());
-			offerDetailDTO.setPromoCodeList(prepaidCxOfferSelection.getPromoCodeList());
-			offerDetailDTO.setMessageText1(prepaidCxOfferSelection.getMessageText1());
-			offerDetailDTO.setMessageText2(prepaidCxOfferSelection.getMessageText2());
-			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
-			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
-			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
-			log.debug("{}", offerDetailDTO);
-
 			offerDetailDTO = offerDetail(
 					prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()),
 					String.valueOf(prepaidCxOfferSelection.getOfferId()));
@@ -321,7 +317,15 @@ public class DataController {
 //			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
 //			offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferType());
 //			offerDetailDTO.setOfferCampaignId(Long.valueOf(prepaidCxOfferSelection.getOfferId()));
-
+//			offerDetailDTO.setSmsCampaignName(prepaidCxOfferSelection.getSmsCampaignName());
+//			offerDetailDTO.setOfferType(prepaidCxOfferSelection.getOfferType());
+//			offerDetailDTO.setPromoCodeList(prepaidCxOfferSelection.getPromoCodeList());
+//			offerDetailDTO.setMessageText1(prepaidCxOfferSelection.getMessageText1());
+//			offerDetailDTO.setMessageText2(prepaidCxOfferSelection.getMessageText2());
+//			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
+//			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
+//			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
+			log.info("{}", offerDetailDTO);
 			list.add(offerDetailDTO);
 		}
 		return  list;
@@ -348,7 +352,6 @@ public class DataController {
 					.optKeyword(prepaidCxOfferRedemption.getOptKeyword())
 					.isFrequencyAndTime(prepaidCxOfferRedemption.getIsFrequencyAndTime())
 					.isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
-					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
 					.redemptionMethod(prepaidCxOfferRedemption.getRedemptionMethod())
 					.recurringFrequencyDayOfMonth(prepaidCxOfferRedemption.getRecurringFrequencyDayOfMonth())
 					.recurringFrequencyPeriodType(prepaidCxOfferRedemption.getRecurringFrequencyPeriodType())
@@ -362,10 +365,28 @@ public class DataController {
 					.dynamicVariable2(prepaidCxOfferRedemption.getDynamicVariable2())
 					.dynamicVariable3(prepaidCxOfferRedemption.getDynamicVariable3())
 					.dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4())
+					.dynamicVariable5(prepaidCxOfferRedemption.getDynamicVariable5())
+					.isRedemptionCapOnly(prepaidCxOfferRedemption.getIsRedemptionCapOnly())
+					.redemptionCapValue(prepaidCxOfferRedemption.getRedemptionCapValue())
+					.isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
+					.frequencyValue(prepaidCxOfferRedemption.getFrequencyValue())
+					.timePeriodEvery(prepaidCxOfferRedemption.getTimePeriodEvery())
+					.timePeriodType(prepaidCxOfferRedemption.getTimePeriodType())
+					.timePeriodValue(prepaidCxOfferRedemption.getTimePeriodValue())
+					.totalRecurringFrequency(prepaidCxOfferRedemption.getTotalRecurringFrequency())
+					.recurringFrequencyDayOfMonth(prepaidCxOfferRedemption.getRecurringFrequencyDayOfMonth())
+					.isRecurringFrequencyEachMonth(prepaidCxOfferRedemption.getIsRecurringFrequencyEachMonth())
+					.recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
+					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
+					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
+					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod())
 					.build();
 			try {
-				offerRedemption.setOptEndDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptEndDate()));
-				offerRedemption.setOptStartDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptStartDate()));
+				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
+				if(prepaidCxOfferRedemption.getOptEndDate() != null)
+					offerRedemption.setOptEndDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptEndDate()));
+				if(prepaidCxOfferRedemption.getOptStartDate() != null)
+					offerRedemption.setOptStartDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptStartDate()));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -405,8 +426,13 @@ public class DataController {
 					.daId(prepaidCxOfferEventCondition.getDaId())
 					.build();
 			try {
-				eventCondition.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
-				eventCondition.setCampaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
+				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
+				if(prepaidCxOfferEventCondition.getCampaignEndDate() != null) {
+					eventCondition.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
+				}
+				if(prepaidCxOfferEventCondition.getCampaignStartDate() != null) {
+					eventCondition.setCampaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
+				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -458,5 +484,11 @@ public class DataController {
 	@GetMapping(value = "listOfferType")
 	public List<PromoCode> listOfferType(){
 		return offerService.listOfferType();
+	}
+
+	@GetMapping(value = "checkUniqueOverallOfferName")
+	public OverallOfferName checkUniqueOverallOfferName(
+			@RequestParam(value = "overallOfferName", required = true) String overallOfferName) throws ParseException {
+		return offerService.checkOverallOfferName(overallOfferName);
 	}
 }

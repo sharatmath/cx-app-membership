@@ -25,5 +25,4 @@ public class ScheduledTask {
 	public void scheduler() throws ParseException {
 		offerService.evictAllCaches();
 	}
-
 }
