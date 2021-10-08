@@ -233,7 +233,9 @@ public class RedemptionServiceImpl extends BaseRabbitTemplate  implements Redemp
 		Map<String, Object> qRedem = new HashMap<>();
 		qRedem.put("msisdn", redemptionRequest.getMsisdn());
 		qRedem.put("offerMembershipId", redemptionRequest.getOfferMembershipId());
-		qRedem.put("smsKeyword", redemptionRequest.getSmsKeyword());        
+		qRedem.put("smsKeyword", redemptionRequest.getSmsKeyword()); 
+		qRedem.put("overallOffername", redemptionRequest.getOverallOffername());
+		qRedem.put("instanceId", redemptionRequest.getInstanceId());
 		
 		log.info("Redemption to Queueu:"+qRedem.toString());
 		
