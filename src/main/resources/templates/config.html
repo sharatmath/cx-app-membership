@@ -644,6 +644,7 @@
                                             <option>Choose...</option>
                                             <option value="DA">DA Offer</option>
                                             <option value="OMS">OMS Offer</option>
+<!--                                            <option value="MA">MA Offer</option>-->
                                             <option value="PROMO">Unique Promo Code</option>
                                         </select>
                                     </div>
@@ -665,6 +666,15 @@
                                             </select>
                                         </div>
                                     </div>
+<!--                                    <div x-show="offerTypeDropdown == 'MA'" class="col-sm-7 row" style="margin-right: 75px">-->
+<!--                                        <div class="form-group row">-->
+<!--                                            <label for="offerBucket">Offer Bucket<sup><i class="fas fa-asterisk"></i></sup></label>-->
+<!--                                            <select class="custom-select col-sm-3" >-->
+<!--                                                <option>Choose...</option>-->
+<!--                                                    <option >test</option>-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <button :disabled="uniqueData == false" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
                                     </button>
                                 </div>
@@ -1482,12 +1492,13 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="inputRecFreqDP">Name</label>
-                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
+<!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">-->
+                                                <input disabled type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
                                             </div>
                                             <label class="col-sm-1 col-form-label col-form-label">in Every</label>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="inputRecFreqDPIn">Name</label>
-                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
+                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
                                             </div>
                                             <div class="col-sm-2"> Day
                                             </div>
@@ -1502,7 +1513,8 @@
                                             </div>
                                             <div class="col-sm-2">
                                                 <label class="sr-only" for="dayRecFreq">Day</label>
-                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
+<!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
+                                                <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
                                             </div>
                                             <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
                                         </div>
@@ -1520,53 +1532,41 @@
                                         </div>
                                         <template x-if="redemptionMethod === 'Auto'">
                                             <div>
+                                                <b>Post Provision Message</b><br><br>
                                                 <div class="form-group row">
-                                                    <b>Post Provision Message</b><br><br>
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.postSmsCampaignName">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.postSmsCampaignName">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable1" x-model="redemptionData.dynamicVariable1">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable1" x-model="redemptionData.dynamicVariable1">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable2" x-model="redemptionData.dynamicVariable2">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable2" x-model="redemptionData.dynamicVariable2">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable3">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable3">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable4">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable4">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 5</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable5">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 5</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable5">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1641,53 +1641,41 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <b>Post Provision Message</b><br><br>
                                                 <div class="form-group row">
-                                                    <b>Post Provision Message</b><br><br>
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="smaCampaignNameManual" x-model="redemptionData.postSmsCampaignName">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="smaCampaignNameManual" x-model="redemptionData.postSmsCampaignName">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable1">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable1">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable2">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable2">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable3" x-model="redemptionData.dynamicVariable3">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable3" x-model="redemptionData.dynamicVariable3">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable4" x-model="redemptionData.dynamicVariable4">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable4" x-model="redemptionData.dynamicVariable4">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 5</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable5" x-model="redemptionData.dynamicVariable5">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 5</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable5" x-model="redemptionData.dynamicVariable5">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1972,7 +1960,7 @@
             // Redemption END
 
             init() {
-                this.eventTypeDropdown(),
+                    this.eventTypeDropdown(),
                     this.offerBucketDropdown(),
                     this.campaignOfferDropdown(),
                     this.getOfferSelection(),
@@ -1995,19 +1983,34 @@
             },
 
             uncheckTotalOffer() {
-                this.offerLevelType                 = null
+                this.offerLevelType                             = null
+                this.eligibilityData.offerLevelCapValue         = null
+                this.eligibilityData.offerLevelCapPeriodValue   = null
+                this.eligibilityData.offerLevelCapPeriodDays    = null
             },
 
             uncheckSubscriber() {
-                this.subscriberOfferEligibility     = null
+                this.subscriberOfferEligibility         = null
+                this.eligibilityData.frequency          = null
+                this.eligibilityData.numberOfFrequency  = null
+                this.eligibilityData.numberOfDays       = null
+
             },
 
             uncheckTotalRedemption() {
-                this.totalRedemptionCapRadio        = null
+                this.totalRedemptionCapRadio                    = null
+                this.redemptionData.redemptionCapValue          = null
+                this.redemptionData.totalRedemptionPeriodValue  = null
+                this.redemptionData.totalRedemptionPeriodEvery  = null
+                this.redemptionData.totalRedemptionPeriodType   = null
             },
 
             uncheckSubscriberRedemption() {
-                this.subscriberRedemptionCapRadio   = null
+                this.subscriberRedemptionCapRadio       = null
+                this.redemptionData.frequencyValue      = null
+                this.redemptionData.timePeriodValue     = null
+                this.redemptionData.timePeriodEvery     = null
+                this.redemptionData.timePeriodType      = null
             },
 
             checkUniqueOfferName() {
@@ -2520,7 +2523,8 @@
                 if (this.recurringRedemptionRadio === 'req-day') {
                     offerRedemption.isRecurringFrequencyAndPeriod   = true;
                     offerRedemption.isRecurringFrequencyEachMonth   = false;
-                    offerRedemption.recurringFrequencyValue         = this.redemptionData.recurringFrequencyValue;
+                    // offerRedemption.recurringFrequencyValue         = this.redemptionData.recurringFrequencyValue;
+                    offerRedemption.recurringFrequencyValue         = '1';
                     offerRedemption.recurringFrequencyPeriodValue   = this.redemptionData.recurringFrequencyPeriodValue;
                     offerRedemption.recurringFrequencyDayOfMonth    = null;
                     offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
@@ -2529,7 +2533,8 @@
                     offerRedemption.isRecurringFrequencyEachMonth   = true;
                     offerRedemption.recurringFrequencyValue         = null;
                     offerRedemption.recurringFrequencyPeriodValue   = null;
-                    offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
+                    // offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
+                    offerRedemption.recurringFrequencyDayOfMonth    = '1';
                     offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
                 }
 
