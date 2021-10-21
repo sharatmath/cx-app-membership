@@ -3095,7 +3095,7 @@
     //** rule in creating component
     //** 1. varialbe name, component name and parameter name (on removeSpecificComponent function) must be the same
     
-    // PSM-FUNCTION COMPONENT START
+    // FUNCTION COMPONENT START
     var getTopupFrequencyMatchForXMonths = Vue.component('getTopupFrequencyMatchForXMonths',
         {template:
             `<div>
@@ -3111,7 +3111,12 @@
                 <div class="component-card">
                         <div class="row">
                             <div class=" col-sm-10 component-title" v-on:click="show()">
-                                <h6><b>getTopupFrequencyMatchForXMonths</b> </h6>
+                                
+                                <h6> 
+                                    <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getTopupFrequencyMatchForXMonths.showDetails === true"></i>
+                                    <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getTopupFrequencyMatchForXMonths.showDetails=== false"></i>
+                                    <b>getTopupFrequencyMatchForXMonths</b> 
+                                </h6>
                             </div>
                             <div class=" col-sm-2">
                                 <button v-on:click="removeSpecificComponent('getTopupFrequencyMatchForXMonths')" 
@@ -3137,9 +3142,11 @@
                                         id="getTopupFrequencyMatchForXMonthsPackageName"
                                     /> 
                                     <input placeholder="yyyymm, freq calculation start from this month"
-                                        :maxlength="6"
+                                        type="month"
+                                        @change="updateStartDateValue"
+                                        style="width:40%"
                                         class="form-control form-control-sm input-custom"
-                                        v-model.number="advanceFilter.getTopupFrequencyMatchForXMonths.startMonth"
+                                        v-model="advanceFilter.getTopupFrequencyMatchForXMonths.startMonthStr"
                                         id="getTopupFrequencyMatchForXMonthsStartMonth"/>  
                                     <input placeholder="Number of Month"
                                         class="form-control form-control-sm input-custom"
@@ -3177,6 +3184,9 @@
         methods: {
             show() {
                 advanceFilter.getTopupFrequencyMatchForXMonths.showDetails = !advanceFilter.getTopupFrequencyMatchForXMonths.showDetails
+            },
+            updateStartDateValue (event) {
+                advanceFilter.getTopupFrequencyMatchForXMonths.startMonth = parseInt(event.target.value.replace("-",""),10)
             }
         },
         
@@ -3208,7 +3218,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getTopupFrequency</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getTopupFrequency.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getTopupFrequency.showDetails=== false"></i>
+                                <b>getTopupFrequency</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getTopupFrequency')" 
@@ -3234,9 +3248,11 @@
                                         id="getTopupFrequencyPackageName"
                                     /> 
                                     <input placeholder="yyyymm, freq calculation start from this month"
-                                        :maxlength="6"
+                                        type="month"
+                                        @change="updateStartDateValue"
                                         class="form-control form-control-sm input-custom"
-                                        v-model.number="advanceFilter.getTopupFrequency.startMonth"
+                                        style="width:40%"
+                                        v-model="advanceFilter.getTopupFrequency.startMonthStr"
                                         id="getTopupFrequencyStartMonth"/>  
                                     <input placeholder="Number of Month"
                                         class="form-control form-control-sm input-custom"
@@ -3275,6 +3291,9 @@
         methods: {
             show() {
                 advanceFilter.getTopupFrequency.showDetails = !advanceFilter.getTopupFrequency.showDetails
+            },
+            updateStartDateValue (event) {
+                advanceFilter.getTopupFrequency.startMonth = parseInt(event.target.value.replace("-",""),10)
             }
         },
         beforeCreate: function() {
@@ -3306,7 +3325,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getPackageFrequency</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getPackageFrequency.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getPackageFrequency.showDetails=== false"></i>
+                                <b>getPackageFrequency</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getPackageFrequency')" 
@@ -3332,9 +3355,11 @@
                                         id="getPackageFrequencyPackageName"
                                     /> 
                                     <input placeholder="yyyymm, freq calculation start from this month"
-                                        :maxlength="6"
+                                        type="month"
+                                        @change="updateStartDateValue"
                                         class="form-control form-control-sm input-custom"
-                                        v-model.number="advanceFilter.getPackageFrequency.startMonth"
+                                        style="width:40%"
+                                        v-model="advanceFilter.getPackageFrequency.startMonthStr"
                                         id="getPackageFrequencyStartMonth"/>  
                                     <input placeholder="Number of Month"
                                         class="form-control form-control-sm input-custom"
@@ -3373,6 +3398,9 @@
         methods: {
             show() {
                 advanceFilter.getPackageFrequency.showDetails = !advanceFilter.getPackageFrequency.showDetails
+            },
+            updateStartDateValue (event) {
+                advanceFilter.getPackageFrequency.startMonth = parseInt(event.target.value.replace("-",""),10)
             }
         },
         beforeCreate: function() {
@@ -3404,7 +3432,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>hasDonePaidTopupFromTopupCode</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.hasDonePaidTopupFromTopupCode.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.hasDonePaidTopupFromTopupCode.showDetails=== false"></i>
+                                <b>hasDonePaidTopupFromTopupCode</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('hasDonePaidTopupFromTopupCode')" 
@@ -3477,7 +3509,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>isFirstPaidTopupofMonth</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.isFirstPaidTopupofMonth.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.isFirstPaidTopupofMonth.showDetails=== false"></i>
+                                <b>isFirstPaidTopupofMonth</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('isFirstPaidTopupofMonth')" 
@@ -3542,7 +3578,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>hasDoneSinglePaidTopup</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.hasDoneSinglePaidTopup.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.hasDoneSinglePaidTopup.showDetails=== false"></i>
+                                <b>hasDoneSinglePaidTopup</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('hasDoneSinglePaidTopup')" 
@@ -3618,7 +3658,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>hasDoneSelfServeTopup</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.hasDoneSelfServeTopup.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.hasDoneSelfServeTopup.showDetails=== false"></i>
+                                <b>hasDoneSelfServeTopup</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('hasDoneSelfServeTopup')" 
@@ -3688,7 +3732,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getAccumulatedTopups</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getAccumulatedTopups.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getAccumulatedTopups.showDetails=== false"></i>
+                                <b>getAccumulatedTopups</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getAccumulatedTopups')" 
@@ -3776,7 +3824,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>isPaidTopupInLastXDays</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.isPaidTopupInLastXDays.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.isPaidTopupInLastXDays.showDetails=== false"></i>
+                                <b>isPaidTopupInLastXDays</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('isPaidTopupInLastXDays')" 
@@ -3838,7 +3890,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getTopupCountforTopupCode</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getTopupCountforTopupCode.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getTopupCountforTopupCode.showDetails=== false"></i>
+                                <b>getTopupCountforTopupCode</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getTopupCountforTopupCode')" 
@@ -3934,7 +3990,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getIDDSum</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getIDDSum.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getIDDSum.showDetails=== false"></i>
+                                <b>getIDDSum</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getIDDSum')" 
@@ -4031,7 +4091,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getIDDBucketPeakDetails</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getIDDBucketPeakDetails.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getIDDBucketPeakDetails.showDetails=== false"></i>
+                                <b>getIDDBucketPeakDetails</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getIDDBucketPeakDetails')" 
@@ -4123,7 +4187,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getIDDBucketPeakStatistic</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getIDDBucketPeakStatistic.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getIDDBucketPeakStatistic.showDetails=== false"></i>
+                                <b>getIDDBucketPeakStatistic</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getIDDBucketPeakStatistic')" 
@@ -4284,7 +4352,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>isDataVasBoughtinLastXDays</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.isDataVasBoughtinLastXDays.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.isDataVasBoughtinLastXDays.showDetails=== false"></i>
+                                <b>isDataVasBoughtinLastXDays</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('isDataVasBoughtinLastXDays')" 
@@ -4360,7 +4432,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>hasDoneinternalSelfServeTopup</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.hasDoneinternalSelfServeTopup.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.hasDoneinternalSelfServeTopup.showDetails=== false"></i>
+                                <b>hasDoneinternalSelfServeTopup</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('hasDoneinternalSelfServeTopup')" 
@@ -4430,7 +4506,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>hasDoneTopUpfromOPIDs</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.hasDoneTopUpfromOPIDs.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.hasDoneTopUpfromOPIDs.showDetails=== false"></i>
+                                <b>hasDoneTopUpfromOPIDs</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('hasDoneTopUpfromOPIDs')" 
@@ -4506,7 +4586,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>hasBoughtPackageinDuration</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.hasBoughtPackageinDuration.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.hasBoughtPackageinDuration.showDetails=== false"></i>
+                                <b>hasBoughtPackageinDuration</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('hasBoughtPackageinDuration')" 
@@ -4582,7 +4666,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getMonthlyDataPPUSum</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getMonthlyDataPPUSum.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getMonthlyDataPPUSum.showDetails=== false"></i>
+                                <b>getMonthlyDataPPUSum</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getMonthlyDataPPUSum')" 
@@ -4602,10 +4690,12 @@
                                 </div>
                                 <div class="col-md-8">
                                     <input placeholder="yyyymm" type="number" min="0"
-                                        :maxlength="6"
+                                        type="month"
+                                        @change="updateStartDateValue"
                                         onkeypress="return event.charCode >= 48"
-                                        class="form-control form-control-sm input-custom" 
-                                        v-model.number="advanceFilter.getMonthlyDataPPUSum.startMonth"
+                                        class="form-control form-control-sm input-custom"
+                                        style="width:40%"
+                                        v-model="advanceFilter.getMonthlyDataPPUSum.startMonthStr"
                                         id="getMonthlyDataPPUSumstartMonth"
                                     /> 
                                     <input placeholder="number of months to go back in the past" type="number" min="0"
@@ -4635,6 +4725,9 @@
         methods: {
             show() {
                 advanceFilter.getMonthlyDataPPUSum.showDetails = !advanceFilter.getMonthlyDataPPUSum.showDetails
+            },
+            updateStartDateValue (event) {
+                advanceFilter.getMonthlyDataPPUSum.startMonth = parseInt(event.target.value.replace("-",""),10)
             }
         },
         beforeCreate: function() {
@@ -4666,7 +4759,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getDAPackageFrequency</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getDAPackageFrequency.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getDAPackageFrequency.showDetails=== false"></i>
+                                <b>getDAPackageFrequency</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getDAPackageFrequency')" 
@@ -4769,7 +4866,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getDABalances</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getDABalances.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getDABalances.showDetails=== false"></i>
+                                <b>getDABalances</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getDABalances')" 
@@ -4849,7 +4950,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getDAConsumption</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getDAConsumption.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getDAConsumption.showDetails=== false"></i>
+                                <b>getDAConsumption</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getDAConsumption')" 
@@ -4937,7 +5042,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getDAInitialQuota</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getDAInitialQuota.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getDAInitialQuota.showDetails=== false"></i>
+                                <b>getDAInitialQuota</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getDAInitialQuota')" 
@@ -5013,7 +5122,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getDACurrentExpiryDate</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getDACurrentExpiryDate.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getDACurrentExpiryDate.showDetails=== false"></i>
+                                <b>getDACurrentExpiryDate</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getDACurrentExpiryDate')" 
@@ -5098,7 +5211,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getLastRechargeDateofDA</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getLastRechargeDateofDA.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getLastRechargeDateofDA.showDetails=== false"></i>
+                                <b>getLastRechargeDateofDA</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getLastRechargeDateofDA')" 
@@ -5184,7 +5301,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getLastRechargeDateOfDataTopupID</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getLastRechargeDateOfDataTopupID.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getLastRechargeDateOfDataTopupID.showDetails=== false"></i>
+                                <b>getLastRechargeDateOfDataTopupID</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getLastRechargeDateOfDataTopupID')" 
@@ -5270,7 +5391,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getDataVasARPU</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getDataVasARPU.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getDataVasARPU.showDetails=== false"></i>
+                                <b>getDataVasARPU</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getDataVasARPU')" 
@@ -5357,7 +5482,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getDailyUsageSum</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getDailyUsageSum.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getDailyUsageSum.showDetails=== false"></i>
+                                <b>getDailyUsageSum</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getDailyUsageSum')" 
@@ -5454,7 +5583,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>isDataUsedinLastXdays</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.isDataUsedinLastXdays.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.isDataUsedinLastXdays.showDetails=== false"></i>
+                                <b>isDataUsedinLastXdays</b> 
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('isDataUsedinLastXdays')" 
@@ -5515,7 +5648,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>getAccumulatedMonthlyTopupValue</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.getAccumulatedMonthlyTopupValue.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.getAccumulatedMonthlyTopupValue.showDetails=== false"></i>
+                                <b>getAccumulatedMonthlyTopupValue</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('getAccumulatedMonthlyTopupValue')" 
@@ -5586,10 +5723,10 @@
             //advanceFilter.getAccumulatedMonthlyTopupValue.operand = 'AND';
         }
     })
-    // PSM-FUNCTION COMPONENT END
+    // FUNCTION COMPONENT END
 
 
-    // PSM-INDICATOR START
+    // INDICATOR COMPONENT START
 
     var AGE_ON_NETWORK_Lifetime = Vue.component('AGE_ON_NETWORK_Lifetime',
         {template:
@@ -5606,7 +5743,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>AGE_ON_NETWORK_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.AGE_ON_NETWORK_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.AGE_ON_NETWORK_Lifetime.showDetails=== false"></i>
+                                <b>AGE_ON_NETWORK_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('AGE_ON_NETWORK_Lifetime')" 
@@ -5681,7 +5822,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>CREDIT_ALL_VALUE_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.CREDIT_ALL_VALUE_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.CREDIT_ALL_VALUE_Lifetime.showDetails=== false"></i>
+                                <b>CREDIT_ALL_VALUE_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('CREDIT_ALL_VALUE_Lifetime')" 
@@ -5754,7 +5899,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>CREDIT_ALL_COUNT_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.CREDIT_ALL_COUNT_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.CREDIT_ALL_COUNT_Lifetime.showDetails=== false"></i>
+                                <b>CREDIT_ALL_COUNT_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('CREDIT_ALL_COUNT_Lifetime')" 
@@ -5827,7 +5976,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>CREDIT_CDR_COUNT_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.CREDIT_CDR_COUNT_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.CREDIT_CDR_COUNT_Lifetime.showDetails=== false"></i>
+                                <b>CREDIT_CDR_COUNT_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('CREDIT_CDR_COUNT_Lifetime')" 
@@ -5902,7 +6055,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>LATEST_BALANCE_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.LATEST_BALANCE_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.LATEST_BALANCE_Lifetime.showDetails=== false"></i>
+                                <b>LATEST_BALANCE_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('LATEST_BALANCE_Lifetime')" 
@@ -5976,7 +6133,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>PEAK_ACTIVITY_TIME_LifeTime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.PEAK_ACTIVITY_TIME_LifeTime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.PEAK_ACTIVITY_TIME_LifeTime.showDetails=== false"></i>
+                                <b>PEAK_ACTIVITY_TIME_LifeTime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('PEAK_ACTIVITY_TIME_LifeTime')" 
@@ -6036,7 +6197,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>SELFSERVE_CREDIT_ALL_Count_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.SELFSERVE_CREDIT_ALL_Count_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.SELFSERVE_CREDIT_ALL_Count_Lifetime.showDetails=== false"></i>
+                                <b>SELFSERVE_CREDIT_ALL_Count_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('SELFSERVE_CREDIT_ALL_Count_Lifetime')" 
@@ -6111,7 +6276,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>TOTAL_SPEND_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.TOTAL_SPEND_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.TOTAL_SPEND_Lifetime.showDetails=== false"></i>
+                                <b>TOTAL_SPEND_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('TOTAL_SPEND_Lifetime')" 
@@ -6185,7 +6354,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>DATA_USER_IDENTIFICATION_LifeTime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.DATA_USER_IDENTIFICATION_LifeTime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.DATA_USER_IDENTIFICATION_LifeTime.showDetails=== false"></i>
+                                <b>DATA_USER_IDENTIFICATION_LifeTime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('DATA_USER_IDENTIFICATION_LifeTime')" 
@@ -6263,7 +6436,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>EXPECTED_EXPIRY_DATE_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.EXPECTED_EXPIRY_DATE_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.EXPECTED_EXPIRY_DATE_Lifetime.showDetails=== false"></i>
+                                <b>EXPECTED_EXPIRY_DATE_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('EXPECTED_EXPIRY_DATE_Lifetime')" 
@@ -6343,7 +6520,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>LAST_LOCAL_CALL_ACTIVITY_LifeTime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.LAST_LOCAL_CALL_ACTIVITY_LifeTime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.LAST_LOCAL_CALL_ACTIVITY_LifeTime.showDetails=== false"></i>
+                                <b>LAST_LOCAL_CALL_ACTIVITY_LifeTime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('LAST_LOCAL_CALL_ACTIVITY_LifeTime')" 
@@ -6421,7 +6602,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>LOCAL_CALL_FULFILMENT_LifeTime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.LOCAL_CALL_FULFILMENT_LifeTime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.LOCAL_CALL_FULFILMENT_LifeTime.showDetails=== false"></i>
+                                <b>LOCAL_CALL_FULFILMENT_LifeTime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('LOCAL_CALL_FULFILMENT_LifeTime')" 
@@ -6496,7 +6681,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>LAST_LOCAL_CALL_LifeTime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.LAST_LOCAL_CALL_LifeTime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.LAST_LOCAL_CALL_LifeTime.showDetails=== false"></i>
+                                <b>LAST_LOCAL_CALL_LifeTime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('LAST_LOCAL_CALL_LifeTime')" 
@@ -6574,7 +6763,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>TOTAL_SPEND_MONTHLY_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.TOTAL_SPEND_MONTHLY_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.TOTAL_SPEND_MONTHLY_Lifetime.showDetails=== false"></i>
+                                <b>TOTAL_SPEND_MONTHLY_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('TOTAL_SPEND_MONTHLY_Lifetime')" 
@@ -6593,9 +6786,11 @@
                                 </div>
                                 <div class="col-md-8">
                                     <input placeholder="yyyymm, freq calculation start from this month"
-                                        :maxlength="6"
+                                        type="month"
+                                        @change="updateStartDateValue"
                                         class="form-control form-control-sm input-custom"
-                                        v-model.number="advanceFilter.TOTAL_SPEND_MONTHLY_Lifetime.startMonth"
+                                        v-model="advanceFilter.TOTAL_SPEND_MONTHLY_Lifetime.startMonthStr"
+                                        style="width:40%"
                                         id="TOTAL_SPEND_MONTHLY_LifetimeStartMonth"/>  
                                     <input placeholder="Number of Month"
                                         class="form-control form-control-sm input-custom"
@@ -6628,6 +6823,9 @@
         methods: {
             show() {
                 advanceFilter.TOTAL_SPEND_MONTHLY_Lifetime.showDetails = !advanceFilter.TOTAL_SPEND_MONTHLY_Lifetime.showDetails
+            },
+            updateStartDateValue (event) {
+                advanceFilter.TOTAL_SPEND_MONTHLY_Lifetime.startMonth = parseInt(event.target.value.replace("-",""),10)
             }
         },
         beforeCreate: function() {
@@ -6658,7 +6856,11 @@
                 <div class="component-card">
                     <div class="row">
                         <div class=" col-sm-10 component-title" v-on:click="show()">
-                            <h6><b>SUBSCRIBER_LATEST_ACTION_Lifetime</b> </h6>
+                            <h6>
+                                <i class="fa fa-plus" style="margin: 8px" v-show="advanceFilter.SUBSCRIBER_LATEST_ACTION_Lifetime.showDetails === true"></i>
+                                <i class="fa fa-minus" style="margin: 8px" v-show="advanceFilter.SUBSCRIBER_LATEST_ACTION_Lifetime.showDetails=== false"></i>
+                                <b>SUBSCRIBER_LATEST_ACTION_Lifetime</b>
+                            </h6>
                         </div>
                         <div class=" col-sm-2">
                             <button v-on:click="removeSpecificComponent('SUBSCRIBER_LATEST_ACTION_Lifetime')" 
@@ -6719,14 +6921,14 @@
         }
     })
 
-    // PSM-INDICATOR END
+    // INDICATOR COMPONENT END
     // Custom UI Components END
     
 
 
     Vue.component('v-select', VueSelect.VueSelect)
 
-    // Main Component for Custom UI
+    // Main Component for ADVANCE FILTER
     var advanceFilter = new Vue({
         el: '#advanceFilterComponent',
         data: {
@@ -6762,6 +6964,7 @@
                 operand:'AND',
                 packageName: '',
                 startMonth:000000,
+                startMonthStr:'',
                 numberOfMonth:0,
                 valueOperand:'eq',
                 value:'',
@@ -6776,6 +6979,7 @@
                 operand:'AND',
                 packageName: '',
                 startMonth:000000,
+                startMonthStr:'',
                 numberOfMonth:0,
                 valueOperand:'eq',
                 value:'',
@@ -6790,6 +6994,7 @@
                 operand:'AND',
                 packageName: '',
                 startMonth:000000,
+                startMonthStr:'',
                 numberOfMonth:0,
                 valueOperand:'eq',
                 value:'',
@@ -6970,6 +7175,7 @@
                 hasOperand: false,
                 operand:'AND',
                 startMonth:000000,
+                startMonthStr:'',
                 numOfMonth: 0,
                 daId: '',
                 key:'Spend',
@@ -7231,6 +7437,7 @@
                 hasOperand: false,
                 operand:'AND',
                 startMonth:000000,
+                startMonthStr:'',
                 numberOfMonth:0,
                 valueOperand:'eq',
                 value:0,
