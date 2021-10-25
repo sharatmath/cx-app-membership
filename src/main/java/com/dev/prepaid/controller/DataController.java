@@ -76,6 +76,11 @@ public class DataController {
 					.offerBucketType(offerBucketType)
 					.offerCampaignId(Long.valueOf(campaignOfferId))
 					.offerCampaignName(prepaidOmsOfferCampaign.getName())
+					.dayHourMinute(
+							String.valueOf(prepaidOmsOfferCampaign.getDay()) + " Day " +
+									String.valueOf(prepaidOmsOfferCampaign.getHour()) + " Hour " +
+									String.valueOf(prepaidOmsOfferCampaign.getMinute()) + " Minute "
+					)
 					.build();
 			
 

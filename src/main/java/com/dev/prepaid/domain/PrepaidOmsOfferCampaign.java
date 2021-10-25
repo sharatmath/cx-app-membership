@@ -36,6 +36,9 @@ public class PrepaidOmsOfferCampaign implements Serializable {
 	private Date startDate;
 	private Date endDate;
 	private String action;
+	private Long day;
+	private Long hour;
+	private Long minute;
 	
 	private String createdBy;
 	private Date createdDate;
