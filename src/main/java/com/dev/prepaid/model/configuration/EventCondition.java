@@ -23,7 +23,7 @@ public class EventCondition {
     @SerializedName("operatorId") private  String operatorId;
 
     @SerializedName("topupCode") private  String topUpCode;
-
+    @SerializedName("topupType") private  String topUpType;
 
     @SerializedName("topupCurBalanceOp") private  String topUpCurBalanceOp;
     @SerializedName("topupCurBalanceValue") private  Long topUpCurBalanceValue;

@@ -323,6 +323,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferMonitoring.setUsageServiceType(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpUsageServiceType());
 			prepaidCxOfferMonitoring.setOperatorId(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpOperator());
 			prepaidCxOfferMonitoring.setTopUpCode(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCode());
+			prepaidCxOfferMonitoring.setTopUpType(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpType());
 
 			prepaidCxOfferMonitoring.setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
 			if(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue() != null) {
@@ -491,6 +492,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferEventCondition.setUsageServiceType(saveConfigRequest.getPayload().getOfferEventCondition().getUsageServiceType());
 			prepaidCxOfferEventCondition.setOperatorId(saveConfigRequest.getPayload().getOfferEventCondition().getOperatorId());
 			prepaidCxOfferEventCondition.setTopUpCode(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCode());
+			prepaidCxOfferEventCondition.setTopUpType(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpType());
 
 			prepaidCxOfferEventCondition.setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCurBalanceOp());
 			prepaidCxOfferEventCondition.setTopUpCurBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCurBalanceValue());

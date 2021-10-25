@@ -266,6 +266,7 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setTopUpUsageServiceType(prepaidCxOfferMonitoring.getUsageServiceType());
 					offerFulfilment.setTopUpOperator(prepaidCxOfferMonitoring.getOperatorId());
 					offerFulfilment.setTopUpCode(prepaidCxOfferMonitoring.getTopUpCode());
+					offerFulfilment.setTopUpType(prepaidCxOfferMonitoring.getTopUpType());
 
 					offerFulfilment.setTopUpCurBalanceOp(prepaidCxOfferMonitoring.getTopUpCurBalanceOp());
 					offerFulfilment.setTopUpCurBalanceValue(prepaidCxOfferMonitoring.getTopUpCurBalanceValue());

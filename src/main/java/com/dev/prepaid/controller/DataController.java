@@ -414,6 +414,7 @@ public class DataController {
 					.arpuSelectedTopUpCode(prepaidCxOfferEventCondition.getArpuSelectedTopUpCode())
 					.topUpAccBalanceBeforeOp(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeOp())
 					.topUpCode(prepaidCxOfferEventCondition.getTopUpCode())
+					.topUpType(prepaidCxOfferEventCondition.getTopUpType())
 					.topUpAccBalanceBeforeValue(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeValue())
 					.topUpCurBalanceValue(prepaidCxOfferEventCondition.getTopUpCurBalanceValue())
 					.topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())

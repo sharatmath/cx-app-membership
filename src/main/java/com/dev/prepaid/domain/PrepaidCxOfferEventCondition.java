@@ -34,6 +34,7 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private String usageServiceType;
     private String operatorId;
 
+    private String topUpType;
     private String topUpCode;
     private String topUpCurBalanceOp;
     private Long topUpCurBalanceValue;

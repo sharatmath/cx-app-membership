@@ -46,6 +46,7 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private Integer periodDays;
     private String period;
 
+    private String topUpType;
     private String topUpCode;
     private String topUpCurBalanceOp;
     private Long topUpCurBalanceValue;

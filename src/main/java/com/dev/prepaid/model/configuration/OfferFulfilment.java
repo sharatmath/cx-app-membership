@@ -20,6 +20,8 @@ public class OfferFulfilment {
     @SerializedName("topupUsageServiceType") private String topUpUsageServiceType;
     @SerializedName("topupOperators") private String topUpOperator;
     @SerializedName("topupCode") private String topUpCode;
+    @SerializedName("topupType") private String topUpType;
+
 
     @SerializedName("topupCurBalanceOp") private  String topUpCurBalanceOp;
     @SerializedName("topupCurBalanceValue") private  Long topUpCurBalanceValue;
