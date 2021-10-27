@@ -39,7 +39,7 @@ public class EventCondition {
     @SerializedName("DaBalanceValue") private  Long daBalanceValue;
     @SerializedName("TempServiceClass") private  String tempServiceClass;
     @SerializedName("imei") private  String imei;
-    @SerializedName("daChange") private  String daChange;
+    @SerializedName("daChange") private  Long daChange;
     @SerializedName("chargedAmount") private  String chargedAmount;
 
     @SerializedName("eventTypeUsages") private  Long eventTypeUsages;

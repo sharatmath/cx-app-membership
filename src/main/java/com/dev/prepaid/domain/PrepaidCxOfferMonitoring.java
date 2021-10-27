@@ -63,7 +63,7 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private Date daExpiryDate;
 
     private  String imei;
-    private  String daChange;
+    private  Long daChange;
     private  Long chargedAmount;
     private  String roamingFlag;
     private  String ratePlanId;

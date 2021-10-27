@@ -55,7 +55,7 @@ public class OfferFulfilment {
     @SerializedName("monitorPeriodDayMonth") private String monitorPeriodDayMonth;
 
     @SerializedName("imei") private  String imei;
-    @SerializedName("daChange") private  String daChange;
+    @SerializedName("daChange") private  Long daChange;
     @SerializedName("chargedAmount") private  Long chargedAmount;
     @SerializedName("roamingFlag") private  String roamingFlag;
     @SerializedName("ratePlanId") private  String ratePlanId;
