@@ -61,4 +61,7 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private String arpuOp;
     private Long arpuValue;
     private String arpuSelectedTopUpCode;
+
+    private  String roamingFlag;
+    private  String ratePlanId;
 }

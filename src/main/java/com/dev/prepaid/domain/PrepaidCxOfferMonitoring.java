@@ -1,5 +1,6 @@
 package com.dev.prepaid.domain;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -58,4 +59,13 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private String topUpDaBalanceOp;
     private Long topUpDaBalanceValue;
     private String topUpTempServiceClass;
+
+    private Date daExpiryDate;
+
+    private  String imei;
+    private  String daChange;
+    private  String chargedAmount;
+    private  String roamingFlag;
+    private  String ratePlanId;
+    private Integer aggregationPeriodDays;
 }

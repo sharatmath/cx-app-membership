@@ -429,7 +429,10 @@ public class DataController {
 					.daBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
 					.daChange(prepaidCxOfferEventCondition.getDaChange())
 					.daBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
+
 					.daId(prepaidCxOfferEventCondition.getDaId())
+					.roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
+					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId())
 					.build();
 			try {
 				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);

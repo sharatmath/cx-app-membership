@@ -284,6 +284,12 @@ public class OfferServiceImpl implements OfferService {
 
 					offerFulfilment.setTopUpTempServiceClass(prepaidCxOfferMonitoring.getTopUpTempServiceClass());
 
+					offerFulfilment.setImei(prepaidCxOfferMonitoring.getImei());
+					offerFulfilment.setDaChange(prepaidCxOfferMonitoring.getDaChange());
+					offerFulfilment.setChargedAmount(prepaidCxOfferMonitoring.getChargedAmount());
+					offerFulfilment.setRoamingFlag(prepaidCxOfferMonitoring.getRoamingFlag());
+					offerFulfilment.setRatePlanId(prepaidCxOfferMonitoring.getRatePlanId());
+
 					return offerFulfilment;
 				} else if("ARPU".equals(prepaidCxOfferMonitoring.getEventType())){
 					offerFulfilment.setOperatorId(prepaidCxOfferMonitoring.getOperatorId());

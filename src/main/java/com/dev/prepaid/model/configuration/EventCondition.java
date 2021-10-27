@@ -53,4 +53,9 @@ public class EventCondition {
     @SerializedName("arpuOp") private  String arpuOp;
     @SerializedName("arpuValue") private  Long arpuValue;
     @SerializedName("arpuSelectedTopUpCode") private  String arpuSelectedTopUpCode;
+
+    @SerializedName("roamingFlag") private  String roamingFlag;
+    @SerializedName("ratePlanId") private  String ratePlanId;
+
+
 }
