@@ -209,7 +209,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	}
 
 	private void saveOfferSelection(String offerConfigId, SaveConfigRequest saveConfigRequest){
-		if(ProvisionType.EVENT_CONDITION.toString().equals(saveConfigRequest.getPayload().getType())){
+		if(ProvisionType.EVENT_CONDITION.getDescription().equals(saveConfigRequest.getPayload().getType())){
 			log.info("saveOfferSelection skip process or not applicable for type{}", saveConfigRequest.getPayload().getOfferMonitoring(), saveConfigRequest.getPayload().getType());
 			return;
 		}
@@ -284,8 +284,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	}
 
 	private void saveOfferMonitoring(String offerConfigId, SaveConfigRequest saveConfigRequest) {
-		if(!ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.toString().equals(saveConfigRequest.getPayload().getType())){
-			log.info("saveOfferMonitoring skip process or not applicable for type{}", saveConfigRequest.getPayload().getOfferMonitoring(), saveConfigRequest.getPayload().getType());
+		if(!ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.getDescription().equals(saveConfigRequest.getPayload().getType())){
+			log.info("saveOfferMonitoring skip process or not applicable for type{}", saveConfigRequest.getPayload().getType());
 			return;
 		}
 		log.info("saveOfferMonitoring {}", saveConfigRequest.getPayload().getOfferMonitoring());
@@ -368,7 +368,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	}
 
 	private void saveOfferRedemption(String offerConfigId, SaveConfigRequest saveConfigRequest){
-		if(ProvisionType.EVENT_CONDITION.toString().equals(saveConfigRequest.getPayload().getType())){
+		if(ProvisionType.EVENT_CONDITION.getDescription().equals(saveConfigRequest.getPayload().getType())){
 			log.info("saveOfferRedemption skip process or not applicable for type{}", saveConfigRequest.getPayload().getOfferMonitoring(), saveConfigRequest.getPayload().getType());
 			return;
 		}
@@ -472,8 +472,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 
 	private void saveOfferEventCondition(String offerConfigId, SaveConfigRequest saveConfigRequest) {
-		if(ProvisionType.DIRECT_PROVISION.toString().equals(saveConfigRequest.getPayload().getType())
-			|| ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.toString().equals(saveConfigRequest.getPayload().getType())
+		if(ProvisionType.DIRECT_PROVISION.getDescription().equals(saveConfigRequest.getPayload().getType())
+			|| ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.getDescription().equals(saveConfigRequest.getPayload().getType())
 		){
 			log.info("saveOfferEventCondition skip process or not applicable for type{}", saveConfigRequest.getPayload().getOfferMonitoring(), saveConfigRequest.getPayload().getType());
 			return;
