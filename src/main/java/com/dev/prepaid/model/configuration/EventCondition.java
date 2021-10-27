@@ -40,7 +40,7 @@ public class EventCondition {
     @SerializedName("TempServiceClass") private  String tempServiceClass;
     @SerializedName("imei") private  String imei;
     @SerializedName("daChange") private  Long daChange;
-    @SerializedName("chargedAmount") private  String chargedAmount;
+    @SerializedName("chargedAmount") private  Long chargedAmount;
 
     @SerializedName("eventTypeUsages") private  Long eventTypeUsages;
     @SerializedName("eventUsagesOp") private  String eventUsagesOp;
