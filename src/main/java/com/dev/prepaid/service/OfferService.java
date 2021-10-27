@@ -31,4 +31,5 @@ public interface OfferService {
 	public List<Country> listCountry();
 	public List<PromoCode> listOfferType();
 	public OverallOfferName checkOverallOfferName(String overallOfferName);
+	public String getProvisionType(String instanceId);
 }

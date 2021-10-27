@@ -307,8 +307,13 @@ public class DataController {
 	public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		return offerService.getOfferPromoCode(instanceId);
 	}
-    		
-    @GetMapping(value = "offerSelection")
+
+	@GetMapping(value = "provisionType")
+	public String getProvisionType(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+		return offerService.getProvisionType(instanceId);
+	}
+
+	@GetMapping(value = "offerSelection")
 	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
 		List<OfferSelection>  data = offerService.getOfferSelection(instanceId);

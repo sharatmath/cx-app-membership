@@ -360,4 +360,12 @@ public class OfferServiceImpl implements OfferService {
 		return countryRepository.findAll();
 	}
 
+	public String getProvisionType(String instanceId){
+		Optional<PrepaidCxOfferConfig> opsFind =  prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(opsFind.isPresent()){
+			return opsFind.get().getProvisionType();
+		}
+		return  "";
+	}
+
 }
