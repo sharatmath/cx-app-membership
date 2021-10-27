@@ -23,7 +23,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class PrepaidOfferMonitoringTrx extends Auditable{
     @Id
-    @Column(name = "OFFER_MONITORING_ID")
+    @Column(name = "OFFER_MONITORING_TX_ID")
     private Long id;
     private Long offerMembershipId;
     private Long msisdn;
