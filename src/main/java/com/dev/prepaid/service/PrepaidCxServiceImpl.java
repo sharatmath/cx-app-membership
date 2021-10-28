@@ -178,15 +178,18 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			if(offerEligibility.getIsOfferLevelCapAndPeriod() == null
 					&& offerEligibility.getIsFrequencyOnly() == null
 					&& offerEligibility.getIsOfferLevelCapOnly() == null
-					&& offerEligibility.getIsOfferLevelCapAndPeriod() == null)
+					&& offerEligibility.getIsOfferLevelCapAndPeriod() == null) {
 				log.info("Skip saved Eligibility {} ", offerEligibility);
-			return;
+				return;
+			}
 		}
 		Optional<PrepaidCxOfferEligibility> optionalPrepaidCxOfferEligibility =  prepaidCxOfferEligibilityRepository.findByOfferConfigId(offerConfigId);
 		if(optionalPrepaidCxOfferEligibility.isPresent()){
+			log.info("optionalPrepaidCxOfferEligibility {}", optionalPrepaidCxOfferEligibility);
 			prepaidCxOfferEligibility = optionalPrepaidCxOfferEligibility.get();
 
 		}else {
+			log.info("optionalPrepaidCxOfferEligibility {}", optionalPrepaidCxOfferEligibility);
 			prepaidCxOfferEligibility = PrepaidCxOfferEligibility.builder()
 					.offerConfigId(offerConfigId)
 					.build();
