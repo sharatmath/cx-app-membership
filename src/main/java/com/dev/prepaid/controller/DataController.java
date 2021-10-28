@@ -206,6 +206,22 @@ public class DataController {
     					.collect(Collectors.toList()));
         	}
         	
+        } else if (offerType.equalsIgnoreCase("MA")) {
+        	if (query == null || query.isEmpty()) {
+
+            	listBucket.addAll(offerService.listOmsOfferBucket()
+    					.stream()
+    					.map(this::mapOmsBucketToOffer)
+    					.collect(Collectors.toList()));
+        	} else {
+
+            	listBucket.addAll(offerService.listOmsOfferBucket()
+    					.stream()
+    					.filter(p -> p.getCode().toLowerCase().contains(query))
+    					.map(this::mapOmsBucketToOffer)
+    					.collect(Collectors.toList()));
+        	}
+        	
         } else {
         }
 		
