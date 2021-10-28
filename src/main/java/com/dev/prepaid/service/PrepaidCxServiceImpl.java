@@ -173,7 +173,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 	private void saveOfferEligibility(String offerConfigId, SaveConfigRequest saveConfigRequest){
 		PrepaidCxOfferEligibility prepaidCxOfferEligibility;
 		OfferEligibility offerEligibility = saveConfigRequest.getPayload().getOfferEligibility();
-		log.info("offerEligibility {}", offerEligibility);
+		log.info("saveOfferEligibility {}", offerEligibility);
 		if(offerEligibility != null){
 			if(offerEligibility.getIsOfferLevelCapAndPeriod() == null
 					&& offerEligibility.getIsFrequencyOnly() == null
@@ -210,7 +210,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 	private void saveOfferSelection(String offerConfigId, SaveConfigRequest saveConfigRequest){
 		if(ProvisionType.EVENT_CONDITION.getDescription().equals(saveConfigRequest.getPayload().getType())){
-			log.info("saveOfferSelection skip process or not applicable for type{}", saveConfigRequest.getPayload().getOfferMonitoring(), saveConfigRequest.getPayload().getType());
+			log.info("saveOfferSelection skip process or not applicable for type {}", saveConfigRequest.getPayload().getType());
 			return;
 		}
 		log.info("saveOfferSelection {}", saveConfigRequest.getPayload().getOfferSelection());
