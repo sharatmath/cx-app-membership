@@ -254,7 +254,7 @@
                                                 <div class="mb-3 row">
                                                     <label class="col-sm-2 col-form-label">Top-Up Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                                     <div class="col-sm-10">
-                                                        <div class="form-group d-flex justify-content-between">
+                                                        <div class="form-group d-flex justify-content-between" x-model="eventConditionData.topUpType">
                                                             <select class="form-control">
                                                                 <option value="All">All</option>
                                                                 <option value="Paid">Paid</option>
@@ -638,7 +638,7 @@
                         <div id="offerSelectionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseOne"><h5><i class="fa fa-plus"></i> Offer Selection - Required</h5></div>
                     </div>
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#directProvisioning">
-                        <div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
+                        <div class="card-body" x-show="type == 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
                             <div>
                                 <div class="form-inline">
                                     <div class="col-sm-2">
@@ -662,10 +662,10 @@
                                             <option value="PROMO">Unique Promo Code</option>
                                         </select>
                                     </div>
-                                    <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS'" class="col-sm-7 row" style="margin-right: 75px">
+                                    <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS' || offerTypeDropdown == 'MA'" class="col-sm-7 row" style="margin-right: 75px">
                                         <div class="form-group row">
                                             <label for="offerBucket">Offer Bucket<sup><i class="fas fa-asterisk"></i></sup></label>
-                                            <select :disabled="uniqueData == false" id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
+                                            <select :disabled="uniqueData == false || offerTypeDropdown == 'MA'" id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
                                                 <option>Choose...</option>
                                                 <template x-for="offerList in offerBucketList">
                                                     <option x-model="offerList.id"><span x-text="offerList.text"></span></option>
@@ -1022,7 +1022,7 @@
                                                 <div class="mb-3 row">
                                                     <label class="col-sm-2 col-form-label">Top-Up Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                                     <div class="col-sm-10">
-                                                        <div class="form-group d-flex justify-content-between">
+                                                        <div class="form-group d-flex justify-content-between" x-model="monitoringData.topUpType">
                                                             <select class="form-control">
                                                                 <option value="All">All</option>
                                                                 <option value="Paid">Paid</option>
@@ -1771,7 +1771,7 @@
                                                 </div>
                                                 <b>Post Provision Message</b><br><br>
                                                 <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                    <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name</label>
                                                     <div class="col-sm-4">
                                                         <input type="text" class="form-control form-control-sm" id="smaCampaignNameManual" x-model="redemptionData.postSmsCampaignName">
                                                     </div>
@@ -2057,7 +2057,7 @@
             redemptionData                  : {},
             eventConditionData              : {},
             redemptionMethod                : null,
-            type                            : 'directProvisioning',
+            type                            : null,
             eventTypeData                   : 'Top-Up',
             eventConditionTypeData          : 'Top-Up',
             offerLevelType                  : null,
@@ -2094,14 +2094,14 @@
                     this.monitoringPolicy(),
                     this.redemptionPolicy(),
                     this.eventConditionPolicy(),
-                    this.getCountryList()
+                    this.getCountryList(),
+                        this.provisionType()
             },
 
             initPage(){
                 Promise.all([
                     this.getProgramList(),
                     this.getPromoList(),
-                    // this.checkUniqueOfferName()
                 ])
                     .then(data => {
                         this.eligibilityPolicy()
@@ -2318,6 +2318,19 @@
                     .finally()
             },
 
+            provisionType() {
+                fetch(PROD_URL + `provisionType?instanceId=${INSTANCE_ID}`)
+                    .then(res => res.text())
+                    .then(data => {
+                        this.type = data
+                        if (!this.type) {
+                            this.type = data.type
+                        }
+                    })
+                    .catch(error => console.log(error))
+                    .finally()
+            },
+
             redemptionPolicy() {
                 fetch(PROD_URL + `offerRedemption?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
@@ -2414,6 +2427,7 @@
                 };
 
                 if (this.eventConditionTypeData === 'Top-Up') {
+                    offerEventCondition.topUpType                   = this.eventConditionData.topUpType;
                     offerEventCondition.creditMethod                = this.eventConditionData.creditMethod;
                     offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
                     offerEventCondition.operatorId                  = this.eventConditionData.operatorId;
@@ -2470,6 +2484,8 @@
                     }
                 };
                 if (this.eventTypeData === 'Top-Up') {
+                    offerMonitoring.topUpType                   = this.monitoringData.topUpType;
+                    offerMonitoring.operatorId                  = this.monitoringData.operatorId;
                     offerMonitoring.topUpCreditMethod           = this.monitoringData.topUpCreditMethod;
                     offerMonitoring.topUpUsageServiceType       = this.monitoringData.topUpUsageServiceType;
                     offerMonitoring.topUpOperator               = this.monitoringData.topUpOperator;
@@ -2500,10 +2516,6 @@
                 const offerEligibility = {
                     "excludeProgramId"  : $('#select2multiple').select2("val").toString()
                 };
-
-                // if ($('#select2multiple').select2("val").toString() != '') {
-                //     offerEligibility.excludeProgramId           = $('#select2multiple').select2("val").toString()
-                // }
 
                 if (this.offerLevelType === 'cap-only') {
                     offerEligibility.isOfferLevelCapOnly        = true;
@@ -2666,7 +2678,7 @@
 
                 var request = { "amsAction" : "save", "requestId" : "save",
                     "payload": {
-                        "type": this.type,
+                        "type": this.provisonTypeData,
                         "uuid": INSTANCE_ID,
                         "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
                             return {
