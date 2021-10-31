@@ -13,13 +13,16 @@ public interface OfferService {
 	public PrepaidOmsOfferCampaign getOmsOfferCampaign(Long id);
 	public PrepaidOmsOfferBucket getOmsOfferBucket(Long id);
 	public PrepaidOmsOfferBucket getOmsOfferBucketByCode(String code);
-	
+
 	public List<PrepaidDaOfferBucket> listDaOfferBucket();
 	public List<PrepaidDaOfferCampaign> listDaOfferCampaign(Long offerId);
 	public PrepaidDaOfferCampaign getDaOfferCampaign(Long id);
 	public PrepaidDaOfferBucket getDaOfferBucket(Long id);
 	public PrepaidDaOfferBucket getDaOfferBucketByCode(String code);
-	
+
+	//MA Services
+	public List<PrepaidMaCreditOffer> listMaOfferBucket();
+
 	public void evictAllCaches();
 	public OfferPromoCode getOfferPromoCode(String instanceId);
 	public List<OfferSelection> getOfferSelection(String instanceId);
@@ -31,4 +34,5 @@ public interface OfferService {
 	public List<Country> listCountry();
 	public List<PromoCode> listOfferType();
 	public OverallOfferName checkOverallOfferName(String overallOfferName);
+	public String getProvisionType(String instanceId);
 }
