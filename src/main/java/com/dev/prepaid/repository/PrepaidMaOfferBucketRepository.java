@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface PrepaidMaOfferBucketRepository extends CrudRepository<PrepaidMaCreditOffer, Long> {
     List<PrepaidMaCreditOffer> findAll();
-    PrepaidMaCreditOffer findOneById(Long id);
-    PrepaidMaCreditOffer findOneByCode(String code);
+//    PrepaidMaCreditOffer findOneById(Long id);
+//    PrepaidMaCreditOffer findOneByCode(String code);
 }
