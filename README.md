@@ -4,8 +4,8 @@ prepaid-cx-api.git
 ```sh
 export JAVA_HOME=/usr/lib/jvm/openjdk-11.0.2_linux-x64/jdk-11.0.2
 mvn clean package -DskipTests=true
-sudo docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.2.3 .
-sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.2.3
+sudo docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.2.4 .
+sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.2.4
 ```
 
 ##  DEPLOYMENT
