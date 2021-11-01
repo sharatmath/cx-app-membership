@@ -364,11 +364,6 @@ public class OfferServiceImpl implements OfferService {
 		}
 	}
 
-	@Override
-	public String getProvisionType(String instanceId) {
-		return null;
-	}
-
 	public List<Country> listCountry(){
 		return countryRepository.findAll();
 	}
