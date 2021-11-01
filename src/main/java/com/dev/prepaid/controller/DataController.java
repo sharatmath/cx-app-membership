@@ -76,6 +76,11 @@ public class DataController {
 					.offerBucketType(offerBucketType)
 					.offerCampaignId(Long.valueOf(campaignOfferId))
 					.offerCampaignName(prepaidOmsOfferCampaign.getName())
+					.dayHourMinute(
+							String.valueOf(prepaidOmsOfferCampaign.getDay()) + " Day " +
+									String.valueOf(prepaidOmsOfferCampaign.getHour()) + " Hour " +
+									String.valueOf(prepaidOmsOfferCampaign.getMinute()) + " Minute "
+					)
 					.build();
 			
 
@@ -201,6 +206,22 @@ public class DataController {
     					.collect(Collectors.toList()));
         	}
         	
+        } else if (offerType.equalsIgnoreCase("MA")) {
+        	if (query == null || query.isEmpty()) {
+
+            	listBucket.addAll(offerService.listOmsOfferBucket()
+    					.stream()
+    					.map(this::mapOmsBucketToOffer)
+    					.collect(Collectors.toList()));
+        	} else {
+
+            	listBucket.addAll(offerService.listOmsOfferBucket()
+    					.stream()
+    					.filter(p -> p.getCode().toLowerCase().contains(query))
+    					.map(this::mapOmsBucketToOffer)
+    					.collect(Collectors.toList()));
+        	}
+        	
         } else {
         }
 		
@@ -302,8 +323,13 @@ public class DataController {
 	public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		return offerService.getOfferPromoCode(instanceId);
 	}
-    		
-    @GetMapping(value = "offerSelection")
+
+	@GetMapping(value = "provisionType")
+	public String getProvisionType(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+		return offerService.getProvisionType(instanceId);
+	}
+
+	@GetMapping(value = "offerSelection")
 	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
 		List<OfferSelection>  data = offerService.getOfferSelection(instanceId);
@@ -414,6 +440,7 @@ public class DataController {
 					.arpuSelectedTopUpCode(prepaidCxOfferEventCondition.getArpuSelectedTopUpCode())
 					.topUpAccBalanceBeforeOp(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeOp())
 					.topUpCode(prepaidCxOfferEventCondition.getTopUpCode())
+					.topUpType(prepaidCxOfferEventCondition.getTopUpType())
 					.topUpAccBalanceBeforeValue(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeValue())
 					.topUpCurBalanceValue(prepaidCxOfferEventCondition.getTopUpCurBalanceValue())
 					.topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())
@@ -423,7 +450,10 @@ public class DataController {
 					.daBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
 					.daChange(prepaidCxOfferEventCondition.getDaChange())
 					.daBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
+
 					.daId(prepaidCxOfferEventCondition.getDaId())
+					.roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
+					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId())
 					.build();
 			try {
 				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);

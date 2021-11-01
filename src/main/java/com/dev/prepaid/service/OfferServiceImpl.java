@@ -273,6 +273,7 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setTopUpUsageServiceType(prepaidCxOfferMonitoring.getUsageServiceType());
 					offerFulfilment.setTopUpOperator(prepaidCxOfferMonitoring.getOperatorId());
 					offerFulfilment.setTopUpCode(prepaidCxOfferMonitoring.getTopUpCode());
+					offerFulfilment.setTopUpType(prepaidCxOfferMonitoring.getTopUpType());
 
 					offerFulfilment.setTopUpCurBalanceOp(prepaidCxOfferMonitoring.getTopUpCurBalanceOp());
 					offerFulfilment.setTopUpCurBalanceValue(prepaidCxOfferMonitoring.getTopUpCurBalanceValue());
@@ -289,6 +290,12 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setTopUpDaBalanceValue(prepaidCxOfferMonitoring.getTopUpDaBalanceValue());
 
 					offerFulfilment.setTopUpTempServiceClass(prepaidCxOfferMonitoring.getTopUpTempServiceClass());
+
+					offerFulfilment.setImei(prepaidCxOfferMonitoring.getImei());
+					offerFulfilment.setDaChange(prepaidCxOfferMonitoring.getDaChange());
+					offerFulfilment.setChargedAmount(prepaidCxOfferMonitoring.getChargedAmount());
+					offerFulfilment.setRoamingFlag(prepaidCxOfferMonitoring.getRoamingFlag());
+					offerFulfilment.setRatePlanId(prepaidCxOfferMonitoring.getRatePlanId());
 
 					return offerFulfilment;
 				} else if("ARPU".equals(prepaidCxOfferMonitoring.getEventType())){
@@ -364,6 +371,14 @@ public class OfferServiceImpl implements OfferService {
 
 	public List<Country> listCountry(){
 		return countryRepository.findAll();
+	}
+
+	public String getProvisionType(String instanceId){
+		Optional<PrepaidCxOfferConfig> opsFind =  prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(opsFind.isPresent()){
+			return opsFind.get().getProvisionType();
+		}
+		return  "";
 	}
 
 }
