@@ -47,6 +47,8 @@ public class OfferServiceImpl implements OfferService {
 	@Autowired
 	private PrepaidDaOfferBucketRepository prepaidDaOfferBucketRepository;
 	@Autowired
+	private PrepaidMaOfferBucketRepository prepaidMaOfferBucketRepository;
+	@Autowired
 	private PrepaidDaOfferCampaignRepository prepaidDaOfferCampaignRepository;
 	@Autowired
 	private PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
@@ -157,6 +159,11 @@ public class OfferServiceImpl implements OfferService {
 //			unless = "#result == null")
 	public synchronized PrepaidDaOfferBucket getDaOfferBucketByCode(String code) {		
 		return prepaidDaOfferBucketRepository.findOneByCode(code);
+	}
+
+	@Override
+	public List<PrepaidMaCreditOffer> listMaOfferBucket() {
+		return prepaidMaOfferBucketRepository.findAll();
 	}
 
 	public List<OfferSelection> getOfferSelection(String instanceId){
@@ -326,6 +333,7 @@ public class OfferServiceImpl implements OfferService {
 		List<PromoCode> list  = promoCodeRepository.findEligiblePromo();
 		list.add(new PromoCode("1", "DA Offer", "DA"));
 		list.add(new PromoCode("2", "OMS Offer", "OMS"));
+		list.add(new PromoCode("2", "OMS Offer", "OMS"));
 
 		return list;
 	}
@@ -347,6 +355,11 @@ public class OfferServiceImpl implements OfferService {
 					.status("SUCCESS")
 					.build();
 		}
+	}
+
+	@Override
+	public String getProvisionType(String instanceId) {
+		return null;
 	}
 
 	public List<Country> listCountry(){
