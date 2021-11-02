@@ -54,6 +54,7 @@ public class PrepaidCxOfferRedemption extends Auditable{
     private String dynamicVariable4;
     private String dynamicVariable5;
 
+
     private String optKeyword;
     private boolean isDateRange;
     private Date optStartDate;

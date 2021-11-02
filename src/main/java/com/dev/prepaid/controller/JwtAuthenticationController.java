@@ -1,5 +1,7 @@
 package com.dev.prepaid.controller;
 
+import com.dev.prepaid.model.invocation.InstanceContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +15,11 @@ import com.dev.prepaid.model.JwtResponse;
 import com.dev.prepaid.service.JwtUserDetailsService;
 import com.dev.prepaid.util.JwtTokenUtil;
 
+import java.util.HashMap;
+import java.util.Map;
 
+
+@Slf4j
 @Controller
 @RequestMapping("/")
 public class JwtAuthenticationController {
@@ -30,6 +36,15 @@ public class JwtAuthenticationController {
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
+
+		return ResponseEntity.ok(new JwtResponse(token));
+	}
+
+	@PostMapping("generateTokenExportProduct")
+	public ResponseEntity<?> createJwtAuthorizationHeader(@RequestBody InstanceContext instanceContext) throws Exception {
+		Map<String, Object> claims = new HashMap<>();
+		log.info("{}", instanceContext);
+		String token = jwtTokenUtil.generateTokenExportProduct(null, instanceContext);
 
 		return ResponseEntity.ok(new JwtResponse(token));
 	}

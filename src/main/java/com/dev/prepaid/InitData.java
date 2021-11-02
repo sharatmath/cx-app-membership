@@ -115,9 +115,17 @@ public class InitData {
 				 .width(255)
 				 .readOnly(false)
 				 .build();
-		outParameters.add(outputParameter);	
-		
-		
+		outParameters.add(outputParameter);
+
+		outputParameter = Parameters.builder()
+				.name("OVERALL_OFFER_NAME")
+				.dataType("Text")
+				.width(200)
+				.readOnly(false)
+				.build();
+		outParameters.add(outputParameter);
+
+
 		outputParameter = Parameters.builder()
 				 .name("STATUS")
 				 .dataType("Text")

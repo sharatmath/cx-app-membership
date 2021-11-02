@@ -77,7 +77,14 @@ public class AmqpListener extends BaseRabbitTemplate {
         JSONObject jsonObject = new JSONObject(map);
         log.info("{}",jsonObject);
         InvocationRequest invocationRequest = (InvocationRequest) GsonUtils.serializeObjectFromJSON(jsonObject.toString(), InvocationRequest.class);
-        log.info("invoke from queue {}",invocationRequest);
+
+        HashMap<String, Object> mapOri = (HashMap<String, Object>) request.get("originalInvocationRequest");
+        log.info("{}",mapOri);
+        JSONObject jsonObjectOri = new JSONObject(mapOri);
+        log.info("{}",jsonObjectOri);
+        InvocationRequest invocationRequestOri = (InvocationRequest) GsonUtils.serializeObjectFromJSON(jsonObjectOri.toString(), InvocationRequest.class);
+
+        log.info("invoke from queue {}  ori {}",invocationRequest, invocationRequestOri);
 
         String instanceId = invocationRequest.getInstanceContext().getInstanceId();
         PrepaidCxOfferConfig instanceConfiguration = prepaidCxOfferConfigRepository.findOneByInstanceIdAndDeletedDateIsNull(instanceId);
@@ -89,6 +96,7 @@ public class AmqpListener extends BaseRabbitTemplate {
             List<List<String>> processedRows = offerEligibilityService.processData(
                     rows,
                     invocationRequest,
+                    invocationRequestOri,
                     instanceConfiguration,
                     invocationRequest.getDataSet().getId(),
                     invocationRequest.getDataSet().getSize()

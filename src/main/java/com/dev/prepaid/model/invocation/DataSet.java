@@ -19,7 +19,7 @@ public class DataSet {
 	@SerializedName("id") 
 	private String id;
 	@SerializedName("rows") 
-	private List <List<String>> rows;
+	private List<List<String>> rows;
 	@SerializedName("size") 
 	private Long size;
 }

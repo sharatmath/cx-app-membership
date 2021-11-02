@@ -5,22 +5,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "PREPAID_CX_ELIGIBILITY_TX")
+@Table(name = "PREPAID_OFFER_ELIGIBILITY_TX")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrepaidOfferEligibilityTrx extends Auditable{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long invocationId;
+    private String invocationId;
+    private String instanceId;
     private Long batchId;
+    private Long batchSize;
+    private Long totalRow;
+    private String data;
     private Boolean isEvaluated;
 }

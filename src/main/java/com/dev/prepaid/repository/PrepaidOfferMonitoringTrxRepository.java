@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface PrepaidOfferMonitoringTrxRepository extends CrudRepository<PrepaidOfferMonitoringTrx, Long> {
-    List<PrepaidOfferMonitoringTrx> findByMsisdnAndOfferConfigId(@Param("msisdn") Long msisdn);
+    List<PrepaidOfferMonitoringTrx> findByMsisdn(@Param("msisdn") Long msisdn);
     List<PrepaidOfferMonitoringTrx> findByMsisdnAndCreatedDateBetween(@Param("msisdn") Long msisdn,
                                                                                       @Param("createdDate") Date endDate,
                                                                                       @Param("createdDate") Date startDate);

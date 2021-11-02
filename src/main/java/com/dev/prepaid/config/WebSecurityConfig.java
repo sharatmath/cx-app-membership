@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/redemption/**",
 						"/configureDummy",
 						"/auths",
+						"/generateTokenExportProduct",
 						"/invoke",
 						
 //						"/**",
