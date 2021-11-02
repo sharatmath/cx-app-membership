@@ -2679,8 +2679,8 @@
                     },
                     "notification": "true"
                 };
-                // console.log(this.overallOfferName);
-                if (this.overallOfferName == '' || this.type != 'eventCondition') {
+                // console.log(this.type);
+                if (!this.overallOfferName && this.type != 'eventCondition') {
                     swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
                 } else {
                     window.parent.postMessage(request,'*');
