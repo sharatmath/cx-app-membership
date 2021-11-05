@@ -58,10 +58,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/data/**",
 						"/redemption/**",
+						"/config/**",
 						"/configureDummy",
+						"/test",
 						"/auths",
 						"/generateTokenExportProduct",
 						"/invoke",
+//						Saket
+						"/saveFunction",
 						
 //						"/**",
 						"/saveconfiguration",
