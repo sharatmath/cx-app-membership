@@ -2,13 +2,10 @@ package com.dev.prepaid.controller;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.Country;
+import com.dev.prepaid.domain.OverallOfferName;
 import com.dev.prepaid.domain.PrepaidCxOfferEligibility;
 import com.dev.prepaid.domain.PrepaidCxOfferEventCondition;
 import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
@@ -39,6 +37,7 @@ import com.dev.prepaid.model.PrepaidBucketDetailDTO;
 import com.dev.prepaid.model.PrepaidCampaignOfferDetailDTO;
 import com.dev.prepaid.model.configuration.EventCondition;
 import com.dev.prepaid.model.configuration.OfferFulfilment;
+import com.dev.prepaid.model.configuration.OfferPromoCode;
 import com.dev.prepaid.model.configuration.OfferRedemption;
 import com.dev.prepaid.model.configuration.ResponSysProgram;
 import com.dev.prepaid.model.request.DataControllRequest;
@@ -46,7 +45,6 @@ import com.dev.prepaid.model.request.GetPackageFrequency;
 import com.dev.prepaid.service.OfferService;
 import com.dev.prepaid.util.AppUtil;
 import com.dev.prepaid.util.DateUtil;
-import com.dev.prepaid.util.OperationUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -267,20 +265,14 @@ public class DataController {
 		offerService.evictAllCaches();
 	}
 
-<<<<<<< HEAD
+ 
 
 	@GetMapping(value = "offerPromoCode")
 	public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		return offerService.getOfferPromoCode(instanceId);
 	}
     		
-    @GetMapping(value = "offerSelection")
-	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
-		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
-		List<OfferSelection>  data = offerService.getOfferSelection(instanceId);
-		for (OfferSelection prepaidCxOfferSelection: data){
-			log.info("{}", prepaidCxOfferSelection);
-=======
+     
 	@GetMapping(value = "offerSelection")
 	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
@@ -288,7 +280,7 @@ public class DataController {
 		List<PrepaidCxOfferSelection> data = offerService.getOfferSelection(instanceId);
 		for (PrepaidCxOfferSelection prepaidCxOfferSelection : data) {
 			log.debug("{}", prepaidCxOfferSelection);
->>>>>>> 183115d1915601093fdc7ed3333ca1ac1a1a8cbc
+ 
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
 			offerDetailDTO = offerDetail(
 					prepaidCxOfferSelection.getOfferBucketType().concat("|")
@@ -348,7 +340,6 @@ public class DataController {
 					.dynamicVariable1(prepaidCxOfferRedemption.getDynamicVariable1())
 					.dynamicVariable2(prepaidCxOfferRedemption.getDynamicVariable2())
 					.dynamicVariable3(prepaidCxOfferRedemption.getDynamicVariable3())
-<<<<<<< HEAD
 					.dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4())
 					.dynamicVariable5(prepaidCxOfferRedemption.getDynamicVariable5())
 					.isRedemptionCapOnly(prepaidCxOfferRedemption.getIsRedemptionCapOnly())
@@ -366,9 +357,7 @@ public class DataController {
 					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
 					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod())
 					.build();
-=======
-					.dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4()).build();
->>>>>>> 183115d1915601093fdc7ed3333ca1ac1a1a8cbc
+ 
 			try {
 				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
 				if(prepaidCxOfferRedemption.getOptEndDate() != null)
@@ -414,7 +403,6 @@ public class DataController {
 					.daBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
 					.daId(prepaidCxOfferEventCondition.getDaId()).build();
 			try {
-<<<<<<< HEAD
 				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
 				if(prepaidCxOfferEventCondition.getCampaignEndDate() != null) {
 					eventCondition.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
@@ -422,11 +410,7 @@ public class DataController {
 				if(prepaidCxOfferEventCondition.getCampaignStartDate() != null) {
 					eventCondition.setCampaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
 				}
-=======
-				eventCondition.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
-				eventCondition
-						.setCampaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
->>>>>>> 183115d1915601093fdc7ed3333ca1ac1a1a8cbc
+ 
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
