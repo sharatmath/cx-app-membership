@@ -22,7 +22,7 @@ public interface OfferService {
 	
 	public void evictAllCaches();
 	public OfferPromoCode getOfferPromoCode(String instanceId);
-	public List<OfferSelection> getOfferSelection(String instanceId);
+	public List<PrepaidCxOfferSelection> getOfferSelection(String instanceId);
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId);
 	public OfferFulfilment getOfferMonitoring(String instanceId);
 	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId);

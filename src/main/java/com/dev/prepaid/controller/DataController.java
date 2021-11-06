@@ -41,7 +41,9 @@ import com.dev.prepaid.model.configuration.OfferPromoCode;
 import com.dev.prepaid.model.configuration.OfferRedemption;
 import com.dev.prepaid.model.configuration.ResponSysProgram;
 import com.dev.prepaid.model.request.DataControllRequest;
+import com.dev.prepaid.model.request.GetAccumulatedTopups;
 import com.dev.prepaid.model.request.GetPackageFrequency;
+import com.dev.prepaid.model.request.IsPaidTopupInLastXDays;
 import com.dev.prepaid.service.OfferService;
 import com.dev.prepaid.util.AppUtil;
 import com.dev.prepaid.util.DateUtil;
@@ -490,13 +492,36 @@ public class DataController {
 //			
 //		}
 
-			if (result.isEmpty()) {
-				result.put("status", false);
-			} else {
-				result.put("status", true);
-			}
-
 		}
+		
+		if (request.getIsPaidTopupInLastXDays() != null) {
+			IsPaidTopupInLastXDays isPaidTopupInLastXDays = request.getIsPaidTopupInLastXDays();
+			log.info("Duration:"+isPaidTopupInLastXDays.getDuration());
+
+			String sql = "SELECT * FROM F_TBL_TOPUP" ; //" WHERE xxxx="+ isPaidTopupInLastXDays.getDuration();
+			log.info(sql);
+			result.put("IsPaidTopupInLastXDays", sql);
+		}
+		
+		if (request.getGetAccumulatedTopups() != null) {
+			GetAccumulatedTopups getAccumulatedTopups = request.getGetAccumulatedTopups();
+			log.info("Start Day:"+getAccumulatedTopups.getGetAccumulatedTopupsStartDay());
+			log.info("Duration:"+getAccumulatedTopups.getGetAccumulatedTopupsDuration());
+			log.info("Accumulate Combo:"+getAccumulatedTopups.getVs2__combobox());
+			log.info("Accumulate Value:"+getAccumulatedTopups.getGetAccumulatedValue());
+
+			String sql = "SELECT * FROM F_TBL_TOPUP" ; //" WHERE xxxx="+ isPaidTopupInLastXDays.getDuration();
+			log.info(sql);
+			result.put("GetAccumulatedTopups", sql);
+		}
+		
+		if (result.isEmpty()) {
+			result.put("status", false);
+		} else {
+			result.put("status", true);
+		}
+		
+		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 
 	}

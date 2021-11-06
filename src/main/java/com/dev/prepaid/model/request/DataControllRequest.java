@@ -23,8 +23,8 @@ public class DataControllRequest {
 	IsFirstPaidTopupofMonth isFirstPaidTopupofMonth;
 	HasDoneSinglePaidTopup hasDoneSinglePaidTopup;
 	HasDoneSelfServeTopup hasDoneSelfServeTopup;
-	
-	
+	IsPaidTopupInLastXDays isPaidTopupInLastXDays;
+	GetAccumulatedTopups getAccumulatedTopups;
 	
 	
 //    'getPackageFrequency',
