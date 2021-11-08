@@ -2296,9 +2296,13 @@
                 fetch(PROD_URL + `provisionType?instanceId=${INSTANCE_ID}`)
                     .then(res => res.text())
                     .then(data => {
-                        this.type = data
-                        if (!this.type) {
+                        // console.log(data)
+                        if (data == '') {
                             this.type = 'directProvisioning'
+                            // console.log('TYPE IS NULL')
+                        } else {
+                            this.type = data
+                            // console.log('TYPE IS NOT NULL')
                         }
                     })
                     .catch(error => console.log(error))
