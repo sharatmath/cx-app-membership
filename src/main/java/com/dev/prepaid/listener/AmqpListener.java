@@ -109,4 +109,7 @@ public class AmqpListener extends BaseRabbitTemplate {
             log.error("Exception occurred while processing rows for invocationUuid:" + invocationRequest.getUuid(), e);
         }
     }
+
+    
+
 }
