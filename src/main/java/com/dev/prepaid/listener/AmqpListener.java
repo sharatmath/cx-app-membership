@@ -31,6 +31,28 @@ public class AmqpListener extends BaseRabbitTemplate {
     @Autowired
     PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
 
+    @RabbitListener(queues = Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
+            containerFactory = Constant.CONNECTION_FACTORY_NAME_MEMBERSHIP_MONITORING,
+            id = Constant.QUEUE_NAME_MEMBERSHIP_MONITORING)
+    public void receivedMessageOfferMonitoring(final Map<String, Object> request) throws Exception {
+        String requestId = getRequestId(request);
+        log.debug("{}|Event type|{}|Membership data|{}", requestId, request.get("evenType"), request);
+        EventType eventType = EventType.get((String) request.get("eventType"));
+        log.debug("{}|Event type|{}", requestId, eventType);
+        if(EventType.USAGE.equals(eventType)){
+            offerMonitoringService.processUsage(request);
+        }else if(EventType.ARPU.equals(eventType)){
+            offerMonitoringService.processArpu(request);
+        }else if(EventType.TOPUP.equals(eventType)){
+            offerMonitoringService.processTopup(request);
+        }
+    }
+
+    @RabbitListener(queues = Constant.QUEUE_NAME_DLQ_MEMBERSHIP_MONITORING)
+    public void listenDlqOfferMonitoring() {
+
+    }
+
     private String getRequestId(Map<String, Object> payload) {
         String requestId = null;
         if (payload.get("requestId") == null) {
