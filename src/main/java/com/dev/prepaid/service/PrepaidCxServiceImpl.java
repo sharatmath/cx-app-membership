@@ -94,7 +94,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.instanceId(serviceInstance.getUuid())
 					.programId(serviceInstance.getAssetId())
 //					.programName(serviceInstance.getApplicationServiceInstall().getName())
-					.provisionType(serviceInstance.getAssetType())
+//					.provisionType(serviceInstance.getAssetType())
 					.build();
 
 			prepaidCxOfferConfigRepository.save(prepaidCxOfferConfig);
