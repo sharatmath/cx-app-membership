@@ -1,10 +1,8 @@
 package com.dev.prepaid.config;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -88,6 +86,12 @@ public class AmqpConfig {
 		factory.setMessageConverter(jackson2MessageConverter());
 		return factory;
 	}
+	//redemption DLQ
+	@Bean
+	public Queue dlqSingtelRedemption() {
+		return new Queue(Constant.QUEUE_NAME_DLQ_SINGTEL_REDEMPTION);
+	}
+
 	//============================================================================= //
 	// offerMonitoring
 	@Bean
@@ -96,6 +100,11 @@ public class AmqpConfig {
 		args.put("x-max-priority", 1);
 		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_MONITORING, true, false, false, args);
 		return queue;
+	}
+
+	@Bean
+	public Queue dlqOfferMonitoring() {
+		return new Queue(Constant.QUEUE_NAME_DLQ_MEMBERSHIP_MONITORING);
 	}
 
 	@Bean
