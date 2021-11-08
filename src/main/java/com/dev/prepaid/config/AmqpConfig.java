@@ -40,6 +40,8 @@ public class AmqpConfig {
 	public Queue queueSingtelRedemption() {
 			Map<String, Object> args = new HashMap<String, Object>();
 			args.put("x-max-priority", 1);
+			args.put("x-dead-letter-exchange", "singtelRedemptionDlx");
+			args.put("x-dead-letter-routing-key", "singtelRedemptionRK");
 			Queue queue = new Queue(Constant.QUEUE_NAME_SINGTEL_REDEMPTION, true, false, false, args);
 			return queue;
 		}
@@ -65,6 +67,16 @@ public class AmqpConfig {
 	@Bean
 	public Queue dlqSingtelRedemption() {
 		return new Queue(Constant.QUEUE_NAME_DLQ_SINGTEL_REDEMPTION);
+	}
+
+	@Bean
+	public DirectExchange dlxSingtelRedemption() {
+		return new DirectExchange("singtelRedemptionDlx");
+	}
+
+	@Bean
+	public Binding singtelRedemptionDlqBinding() {
+		return BindingBuilder.bind(dlqSingtelRedemption()).to(dlxSingtelRedemption()).with("singtelRedemptionRK");
 	}
 
 	//============================================================================= //
@@ -98,6 +110,11 @@ public class AmqpConfig {
 	}
 
 	@Bean
+	public Queue dlqMembershipOfferSubscriber() {
+		return new Queue(Constant.QUEUE_NAME_DLQ_MEMBERSHIP_SUBSCRIBER);
+	}
+
+	@Bean
 	public Binding bindingMembershipOfferSubscriber(Queue queueMembershipOfferSubscriber, TopicExchange exchangeMembership) {
 		return BindingBuilder.bind(queueMembershipOfferSubscriber).to(exchangeMembership)
 				.with(Constant.QUEUE_NAME_MEMBERSHIP_SUBSCRIBER); //route.key.name=queue.name
@@ -110,6 +127,11 @@ public class AmqpConfig {
 		args.put("x-max-priority", 1);
 		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY, true, false, false, args);
 		return queue;
+	}
+
+	@Bean
+	public Queue dlqMembershipOfferEigibility() {
+		return new Queue(Constant.QUEUE_NAME_DLQ_MEMBERSHIP_ELIGIBILITY);
 	}
 
 	@Bean
