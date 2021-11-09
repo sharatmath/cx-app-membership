@@ -3047,12 +3047,12 @@
                 'getDAConsumption',
                 'getDAInitialQuota',
                 'getDACurrentExpiryDate',
-                'getLastRechargeDateofDA',
-                'getLastRechargeDateOfDataTopupID',
-                'getDataVasARPU',
-                'getDailyUsageSum',
-                'isDataUsedinLastXdays',
-                'getAccumulatedMonthlyTopupValue'
+                // 'getLastRechargeDateofDA',
+                // 'getLastRechargeDateOfDataTopupID',
+                // 'getDataVasARPU',
+                // 'getDailyUsageSum',
+                // 'isDataUsedinLastXdays',
+                // 'getAccumulatedMonthlyTopupValue'
             ],
             dropdownCustomTimeIndicatorList:[
                 'AGE_ON_NETWORK_Lifetime',
@@ -3303,12 +3303,15 @@
                                         v-model.number="advanceFilter.getTopupFrequencyMatchForXMonths.numberOfMonth"
                                         id="getTopupFrequencyMatchForXMonthsNumberOfMonth"/>
                                     <div class="row" style="width:104%">
-                                        <div class="col-md-7"> 
-                                            <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
-                                                class="form-control form-control-sm input-custom"
-                                                v-model="advanceFilter.getTopupFrequencyMatchForXMonths.valueOperand"
-                                            /> 
-                                        </div>
+                                        <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="advanceFilter.getTopupFrequencyMatchForXMonths.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
+                                    ></v-select>
                                         <div class="col-md-5"> 
                                             <input placeholder="Integer, freq required..." 
                                                 class="form-control form-control-sm input-custom"
@@ -3409,12 +3412,15 @@
                                         v-model.number="advanceFilter.getTopupFrequency.numberOfMonth"
                                         id="getTopupFrequencyNumberOfMonth"/>
                                     <div class="row" style="width:104%">
-                                        <div class="col-md-7"> 
-                                            <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
-                                                class="form-control form-control-sm input-custom"
-                                                v-model="advanceFilter.getTopupFrequency.valueOperand"
-                                            /> 
-                                        </div>
+                                        <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.operadSetList"
+                                            :clearable="false"
+                                            v-model="advanceFilter.getTopupFrequency.valueOperand"
+                                            :reduce="text => text.value"
+                                            label="text"
+                                        ></v-select>
                                         <div class="col-md-5"> 
                                             <input placeholder="Integer, freq required..." 
                                                 class="form-control form-control-sm input-custom"
@@ -3516,12 +3522,16 @@
                                         v-model.number="advanceFilter.getPackageFrequency.numberOfMonth"
                                         id="getPackageFrequencyNumberOfMonth"/>
                                     <div class="row" style="width:104%">
-                                        <div class="col-md-7"> 
-                                            <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
-                                                class="form-control form-control-sm input-custom"
-                                                v-model="advanceFilter.getPackageFrequency.valueOperand"
-                                            /> 
-                                        </div>
+                                        <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.operadSetList"
+                                            :clearable="false"
+                                            v-model="advanceFilter.getPackageFrequency.valueOperand"
+                                            :reduce="text => text.value"
+                                            label="text"
+                                        ></v-select>
+                                        
                                         <div class="col-md-5"> 
                                             <input placeholder="Integer, freq required..." 
                                                 class="form-control form-control-sm input-custom"
@@ -4962,16 +4972,22 @@
                                         id="getDAPackageFrequencyDuration"
                                     /> 
                                     <div class="row" style="width:104%">
-                                        <div class="col-md-7"> 
-                                            <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
-                                                class="form-control form-control-sm input-custom"
-                                                v-model="advanceFilter.getDAPackageFrequency.valueOperand"
-                                            /> 
-                                        </div>
+                                        <v-select 
+                                        class="operators"
+                                        style="margin:5px; margin-left:20px;"
+                                        :options="store.state.operadSetList"
+                                        :clearable="false"
+                                        v-model="advanceFilter.getDAPackageFrequency.valueOperand"
+                                        :reduce="text => text.value"
+                                        label="text"
+                                    ></v-select>
+                                       
                                         <div class="col-md-5"> 
                                             <input placeholder="Integer, freq required..." 
                                                 class="form-control form-control-sm input-custom"
                                                 v-model="advanceFilter.getDAPackageFrequency.value"
+                                                type="number" min="0"
+                                                onkeypress="return event.charCode >= 48"
                                             /> 
                                         </div>
                                     </div>
@@ -5139,12 +5155,17 @@
                                         id="getDAConsumptionDaId"
                                     /> 
                                     <div class="row" style="width:104%">
-                                        <div class="col-md-6"> 
-                                            <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
-                                                class="form-control form-control-sm input-custom"
-                                                v-model="advanceFilter.getDAConsumption.valueOperand"
-                                            /> 
-                                        </div>
+                                        
+                                            <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.operadSetList"
+                                            :clearable="false"
+                                            v-model="advanceFilter.getDAConsumption.valueOperand"
+                                            :reduce="text => text.value"
+                                            label="text"
+                                        ></v-select>
+                                        
                                         <div class="col-md-6"> 
                                             <input placeholder="more than 1 package – pipe separated" 
                                                 class="form-control form-control-sm input-custom"
@@ -5218,12 +5239,15 @@
                                         id="getDAInitialQuotaDaId"
                                     /> 
                                     <div class="row" style="width:104%">
-                                        <div class="col-md-6"> 
-                                            <input placeholder="eq:=, ge:>=, le:<=, gt:>, lt:<" 
-                                                class="form-control form-control-sm input-custom"
-                                                v-model="advanceFilter.getDAInitialQuota.valueOperand"
-                                            /> 
-                                        </div>
+                                        <v-select 
+                                            class="operators"
+                                            style="margin:5px; margin-left:20px;"
+                                            :options="store.state.operadSetList"
+                                            :clearable="false"
+                                            v-model="advanceFilter.getDAInitialQuota.valueOperand"
+                                            :reduce="text => text.value"
+                                            label="text"
+                                        ></v-select>
                                         <div class="col-md-6"> 
                                             <input placeholder="Integer, freq required..."
                                                 class="form-control form-control-sm input-custom"
@@ -7343,7 +7367,7 @@
                 startDay: 0,
                 duration: 0,
                 valueOperand:'eq',
-                value:'',
+                value:0,
                 type:'function',
                 showDetails: true
             },
