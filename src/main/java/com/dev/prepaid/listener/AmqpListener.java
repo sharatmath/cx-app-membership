@@ -48,11 +48,6 @@ public class AmqpListener extends BaseRabbitTemplate {
         }
     }
 
-    @RabbitListener(queues = Constant.QUEUE_NAME_DLQ_MEMBERSHIP_MONITORING)
-    public void listenDlqOfferMonitoring() {
-
-    }
-
     private String getRequestId(Map<String, Object> payload) {
         String requestId = null;
         if (payload.get("requestId") == null) {
