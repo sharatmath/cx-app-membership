@@ -464,12 +464,17 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             if (i + batchSize > totalObjects) {
                 List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, totalObjects);
                 List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
+                // getConfigAdvanceFilterQuery with parameter offerConfigId
+                // getMsisdn from query
+                // compare msisdn eligible with msisdn from advance filter query
+                // match msisdn put in queue redemption
                 for (PrepaidOfferMembership p : saved) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("offerMembershipId", p.getId());
                     map.put("msisdn", p.getMsisdn());
                     map.put("smsKeyword", "");
                     map.put("instanceId", prepaidCxOfferConfig.getInstanceId());
+
                     sendToRedemptionQueue(invId, map);
                 }
 
