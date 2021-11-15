@@ -434,6 +434,7 @@ public class DataController {
 					.eventTypeUsages(prepaidCxOfferEventCondition.getEventTypeUsages())
 					.eventUsagesOp(prepaidCxOfferEventCondition.getEventUsagesOp())
 					.eventUsagesValue(prepaidCxOfferEventCondition.getEventUsagesValue())
+					.eventUsagesUnit(prepaidCxOfferEventCondition.getEventUsagesUnit())
 					.arpuOp(prepaidCxOfferEventCondition.getArpuOp())
 					.arpuType(prepaidCxOfferEventCondition.getArpuType())
 					.arpuValue(prepaidCxOfferEventCondition.getArpuValue())

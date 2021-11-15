@@ -489,7 +489,16 @@
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <input type="number" class="form-control" id="eventConditionDataUsageValue" x-model="eventConditionData.eventUsagesValue">
-                                                </div> GB / Mins / Count / $
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <select class="form-control" x-model="eventConditionData.eventUsagesUnit">
+                                                        <option>Choose...</option>
+                                                        <option value="GB">GB</option>
+                                                        <option value="Mins">Mins</option>
+                                                        <option value="Count">Count</option>
+                                                        <option value="$">$</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="mb-3 row">
                                                 <label for="topUpValue" class="col-sm-2 col-form-label">Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>
@@ -551,25 +560,25 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Service Class</label>
+                                                <label class="col-sm-2 col-form-label">Service Class</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="usageTopUpTemporaryServiceClass" x-model="eventConditionData.tempServiceClass">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">IMEI</label>
+                                                <label class="col-sm-2 col-form-label">IMEI</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="usageTopUpIMEI" x-model="eventConditionData.imei">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">DA Change</label>
+                                                <label class="col-sm-2 col-form-label">DA Change</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="usageTopUpDAChange" x-model="eventConditionData.daChange">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Charge Amount</label>
+                                                <label class="col-sm-2 col-form-label">Charge Amount</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="usageTopUpChargeAmount" x-model="eventConditionData.chargedAmount">
                                                 </div>
@@ -1053,6 +1062,7 @@
                                                         <option value="equalTo">Equal to</option>
                                                         <option value="lessOrEqual">Les than or Equal to</option>
                                                         <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        <option value="isBetween">Is Between</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
@@ -1080,6 +1090,7 @@
                                                         <option value="equalTo">Equal to</option>
                                                         <option value="lessOrEqual">Les than or Equal to</option>
                                                         <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        <option value="isBetween">Is Between</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
@@ -1095,6 +1106,7 @@
                                                         <option value="equalTo">Equal to</option>
                                                         <option value="lessOrEqual">Les than or Equal to</option>
                                                         <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        <option value="isBetween">Is Between</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
@@ -1116,6 +1128,7 @@
                                                         <option value="equalTo">Equal to</option>
                                                         <option value="lessOrEqual">Les than or Equal to</option>
                                                         <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        <option value="isBetween">Is Between</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
@@ -1218,10 +1231,6 @@
                                                         <div class="col-sm-10">
                                                             <select id="usageTypeIDD" class="form-control" x-model="monitoringData.usageType">
                                                                 <option>Choose...</option>
-                                                                <option value="COUNTRY_CD">COUNTRY_CD</option>
-                                                                <option value="COUNTRY_NAME">COUNTRY_NAME</option>
-                                                                <option value="COUNT">COUNT</option>
-                                                                <option value="DURATION">DURATION</option>
                                                                 <option value="MA_AMOUNT">MA_AMOUNT</option>
                                                                 <option value="DA_AMOUNT">DA_AMOUNT</option>
                                                                 <option value="SMS_COUNT">SMS_COUNT</option>
@@ -1260,7 +1269,24 @@
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <input type="number" class="form-control" id="usageValue" x-model="monitoringData.usageValue">
-                                                </div> GB / Mins / Count
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <select class="form-control" x-model="monitoringData.usageUnit">
+                                                        <option>Choose...</option>
+                                                        <option value="GB">GB</option>
+                                                        <option value="Mins">Mins</option>
+                                                        <option value="Count">Count</option>
+                                                        <option value="$">$</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="topUpValue" class="col-sm-2 col-form-label">Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <span>Upcoming</span>
+                                                <div class="col-sm-2">
+                                                    <input type="number" class="form-control" x-model="monitoringData.aggregationPeriodDays" min="0" max="180">
+                                                </div>
+                                                <span>Days</span>
                                             </div>
                                             <div class="mb-3 row">
                                                 <label for="topUpValue" class="col-sm-2 col-form-label">Current Balance</label>
@@ -1314,27 +1340,27 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Service Class</label>
+                                                <label class="col-sm-2 col-form-label">Service Class</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="monitoringDataUTopUpTemporaryServiceClass" x-model="monitoringData.topUpTempServiceClass">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">IMEI</label>
+                                                <label class="col-sm-2 col-form-label">IMEI</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="monitoringDataUTopUpIMEI" x-model="monitoringData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="monitoringDataUTopUpIMEI" x-model="monitoringData.imei">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">DA Change</label>
+                                                <label class="col-sm-2 col-form-label">DA Change</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="monitoringDataUTopUpDAChange" x-model="monitoringData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="monitoringDataUTopUpDAChange" x-model="monitoringData.daChange">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Charge Amount</label>
+                                                <label class="col-sm-2 col-form-label">Charge Amount</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="monitoringDataUTopUpChargeAmount" x-model="monitoringData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="monitoringDataUTopUpChargeAmount" x-model="monitoringData.chargedAmount">
                                                 </div>
                                             </div>
                                         </div>
@@ -1432,7 +1458,7 @@
                                                         <input min="1" max="31" :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" type="number" class="form-control" id="periodValue" x-model="monitoringData.monitorPeriod">
                                                     </div>
                                                     <div class="col-sm-3">
-                                                        <select :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" id="monitorPeriodDropdown" class="form-control" x-model="monitoringData.monitorPeriodDayMonth">
+                                                        <select :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" class="form-control" x-model="monitoringData.monitorPeriodDayMonth">
                                                             <option value="month">Month</option>
                                                             <option value="days">Days</option>
                                                         </select>
@@ -2424,6 +2450,18 @@
                     offerEventCondition.eventUsagesOp               = this.eventConditionData.eventUsagesOp;
                     offerEventCondition.eventUsagesValue            = this.eventConditionData.eventUsagesValue;
                     offerEventCondition.aggregationPeriodDays       = this.eventConditionData.aggregationPeriodDays;
+                    offerEventCondition.eventUsagesUnit             = this.eventConditionData.eventUsagesUnit;
+                    offerEventCondition.topUpCurBalanceOp           = this.eventConditionData.topUpCurBalanceOp;
+                    offerEventCondition.topUpCurBalanceValue        = this.eventConditionData.topUpCurBalanceValue;
+                    offerEventCondition.topUpAccBalanceBeforeOp     = this.eventConditionData.topUpAccBalanceBeforeOp;
+                    offerEventCondition.topUpAccBalanceBeforeValue  = this.eventConditionData.topUpAccBalanceBeforeValue;
+                    offerEventCondition.daId                        = this.eventConditionData.daId;
+                    offerEventCondition.daBalanceOp                 = this.eventConditionData.daBalanceOp;
+                    offerEventCondition.daBalanceValue              = this.eventConditionData.daBalanceValue;
+                    offerEventCondition.tempServiceClass            = this.eventConditionData.tempServiceClass;
+                    offerEventCondition.imei                        = this.eventConditionData.imei;
+                    offerEventCondition.daChange                    = this.eventConditionData.daChange;
+                    offerEventCondition.chargedAmount               = this.eventConditionData.chargedAmount;
                 } else if (this.eventConditionTypeData === 'ARPU') {
                     offerEventCondition.operatorId                  = this.eventConditionData.operatorId;
                     offerEventCondition.arpuType                    = this.eventConditionData.arpuType;
@@ -2453,11 +2491,7 @@
                     offerMonitoring.monitorStartDate                = null;
                     offerMonitoring.monitorEndDate                  = null;
                     offerMonitoring.monitorPeriod                   = this.monitoringData.monitorPeriod;
-                    if (this.monitoringData.monitorPeriodDayMonth === 'string') {
-                        offerMonitoring.monitorPeriodDayMonth       = 'month';
-                    } else {
-                        offerMonitoring.monitorPeriodDayMonth       = this.monitoringData.monitorPeriodDayMonth;
-                    }
+                    offerMonitoring.monitorPeriodDayMonth           = this.monitoringData.monitorPeriodDayMonth || 'month';
                 };
                 if (this.eventTypeData === 'Top-Up') {
                     offerMonitoring.topUpType                   = this.monitoringData.topUpType || 'All';
@@ -2479,14 +2513,28 @@
                 } else if (this.eventTypeData === 'Usage') {
                     offerMonitoring.usageServiceType            = this.monitoringData.usageServiceType;
                     offerMonitoring.usageType                   = this.monitoringData.usageType;
+                    offerMonitoring.topUpCurBalanceOp           = this.monitoringData.topUpCurBalanceOp;
+                    offerMonitoring.topUpCurBalanceValue        = this.monitoringData.topUpCurBalanceValue;
+                    offerMonitoring.topUpAccBalanceBeforeOp     = this.monitoringData.topUpAccBalanceBeforeOp;
+                    offerMonitoring.topUpAccBalanceBeforeValue  = this.monitoringData.topUpAccBalanceBeforeValue;
+                    offerMonitoring.topUpDaId                   = this.monitoringData.topUpDaId;
+                    offerMonitoring.topUpDaBalanceOp            = this.monitoringData.topUpDaBalanceOp;
+                    offerMonitoring.topUpDaBalanceValue         = this.monitoringData.topUpDaBalanceValue;
+                    offerMonitoring.topUpTempServiceClass       = this.monitoringData.topUpTempServiceClass;
+                    offerMonitoring.imei                        = this.monitoringData.imei;
+                    offerMonitoring.daChange                    = this.monitoringData.daChange;
+                    offerMonitoring.chargedAmount               = this.monitoringData.chargedAmount;
                     offerMonitoring.countryCode                 = this.monitoringData.countryCode;
                     offerMonitoring.usageOperator               = this.monitoringData.usageOperator;
                     offerMonitoring.usageValue                  = this.monitoringData.usageValue;
+                    offerMonitoring.aggregationPeriodDays       = this.monitoringData.aggregationPeriodDays;
+                    offerMonitoring.usageUnit                   = this.monitoringData.usageUnit;
                 } else if (this.eventTypeData === 'ARPU') {
                     offerMonitoring.arpuOp                      = this.monitoringData.arpuOp;
                     offerMonitoring.arpuType                    = this.monitoringData.arpuType;
                     offerMonitoring.arpuSelectedTopUpCode       = this.monitoringData.arpuSelectedTopUpCode;
                     offerMonitoring.arpuValue                   = this.monitoringData.arpuValue;
+                    offerMonitoring.operatorId                  = this.monitoringData.operatorId;
                 };
 
                 const offerEligibility = {

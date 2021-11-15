@@ -45,6 +45,7 @@ public class EventCondition {
     @SerializedName("eventTypeUsages") private  Long eventTypeUsages;
     @SerializedName("eventUsagesOp") private  String eventUsagesOp;
     @SerializedName("eventUsagesValue") private  Long eventUsagesValue;
+    @SerializedName("eventUsagesUnit") private  String eventUsagesUnit;
     @SerializedName("aggregationPeriodDays") private  Integer aggregationPeriodDays;
 
     @SerializedName("countryCode") private  String countryCode;

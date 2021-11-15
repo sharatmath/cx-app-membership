@@ -288,7 +288,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 	private void saveOfferMonitoring(String offerConfigId, SaveConfigRequest saveConfigRequest) {
 		if(!ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.getDescription().equals(saveConfigRequest.getPayload().getType())){
-			log.info("saveOfferMonitoring skip process or not applicable for type{}", saveConfigRequest.getPayload().getType());
+			log.info("saveOfferMonitoring skip process or not applicable for type {}", saveConfigRequest.getPayload().getType());
 			return;
 		}
 		log.info("saveOfferMonitoring {}", saveConfigRequest.getPayload().getOfferMonitoring());
@@ -354,6 +354,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferMonitoring.setUsageType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageType());
 			prepaidCxOfferMonitoring.setUsageOp(saveConfigRequest.getPayload().getOfferMonitoring().getUsageOperator());
 			prepaidCxOfferMonitoring.setUsageValue(saveConfigRequest.getPayload().getOfferMonitoring().getUsageValue());
+			prepaidCxOfferMonitoring.setUsageUnit(saveConfigRequest.getPayload().getOfferMonitoring().getUsageUnit());
 			prepaidCxOfferMonitoring.setCountryCode(saveConfigRequest.getPayload().getOfferMonitoring().getCountryCode());
 			prepaidCxOfferMonitoring.setTopUpDaId(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaId());
 			prepaidCxOfferMonitoring.setTopUpDaBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceOp());
@@ -533,6 +534,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferEventCondition.setEventTypeUsages(saveConfigRequest.getPayload().getOfferEventCondition().getEventTypeUsages());
 			prepaidCxOfferEventCondition.setEventUsagesOp(saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesOp());
 			prepaidCxOfferEventCondition.setEventUsagesValue(saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesValue());
+			prepaidCxOfferEventCondition.setEventUsagesUnit(saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesUnit());
+
 			prepaidCxOfferEventCondition.setCountryCode(saveConfigRequest.getPayload().getOfferEventCondition().getCountryCode());
 			prepaidCxOfferEventCondition.setAggregationPeriodDays(saveConfigRequest.getPayload().getOfferEventCondition().getAggregationPeriodDays());
 
