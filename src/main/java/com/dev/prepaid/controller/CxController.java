@@ -1,12 +1,14 @@
 package com.dev.prepaid.controller;
 
 import com.dev.prepaid.domain.PrepaidMaCreditOffer;
+import com.dev.prepaid.model.create.CreateResponse;
 import com.dev.prepaid.service.OfferService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +30,10 @@ public class CxController {
         return offerService.getMaCreditOfferById(id);
     }
 
+    @PostMapping(value = "create-ma")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<CreateResponse> createMaCredit(){
 
+    }
 
 }
