@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -32,7 +33,15 @@ public class CxController {
 
     @PostMapping(value = "create-ma")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CreateResponse> createMaCredit(){
+    public ResponseEntity<String> createMaCredit(@RequestBody  List<Map<String, Object>> payload){
+        log.info("{}", payload);
+        return ResponseEntity.ok("success");
+    }
+
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMaCredit(@RequestBody String body){
+        log.info("delete MA Credit");
 
     }
 
