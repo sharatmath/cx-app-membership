@@ -23,6 +23,7 @@ public interface OfferService {
 	//MA Services
 	public List<PrepaidMaCreditOffer> listMaOfferBucket();
 	public PrepaidMaCreditOffer getMaCreditOfferById(Long id);
+	public PrepaidMaCreditOffer
 
 	public void evictAllCaches();
 	public OfferPromoCode getOfferPromoCode(String instanceId);
