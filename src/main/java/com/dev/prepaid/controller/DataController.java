@@ -3,6 +3,7 @@ package com.dev.prepaid.controller;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.Country;
 import com.dev.prepaid.domain.OverallOfferName;
+import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
 import com.dev.prepaid.domain.PrepaidCxOfferEligibility;
 import com.dev.prepaid.domain.PrepaidCxOfferEventCondition;
 import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
@@ -43,10 +45,14 @@ import com.dev.prepaid.model.configuration.ResponSysProgram;
 import com.dev.prepaid.model.request.DataControllRequest;
 import com.dev.prepaid.model.request.GetAccumulatedTopups;
 import com.dev.prepaid.model.request.GetPackageFrequency;
+import com.dev.prepaid.model.request.GetTopupFrequency;
 import com.dev.prepaid.model.request.IsPaidTopupInLastXDays;
+import com.dev.prepaid.repository.PrepaidCxOfferAdvanceFilterRepository;
+import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
 import com.dev.prepaid.service.OfferService;
 import com.dev.prepaid.util.AppUtil;
 import com.dev.prepaid.util.DateUtil;
+import com.dev.prepaid.util.OperationUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,6 +69,14 @@ public class DataController {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	/*
+	 * @Autowired private PrepaidCxOfferAdvanceFilterRepository
+	 * prepaidCxOfferAdvanceFilterRepository;
+	 */
+	
+	@Autowired
+	IPrepaidCxOfferAdvanceFilterService prepaidCxOfferAdvanceFilterService;
 
 	@GetMapping(value = "offerDetail")
 	public PrepaidCampaignOfferDetailDTO offerDetail(
@@ -267,14 +281,12 @@ public class DataController {
 		offerService.evictAllCaches();
 	}
 
- 
-
 	@GetMapping(value = "offerPromoCode")
-	public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+	public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId)
+			throws Exception {
 		return offerService.getOfferPromoCode(instanceId);
 	}
-    		
-     
+
 	@GetMapping(value = "offerSelection")
 	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
@@ -282,7 +294,7 @@ public class DataController {
 		List<PrepaidCxOfferSelection> data = offerService.getOfferSelection(instanceId);
 		for (PrepaidCxOfferSelection prepaidCxOfferSelection : data) {
 			log.debug("{}", prepaidCxOfferSelection);
- 
+
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
 			offerDetailDTO = offerDetail(
 					prepaidCxOfferSelection.getOfferBucketType().concat("|")
@@ -357,14 +369,13 @@ public class DataController {
 					.recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
 					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
 					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
-					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod())
-					.build();
- 
+					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod()).build();
+
 			try {
 				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
-				if(prepaidCxOfferRedemption.getOptEndDate() != null)
+				if (prepaidCxOfferRedemption.getOptEndDate() != null)
 					offerRedemption.setOptEndDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptEndDate()));
-				if(prepaidCxOfferRedemption.getOptStartDate() != null)
+				if (prepaidCxOfferRedemption.getOptStartDate() != null)
 					offerRedemption.setOptStartDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptStartDate()));
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -406,13 +417,15 @@ public class DataController {
 					.daId(prepaidCxOfferEventCondition.getDaId()).build();
 			try {
 				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
-				if(prepaidCxOfferEventCondition.getCampaignEndDate() != null) {
-					eventCondition.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
+				if (prepaidCxOfferEventCondition.getCampaignEndDate() != null) {
+					eventCondition
+							.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
 				}
-				if(prepaidCxOfferEventCondition.getCampaignStartDate() != null) {
-					eventCondition.setCampaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
+				if (prepaidCxOfferEventCondition.getCampaignStartDate() != null) {
+					eventCondition.setCampaignStartDate(
+							DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
 				}
- 
+
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -461,13 +474,12 @@ public class DataController {
 		return offerService.listOfferType();
 	}
 
- 
 	@GetMapping(value = "checkUniqueOverallOfferName")
 	public OverallOfferName checkUniqueOverallOfferName(
 			@RequestParam(value = "overallOfferName", required = true) String overallOfferName) throws ParseException {
 		return offerService.checkOverallOfferName(overallOfferName);
 	}
- 
+
 //	Saket
 
 	@RequestMapping(value = { "/getMyQuery" }, method = { RequestMethod.GET, RequestMethod.POST })
@@ -476,122 +488,88 @@ public class DataController {
 		if (request == null) {
 
 		}
+//		GetTopupFrequencyMatchForXMonths
 		if (request.getGetPackageFrequency() != null) {
 			GetPackageFrequency pkgFrequency = request.getGetPackageFrequency();
-			pkgFrequency.getGetPackageFrequencyStartMonth();
-//			pkgFrequency.get
+			String packageFrequencyPackageName = pkgFrequency.getGetPackageFrequencyPackageName();
+			int startMonth = pkgFrequency.getGetPackageFrequencyStartMonth();
 
-//			String sql = "SELECT * FROM localdata." + firstTbl + " WHERE code = " + code + " and " + "name = " + cName;
-//			System.out.println(sql);
-//			if (!OperationUtil.isEmpty(sql) && sql != null) {
-//				result.put("GetPackageFrequency", sql);
-//			}
-//		} 
+			String sql = "SELECT * FROM F_TBL_TOPUP_MT_A " + " WHERE getPackageFrequencyStartMonth = " + startMonth
+					+ " and " + "packageFrequencyPackageName = " + packageFrequencyPackageName;
+			System.out.println(sql);
+			if (!OperationUtil.isEmpty(sql) && sql != null) {
+				result.put("GetPackageFrequency", sql);
+			}
+		}
+		
+//		GetTopupFrequency
+		if (request.getGetTopupFrequency() != null) {
+			GetTopupFrequency topupFrequency = request.getGetTopupFrequency();
+			String topupFrequencyMatchForXMonthsPackageName = topupFrequency.getGetTopupFrequencyMatchForXMonthsPackageName();
+//			int startMonth = pkgFrequency.getGetPackageFrequencyStartMonth();
+
+			String sql = "SELECT * FROM F_TBL_TOPUP_MT_A " + " WHERE topupFrequencyMatchForXMonthsPackageName = " + topupFrequencyMatchForXMonthsPackageName;
+			System.out.println(sql);
+			if (!OperationUtil.isEmpty(sql) && sql != null) {
+				result.put("GetPackageFrequency", sql);
+			}
+		}
 //		
 //		if() {
 //			
 //		}
 
-		}
-		
+//		}
+
 		if (request.getIsPaidTopupInLastXDays() != null) {
 			IsPaidTopupInLastXDays isPaidTopupInLastXDays = request.getIsPaidTopupInLastXDays();
-			log.info("Duration:"+isPaidTopupInLastXDays.getDuration());
+			log.info("Duration:" + isPaidTopupInLastXDays.getDuration());
 
-			String sql = "SELECT * FROM F_TBL_TOPUP" ; //" WHERE xxxx="+ isPaidTopupInLastXDays.getDuration();
+			String sql = "SELECT * FROM F_TBL_TOPUP"; // " WHERE xxxx="+ isPaidTopupInLastXDays.getDuration();
 			log.info(sql);
 			result.put("IsPaidTopupInLastXDays", sql);
 		}
-		
+
 		if (request.getGetAccumulatedTopups() != null) {
 			GetAccumulatedTopups getAccumulatedTopups = request.getGetAccumulatedTopups();
-			log.info("Start Day:"+getAccumulatedTopups.getGetAccumulatedTopupsStartDay());
-			log.info("Duration:"+getAccumulatedTopups.getGetAccumulatedTopupsDuration());
-			log.info("Accumulate Combo:"+getAccumulatedTopups.getVs2__combobox());
-			log.info("Accumulate Value:"+getAccumulatedTopups.getGetAccumulatedValue());
+			log.info("Start Day:" + getAccumulatedTopups.getGetAccumulatedTopupsStartDay());
+			log.info("Duration:" + getAccumulatedTopups.getGetAccumulatedTopupsDuration());
+			log.info("Accumulate Combo:" + getAccumulatedTopups.getVs2__combobox());
+			log.info("Accumulate Value:" + getAccumulatedTopups.getGetAccumulatedValue());
 
-			String sql = "SELECT * FROM F_TBL_TOPUP" ; //" WHERE xxxx="+ isPaidTopupInLastXDays.getDuration();
+			String sql = "SELECT * FROM F_TBL_TOPUP"; // " WHERE xxxx="+ isPaidTopupInLastXDays.getDuration();
 			log.info(sql);
 			result.put("GetAccumulatedTopups", sql);
 		}
-		
+
 		if (result.isEmpty()) {
 			result.put("status", false);
 		} else {
 			result.put("status", true);
 		}
-		
-		
+
 		return new ResponseEntity<>(result, HttpStatus.OK);
 
 	}
 	
+//	Saket(PREPAID_CX_OFFER_ADVANCE_FILTER)
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@RequestMapping(value = { "/doInsertCXOffer" }, method = { RequestMethod.POST })
+    public HttpJsonResult<Hashtable<String, Object>> doInsertCXOffer(
+            @RequestBody PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter) {
+        Hashtable<String, Object> returnTable = new Hashtable<String, Object>();
+        HttpJsonResult<Hashtable<String, Object>> result = new HttpJsonResult<Hashtable<String, Object>>(returnTable);
+        try {
+        	
+        	prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
+        	
+        } catch (Exception e) {
+            log.error("Error", e);
+            log.error("[Prepaid Membership][DataController][doInsertCXOffer] failed!", e);
+        }
+        return result;
+    }
 	
 
-	/*
-	 * String[] groupIdList = request.getParameterValues("groupIdList"); String
-	 * firstTbl =
-	 * OperationUtil.nullStringCheck(request.getParameter("country")).trim(); String
-	 * code = OperationUtil.nullStringCheck(request.getParameter("code")).trim();
-	 * String cName =
-	 * OperationUtil.nullStringCheck(request.getParameter("cName")).trim(); String
-	 * selectedPSMType =
-	 * OperationUtil.nullStringCheck(request.getParameter("selectedPSMType"));
-	 * String getPackageFrequencyPackageName = OperationUtil
-	 * .nullStringCheck(request.getParameter("getPackageFrequencyPackageName")).trim
-	 * (); String getPackageFrequencyStartMonth = OperationUtil
-	 * .nullStringCheck(request.getParameter("getPackageFrequencyStartMonth")).trim(
-	 * ); String getPackageFrequencyNumberOfMonth = OperationUtil
-	 * .nullStringCheck(request.getParameter("getPackageFrequencyNumberOfMonth")).
-	 * trim(); Map<String, Object> result = new HashMap<>(); Map<String, Object>
-	 * params = null;
-	 * 
-	 * try {
-	 * 
-	 * params = new HashMap<>(); if (groupIdList != null && groupIdList.length > 0)
-	 * { params.put("groupIdList", Arrays.asList(groupIdList)); }
-	 * 
-	 * //
-	 * 
-	 * String sql = "SELECT * FROM localdata." + firstTbl + " WHERE code = " + code
-	 * + " and " + "name = " + cName; System.out.println(sql); if
-	 * (!OperationUtil.isEmpty(sql) && sql != null) { result.put("data", sql);
-	 * result.put("status", "success"); } } catch (Exception e) {
-	 * result.put("success", "false"); result.put("message", "Failure!");
-	 * log.error("[Prepaid Membership][DataController][getMyQuery] failed!", e); }
-	 */
-//		}
-//		return new ResponseEntity<>(result, HttpStatus.OK);
-//
-//	}
-
-//	Saket
-
-//	@RequestMapping("/getFunctionList")
-//	public List<MetaFunctionAdvanceFilter> getFunctionList() {
-//		
-//		return functionRepository.findAll();
-//	}
-
->>>>>>> 183115d1915601093fdc7ed3333ca1ac1a1a8cbc
 }
+
