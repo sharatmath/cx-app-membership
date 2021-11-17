@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.configuration.*;
+import com.dev.prepaid.repository.PrepaidMaOfferBucketRepository;
 
 
 public interface OfferService {
@@ -23,7 +24,7 @@ public interface OfferService {
 	//MA Services
 	public List<PrepaidMaCreditOffer> listMaOfferBucket();
 	public PrepaidMaCreditOffer getMaCreditOfferById(Long id);
-	public PrepaidMaCreditOffer
+	public void deletePrepaidMaCreditOffer(Long id);
 
 	public void evictAllCaches();
 	public OfferPromoCode getOfferPromoCode(String instanceId);
