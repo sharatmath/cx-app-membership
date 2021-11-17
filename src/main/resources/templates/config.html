@@ -2702,7 +2702,7 @@
 
                 var request = { "amsAction" : "save", "requestId" : "save",
                     "payload": {
-                        "type": this.provisonTypeData,
+                        "type": this.type,
                         "uuid": INSTANCE_ID,
                         "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
                             return {
