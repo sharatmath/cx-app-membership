@@ -47,6 +47,8 @@ public class OfferServiceImpl implements OfferService {
 	@Autowired
 	private PrepaidDaOfferBucketRepository prepaidDaOfferBucketRepository;
 	@Autowired
+	private PrepaidMaOfferBucketRepository prepaidMaOfferBucketRepository;
+	@Autowired
 	private PrepaidDaOfferCampaignRepository prepaidDaOfferCampaignRepository;
 	@Autowired
 	private PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
@@ -159,6 +161,11 @@ public class OfferServiceImpl implements OfferService {
 		return prepaidDaOfferBucketRepository.findOneByCode(code);
 	}
 
+	@Override
+	public List<PrepaidMaCreditOffer> listMaOfferBucket() {
+		return prepaidMaOfferBucketRepository.findAll();
+	}
+
 	public List<OfferSelection> getOfferSelection(String instanceId){
 		List<OfferSelection> listOfferOnly = new ArrayList<>();
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
@@ -266,6 +273,7 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setTopUpUsageServiceType(prepaidCxOfferMonitoring.getUsageServiceType());
 					offerFulfilment.setTopUpOperator(prepaidCxOfferMonitoring.getOperatorId());
 					offerFulfilment.setTopUpCode(prepaidCxOfferMonitoring.getTopUpCode());
+					offerFulfilment.setTopUpType(prepaidCxOfferMonitoring.getTopUpType());
 
 					offerFulfilment.setTopUpCurBalanceOp(prepaidCxOfferMonitoring.getTopUpCurBalanceOp());
 					offerFulfilment.setTopUpCurBalanceValue(prepaidCxOfferMonitoring.getTopUpCurBalanceValue());
@@ -282,6 +290,12 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setTopUpDaBalanceValue(prepaidCxOfferMonitoring.getTopUpDaBalanceValue());
 
 					offerFulfilment.setTopUpTempServiceClass(prepaidCxOfferMonitoring.getTopUpTempServiceClass());
+
+					offerFulfilment.setImei(prepaidCxOfferMonitoring.getImei());
+					offerFulfilment.setDaChange(prepaidCxOfferMonitoring.getDaChange());
+					offerFulfilment.setChargedAmount(prepaidCxOfferMonitoring.getChargedAmount());
+					offerFulfilment.setRoamingFlag(prepaidCxOfferMonitoring.getRoamingFlag());
+					offerFulfilment.setRatePlanId(prepaidCxOfferMonitoring.getRatePlanId());
 
 					return offerFulfilment;
 				} else if("ARPU".equals(prepaidCxOfferMonitoring.getEventType())){
@@ -326,6 +340,7 @@ public class OfferServiceImpl implements OfferService {
 		List<PromoCode> list  = promoCodeRepository.findEligiblePromo();
 		list.add(new PromoCode("1", "DA Offer", "DA"));
 		list.add(new PromoCode("2", "OMS Offer", "OMS"));
+		list.add(new PromoCode("2", "OMS Offer", "OMS"));
 
 		return list;
 	}
@@ -349,8 +364,21 @@ public class OfferServiceImpl implements OfferService {
 		}
 	}
 
+	@Override
+	public String getProvisionType(String instanceId) {
+		return null;
+	}
+
 	public List<Country> listCountry(){
 		return countryRepository.findAll();
+	}
+
+	public String getProvisionType(String instanceId){
+		Optional<PrepaidCxOfferConfig> opsFind =  prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(opsFind.isPresent()){
+			return opsFind.get().getProvisionType();
+		}
+		return  "";
 	}
 
 }

@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <link rel="shortcut icon" href="https://www.singtel.com/content/dam/singtel/Standard/favicon.ico" type="image/vnd.microsoft.icon"/>
 
@@ -251,6 +250,21 @@
                                     <hr>
                                     <template x-if="eventConditionTypeData === 'Top-Up'">
                                         <div class="eventConditionFulfillmentMonitoring" id="eventConditionDataTopUpForm">
+                                            <div class="form-group">
+                                                <div class="mb-3 row">
+                                                    <label class="col-sm-2 col-form-label">Top-Up Type<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                    <div class="col-sm-10">
+                                                        <div class="form-group d-flex justify-content-between" x-model="eventConditionData.topUpType">
+                                                            <select class="form-control">
+                                                                <option value="All">All</option>
+                                                                <option value="Paid">Paid</option>
+                                                                <option value="Non-Paid">Non-Paid</option>
+                                                                <option value="Data">Data</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="mb-3 row">
                                                 <label for="eventConditionDataOperators" class="col-sm-2 col-form-label">OPID</label>
                                                 <div class="col-sm-10">
@@ -258,7 +272,7 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="eventConditionDataRefillProfileID" class="col-sm-2 col-form-label">Top Up Code</label>
+                                                <label for="eventConditionDataRefillProfileID" class="col-sm-2 col-form-label">Top-Up Code</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="eventConditionDataRefillProfileID" x-model="eventConditionData.topUpCode">
                                                 </div>
@@ -624,7 +638,7 @@
                         <div id="offerSelectionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseOne"><h5><i class="fa fa-plus"></i> Offer Selection - Required</h5></div>
                     </div>
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#directProvisioning">
-                        <div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
+                        <div class="card-body" x-show="type == 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
                             <div>
                                 <div class="form-inline">
                                     <div class="col-sm-2">
@@ -644,13 +658,14 @@
                                             <option>Choose...</option>
                                             <option value="DA">DA Offer</option>
                                             <option value="OMS">OMS Offer</option>
+<!--                                            <option value="MA">MA Offer</option>-->
                                             <option value="PROMO">Unique Promo Code</option>
                                         </select>
                                     </div>
-                                    <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS'" class="col-sm-7 row" style="margin-right: 75px">
+                                    <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS' || offerTypeDropdown == 'MA'" class="col-sm-7 row" style="margin-right: 75px">
                                         <div class="form-group row">
                                             <label for="offerBucket">Offer Bucket<sup><i class="fas fa-asterisk"></i></sup></label>
-                                            <select :disabled="uniqueData == false" id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
+                                            <select :disabled="uniqueData == false || offerTypeDropdown == 'MA'" id="offerBucket" x-ref="selectBucket" class="custom-select col-sm-3" >
                                                 <option>Choose...</option>
                                                 <template x-for="offerList in offerBucketList">
                                                     <option x-model="offerList.id"><span x-text="offerList.text"></span></option>
@@ -688,38 +703,96 @@
                                                                                     <input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
                                                                                 </div>
                                                                                 <div class="col-md-6 mb-3">
-                                                                                    <label :for="'daName' + index">DA Name</label>
+                                                                                    <label :for="'daName' + index">Bucket Name</label>
                                                                                     <input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="form-row">
-                                                                                <div class="col-md-6 mb-3">
-                                                                                    <label :for="'campaignOfferDesc' + index">Campaign Offer Description</label>
-                                                                                    <input type="text" class="form-control" :id="'campaignOfferDesc' + index" x-model="offer.description" disabled>
-                                                                                </div>
-                                                                                <div class="col-md-6 mb-3">
-                                                                                    <label :for="'validity' + index">Validity</label>
-                                                                                    <input type="text" class="form-control" :id="'validity' + index" x-model="offer.validity" disabled>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="form-row">
-                                                                                <div class="col-md-6 mb-3">
-                                                                                    <label :for="'value' + index">Value</label>
-                                                                                    <input type="text" class="form-control" :id="'value' + index" x-model="offer.value" disabled>
-                                                                                </div>
-                                                                                <div class="col-md-6 mb-3">
-                                                                                    <label :for="'valueUnit' + index">Value Unit</label>
-                                                                                    <input type="text" class="form-control" :id="'valueUnit' + index" x-model="offer.valueUnit" disabled>
+                                                                            <div x-show="offer.offerBucketType == 'DA'">
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'campaignOfferDesc' + index">Campaign Offer Description</label>
+                                                                                        <input type="text" class="form-control" :id="'campaignOfferDesc' + index" x-model="offer.description" disabled>
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'validity' + index">Validity</label>
+                                                                                        <input type="text" class="form-control" :id="'validity' + index" x-model="offer.valueValidityInDays" disabled>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="form-row">
-                                                                                <div class="col-md-6 mb-3">
-                                                                                    <label :for="'capValue' + index">CAP Value</label>
-                                                                                    <input type="text" class="form-control" :id="'capValue' + index" x-model="offer.valueCap" disabled>
+                                                                            <div x-show="offer.offerBucketType == 'OMS'">
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'campaignOfferDesc' + index">Campaign Offer Description</label>
+                                                                                        <input type="text" class="form-control" :id="'campaignOfferDesc' + index" x-model="offer.description" disabled>
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'validity' + index">Validity (Day/Hour/Minutes)</label>
+                                                                                        <input type="text" class="form-control" :id="'validity' + index" x-model="offer.dayHourMinute" disabled>
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div class="col-md-6 mb-3">
-                                                                                    <label :for="'valueToDeduct' + index">Value to Deduct from MA</label>
-                                                                                    <input type="text" class="form-control" :id="'valueToDeduct' + index" x-model="offer.valueToDeductFromMa" disabled>
+                                                                            </div>
+                                                                            <div x-show="offer.offerBucketType == 'DA'">
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'value' + index">Value</label>
+                                                                                        <input type="text" class="form-control" :id="'value' + index" x-model="offer.value" disabled>
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'valueUnit' + index">Value Unit</label>
+                                                                                        <div x-show="offer.valueUnit == 'SMS'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="Unit Count" disabled>
+                                                                                        </div>
+                                                                                        <div x-show="offer.valueUnit == 'AMOUNT'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="Amount in SGD" disabled>
+                                                                                        </div>
+                                                                                        <div x-show="offer.valueUnit == 'MB'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="Amount in MB" disabled>
+                                                                                        </div>
+                                                                                        <div x-show="offer.valueUnit == 'PERCENT_AMOUNT'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="% of Topup Value in SGD" disabled>
+                                                                                        </div>
+                                                                                        <div x-show="offer.valueUnit == 'PERCENT_MB'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="% Topup Value in MB" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div x-show="offer.offerBucketType == 'OMS'">
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'value' + index">Threshold Value</label>
+                                                                                        <input type="text" class="form-control" :id="'value' + index" x-model="offer.thresholdValue" disabled>
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'valueUnit' + index">Threshold Value Unit</label>
+                                                                                        <div x-show="offer.thresholdValueUnit == 'SMS'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="Unit Count" disabled>
+                                                                                        </div>
+                                                                                        <div x-show="offer.thresholdValueUnit == 'MINUTE'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="Amount in Minute" disabled>
+                                                                                        </div>
+                                                                                        <div x-show="offer.thresholdValueUnit == 'MB'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="Amount in MB" disabled>
+                                                                                        </div>
+                                                                                        <div x-show="offer.thresholdValueUnit == 'PERCENT_MINUTE'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="% of Amount in Minute" disabled>
+                                                                                        </div>
+                                                                                        <div x-show="offer.thresholdValueUnit == 'PERCENT_MB'">
+                                                                                            <input type="text" class="form-control" :id="'valueUnit' + index" value="% of Amount in MB" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div x-show="offer.offerBucketType == 'DA'">
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'capValue' + index">CAP Value</label>
+                                                                                        <input type="text" class="form-control" :id="'capValue' + index" x-model="offer.valueCap" disabled>
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'valueToDeduct' + index">Value to Deduct from MA</label>
+                                                                                        <input type="text" class="form-control" :id="'valueToDeduct' + index" x-model="offer.valueToDeductFromMa" disabled>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-row">
@@ -945,6 +1018,20 @@
                                     <hr>
                                     <template x-if="eventTypeData === 'Top-Up'">
                                         <div class="eventTypeFulfillmentMonitoring" id="topUpForm">
+                                            <div class="form-group">
+                                                <div class="mb-3 row">
+                                                    <label class="col-sm-2 col-form-label">Top-Up Type<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                    <div class="col-sm-10">
+                                                        <div class="form-group d-flex justify-content-between" x-model="monitoringData.topUpType">
+                                                            <select class="form-control">
+                                                                <option value="All">All</option>
+                                                                <option value="Paid">Paid</option>
+                                                                <option value="Non-Paid">Non-Paid</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="mb-3 row">
                                                 <label for="operators" class="col-sm-2 col-form-label">OPID</label>
                                                 <div class="col-sm-10">
@@ -1367,146 +1454,6 @@
                         <div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
                             <template x-if="redemptionData">
                                 <div>
-                                    <div id="redemptionCapForm">
-                                        <b>Total Redemption Cap</b><br><br>
-                                        <div class="form-group row">
-                                            <button @click="uncheckTotalRedemption" class="btn btn-singtel"><i class="far fa-times-circle"></i> Uncheck Total Redemption</button>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
-                                                Total Number of Redemption
-                                            </label>
-                                            <div class="col-sm-1">
-                                                <div class="custom-control custom-radio">
-                                                    <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isRedemptionCapOnlyID" name="radioTotalRedemption" class="custom-control-input" value="redemption-only" x-model="totalRedemptionCapRadio">
-                                                    <label class="custom-control-label" for="isRedemptionCapOnlyID"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-time-period' || recurringProvisioning === 'yes'" type="number" class="form-control form-control-sm" id="redemptionCapValue" x-model="redemptionData.redemptionCapValue">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label col-form-label">Redemption and Time Period
-                                            </label>
-                                            <div class="col-sm-1">
-                                                <div class="custom-control custom-radio">
-                                                    <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isRedemptionCapAndPeriodID" name="radioTotalRedemption" class="custom-control-input" value="redemption-time-period" x-model="totalRedemptionCapRadio">
-                                                    <label class="custom-control-label" for="isRedemptionCapAndPeriodID"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <label class="sr-only" for="totalRedemptionPeriodValue">Name</label>
-                                                <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="totalRedemptionPeriodValue" x-model="redemptionData.totalRedemptionPeriodValue">
-                                            </div>
-                                            <label class="col-sm-1 col-form-label col-form-label">in Every</label>
-                                            <div class="col-sm-2">
-                                                <label class="sr-only" for="timePeriodValueEvery">Name</label>
-                                                <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="timePeriodValueEvery" x-model="redemptionData.totalRedemptionPeriodEvery">
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <select :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.totalRedemptionPeriodType">
-                                                    <option>Choose...</option>
-                                                    <option value="Days">Days</option>
-                                                    <option value="Month">Month</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div><br>
-                                    <div id="subscriberRedemptionCapForm">
-                                        <b>Subscriber Redemption Cap</b><br><br>
-                                        <div class="form-group row">
-                                            <button @click="uncheckSubscriberRedemption" class="btn btn-singtel"><i class="far fa-times-circle"></i> Uncheck Subscriber Redemption</button>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
-                                                Frequency Only
-                                            </label>
-                                            <div class="col-sm-1">
-                                                <div class="custom-control custom-radio">
-                                                    <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isFrequencyOnlyID" name="radioSubscriberRedemption" class="custom-control-input" value="freq-only" x-model="subscriberRedemptionCapRadio">
-                                                    <label class="custom-control-label" for="isFrequencyOnlyID"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-timeperiod' || recurringProvisioning === 'yes'" type="number" class="form-control form-control-sm" id="frequencyValue" x-model="redemptionData.frequencyValue">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label col-form-label">
-                                                Frequency and Time Period
-                                            </label>
-                                            <div class="col-sm-1">
-                                                <div class="custom-control custom-radio">
-                                                    <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isFrequencyAndTime" name="radioSubscriberRedemption" class="custom-control-input" value="freq-timeperiod" x-model="subscriberRedemptionCapRadio">
-                                                    <label class="custom-control-label" for="isFrequencyAndTime"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <label class="sr-only" for="timePeriodValue">Name</label>
-                                                <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="timePeriodValue" x-model="redemptionData.timePeriodValue">
-                                            </div>
-                                            <label class="col-sm-1 col-form-label col-form-label">in Every</label>
-                                            <div class="col-sm-2">
-                                                <label class="sr-only" for="timePeriodValue2">Name</label>
-                                                <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="timePeriodValue2" x-model="redemptionData.timePeriodEvery">
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <select :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.timePeriodType">
-                                                    <option>Choose...</option>
-                                                    <option value="Days">Days</option>
-                                                    <option value="Month">Month</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div><br>
-                                    <span>Is there recurring provisioning? </span>
-                                    <input type="radio" value="yes" x-model="recurringProvisioning"> Yes
-                                    <input type="radio" value="no" x-model="recurringProvisioning"> No
-                                    <br><br>
-                                    <div id="recurringRedemptionCapForm" x-show="recurringProvisioning =='yes'">
-                                        <b>Recurring Provisioning</b><br><br>
-                                        <div class="form-group row">
-                                            <label for="totalRecurringFrequency" class="col-sm-2 col-form-label col-form-label">Total Frequency</label>
-                                            <div class="col-sm-4">
-                                                <input type="number" class="form-control form-control-sm" id="totalRecurringFrequency" x-model="redemptionData.totalRecurringFrequency">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label col-form-label">Recurring Frequency</label>
-                                            <div class="col-sm-1">
-                                                <div class="custom-control custom-radio">
-                                                    <input type="radio" id="radioRecurringRedemptionID" name="radioRecurringRedemption" class="custom-control-input" value="req-day" x-model="recurringRedemptionRadio">
-                                                    <label class="custom-control-label" for="radioRecurringRedemptionID"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <label class="sr-only" for="inputRecFreqDP">Name</label>
-                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
-                                            </div>
-                                            <label class="col-sm-1 col-form-label col-form-label">in Every</label>
-                                            <div class="col-sm-2">
-                                                <label class="sr-only" for="inputRecFreqDPIn">Name</label>
-                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
-                                            </div>
-                                            <div class="col-sm-2"> Day
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label col-form-label"></label>
-                                            <div class="col-sm-1">
-                                                <div class="custom-control custom-radio">
-                                                    <input type="radio" id="isRecurringFrequencyEachMonthID" name="radioRecurringRedemption" class="custom-control-input" value="req-month" x-model="recurringRedemptionRadio">
-                                                    <label class="custom-control-label" for="isRecurringFrequencyEachMonthID"></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <label class="sr-only" for="dayRecFreq">Day</label>
-                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
-                                            </div>
-                                            <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
-                                        </div>
-                                    </div><br>
                                     <div id="redemptionMethodForm">
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label col-form-label"><b>Redemption Method</b></label>
@@ -1520,59 +1467,240 @@
                                         </div>
                                         <template x-if="redemptionMethod === 'Auto'">
                                             <div>
-                                                <div class="form-group row">
-                                                    <b>Post Provision Message</b><br><br>
+                                                <span>Is there recurring provisioning? </span>
+                                                <input type="radio" value="yes" x-model="recurringProvisioning"> Yes
+                                                <input type="radio" value="no" x-model="recurringProvisioning"> No
+                                                <br><br>
+                                                <div x-show="recurringProvisioning =='yes'">
+                                                    <b>Recurring Provisioning</b><br><br>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                        <label for="totalRecurringFrequency" class="col-sm-2 col-form-label col-form-label">Total Frequency</label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.postSmsCampaignName">
+                                                            <input type="number" class="form-control form-control-sm" x-model="redemptionData.totalRecurringFrequency">
                                                         </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label">Recurring Frequency</label>
+                                                        <div class="col-sm-1">
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" name="radioRecurringRedemption" class="custom-control-input" value="req-day" x-model="recurringRedemptionRadio">
+                                                                <label class="custom-control-label" for="radioRecurringRedemptionID"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="inputRecFreqDP">Name</label>
+                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">-->
+                                                            <input disabled type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyValue">
+                                                        </div>
+                                                        <label class="col-sm-1 col-form-label col-form-label">in Every</label>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="inputRecFreqDPIn">Name</label>
+                                                            <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyPeriodValue">
+                                                        </div>
+                                                        <div class="col-sm-2"> Day
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label"></label>
+                                                        <div class="col-sm-1">
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" name="radioRecurringRedemption" class="custom-control-input" value="req-month" x-model="recurringRedemptionRadio">
+                                                                <label class="custom-control-label" for="isRecurringFrequencyEachMonthID"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="dayRecFreq">Day</label>
+                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
+                                                            <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                        </div>
+                                                        <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <b>Post Provision Message</b><br><br>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.postSmsCampaignName">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable1" x-model="redemptionData.dynamicVariable1">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable1" x-model="redemptionData.dynamicVariable1">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable2" x-model="redemptionData.dynamicVariable2">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable2" x-model="redemptionData.dynamicVariable2">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable3">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable3">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable4">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable4">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 5</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable5">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 5</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable5">
                                                     </div>
                                                 </div>
                                             </div>
                                         </template>
                                         <template x-if="redemptionMethod === 'Manual'">
                                             <div class="manualRedemptionSelection">
+                                                <div id="subscriberRedemptionCapForm">
+                                                    <b>Subscriber Redemption Cap</b><br><br>
+                                                    <div class="form-group row">
+                                                        <button @click="uncheckSubscriberRedemption" class="btn btn-singtel"><i class="far fa-times-circle"></i> Uncheck Subscriber Redemption</button>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
+                                                            Frequency Only
+                                                        </label>
+                                                        <div class="col-sm-1">
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isFrequencyOnlyID" name="radioSubscriberRedemption" class="custom-control-input" value="freq-only" x-model="subscriberRedemptionCapRadio">
+                                                                <label class="custom-control-label" for="isFrequencyOnlyID"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-timeperiod' || recurringProvisioning === 'yes'" type="number" class="form-control form-control-sm" id="frequencyValue" x-model="redemptionData.frequencyValue">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label">
+                                                            Frequency and Time Period
+                                                        </label>
+                                                        <div class="col-sm-1">
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isFrequencyAndTime" name="radioSubscriberRedemption" class="custom-control-input" value="freq-timeperiod" x-model="subscriberRedemptionCapRadio">
+                                                                <label class="custom-control-label" for="isFrequencyAndTime"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="timePeriodValue">Name</label>
+                                                            <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="timePeriodValue" x-model="redemptionData.timePeriodValue">
+                                                        </div>
+                                                        <label class="col-sm-1 col-form-label col-form-label">in Every</label>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="timePeriodValue2">Name</label>
+                                                            <input :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="timePeriodValue2" x-model="redemptionData.timePeriodEvery">
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select :disabled="!subscriberRedemptionCapRadio || subscriberRedemptionCapRadio === 'freq-only' || recurringProvisioning === 'yes'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.timePeriodType">
+                                                                <option>Choose...</option>
+                                                                <option value="Days">Days</option>
+                                                                <option value="Month">Month</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div><br>
+                                                <div id="redemptionCapForm">
+                                                    <b>Total Redemption Cap</b><br><br>
+                                                    <div class="form-group row">
+                                                        <button @click="uncheckTotalRedemption" class="btn btn-singtel"><i class="far fa-times-circle"></i> Uncheck Total Redemption</button>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
+                                                            Total Number of Redemption
+                                                        </label>
+                                                        <div class="col-sm-1">
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isRedemptionCapOnlyID" name="radioTotalRedemption" class="custom-control-input" value="redemption-only" x-model="totalRedemptionCapRadio">
+                                                                <label class="custom-control-label" for="isRedemptionCapOnlyID"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-time-period' || recurringProvisioning === 'yes'" type="number" class="form-control form-control-sm" id="redemptionCapValue" x-model="redemptionData.redemptionCapValue">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label">Redemption and Time Period
+                                                        </label>
+                                                        <div class="col-sm-1">
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" :disabled="recurringProvisioning === 'yes'" id="isRedemptionCapAndPeriodID" name="radioTotalRedemption" class="custom-control-input" value="redemption-time-period" x-model="totalRedemptionCapRadio">
+                                                                <label class="custom-control-label" for="isRedemptionCapAndPeriodID"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="totalRedemptionPeriodValue">Name</label>
+                                                            <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="totalRedemptionPeriodValue" x-model="redemptionData.totalRedemptionPeriodValue">
+                                                        </div>
+                                                        <label class="col-sm-1 col-form-label col-form-label">in Every</label>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="timePeriodValueEvery">Name</label>
+                                                            <input :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" type="number" min="1" max="31" class="form-control mb-2 mr-sm-2" id="timePeriodValueEvery" x-model="redemptionData.totalRedemptionPeriodEvery">
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select :disabled="!totalRedemptionCapRadio || totalRedemptionCapRadio === 'redemption-only' || recurringProvisioning === 'yes'" class="form-control mb-2 mr-sm-2" x-model="redemptionData.totalRedemptionPeriodType">
+                                                                <option>Choose...</option>
+                                                                <option value="Days">Days</option>
+                                                                <option value="Month">Month</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <span>Is there recurring provisioning? </span>
+                                                <input type="radio" value="yes" x-model="recurringProvisioning"> Yes
+                                                <input type="radio" value="no" x-model="recurringProvisioning"> No
+                                                <br><br>
+                                                <div id="recurringRedemptionCapForm" x-show="recurringProvisioning =='yes'">
+                                                    <b>Recurring Provisioning</b><br><br>
+                                                    <div class="form-group row">
+                                                        <label for="totalRecurringFrequency" class="col-sm-2 col-form-label col-form-label">Total Frequency</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="number" class="form-control form-control-sm" id="totalRecurringFrequency" x-model="redemptionData.totalRecurringFrequency">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label">Recurring Frequency</label>
+                                                        <div class="col-sm-1">
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" id="radioRecurringRedemptionID" name="radioRecurringRedemption" class="custom-control-input" value="req-day" x-model="recurringRedemptionRadio">
+                                                                <label class="custom-control-label" for="radioRecurringRedemptionID"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="inputRecFreqDP">Name</label>
+                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">-->
+                                                            <input disabled type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
+                                                        </div>
+                                                        <label class="col-sm-1 col-form-label col-form-label">in Every</label>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="inputRecFreqDPIn">Name</label>
+                                                            <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
+                                                        </div>
+                                                        <div class="col-sm-2"> Day
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 col-form-label col-form-label"></label>
+                                                        <div class="col-sm-1">
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" id="isRecurringFrequencyEachMonthID" name="radioRecurringRedemption" class="custom-control-input" value="req-month" x-model="recurringRedemptionRadio">
+                                                                <label class="custom-control-label" for="isRecurringFrequencyEachMonthID"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <label class="sr-only" for="dayRecFreq">Day</label>
+                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
+                                                            <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                        </div>
+                                                        <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
+                                                    </div>
+                                                </div><hr>
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
                                                     <div class="col-sm-4">
@@ -1641,53 +1769,41 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <b>Post Provision Message</b><br><br>
                                                 <div class="form-group row">
-                                                    <b>Post Provision Message</b><br><br>
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="smaCampaignNameManual" x-model="redemptionData.postSmsCampaignName">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="smaCampaignNameManual" x-model="redemptionData.postSmsCampaignName">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable1">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 1</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable1">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable2">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 2</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" x-model="redemptionData.dynamicVariable2">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable3" x-model="redemptionData.dynamicVariable3">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 3</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable3" x-model="redemptionData.dynamicVariable3">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable4" x-model="redemptionData.dynamicVariable4">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 4</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable4" x-model="redemptionData.dynamicVariable4">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 5</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="dynamicVariable5" x-model="redemptionData.dynamicVariable5">
-                                                        </div>
+                                                    <label class="col-sm-2 col-form-label col-form-label">Dynamic Variable 5</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control form-control-sm" id="dynamicVariable5" x-model="redemptionData.dynamicVariable5">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1741,7 +1857,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>-->
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <!--jQUERY BEGIN-->
 <script>
@@ -1942,7 +2057,7 @@
             redemptionData                  : {},
             eventConditionData              : {},
             redemptionMethod                : null,
-            type                            : 'directProvisioning',
+            type                            : null,
             eventTypeData                   : 'Top-Up',
             eventConditionTypeData          : 'Top-Up',
             offerLevelType                  : null,
@@ -1972,21 +2087,21 @@
             // Redemption END
 
             init() {
-                this.eventTypeDropdown(),
+                    this.eventTypeDropdown(),
                     this.offerBucketDropdown(),
                     this.campaignOfferDropdown(),
                     this.getOfferSelection(),
                     this.monitoringPolicy(),
                     this.redemptionPolicy(),
                     this.eventConditionPolicy(),
-                    this.getCountryList()
+                    this.getCountryList(),
+                        this.provisionType()
             },
 
             initPage(){
                 Promise.all([
                     this.getProgramList(),
                     this.getPromoList(),
-                    // this.checkUniqueOfferName()
                 ])
                     .then(data => {
                         this.eligibilityPolicy()
@@ -1995,19 +2110,34 @@
             },
 
             uncheckTotalOffer() {
-                this.offerLevelType                 = null
+                this.offerLevelType                             = null
+                this.eligibilityData.offerLevelCapValue         = null
+                this.eligibilityData.offerLevelCapPeriodValue   = null
+                this.eligibilityData.offerLevelCapPeriodDays    = null
             },
 
             uncheckSubscriber() {
-                this.subscriberOfferEligibility     = null
+                this.subscriberOfferEligibility         = null
+                this.eligibilityData.frequency          = null
+                this.eligibilityData.numberOfFrequency  = null
+                this.eligibilityData.numberOfDays       = null
+
             },
 
             uncheckTotalRedemption() {
-                this.totalRedemptionCapRadio        = null
+                this.totalRedemptionCapRadio                    = null
+                this.redemptionData.redemptionCapValue          = null
+                this.redemptionData.totalRedemptionPeriodValue  = null
+                this.redemptionData.totalRedemptionPeriodEvery  = null
+                this.redemptionData.totalRedemptionPeriodType   = null
             },
 
             uncheckSubscriberRedemption() {
-                this.subscriberRedemptionCapRadio   = null
+                this.subscriberRedemptionCapRadio       = null
+                this.redemptionData.frequencyValue      = null
+                this.redemptionData.timePeriodValue     = null
+                this.redemptionData.timePeriodEvery     = null
+                this.redemptionData.timePeriodType      = null
             },
 
             checkUniqueOfferName() {
@@ -2050,6 +2180,8 @@
             eventTypeDropdown() {
                 if(this.offerTypeDropdown == 'DA' || this.offerTypeDropdown == 'OMS') {
                     this.$watch("offerTypeDropdown", (value) => {
+                        this.offerBucketList = [];
+                        this.campaignOfferList = [];
                         this.offerBucketDropdown();
                     });
                 }
@@ -2058,12 +2190,11 @@
             offerBucketDropdown() {
                 this.select2 = $(this.$refs.selectBucket).select2();
                 this.select2.on("select2:select", (event) => {
-                    // console.log('change selectCampaign')
                     this.selectedBucket = event.target.value;
                     this.selectedBucketLabel = event.target.label;
                 });
                 this.$watch("selectedBucket", (value) => {
-                    // console.log('testing')
+                    this.campaignOfferList = []
                     this.campaignOfferDropdown();
                 });
                 fetch(PROD_URL + `offerBucket?offerType=${this.offerTypeDropdown}`)
@@ -2078,11 +2209,9 @@
             campaignOfferDropdown() {
                 this.select2 = $(this.$refs.selectCampaign).select2();
                 this.select2.on("select2:select", (event) => {
-                    // console.log('change selectCampaign')
                     this.selectedCampaign = event.target.value;
                 });
                 this.$watch("selectedCampaign", (value) => {
-                    // console.log('testing')
                     this.select2.val(value).trigger("change");
                 });
                 if (this.selectedBucket != null) {
@@ -2189,6 +2318,19 @@
                     .finally()
             },
 
+            provisionType() {
+                fetch(PROD_URL + `provisionType?instanceId=${INSTANCE_ID}`)
+                    .then(res => res.text())
+                    .then(data => {
+                        this.type = data
+                        if (!this.type) {
+                            this.type = data.type
+                        }
+                    })
+                    .catch(error => console.log(error))
+                    .finally()
+            },
+
             redemptionPolicy() {
                 fetch(PROD_URL + `offerRedemption?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
@@ -2285,6 +2427,7 @@
                 };
 
                 if (this.eventConditionTypeData === 'Top-Up') {
+                    offerEventCondition.topUpType                   = this.eventConditionData.topUpType;
                     offerEventCondition.creditMethod                = this.eventConditionData.creditMethod;
                     offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
                     offerEventCondition.operatorId                  = this.eventConditionData.operatorId;
@@ -2341,6 +2484,8 @@
                     }
                 };
                 if (this.eventTypeData === 'Top-Up') {
+                    offerMonitoring.topUpType                   = this.monitoringData.topUpType;
+                    offerMonitoring.operatorId                  = this.monitoringData.operatorId;
                     offerMonitoring.topUpCreditMethod           = this.monitoringData.topUpCreditMethod;
                     offerMonitoring.topUpUsageServiceType       = this.monitoringData.topUpUsageServiceType;
                     offerMonitoring.topUpOperator               = this.monitoringData.topUpOperator;
@@ -2371,10 +2516,6 @@
                 const offerEligibility = {
                     "excludeProgramId"  : $('#select2multiple').select2("val").toString()
                 };
-
-                // if ($('#select2multiple').select2("val").toString() != '') {
-                //     offerEligibility.excludeProgramId           = $('#select2multiple').select2("val").toString()
-                // }
 
                 if (this.offerLevelType === 'cap-only') {
                     offerEligibility.isOfferLevelCapOnly        = true;
@@ -2520,7 +2661,8 @@
                 if (this.recurringRedemptionRadio === 'req-day') {
                     offerRedemption.isRecurringFrequencyAndPeriod   = true;
                     offerRedemption.isRecurringFrequencyEachMonth   = false;
-                    offerRedemption.recurringFrequencyValue         = this.redemptionData.recurringFrequencyValue;
+                    // offerRedemption.recurringFrequencyValue         = this.redemptionData.recurringFrequencyValue;
+                    offerRedemption.recurringFrequencyValue         = '1';
                     offerRedemption.recurringFrequencyPeriodValue   = this.redemptionData.recurringFrequencyPeriodValue;
                     offerRedemption.recurringFrequencyDayOfMonth    = null;
                     offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
@@ -2529,13 +2671,14 @@
                     offerRedemption.isRecurringFrequencyEachMonth   = true;
                     offerRedemption.recurringFrequencyValue         = null;
                     offerRedemption.recurringFrequencyPeriodValue   = null;
-                    offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
+                    // offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
+                    offerRedemption.recurringFrequencyDayOfMonth    = '1';
                     offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
                 }
 
                 var request = { "amsAction" : "save", "requestId" : "save",
                     "payload": {
-                        "type": this.type,
+                        "type": this.provisonTypeData,
                         "uuid": INSTANCE_ID,
                         "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
                             return {

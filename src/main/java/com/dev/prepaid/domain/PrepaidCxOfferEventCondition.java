@@ -34,6 +34,7 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private String usageServiceType;
     private String operatorId;
 
+    private String topUpType;
     private String topUpCode;
     private String topUpCurBalanceOp;
     private Long topUpCurBalanceValue;
@@ -46,8 +47,8 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private Long daBalanceValue;
     private String tempServiceClass;
     private  String imei;
-    private  String daChange;
-    private  String chargedAmount;
+    private  Long daChange;
+    private  Long chargedAmount;
 
     private Long eventTypeUsages;
     private String eventUsagesOp;
@@ -60,4 +61,7 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private String arpuOp;
     private Long arpuValue;
     private String arpuSelectedTopUpCode;
+
+    private  String roamingFlag;
+    private  String ratePlanId;
 }
