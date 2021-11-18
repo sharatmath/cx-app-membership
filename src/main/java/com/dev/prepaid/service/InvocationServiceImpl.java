@@ -4,16 +4,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.invocation.*;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
+import com.dev.prepaid.repository.PrepaidCxProvInvocationsRepository;
 import com.dev.prepaid.repository.PrepaidOfferEligibilityTrxRepository;
 import com.dev.prepaid.type.ProvisionType;
 import com.dev.prepaid.util.*;
@@ -46,16 +44,26 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
     private OfferEligibilityService offerEligibilityService;
     @Autowired
     private PrepaidOfferEligibilityTrxRepository prepaidOfferEligibilityTrxRepository;
+    @Autowired
+    private PrepaidCxProvInvocationsRepository prepaidCxProvInvocationsRepository;
 
     @Override
     @Async("CXInvocationExecutor")
     public void invoke(InvocationRequest invocation) throws Exception {
         String instanceId = invocation.getInstanceContext().getInstanceId();
         PrepaidCxOfferConfig instanceConfiguration = prepaidCxOfferConfigRepository.findOneByInstanceIdAndDeletedDateIsNull(instanceId);
+        log.info("{}", instanceConfiguration);
         if(ProvisionType.EVENT_CONDITION.getDescription().equals(instanceConfiguration.getProvisionType()) ||
                 ProvisionType.EVENT_CONDITION_WITH_DIRECT_PROVISION.getDescription().equals(instanceConfiguration.getProvisionType())
         ){
             log.debug("invoke not allowed for type {}", instanceConfiguration.getProvisionType());
+            PrepaidCxProvInvocations opsFind = prepaidCxProvInvocationsRepository.findOneById(invocation.getUuid());
+            if(opsFind != null){
+                opsFind.setStatus("COMPLETE");
+                opsFind.setLastModifiedDate(new Date());
+                opsFind.setOutput("invoke not allowed for type " + instanceConfiguration.getProvisionType());
+                prepaidCxProvInvocationsRepository.save(opsFind);
+            }
             return;
         }
 
