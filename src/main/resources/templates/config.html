@@ -357,7 +357,7 @@
             <div class="accordion DPForm" id="directProvisioning">
                 <div class="card">
                     <div class="card-header" id="headingSix">
-                        <div id="eventConditionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseSix"><h5><i class="fa fa-plus"></i> Event Condition - Not Applicable</h5></div>
+                        <div id="eventConditionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseSix"><h5><i class="fa fa-plus"></i> Event Condition - <label x-show="['offerMonitoringWithAssignment', 'directProvisioning'].includes(type)">Not Applicable</label><label x-show="type == 'eventConditionDirectProvisioning'">Required</label><label x-show="type == 'eventCondition'">Required</label></h5></div>
                     </div>
                     <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#directProvisioning">
                         <div class="card-body" x-show="type === 'eventConditionDirectProvisioning' || type === 'eventCondition'">
@@ -423,8 +423,8 @@
                                                 <div class="mb-3 row">
                                                     <label class="col-sm-2 col-form-label">Top-Up Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                                     <div class="col-sm-10">
-                                                        <div class="form-group d-flex justify-content-between" x-model="eventConditionData.topUpType">
-                                                            <select class="form-control">
+                                                        <div class="form-group d-flex justify-content-between">
+                                                            <select class="form-control" x-model="eventConditionData.topUpType">
                                                                 <option value="All">All</option>
                                                                 <option value="Paid">Paid</option>
                                                                 <option value="Non-Paid">Non-Paid</option>
@@ -506,13 +506,13 @@
                                             <div class="mb-3 row">
                                                 <label for="refillProfileID" class="col-sm-2 col-form-label">DA ID</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="eventConditionDataDaID" x-model="eventConditionData.daId">
+                                                    <input type="text" class="form-control" id="eventConditionDataDaID" x-model="eventConditionData.topUpDaId">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
                                                 <label for="topUpValue" class="col-sm-2 col-form-label">DA Balance</label>
                                                 <div class="col-sm-5">
-                                                    <select id="eventConditionDataTopUpDaBalanceOperators" class="form-control" x-model="eventConditionData.daBalanceOp">
+                                                    <select id="eventConditionDataTopUpDaBalanceOperators" class="form-control" x-model="eventConditionData.topUpDaBalanceOp">
                                                         <option value="lessThan">Less than</option>
                                                         <option value="moreThan">More than</option>
                                                         <option value="equalTo">Equal to</option>
@@ -521,13 +521,13 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
-                                                    <input type="text" class="form-control" id="eventConditionDataTopUpDaBalanceValue" x-model="eventConditionData.daBalanceValue">
+                                                    <input type="text" class="form-control" id="eventConditionDataTopUpDaBalanceValue" x-model="eventConditionData.topUpDaBalanceValue">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
                                                 <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass" x-model="eventConditionData.tempServiceClass">
+                                                    <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass" x-model="eventConditionData.topUpTempServiceClass">
                                                 </div>
                                             </div>
                                         </div>
@@ -658,7 +658,16 @@
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <input type="number" class="form-control" id="eventConditionDataUsageValue" x-model="eventConditionData.eventUsagesValue">
-                                                </div> GB / Mins / Count / $
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <select class="form-control" x-model="eventConditionData.eventUsagesUnit">
+                                                        <option>Choose...</option>
+                                                        <option value="GB">GB</option>
+                                                        <option value="Mins">Mins</option>
+                                                        <option value="Count">Count</option>
+                                                        <option value="$">$</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="mb-3 row">
                                                 <label for="topUpValue" class="col-sm-2 col-form-label">Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>
@@ -720,25 +729,25 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Service Class</label>
+                                                <label class="col-sm-2 col-form-label">Service Class</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="usageTopUpTemporaryServiceClass" x-model="eventConditionData.tempServiceClass">
+                                                    <input type="text" class="form-control" id="usageTemporaryServiceClass" x-model="eventConditionData.tempServiceClass">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">IMEI</label>
+                                                <label class="col-sm-2 col-form-label">IMEI</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="usageTopUpIMEI" x-model="eventConditionData.imei">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">DA Change</label>
+                                                <label class="col-sm-2 col-form-label">DA Change</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="usageTopUpDAChange" x-model="eventConditionData.daChange">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Charge Amount</label>
+                                                <label class="col-sm-2 col-form-label">Charge Amount</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="usageTopUpChargeAmount" x-model="eventConditionData.chargedAmount">
                                                 </div>
@@ -804,10 +813,10 @@
                 </div>
                 <div class="card">
                     <div class="card-header" id="headingOne">
-                        <div id="offerSelectionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseOne"><h5><i class="fa fa-plus"></i> Offer Selection - Required</h5></div>
+                        <div id="offerSelectionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseOne"><h5><i class="fa fa-plus"></i> Offer Selection - <label x-show="['offerMonitoringWithAssignment', 'directProvisioning', 'eventConditionDirectProvisioning'].includes(type)">Required</label><label x-show="type == 'eventCondition'">Not Applicable</label></h5></div>
                     </div>
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#directProvisioning">
-                        <div class="card-body" x-show="type == 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
+                        <div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
                             <div>
                                 <div class="form-inline">
                                     <div class="col-sm-2">
@@ -827,7 +836,7 @@
                                             <option>Choose...</option>
                                             <option value="DA">DA Offer</option>
                                             <option value="OMS">OMS Offer</option>
-<!--                                            <option value="MA">MA Offer</option>-->
+                                            <option value="MA">MA Offer</option>
                                             <option value="PROMO">Unique Promo Code</option>
                                         </select>
                                     </div>
@@ -1058,7 +1067,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header" id="headingTwo">
-                        <div id="advancedFilterAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseTwo"><h5><i class="fa fa-plus"></i> Advanced Filter - Optional</h5></div>
+                        <div id="advancedFilterAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseTwo"><h5><i class="fa fa-plus"></i> Advanced Filter - <label x-show="['directProvisioning', 'offerMonitoringWithAssignment', 'eventConditionDirectProvisioning', 'eventCondition'].includes(type)">Optional</label></h5></div>
                     </div>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#directProvisioning">
                         <div class="card-body">
@@ -1082,7 +1091,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header" id="headingThree">
-                        <div id="eligibilityPolicyAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseThree"><h5><i class="fa fa-plus"></i> Eligibility Policy - Optional</h5></div>
+                        <div id="eligibilityPolicyAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseThree"><h5><i class="fa fa-plus"></i> Eligibility Policy - <label x-show="['directProvisioning', 'offerMonitoringWithAssignment', 'eventConditionDirectProvisioning', 'eventCondition'].includes(type)">Optional</label></h5></div>
                     </div>
                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#directProvisioning">
                         <div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning' || type === 'eventCondition'">
@@ -1178,7 +1187,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header" id="headingFour">
-                        <div id="fulfillmentAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseFour"><h5><i class="fa fa-plus"></i> Offer Monitoring - Not Applicable</h5></div>
+                        <div id="fulfillmentAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseFour"><h5><i class="fa fa-plus"></i> Offer Monitoring - <label x-show="['directProvisioning', 'eventConditionDirectProvisioning', 'eventCondition'].includes(type)">Not Applicable</label><label x-show="type == 'offerMonitoringWithAssignment'">Required</label></h5></div>
                     </div>
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#directProvisioning">
                         <div class="card-body" x-show="type === 'offerMonitoringWithAssignment'">
@@ -1236,6 +1245,7 @@
                                                         <option value="equalTo">Equal to</option>
                                                         <option value="lessOrEqual">Les than or Equal to</option>
                                                         <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        <option value="isBetween">Is Between</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
@@ -1263,6 +1273,7 @@
                                                         <option value="equalTo">Equal to</option>
                                                         <option value="lessOrEqual">Les than or Equal to</option>
                                                         <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        <option value="isBetween">Is Between</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
@@ -1278,6 +1289,7 @@
                                                         <option value="equalTo">Equal to</option>
                                                         <option value="lessOrEqual">Les than or Equal to</option>
                                                         <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        <option value="isBetween">Is Between</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
@@ -1299,6 +1311,7 @@
                                                         <option value="equalTo">Equal to</option>
                                                         <option value="lessOrEqual">Les than or Equal to</option>
                                                         <option value="moreOrEqualTo">More than or Equal to</option>
+                                                        <option value="isBetween">Is Between</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
@@ -1401,10 +1414,6 @@
                                                         <div class="col-sm-10">
                                                             <select id="usageTypeIDD" class="form-control" x-model="monitoringData.usageType">
                                                                 <option>Choose...</option>
-                                                                <option value="COUNTRY_CD">COUNTRY_CD</option>
-                                                                <option value="COUNTRY_NAME">COUNTRY_NAME</option>
-                                                                <option value="COUNT">COUNT</option>
-                                                                <option value="DURATION">DURATION</option>
                                                                 <option value="MA_AMOUNT">MA_AMOUNT</option>
                                                                 <option value="DA_AMOUNT">DA_AMOUNT</option>
                                                                 <option value="SMS_COUNT">SMS_COUNT</option>
@@ -1443,7 +1452,24 @@
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <input type="number" class="form-control" id="usageValue" x-model="monitoringData.usageValue">
-                                                </div> GB / Mins / Count
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <select class="form-control" x-model="monitoringData.usageUnit">
+                                                        <option>Choose...</option>
+                                                        <option value="GB">GB</option>
+                                                        <option value="Mins">Mins</option>
+                                                        <option value="Count">Count</option>
+                                                        <option value="$">$</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="topUpValue" class="col-sm-2 col-form-label">Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <span>Upcoming</span>
+                                                <div class="col-sm-2">
+                                                    <input type="number" class="form-control" x-model="monitoringData.aggregationPeriodDays" min="0" max="180">
+                                                </div>
+                                                <span>Days</span>
                                             </div>
                                             <div class="mb-3 row">
                                                 <label for="topUpValue" class="col-sm-2 col-form-label">Current Balance</label>
@@ -1497,27 +1523,27 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Service Class</label>
+                                                <label class="col-sm-2 col-form-label">Service Class</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="monitoringDataUTopUpTemporaryServiceClass" x-model="monitoringData.topUpTempServiceClass">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">IMEI</label>
+                                                <label class="col-sm-2 col-form-label">IMEI</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="monitoringDataUTopUpIMEI" x-model="monitoringData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="monitoringDataUTopUpIMEI" x-model="monitoringData.imei">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">DA Change</label>
+                                                <label class="col-sm-2 col-form-label">DA Change</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="monitoringDataUTopUpDAChange" x-model="monitoringData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="monitoringDataUTopUpDAChange" x-model="monitoringData.daChange">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Charge Amount</label>
+                                                <label class="col-sm-2 col-form-label">Charge Amount</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="monitoringDataUTopUpChargeAmount" x-model="monitoringData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="monitoringDataUTopUpChargeAmount" x-model="monitoringData.chargedAmount">
                                                 </div>
                                             </div>
                                         </div>
@@ -1615,7 +1641,7 @@
                                                         <input min="1" max="31" :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" type="number" class="form-control" id="periodValue" x-model="monitoringData.monitorPeriod">
                                                     </div>
                                                     <div class="col-sm-3">
-                                                        <select :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" id="monitorPeriodDropdown" class="form-control" x-model="monitoringData.monitorPeriodDayMonth">
+                                                        <select :disabled="!monitoringFulfillmentRadio || monitoringFulfillmentRadio === 'specified-period'" class="form-control" x-model="monitoringData.monitorPeriodDayMonth">
                                                             <option value="month">Month</option>
                                                             <option value="days">Days</option>
                                                         </select>
@@ -1631,7 +1657,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header" id="headingFive">
-                        <div id="redemptionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseFive"><h5><i class="fa fa-plus"></i> Redemption Policy - Required</h5></div>
+                        <div id="redemptionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseFive"><h5><i class="fa fa-plus"></i> Redemption Policy - <label x-show="['directProvisioning', 'offerMonitoringWithAssignment', 'eventConditionDirectProvisioning'].includes(type)">Required</label><label x-show="type == 'eventCondition'">Not Applicable</label></h5></div>
                     </div>
                     <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#directProvisioning">
                         <div class="card-body" x-show="type === 'directProvisioning' || type === 'offerMonitoringWithAssignment' || type === 'eventConditionDirectProvisioning'">
@@ -2036,6 +2062,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mattkingshott/iodine@3/dist/iodine.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -2056,56 +2083,6 @@
                 maximumSelectionLength: 2
             });
         });
-
-        $(document).ready(function(){
-            $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Not Applicable</h5>");
-            $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
-            $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
-            $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
-            $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Not Applicable</h5>");
-            $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
-
-            $('#typeData').on('change', function() {
-
-                if (this.value == 'directProvisioning')
-                {
-                    $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Not Applicable</h5>");
-                    $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
-                    $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
-                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
-                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Not Applicable</h5>");
-                    $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
-                }
-                if (this.value == 'offerMonitoringWithAssignment')
-                {
-                    $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Not Applicable</h5>");
-                    $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
-                    $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
-                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
-                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Required</h5>");
-                    $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
-                }
-                if (this.value == 'eventConditionDirectProvisioning')
-                {
-                    $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Required</h5>");
-                    $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Required</h5>");
-                    $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
-                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
-                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Not Applicable</h5>");
-                    $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Required</h5>");
-                }
-                if (this.value == 'eventCondition')
-                {
-                    $("#eventConditionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Event Condition - Required</h5>");
-                    $("#offerSelectionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Selection - Not Applicable</h5>");
-                    $("#advancedFilterAccordion").html("<h5><i class=\"fa fa-plus\"></i> Advanced Filter - Optional</h5>");
-                    $("#eligibilityPolicyAccordion").html("<h5><i class=\"fa fa-plus\"></i> Eligibility Policy - Optional</h5>");
-                    $("#fulfillmentAccordion").html("<h5><i class=\"fa fa-plus\"></i> Offer Monitoring - Not Applicable</h5>");
-                    $("#redemptionAccordion").html("<h5><i class=\"fa fa-plus\"></i> Redemption Policy - Not Applicable</h5>");
-                }
-            });
-        });
-        // Type Provisioning Dropdown END
 
         // Plus Minus Icon for Accordion BEGIN
         $(document).ready(function(){
@@ -2248,7 +2225,7 @@
             redemptionMethod                : null,
             type                            : null,
             eventTypeData                   : 'Top-Up',
-            eventConditionTypeData          : 'Top-Up',
+            eventConditionTypeData          : null,
             offerLevelType                  : null,
             subscriberOfferEligibility      : null,
             monitoringFulfillmentRadio      : null,
@@ -2276,15 +2253,15 @@
             // Redemption END
 
             init() {
-                    this.eventTypeDropdown(),
-                    this.offerBucketDropdown(),
-                    this.campaignOfferDropdown(),
-                    this.getOfferSelection(),
-                    this.monitoringPolicy(),
-                    this.redemptionPolicy(),
-                    this.eventConditionPolicy(),
-                    this.getCountryList(),
-                        this.provisionType()
+                this.eventTypeDropdown(),
+                this.offerBucketDropdown(),
+                this.campaignOfferDropdown(),
+                this.getOfferSelection(),
+                this.monitoringPolicy(),
+                this.redemptionPolicy(),
+                this.eventConditionPolicy(),
+                this.getCountryList(),
+                this.provisionType()
             },
 
             initPage(){
@@ -2367,11 +2344,16 @@
             },
 
             eventTypeDropdown() {
-                if(this.offerTypeDropdown == 'DA' || this.offerTypeDropdown == 'OMS') {
+                if(this.offerTypeDropdown == 'DA' || this.offerTypeDropdown == 'OMS' || this.offerTypeDropdown == 'MA') {
                     this.$watch("offerTypeDropdown", (value) => {
                         this.offerBucketList = [];
                         this.campaignOfferList = [];
-                        this.offerBucketDropdown();
+                        // this.offerBucketDropdown();
+                        if (this.offerTypeDropdown == 'MA') {
+                            this.campaignOfferDropdown();
+                        } else {
+                            this.offerBucketDropdown();
+                        }
                     });
                 }
             },
@@ -2404,7 +2386,25 @@
                     this.select2.val(value).trigger("change");
                 });
                 if (this.selectedBucket != null) {
-                    fetch(PROD_URL + `offerCampaign?offerId=${this.selectedBucket}`)
+                    if (this.offerTypeDropdown != 'MA') {
+                        fetch(PROD_URL + `offerCampaign?offerId=${this.selectedBucket}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                this.campaignOfferList = data
+                            })
+                            .catch(error => console.log(error))
+                            .finally()
+                    } else {
+                        fetch(PROD_URL + `offerCampaign?offerId=MA`)
+                            .then(res => res.json())
+                            .then(data => {
+                                this.campaignOfferList = data
+                            })
+                            .catch(error => console.log(error))
+                            .finally()
+                    }
+                } else if (this.offerTypeDropdown == 'MA') {
+                    fetch(PROD_URL + `offerCampaign?offerId=MA`)
                         .then(res => res.json())
                         .then(data => {
                             this.campaignOfferList = data
@@ -2502,6 +2502,14 @@
                     .then(res => res.json())
                     .then(data => {
                         this.eventConditionData = data
+
+                        // For Event Condition Type Dropdown
+                        if (data.eventType != null) {
+                            this.eventConditionTypeData = data.eventType
+                        } else {
+                            this.eventConditionTypeData = 'Top-Up'
+                        }
+
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -2511,9 +2519,13 @@
                 fetch(PROD_URL + `provisionType?instanceId=${INSTANCE_ID}`)
                     .then(res => res.text())
                     .then(data => {
-                        this.type = data
-                        if (!this.type) {
-                            this.type = data.type
+                        // console.log(data)
+                        if (data == '') {
+                            this.type = 'directProvisioning'
+                            // console.log('TYPE IS NULL')
+                        } else {
+                            this.type = data
+                            // console.log('TYPE IS NOT NULL')
                         }
                     })
                     .catch(error => console.log(error))
@@ -2537,7 +2549,7 @@
                             this.totalRedemptionCapRadio = 'redemption-time-period'
                         }
 
-                        // for Radio Subcriber Redemption Cap
+                        // for Radio Subscriber Redemption Cap
                         if (data.isFrequencyOnly == true) {
                             this.subscriberRedemptionCapRadio = 'freq-only'
                         } else if (data.isFrequencyAndTime == true) {
@@ -2567,7 +2579,6 @@
                     fetch(PROD_URL + `listProgram`)
                         .then(res => res.json())
                         .then(data => {
-                            // console.log('success: program')
                             this.programList = data
                             resolve('program')
                         })
@@ -2594,7 +2605,6 @@
                     fetch(PROD_URL + `listOfferType`)
                         .then(res => res.json())
                         .then(data => {
-                            // console.log('success: promo')
                             this.promoList = data
                             resolve('promo')
                         })
@@ -2616,7 +2626,7 @@
                 };
 
                 if (this.eventConditionTypeData === 'Top-Up') {
-                    offerEventCondition.topUpType                   = this.eventConditionData.topUpType;
+                    offerEventCondition.topUpType                   = this.eventConditionData.topUpType || 'All';
                     offerEventCondition.creditMethod                = this.eventConditionData.creditMethod;
                     offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
                     offerEventCondition.operatorId                  = this.eventConditionData.operatorId;
@@ -2627,16 +2637,28 @@
                     offerEventCondition.topUpAccBalanceBeforeValue  = this.eventConditionData.topUpAccBalanceBeforeValue;
                     offerEventCondition.topUpOp                     = this.eventConditionData.topUpOp || 'lessThan';
                     offerEventCondition.topUpTransactionValue       = this.eventConditionData.topUpTransactionValue;
-                    offerEventCondition.topUpDaId                   = this.eventConditionData.daId;
-                    offerEventCondition.topUpDaBalanceOp            = this.eventConditionData.daBalanceOp || 'lessThan';
-                    offerEventCondition.topUpDaBalanceValue         = this.eventConditionData.daBalanceValue;
-                    offerEventCondition.topUpTempServiceClass       = this.eventConditionData.tempServiceClass;
+                    offerEventCondition.topUpDaId                   = this.eventConditionData.topUpDaId;
+                    offerEventCondition.topUpDaBalanceOp            = this.eventConditionData.topUpDaBalanceOp || 'lessThan';
+                    offerEventCondition.topUpDaBalanceValue         = this.eventConditionData.topUpDaBalanceValue;
+                    offerEventCondition.topUpTempServiceClass       = this.eventConditionData.topUpTempServiceClass;
                 } else if (this.eventConditionTypeData === 'Usage') {
                     offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
                     offerEventCondition.eventTypeUsages             = this.eventConditionData.eventTypeUsages;
                     offerEventCondition.eventUsagesOp               = this.eventConditionData.eventUsagesOp;
                     offerEventCondition.eventUsagesValue            = this.eventConditionData.eventUsagesValue;
                     offerEventCondition.aggregationPeriodDays       = this.eventConditionData.aggregationPeriodDays;
+                    offerEventCondition.eventUsagesUnit             = this.eventConditionData.eventUsagesUnit;
+                    offerEventCondition.topUpCurBalanceOp           = this.eventConditionData.topUpCurBalanceOp;
+                    offerEventCondition.topUpCurBalanceValue        = this.eventConditionData.topUpCurBalanceValue;
+                    offerEventCondition.topUpAccBalanceBeforeOp     = this.eventConditionData.topUpAccBalanceBeforeOp;
+                    offerEventCondition.topUpAccBalanceBeforeValue  = this.eventConditionData.topUpAccBalanceBeforeValue;
+                    offerEventCondition.daId                        = this.eventConditionData.daId;
+                    offerEventCondition.daBalanceOp                 = this.eventConditionData.daBalanceOp;
+                    offerEventCondition.daBalanceValue              = this.eventConditionData.daBalanceValue;
+                    offerEventCondition.tempServiceClass            = this.eventConditionData.tempServiceClass;
+                    offerEventCondition.imei                        = this.eventConditionData.imei;
+                    offerEventCondition.daChange                    = this.eventConditionData.daChange;
+                    offerEventCondition.chargedAmount               = this.eventConditionData.chargedAmount;
                 } else if (this.eventConditionTypeData === 'ARPU') {
                     offerEventCondition.operatorId                  = this.eventConditionData.operatorId;
                     offerEventCondition.arpuType                    = this.eventConditionData.arpuType;
@@ -2666,14 +2688,10 @@
                     offerMonitoring.monitorStartDate                = null;
                     offerMonitoring.monitorEndDate                  = null;
                     offerMonitoring.monitorPeriod                   = this.monitoringData.monitorPeriod;
-                    if (this.monitoringData.monitorPeriodDayMonth === 'string') {
-                        offerMonitoring.monitorPeriodDayMonth       = 'month';
-                    } else {
-                        offerMonitoring.monitorPeriodDayMonth       = this.monitoringData.monitorPeriodDayMonth;
-                    }
+                    offerMonitoring.monitorPeriodDayMonth           = this.monitoringData.monitorPeriodDayMonth || 'month';
                 };
                 if (this.eventTypeData === 'Top-Up') {
-                    offerMonitoring.topUpType                   = this.monitoringData.topUpType;
+                    offerMonitoring.topUpType                   = this.monitoringData.topUpType || 'All';
                     offerMonitoring.operatorId                  = this.monitoringData.operatorId;
                     offerMonitoring.topUpCreditMethod           = this.monitoringData.topUpCreditMethod;
                     offerMonitoring.topUpUsageServiceType       = this.monitoringData.topUpUsageServiceType;
@@ -2692,14 +2710,28 @@
                 } else if (this.eventTypeData === 'Usage') {
                     offerMonitoring.usageServiceType            = this.monitoringData.usageServiceType;
                     offerMonitoring.usageType                   = this.monitoringData.usageType;
+                    offerMonitoring.topUpCurBalanceOp           = this.monitoringData.topUpCurBalanceOp;
+                    offerMonitoring.topUpCurBalanceValue        = this.monitoringData.topUpCurBalanceValue;
+                    offerMonitoring.topUpAccBalanceBeforeOp     = this.monitoringData.topUpAccBalanceBeforeOp;
+                    offerMonitoring.topUpAccBalanceBeforeValue  = this.monitoringData.topUpAccBalanceBeforeValue;
+                    offerMonitoring.topUpDaId                   = this.monitoringData.topUpDaId;
+                    offerMonitoring.topUpDaBalanceOp            = this.monitoringData.topUpDaBalanceOp;
+                    offerMonitoring.topUpDaBalanceValue         = this.monitoringData.topUpDaBalanceValue;
+                    offerMonitoring.topUpTempServiceClass       = this.monitoringData.topUpTempServiceClass;
+                    offerMonitoring.imei                        = this.monitoringData.imei;
+                    offerMonitoring.daChange                    = this.monitoringData.daChange;
+                    offerMonitoring.chargedAmount               = this.monitoringData.chargedAmount;
                     offerMonitoring.countryCode                 = this.monitoringData.countryCode;
                     offerMonitoring.usageOperator               = this.monitoringData.usageOperator;
                     offerMonitoring.usageValue                  = this.monitoringData.usageValue;
+                    offerMonitoring.aggregationPeriodDays       = this.monitoringData.aggregationPeriodDays;
+                    offerMonitoring.usageUnit                   = this.monitoringData.usageUnit;
                 } else if (this.eventTypeData === 'ARPU') {
                     offerMonitoring.arpuOp                      = this.monitoringData.arpuOp;
                     offerMonitoring.arpuType                    = this.monitoringData.arpuType;
                     offerMonitoring.arpuSelectedTopUpCode       = this.monitoringData.arpuSelectedTopUpCode;
                     offerMonitoring.arpuValue                   = this.monitoringData.arpuValue;
+                    offerMonitoring.operatorId                  = this.monitoringData.operatorId;
                 };
 
                 const offerEligibility = {
@@ -2867,7 +2899,7 @@
 
                 var request = { "amsAction" : "save", "requestId" : "save",
                     "payload": {
-                        "type": this.provisonTypeData,
+                        "type": this.type,
                         "uuid": INSTANCE_ID,
                         "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
                             return {
@@ -2896,8 +2928,13 @@
                     },
                     "notification": "true"
                 };
-                // console.log(request);
-                window.parent.postMessage(request,'*');
+                // console.log(this.type);
+                if (!this.overallOfferName && this.type != 'eventCondition') {
+                    swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
+                } else {
+                    window.parent.postMessage(request,'*');
+                }
+                // window.parent.postMessage(request,'*');
             },
         };
     }
