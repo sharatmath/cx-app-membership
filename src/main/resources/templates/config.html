@@ -254,8 +254,8 @@
                                                 <div class="mb-3 row">
                                                     <label class="col-sm-2 col-form-label">Top-Up Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                                     <div class="col-sm-10">
-                                                        <div class="form-group d-flex justify-content-between" x-model="eventConditionData.topUpType">
-                                                            <select class="form-control">
+                                                        <div class="form-group d-flex justify-content-between">
+                                                            <select class="form-control" x-model="eventConditionData.topUpType">
                                                                 <option value="All">All</option>
                                                                 <option value="Paid">Paid</option>
                                                                 <option value="Non-Paid">Non-Paid</option>
@@ -337,13 +337,13 @@
                                             <div class="mb-3 row">
                                                 <label for="refillProfileID" class="col-sm-2 col-form-label">DA ID</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="eventConditionDataDaID" x-model="eventConditionData.daId">
+                                                    <input type="text" class="form-control" id="eventConditionDataDaID" x-model="eventConditionData.topUpDaId">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
                                                 <label for="topUpValue" class="col-sm-2 col-form-label">DA Balance</label>
                                                 <div class="col-sm-5">
-                                                    <select id="eventConditionDataTopUpDaBalanceOperators" class="form-control" x-model="eventConditionData.daBalanceOp">
+                                                    <select id="eventConditionDataTopUpDaBalanceOperators" class="form-control" x-model="eventConditionData.topUpDaBalanceOp">
                                                         <option value="lessThan">Less than</option>
                                                         <option value="moreThan">More than</option>
                                                         <option value="equalTo">Equal to</option>
@@ -352,13 +352,13 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-5">
-                                                    <input type="text" class="form-control" id="eventConditionDataTopUpDaBalanceValue" x-model="eventConditionData.daBalanceValue">
+                                                    <input type="text" class="form-control" id="eventConditionDataTopUpDaBalanceValue" x-model="eventConditionData.topUpDaBalanceValue">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
                                                 <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass" x-model="eventConditionData.tempServiceClass">
+                                                    <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass" x-model="eventConditionData.topUpTempServiceClass">
                                                 </div>
                                             </div>
                                         </div>
@@ -562,7 +562,7 @@
                                             <div class="mb-3 row">
                                                 <label class="col-sm-2 col-form-label">Service Class</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="usageTopUpTemporaryServiceClass" x-model="eventConditionData.tempServiceClass">
+                                                    <input type="text" class="form-control" id="usageTemporaryServiceClass" x-model="eventConditionData.tempServiceClass">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
@@ -2036,7 +2036,7 @@
             redemptionMethod                : null,
             type                            : null,
             eventTypeData                   : 'Top-Up',
-            eventConditionTypeData          : 'Top-Up',
+            eventConditionTypeData          : null,
             offerLevelType                  : null,
             subscriberOfferEligibility      : null,
             monitoringFulfillmentRadio      : null,
@@ -2313,6 +2313,14 @@
                     .then(res => res.json())
                     .then(data => {
                         this.eventConditionData = data
+
+                        // For Event Condition Type Dropdown
+                        if (data.eventType != null) {
+                            this.eventConditionTypeData = data.eventType
+                        } else {
+                            this.eventConditionTypeData = 'Top-Up'
+                        }
+
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -2352,7 +2360,7 @@
                             this.totalRedemptionCapRadio = 'redemption-time-period'
                         }
 
-                        // for Radio Subcriber Redemption Cap
+                        // for Radio Subscriber Redemption Cap
                         if (data.isFrequencyOnly == true) {
                             this.subscriberRedemptionCapRadio = 'freq-only'
                         } else if (data.isFrequencyAndTime == true) {
@@ -2440,10 +2448,10 @@
                     offerEventCondition.topUpAccBalanceBeforeValue  = this.eventConditionData.topUpAccBalanceBeforeValue;
                     offerEventCondition.topUpOp                     = this.eventConditionData.topUpOp || 'lessThan';
                     offerEventCondition.topUpTransactionValue       = this.eventConditionData.topUpTransactionValue;
-                    offerEventCondition.topUpDaId                   = this.eventConditionData.daId;
-                    offerEventCondition.topUpDaBalanceOp            = this.eventConditionData.daBalanceOp || 'lessThan';
-                    offerEventCondition.topUpDaBalanceValue         = this.eventConditionData.daBalanceValue;
-                    offerEventCondition.topUpTempServiceClass       = this.eventConditionData.tempServiceClass;
+                    offerEventCondition.topUpDaId                   = this.eventConditionData.topUpDaId;
+                    offerEventCondition.topUpDaBalanceOp            = this.eventConditionData.topUpDaBalanceOp || 'lessThan';
+                    offerEventCondition.topUpDaBalanceValue         = this.eventConditionData.topUpDaBalanceValue;
+                    offerEventCondition.topUpTempServiceClass       = this.eventConditionData.topUpTempServiceClass;
                 } else if (this.eventConditionTypeData === 'Usage') {
                     offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
                     offerEventCondition.eventTypeUsages             = this.eventConditionData.eventTypeUsages;
