@@ -516,12 +516,18 @@ public class DataController {
 
     @PostMapping(value = "offerMonitoringTrxBulk")
     public ResponseEntity<String> offerMonitoringTrxBulk(@RequestBody List<Map<String, Object>> payload) {
-        rabbitTemplate.convertAndSend(
-                Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
-                Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
-                payload
-        );
-        log.info("{}", payload);
+		rabbitTemplate.convertAndSend(
+				Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+				Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
+				payload
+		);
+		log.info(" send to monitoring queue {}", payload);
+		rabbitTemplate.convertAndSend(
+				Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+				Constant.QUEUE_NAME_MEMBERSHIP_EVENT_CONDITION,
+				payload
+		);
+		log.info(" send to event condition queue {}", payload);
         return ResponseEntity.ok("Success");
     }
 
