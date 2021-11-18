@@ -430,7 +430,7 @@ public class DataController {
 
 			EventCondition eventCondition =  EventCondition.builder()
 					.eventConditionName(prepaidCxOfferEventCondition.getEventConditionName())
-					.eventConditionType(prepaidCxOfferEventCondition.getEventConditionType())
+					.eventType(prepaidCxOfferEventCondition.getEventConditionType())
 					.eventTypeUsages(prepaidCxOfferEventCondition.getEventTypeUsages())
 					.eventUsagesOp(prepaidCxOfferEventCondition.getEventUsagesOp())
 					.eventUsagesValue(prepaidCxOfferEventCondition.getEventUsagesValue())
@@ -443,6 +443,7 @@ public class DataController {
 					.topUpCode(prepaidCxOfferEventCondition.getTopUpCode())
 					.topUpType(prepaidCxOfferEventCondition.getTopUpType())
 					.topUpAccBalanceBeforeValue(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeValue())
+					.topUpCurBalanceOp(prepaidCxOfferEventCondition.getTopUpCurBalanceOp())
 					.topUpCurBalanceValue(prepaidCxOfferEventCondition.getTopUpCurBalanceValue())
 					.topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())
 					.chargedAmount(prepaidCxOfferEventCondition.getChargedAmount())
@@ -451,8 +452,14 @@ public class DataController {
 					.daBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
 					.daChange(prepaidCxOfferEventCondition.getDaChange())
 					.daBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
-
+					.creditMethod(prepaidCxOfferEventCondition.getCreditMethod())
+					.usageServiceType(prepaidCxOfferEventCondition.getUsageServiceType())
+					.operatorId(prepaidCxOfferEventCondition.getOperatorId())
 					.daId(prepaidCxOfferEventCondition.getDaId())
+					.topUpDaId(prepaidCxOfferEventCondition.getDaId())
+					.topUpDaBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
+					.topUpDaBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
+					.topUpTempServiceClass(prepaidCxOfferEventCondition.getTempServiceClass())
 					.roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
 					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId())
 					.build();
