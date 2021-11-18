@@ -28,7 +28,6 @@ import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
 import com.dev.prepaid.domain.PrepaidCxOfferEligibility;
 import com.dev.prepaid.domain.PrepaidCxOfferEventCondition;
 import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
-import com.dev.prepaid.domain.PrepaidCxOfferSelection;
 import com.dev.prepaid.domain.PrepaidDaOfferBucket;
 import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
 import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
@@ -41,13 +40,13 @@ import com.dev.prepaid.model.configuration.EventCondition;
 import com.dev.prepaid.model.configuration.OfferFulfilment;
 import com.dev.prepaid.model.configuration.OfferPromoCode;
 import com.dev.prepaid.model.configuration.OfferRedemption;
+import com.dev.prepaid.model.configuration.OfferSelection;
 import com.dev.prepaid.model.configuration.ResponSysProgram;
 import com.dev.prepaid.model.request.DataControllRequest;
 import com.dev.prepaid.model.request.GetAccumulatedTopups;
 import com.dev.prepaid.model.request.GetPackageFrequency;
 import com.dev.prepaid.model.request.GetTopupFrequency;
 import com.dev.prepaid.model.request.IsPaidTopupInLastXDays;
-import com.dev.prepaid.repository.PrepaidCxOfferAdvanceFilterRepository;
 import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
 import com.dev.prepaid.service.OfferService;
 import com.dev.prepaid.util.AppUtil;
@@ -332,14 +331,12 @@ public class DataController {
 	@GetMapping(value = "offerSelection")
 	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
-		List<PrepaidCxOfferSelection> data = offerService.getOfferSelection(instanceId);
-		for (PrepaidCxOfferSelection prepaidCxOfferSelection : data) {
-			log.debug("{}", prepaidCxOfferSelection);
-
+		List<OfferSelection>  data = offerService.getOfferSelection(instanceId);
+		for (OfferSelection prepaidCxOfferSelection: data){
+			log.info("{}", prepaidCxOfferSelection);
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
 			offerDetailDTO = offerDetail(
-					prepaidCxOfferSelection.getOfferBucketType().concat("|")
-							.concat(prepaidCxOfferSelection.getOfferBucketId()),
+					prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()),
 					String.valueOf(prepaidCxOfferSelection.getOfferId()));
 //			offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()));
 //			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
@@ -356,7 +353,7 @@ public class DataController {
 			log.info("{}", offerDetailDTO);
 			list.add(offerDetailDTO);
 		}
-		return list;
+		return  list;
 	}
 
 	@GetMapping(value = "offerEligibility")
