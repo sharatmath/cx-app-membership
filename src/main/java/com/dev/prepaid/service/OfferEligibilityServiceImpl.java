@@ -9,6 +9,7 @@ import com.dev.prepaid.model.invocation.DataSet;
 import com.dev.prepaid.model.invocation.InvocationRequest;
 import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferMembershipStatus;
+import com.dev.prepaid.type.ProvisionType;
 import com.dev.prepaid.util.BaseRabbitTemplate;
 import com.dev.prepaid.util.JwtTokenUtil;
 import com.dev.prepaid.util.RESTUtil;
@@ -468,27 +469,34 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 // getMsisdn from query
                 // compare msisdn eligible with msisdn from advance filter query
                 // match msisdn put in queue redemption
+                if(ProvisionType.DIRECT_PROVISION.getDescription().equals(prepaidCxOfferConfig.getProvisionType()) ||
+                        ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.equals(prepaidCxOfferConfig.getProvisionType())
+                ) {
+                    for (PrepaidOfferMembership p : saved) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("offerMembershipId", p.getId());
+                        map.put("msisdn", p.getMsisdn());
+                        map.put("smsKeyword", "");
+                        map.put("instanceId", prepaidCxOfferConfig.getInstanceId());
+
+                        sendToRedemptionQueue(invId, map);
+                        }
+                }
+                break;
+            }
+            List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, i + batchSize);
+            List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
+            if(ProvisionType.DIRECT_PROVISION.getDescription().equals(prepaidCxOfferConfig.getProvisionType()) ||
+                    ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.equals(prepaidCxOfferConfig.getProvisionType())
+            ) {
                 for (PrepaidOfferMembership p : saved) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("offerMembershipId", p.getId());
                     map.put("msisdn", p.getMsisdn());
                     map.put("smsKeyword", "");
                     map.put("instanceId", prepaidCxOfferConfig.getInstanceId());
-
                     sendToRedemptionQueue(invId, map);
                 }
-
-                break;
-            }
-            List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, i + batchSize);
-            List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
-            for (PrepaidOfferMembership p : saved) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("offerMembershipId", p.getId());
-                map.put("msisdn", p.getMsisdn());
-                map.put("smsKeyword", "");
-                map.put("instanceId", prepaidCxOfferConfig.getInstanceId());
-                sendToRedemptionQueue(invId, map);
             }
         }
         log.info("process#5|SAVE|{}|rows|{}", membershipRows.size(), membershipRows);
@@ -529,6 +537,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
     public ResponseEntity<String> sendToRedemptionQueue(String invId, Map<String, Object> payload) {
+        //type directProvisioning and event + directProvisioning -> invoke redemption
+        //type eventConditionOnly -> invoke Custom Event
+        //type offerAssignment And Offer Monitoring -> do nothing
         log.info("process#6|START|sendToRedemptionQueue");
         log.info("process#6|id|{}|payload|{}",
                 invId,

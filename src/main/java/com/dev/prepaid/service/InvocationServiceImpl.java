@@ -15,6 +15,7 @@ import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.invocation.*;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
 import com.dev.prepaid.repository.PrepaidOfferEligibilityTrxRepository;
+import com.dev.prepaid.type.ProvisionType;
 import com.dev.prepaid.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +52,13 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
     public void invoke(InvocationRequest invocation) throws Exception {
         String instanceId = invocation.getInstanceContext().getInstanceId();
         PrepaidCxOfferConfig instanceConfiguration = prepaidCxOfferConfigRepository.findOneByInstanceIdAndDeletedDateIsNull(instanceId);
+        if(ProvisionType.EVENT_CONDITION.getDescription().equals(instanceConfiguration.getProvisionType()) ||
+                ProvisionType.EVENT_CONDITION_WITH_DIRECT_PROVISION.getDescription().equals(instanceConfiguration.getProvisionType())
+        ){
+            log.debug("invoke not allowed for type {}", instanceConfiguration.getProvisionType());
+            return;
+        }
+
         List<List<String>> rows = invocation.getDataSet().getRows();
         // Async
         // Invoke without data will have DataSet with size, but no rows in DataSet
