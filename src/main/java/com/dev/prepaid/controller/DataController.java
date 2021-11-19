@@ -471,10 +471,10 @@ public class DataController {
             try {
                 log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
                 if (prepaidCxOfferEventCondition.getCampaignEndDate() != null) {
-                    eventCondition.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
+                    eventCondition.setCampaignEndDate(DateUtil.fromLocalDateTime(prepaidCxOfferEventCondition.getCampaignEndDate()));
                 }
                 if (prepaidCxOfferEventCondition.getCampaignStartDate() != null) {
-                    eventCondition.setCampaignStartDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
+                    eventCondition.setCampaignStartDate(DateUtil.fromLocalDateTime(prepaidCxOfferEventCondition.getCampaignStartDate()));
                 }
             } catch (ParseException e) {
                 e.printStackTrace();

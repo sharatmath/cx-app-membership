@@ -496,10 +496,10 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		prepaidCxOfferEventCondition.setEventConditionType(saveConfigRequest.getPayload().getOfferEventCondition().getEventType());
 		prepaidCxOfferEventCondition.setEventConditionName(saveConfigRequest.getPayload().getOfferEventCondition().getEventConditionName());
 		if(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignStartDate() != null) {
-			prepaidCxOfferEventCondition.setCampaignStartDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignStartDate()));
+			prepaidCxOfferEventCondition.setCampaignStartDate(DateUtil.stringToLocalDateTime(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignStartDate()));
 		}
 		if(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate() != null) {
-			prepaidCxOfferEventCondition.setCampaignEndDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate()));
+			prepaidCxOfferEventCondition.setCampaignEndDate(DateUtil.stringToLocalDateTime(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate()));
 		}
 		log.info("saveOfferEventCondition type {}", prepaidCxOfferEventCondition.getEventConditionType());
 		if("Top-Up".equals(prepaidCxOfferEventCondition.getEventConditionType())){

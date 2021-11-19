@@ -2,20 +2,20 @@ package com.dev.prepaid.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 
 @Slf4j
 public class DateUtil {
 	static final long ONE_MINUTE_IN_MILLIS=60000;//millisecs
+
 	public static Date stringToDate(String data){
 		ZoneId zoneId = ZoneId.of( "Asia/Singapore" );
 		String concat = ":10.000Z";
@@ -31,6 +31,30 @@ public class DateUtil {
 	public static String fromDate(Date date) throws ParseException {
 		String f  = DateUtil.dateToString(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
 		return  f.substring(0, 16);
+	}
+
+	public static LocalDateTime stringToLocalDateTime(String data){
+		String zero = ":00";
+		String dateConvert = data.concat(zero);
+		ZoneId timeZone = ZoneId.systemDefault();
+//		ZoneId zoneId = ZoneId.of( "Asia/Singapore" );
+		ZonedDateTime zonedDateTime = LocalDateTime.parse(dateConvert,
+				DateTimeFormatter.ISO_DATE_TIME).atZone(timeZone);
+
+		log.info("zonedDateTime |{}|", zonedDateTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME));
+		LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
+
+		return localDateTime;
+	}
+
+	public static String fromLocalDateTime(LocalDateTime localDateTime) throws ParseException {
+		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+		ZoneId timeZone = ZoneId.systemDefault();
+		ZonedDateTime zonedDateTime =localDateTime.atZone(timeZone);
+		log.info("zonedDateTime |{}|", zonedDateTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME));
+		String formattedDateTime = localDateTime.format(formatter);
+		log.info("formattedDateTime |{}|", formattedDateTime);
+		return  formattedDateTime.substring(0, 16);
 	}
 	public static Date stringToDate(String dateStr,String format) throws ParseException {
 			return new SimpleDateFormat(format).parse(dateStr);//yyyy-MM-dd'T'HH:mm:ss'Z'
