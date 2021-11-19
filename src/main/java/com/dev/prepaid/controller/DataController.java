@@ -449,6 +449,7 @@ public class DataController {
                     .topUpAccBalanceBeforeValue(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeValue())
                     .topUpCurBalanceOp(prepaidCxOfferEventCondition.getTopUpCurBalanceOp())
                     .topUpCurBalanceValue(prepaidCxOfferEventCondition.getTopUpCurBalanceValue())
+                    .topUpOp(prepaidCxOfferEventCondition.getTopUpOp())
                     .topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())
                     .chargedAmount(prepaidCxOfferEventCondition.getChargedAmount())
                     .imei(prepaidCxOfferEventCondition.getImei())

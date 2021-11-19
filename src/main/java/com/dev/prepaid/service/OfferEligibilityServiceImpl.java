@@ -87,19 +87,26 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         }
 
         if (offerLevelRows.size() > 0) {
-            saveToPrepaidOfferMembership(offerLevelRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration);
+            if(!ProvisionType.EVENT_CONDITION.getDescription().equals(instanceConfiguration.getProvisionType())) {
+                saveToPrepaidOfferMembership(offerLevelRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration);
+            }else{
+                log.info("Not Save Membership Caused Provision Type {}", instanceConfiguration.getProvisionType());
+            }
         }
 
 
         //7
-        productImportEndpoint(offerLevelRows, invocation, invocationOri, instanceConfiguration);
+        if(ProvisionType.DIRECT_PROVISION.getDescription().equals(instanceConfiguration.getProvisionType()) ||
+            ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.getDescription().equals(instanceConfiguration.getProvisionType())) {
+            productImportEndpoint(offerLevelRows, invocation, invocationOri, instanceConfiguration);
 
-        try {
-            PrepaidCxProvInvocations prepaidCxProvInvocations = prepaidCxProvInvocationsRepository.findOneById(invocation.getUuid());
-            prepaidCxProvInvocations.setStatus("COMPLETED");
-            prepaidCxProvInvocationsRepository.save(prepaidCxProvInvocations);
-        } catch (Exception e) {
-            log.error("ERROR : {}", e);
+            try {
+                PrepaidCxProvInvocations prepaidCxProvInvocations = prepaidCxProvInvocationsRepository.findOneById(invocation.getUuid());
+                prepaidCxProvInvocations.setStatus("COMPLETED");
+                prepaidCxProvInvocationsRepository.save(prepaidCxProvInvocations);
+            } catch (Exception e) {
+                log.error("ERROR : {}", e);
+            }
         }
 
         return offerLevelRows;
@@ -113,15 +120,23 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#1|DATA|{}", rows);
         Optional<PrepaidCxOfferEligibility> opsFind = prepaidCxOfferEligibilityRepository.findByOfferConfigId(instanceConfiguration.getId());
         log.info("process#1|{}|config|{}", opsFind, instanceConfiguration.getId());
-        String[] excludeOverallOfferName = null;
+
         if (!opsFind.isPresent()) {
             log.info("process#1|SUMMARY_IN|{}|rows|{}", rows.size(), rows);
             log.info("process#1|SUMMARY_OUT|{}|rows|{}", rows.size(), rows);
             log.info("process#1|evaluationSubscriberExclusion|END");
             return rows;
         }
+
+        String[] excludeOverallOfferName = null;
+        String getExcludeProgramId = opsFind.get().getExcludeProgramId();
+        log.info("process#1|excludeOverallOfferName|{}|", getExcludeProgramId);
         for (List<String> row : rows) {
-            if (opsFind.get().getExcludeProgramId() != null) {
+            if (getExcludeProgramId.isEmpty() || getExcludeProgramId == null || opsFind.get().getExcludeProgramId() == "" || Objects.isNull(getExcludeProgramId)) {
+                log.info("process#1|3|EXCLUSION|{}|PASS", row.get(1));
+                resultRows.add(row);
+            }
+            else {
                 excludeOverallOfferName = opsFind.get().getExcludeProgramId().split(",");
                 boolean checkIsExist = false;
                 for (String overallOfferName : excludeOverallOfferName) {
@@ -149,9 +164,6 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     excluseRows.add(row);
                 }
 
-            } else {
-                log.info("process#1|3|EXCLUSION|{}|PASS", row.get(1));
-                resultRows.add(row);
             }
         }
         log.info("process#1|SUMMARY_IN|{}", rows.size());
@@ -481,9 +493,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
                         sendToRedemptionQueue(invId, map);
                         }
+                }else{
+                    log.info("process#5|NOT Sent to Redemption Queue caused provision type |{}|", prepaidCxOfferConfig.getProvisionType());
                 }
                 break;
             }
+
             List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, i + batchSize);
             List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
             if(ProvisionType.DIRECT_PROVISION.getDescription().equals(prepaidCxOfferConfig.getProvisionType()) ||
@@ -497,6 +512,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     map.put("instanceId", prepaidCxOfferConfig.getInstanceId());
                     sendToRedemptionQueue(invId, map);
                 }
+            } else{
+                log.info("process#5|NOT Sent to Redemption Queue caused provision type |{}|",  prepaidCxOfferConfig.getProvisionType());
             }
         }
         log.info("process#5|SAVE|{}|rows|{}", membershipRows.size(), membershipRows);
