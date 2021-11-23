@@ -203,7 +203,7 @@
 
         .modal-container {
             width: 50%;
-            height: 350px;
+            height: 40%;
             margin: 3% auto;
             padding: 10px 15px;
             background-color: #fff;
@@ -230,7 +230,7 @@
             padding: 0; */
             border: none;
             position: fixed;
-            bottom: 31%;
+            bottom: 30%;
             right: 25%; 
         }
 
@@ -272,17 +272,23 @@
             border:solid .3px;
             border-radius: 5px;
             border-width: bold;
-            background-color: #eceefa;
-            padding: 2px;
+            background-color: #fafafd;
+            padding: 0.5%;
+            margin-top: 2%;
+            margin-left: 1px;
+            /* min-height: 150px; */
+        }
+
+        .data-card {
+            border-radius: 5px;
+            border-width: bold;
+            background-color: #ececfa;
+            padding: 0px;
             margin-top: 5px;
         }
 
         .delete-component-btn {
             float: right;
-        }
-
-        .component-title {
-            padding: 5px;
         }
 
         .component-form {
@@ -1076,15 +1082,18 @@
                                 {{testData}} {{showModal}} {{tableList}}
                                 <query-component 
                                     v-bind:xxx="testData"
-                                    v-bind:yyy="testIndex" 
+                                    v-bind:maindata="mainData" 
                                     v-bind:modaltriggerfn="showModalfn"
+                                    v-bind:deletegroupfn="deleteGroupfn"
                                     
                                     ></query-component>
                                 <table-column-modal 
                                     v-bind:modaltrigger="showModal" 
                                     v-bind:modaltriggerfn="showModalfn" 
                                     v-bind:tablelist="tableList"></table-column-modal>
+                                    {{mainData}}
                             </div>
+                            
 
                         </div>
                     </div>
@@ -2956,24 +2965,56 @@
     const formatDate = date => date.toISOString().slice(0, 10);
     var dateToday = formatDate(new Date());
 
+    function uuidv4() {
+	    var a, b, c, d;
+	    var time = Math.round(new Date().getTime() / 1000);
+	    var version = window.navigator.appVersion;
+	    var href = window.location.href;
+        
+	    // a - unix timestamp
+	    a = time.toString(16).substring(0, 8);
+
+	    // b - browser
+	    var match = version.match(/\d+/g);
+	    if (!match) {
+	    	throw 'Invalid browser version string';
+	    }
+	    var sum = 0;
+	    for (var i = 0, ii = match.length; i < ii; ++i) {
+	    	sum += parseInt(match[i], 10);
+	    }
+	    b = (sum * sum * sum).toString(16).substring(0, 6);
+
+	    // c - url
+	    c = (href.length * href.length * href.length).toString(16).substring(0, 4);
+
+	    // d - random
+	    d = Math.random().toString().substring(2);
+	    d = parseInt(d, 10);
+	    d = d.toString(16).substring(0, 6);
+
+	    return [a, b, c, d].join('-');
+    };
+
 
     Vue.component('table-column-modal',{
         props:['modaltrigger', 'modaltriggerfn','tablelist'],
         data:function () {
             return {
+                dataId:null,
                 selectedTable:null,
                 selectedColumn:null,
                 tableColumnList:[],
                 numberOption: ['SUM','AVERAGE','MEAN','MEDIAN'],
-                selectedNumberOption:'SUM',
                 numberOperand: ['>','<', '>=', '<=', '=', '!='],
+                varCharOption:['MATCHES','EQUAL','START WITH'],
+                selectedNumberOption:'SUM',
                 selectedNumberOperand:'>',
                 numberValue:0,
                 selectedDateType:'exactDate',
                 exactDate:dateToday,
                 daysBefore:0,
                 duration:0,
-                varCharOption:['MATCHES','EQUAL','START WITH'],
                 selectedVarCharOption: 'MATCHES',
                 varCharValue:''
 
@@ -2990,6 +3031,9 @@
                         <div class="modal-header">
                           <slot name="header">
                            <h5> Add Data </h5>
+                           <button class="btn" @click="modaltriggerfn" @click="clearDropdown">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
                           </slot>
                         </div>
                         <div class="modal-body">
@@ -2999,7 +3043,7 @@
                                     <v-select 
                                         placeholder='Select Table'
                                         class="basic-dropdown"
-                                        style="margin:5px;"
+                                        style="margin:5px; padding:0px !Important;"
                                         :options="tablelist"
                                         :clearable="false"
                                         v-model="selectedTable"
@@ -3011,7 +3055,7 @@
                                         <v-select 
                                             placeholder='Select Column'
                                             class="basic-dropdown"
-                                            style="margin:5px;"
+                                            style="margin:5px; padding:0px !Important;"
                                             :options="tableColumnList"
                                             :clearable="false"
                                             v-model="selectedColumn"
@@ -3033,7 +3077,7 @@
                                             <v-select 
                                                 placeholder='-----'
                                                 class="basic-dropdown"
-                                                style="margin:5px;"
+                                                style="margin:5px; padding:0px !Important;"
                                                 :options="numberOption"
                                                 :clearable="false"
                                                 v-model="selectedNumberOption"
@@ -3043,7 +3087,7 @@
                                             <v-select 
                                                 placeholder='-----'
                                                 class="basic-dropdown"
-                                                style="margin:5px;"
+                                                style="margin:5px; padding:0px !Important;"
                                                 :options="numberOperand"
                                                 :clearable="false"
                                                 v-model="selectedNumberOperand"
@@ -3054,7 +3098,8 @@
                                                 type="number" min="0"
                                                 class="form-control form-control-sm input-custom"
                                                 style="margin-left:0px"
-                                                v-model.number="numberValue"/> 
+                                                v-model.number="numberValue"
+                                                @input="removeNegative($event,'numberValue', numberValue)"/> 
                                         </div>
                                         <div class=" col-sm-5"> </div>
                                         
@@ -3074,7 +3119,8 @@
                                                 type="number" min="0"
                                                 class="form-control form-control-sm input-custom"
                                                 style="margin-left: 5px !important;"
-                                                v-model.number="duration"/>
+                                                v-model.number="duration"
+                                                @input="removeNegative($event,'duration', duration)"/>
                                         </div>
                                         <div class=" col-sm-2">
                                             <input type="radio" id="exactDate" value="exactDate" v-model="selectedDateType">
@@ -3098,7 +3144,8 @@
                                                 type="number" min="0"
                                                 class="form-control form-control-sm input-custom"
                                                 style="width:20%; margin-left:0px !important;"
-                                                v-model.number="daysBefore"/>    
+                                                v-model.number="daysBefore"
+                                                @input="removeNegative($event,'daysBefore', daysBefore)"/>    
                                             </div>
                                         </div>
                                     </div>
@@ -3113,7 +3160,7 @@
                                             <v-select 
                                                 placeholder='-----'
                                                 class="basic-dropdown"
-                                                style="margin:3px;"
+                                                style="margin:3px; padding:0px !Important;"
                                                 :options="varCharOption"
                                                 :clearable="false"
                                                 v-model="selectedVarCharOption"
@@ -3147,7 +3194,8 @@
                                                 type="number" min="0"
                                                 class="form-control form-control-sm input-custom"
                                                 style="margin-left: 5px !important;"
-                                                v-model.number="numberValue"/>
+                                                v-model.number="numberValue"
+                                                @input="removeNegative($event,'numberValue', numberValue)"/>
                                         </div>
                                         <div class=" col-sm-2">
                                             <input type="radio" id="exactDate" value="exactDate" v-model="selectedDateType">
@@ -3171,7 +3219,8 @@
                                                 type="number" min="0"
                                                 class="form-control form-control-sm input-custom"
                                                 style="width:20%; margin-left:0px !important;"
-                                                v-model.number="daysBefore"/>    
+                                                v-model.number="daysBefore"
+                                                @input="removeNegative($event, 'daysBefore', daysBefore)"/>    
                                             </div>
                                         </div>
                                     </div>    
@@ -3179,7 +3228,6 @@
                                 
                             
                             </div>
-                            {{selectedColumn}}
                             <div class="modal-footer">
                                 <button class="btn" @click="modaltriggerfn" @click="clearDropdown">
                                     Back
@@ -3198,6 +3246,8 @@
         methods:{
             setSelectedTable () {
                 console.log(this.selectedTable,'selectedTable')
+                console.log(uuidv4());
+               
 
                 fetch(PROD_URL + `offerSelection?instanceId=${INSTANCE_ID}`)
 				.then(res => res.json())
@@ -3233,7 +3283,18 @@
                         { name:'CREATED_DATE', dataType:'DATE'}]
 
                 }
+
+                // everytime table was changed, this will clear the previous data
                 this.selectedColumn = null;
+                this.selectedNumberOption='SUM';
+                this.selectedNumberOperand = '>';
+                this.numberValue = 0;
+                this.selectedDateType = 'exactDate';
+                this.exactDate = dateToday;
+                this.daysBefore = 0;
+                this.duration = 0;
+                this.selectedVarCharOption = 'MATCHES';
+                this.varCharValue = '';
                 
                 console.log(this.tableColumnList,'tableColumnList after')
 
@@ -3242,13 +3303,26 @@
             updateExactDate () {
                 console.log(this.exactDate)
             },
+
+            removeNegative(e,type, value) {
+                console.log(e,'eeee')
+                value = Math.max(0, parseInt(e.target.value) || 0);
+
+                if(type==='numberValue'){
+                    this.numberValue = value;
+                } else if (type==='daysBefore') {
+                    this.daysBefore = value;
+                } else if (type==='duration') {
+                    this.duration = value;
+                }
+            },
             clearDropdown () {
                 console.log(this.selectedColumn,'data')
+                this.dataId = null;
                 this.selectedTable = null;
                 this.selectedColumn = null;
                 this.tableColumnList = [];
                 this.selectedNumberOption='SUM';
-                this.numberOperand =  ['>','<', '>=', '<=', '=', '!='];
                 this.selectedNumberOperand = '>';
                 this.numberValue = 0;
                 this.selectedDateType = 'exactDate';
@@ -3261,70 +3335,172 @@
         },
     })
 
-  Vue.component('sample', {
-      template:`<div>test compionent</div>`
+    Vue.component('data-component', {
+        props:['data'],
+        template:
+            `<div class="data-card wrapper" style="margin-left: 1% !important;">
+                    <div class="row">
+                        <div class="col-md-4" style="margin-left:20px !important; margin-top: 5px">
+                            <div><b>Table:</b> {{data.selectedTable}}</div>
+                            <div><b>Column:</b> {{data.selectedColumn.name}}</div>
+                        </div>
+                        <div class="col-md-3" style="margin-left:5% !important;  margin-top: 5px" v-show="data.selectedColumn.dataType==='NUMBER'">
+                            <div><b>Data:</b> {{data.selectedNumberOption}} {{data.selectedNumberOperand}} {{data.numberValue}}</div>
+                            <div><b>Duration(days):</b>{{data.duration}}</div>
+                            <div v-if="data.selectedDateType ==='exactDate'">
+                                <div><b>Start date:</b>  {{data.exactDate}}</div>
+                            </div>
+                            <div v-show="data.selectedDateType ==='daysBefore'">
+                                <div><b>Days before:</b>{{data.daysBefore}}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="margin-left:5% !important;  margin-top: 5px" v-show="data.selectedColumn.dataType==='VARCHAR'">
+                            <div><b>Data:</b>  {{data.selectedVarCharOption}} {{data.varCharValue}}</div>
+                        </div>
+                        <div class="col-md-3" style="margin-left:5% !important;  margin-top: 5px" v-show="data.selectedColumn.dataType==='DATE'">
+                            <div><b>Duration (days):</b>  {{data.duration}}</div>
+                            <div><b>Days Before:</b>  {{data.daysBefore}}</div>
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-2 justify-content-end" >
+                            <button type="button"class="btn btn-outline-danger btn-sm" style="float:right; border-radius: 50%;
+                                border: 1px solid #ff000061; margin-top: 5px"><i class="fas fa fa-trash"></i> 
+                        </div>
+                    </div>
+            </div>`
   })
 
-//   <div v-for="y in yyy" :key="y.groups">
-//        <div v-show="y.groups.length > 0">
-//            <query-component 
-//                    v-bind:yyy="y.groups" 
-//                >{{y.groups}}</query-component>
-//        </div>       
-//    </div>
+//   <div class="col-sm-12 ">
+//                             <div v-for="y in maindata" :key="y.dataList">
+//                                 <div v-for="data in y.dataList"> 
+    // <data-component v-bind:data="data"></data-component>
+    //                             </div>
+//                             </div>
+//                         </div>
+//                         <div class="col-sm-12">
+//                             <div v-for="y in maindata" :key="y.groups">
+//                                 <div v-show="y.groups.length > 0">
+//                                     <query-component 
+//                                            v-bind:maindata="y.groups" 
+//                                        >{{y.groups}}</query-component>
+//                                 </div>       
+//                             </div> 
+//                         </div>
+
+
+// <div>
+//     <div class="component-card">
+//         <div class="row">
+//          <div v-for="y in maindata" :key="y">
+//              <div class="col-sm-12 ">
+//                  <div v-for="data in y.dataList"> 
+//                      <data-component v-bind:data="data"></data-component>
+//                  </div>
+//              </div>
+//              <div class="col-sm-12 ">
+//                  <div v-show="y.groups.length > 0">
+//                      <query-component 
+//                             v-bind:maindata="y.groups" 
+//                         >{{y.groups}}</query-component>
+//                  </div>     
+//              </div>
+//          </div>
+//         </div>
+//     </div>
+// </div>
+
+//-----------------------------------------------------------------------------
+// <div class="component-card">
+//                     <div class="row">
+//                         <div class=" col-sm-4 ">
+//                             <h6>
+//                                 <v-select 
+//                                     placeholder='----'
+//                                     class="operators"
+//                                     style="margin:5px;"
+//                                     :options="condition"
+//                                     :clearable="false"
+//                                     v-model="selectedCondition"
+//                                 ></v-select>
+//                             </h6>
+//                         </div>
+
+//                         <div class="col-sm-4"></div>
+//                         <div class="col-sm-4">
+//                             <button @click="modaltriggerfn" class="btn btn-create-group"> Add Data</button>
+//                             <button @click="modaltriggerfn" class="btn btn-create-group"> Create Group</button> 
+//                             <button @click="deleteGroup(maindata)" type="button"class="btn btn-danger my-1" style="max-width: 40px !important; margin-left:15%" ><i class="fas fa fa-trash"></i>
+//                         </div>
+
+//                         <div class="col-sm-12 ">
+//                             <div v-for="y in maindata" :key="y.dataList">
+//                                 <div v-for="data in y.dataList"> 
+//                                     <data-component v-bind:data="data"></data-component>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                         <div class="col-sm-12">
+                           
+//                         </div>
+                        
+                       
+//                     </div>
+                    
+//                 </div>
 
     Vue.component('query-component', {
-            props: ['xxx', 'yyy', 'modaltriggerfn','checkdata'],
+            props: ['xxx', 'maindata', 'modaltriggerfn','checkdata','deletegroupfn'],
             data: function () {
             return {
+                groupId:null,
                 condition:['----','AND', 'OR'],
                 selectedCondition:'AND'
             } 
         },
             template:
             `<div>
-                <div class="component-card">
-                    <div class="row component-title">
-                        <div class=" col-sm-4 ">
-                            <h6>
+                <div class="row component-card" v-for="y in maindata" :key="y">
+                    <div class=" col-sm-4 ">
+                            <div v-show="y.groups || y.dataList">
                                 <v-select 
                                     placeholder='----'
                                     class="operators"
-                                    style="margin:5px;"
+                                    style="margin:3px; padding:0px !Important;"
                                     :options="condition"
                                     :clearable="false"
-                                    v-model="selectedCondition"
+                                    v-model="y.groupCondition"
                                 ></v-select>
-                            </h6>
-                        </div>
-                        <div class="col-sm-4">{{ xxx }} {{yyy}}</div>
-
-
-                        <div class="col-sm-4">
-                            <button @click="modaltriggerfn" class="btn btn-create-group"> Add Data</button>
-                            <button @click="modaltriggerfn" class="btn btn-create-group"> Create Group</button> 
-                            <button type="button"class="btn btn-danger my-1" style="max-width: 40px !important; margin-left:15%" ><i class="fas fa fa-trash"></i>
-                        </div>
-                       
+                            </div>
+                    </div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4" >
+                        <button @click="modaltriggerfn" class="btn btn-create-group btn-sm" style="margin-left:20%"> Add Data</button>
+                        <button @click="modaltriggerfn" class="btn btn-create-group btn-sm" style="margin-right:3%"> Create Group</button>
+                        <button @click="deletegroupfn(y.groupId)" type="button"class="btn btn-danger btn-sm" style="max-width: 35px !important;" 
+                            v-show="!y.rootGroup"><i class="fas fa fa-trash"></i>
                     </div>
                     
+                     <div class="col-sm-12 " v-show="y.dataList">
+                         <div v-for="data in y.dataList"> 
+                             <data-component v-bind:data="data"></data-component>
+                         </div>
+                     </div>
+                     <div class="col-sm-12" v-show="y.groups">
+                            <query-component 
+                                v-bind:maindata="y.groups"
+                                v-bind:modaltriggerfn="modaltriggerfn"
+                                v-bind:deletegroupfn="deletegroupfn"
+                            ></query-component> 
+                     </div>
                 </div>
             </div>`,
        
-        methods: {
-            testing () {
-                console.log(this.yyy)
-            }
-           
-        },
-        beforeCreate: function() {
-        //    console.log(advanceFilter.SUBSCRIBER_LATEST_ACTION_Lifetime)
-        },
+        methods: { },
+        beforeCreate: function() {},
     })
 
-
-
     Vue.component('v-select', VueSelect.VueSelect)
+
 
     // Main Component for ADVANCE FILTER
     var advanceFilter = new Vue({
@@ -3333,23 +3509,118 @@
             showModal: false,
             tableList:[],
             testData: 'test pass props',
-            testIndex: [
-                { id:1,
-                    groups:[
-                        {id:1.1,
-                         groups:[ {id:1.11, groups:[]}]
-                        },
-                        {id:1.2,
-                         groups:[ {id:1.12, groups:[]}]
-                        }]
-                },
-                { id:2,
-                    groups:[
-                        {id:2.1,
-                         groups:[ 
-                             {id:2.11, groups:[ {id:2.111, groups:[]}
-                         ]}]
-                        },]
+            tempData:{
+                groupId:'',
+                groupId:1,
+                rootGroup:true,
+                groupCondition:'AND',
+                //groups:[]   -> must be pushed
+                //dataList:[] -> must be pushed
+            },
+            mainData: [{
+                groupId:1,
+                rootGroup:true,
+                groupCondition:'AND',
+                groups:[{
+                    groupId:1.2,
+                    rootGroup:false,
+                    groupCondition:'OR',
+                    groups:[{
+                        groupId:1.23,
+                        rootGroup:false, 
+                        groupCondition:'AND',
+                        groups:[{
+                            groupId:1.234,
+                            rootGroup:false,
+                            groupCondition:'AND',
+                            groups:[{
+                                groupId:1.2345,
+                                rootGroup:false,
+                                groupCondition:'AND',
+                                dataList:[] }],
+                            dataList:[{ 
+                                dataId: 'data1.112',
+                                selectedTable: '1.234',
+                                selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
+                                selectedNumberOption:'SUM',
+                                selectedNumberOperand: '>',
+                                numberValue: 11,
+                                selectedDateType: 'exactDate',
+                                exactDate: dateToday,
+                                daysBefore: 4,
+                                duration: 31,
+                                selectedVarCharOption: 'MATCHES',
+                                varCharValue: 'asdasdasds',},
+                                {   dataId: 'data1.112',
+                                selectedTable: '1.234',
+                                selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
+                                selectedNumberOption:'SUM',
+                                selectedNumberOperand: '>',
+                                numberValue: 11,
+                                selectedDateType: 'exactDate',
+                                exactDate: dateToday,
+                                daysBefore: 4,
+                                duration: 31,
+                                selectedVarCharOption: 'MATCHES',
+                                varCharValue: '22222',}
+                            ]
+                        }],
+                        dataList:[{
+                            dataId: 'data3',
+                            selectedTable: '1.23',
+                            selectedColumn: { name: "CREATED_DATE", dataType: "DATE" },
+                            selectedNumberOption:'SUM',
+                            selectedNumberOperand: '>',
+                            numberValue: 0,
+                            selectedDateType: 'exactDate',
+                            exactDate: dateToday,
+                            daysBefore: 0,
+                            duration: 0,
+                            selectedVarCharOption: 'MATCHES',
+                            varCharValue: '',}
+                        ]
+                    }]
+                    }],
+                dataList:[
+                    {   dataId: 'data1',
+                        selectedTable: '1',
+                        selectedColumn: { name: "CDR_DA_DT_A_ID", dataType: "NUMBER" },
+                        selectedNumberOption:'AVERAGE',
+                        selectedNumberOperand: '>',
+                        numberValue: 12,
+                        selectedDateType: 'exactDate',
+                        exactDate: dateToday,
+                        daysBefore: 222,
+                        duration: 10,
+                        selectedVarCharOption: 'MATCHES',
+                        varCharValue: '',
+                    },
+                    {   dataId: 'data2',
+                        selectedTable: '1',
+                        selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
+                        selectedNumberOption:'SUM',
+                        selectedNumberOperand: '<',
+                        numberValue: 8,
+                        selectedDateType: 'exactDate',
+                        exactDate: dateToday,
+                        daysBefore: 88,
+                        duration: 15,
+                        selectedVarCharOption: 'MATCHES',
+                        varCharValue: 'test VChar',
+                    },
+                    {   dataId: 'data3',
+                        selectedTable: '1',
+                        selectedColumn: { name: "CREATED_DATE", dataType: "DATE" },
+                        selectedNumberOption:'SUM',
+                        selectedNumberOperand: '+',
+                        numberValue: 6,
+                        selectedDateType: 'exactDate',
+                        exactDate: dateToday,
+                        daysBefore:3,
+                        duration: 22,
+                        selectedVarCharOption: 'MATCHES',
+                        varCharValue: 'test var char',}
+                ]
             }],
         },
         methods: {
@@ -3360,19 +3631,42 @@
             },
             checkDatafn () {
                 console.log('checkDatafn')
-                console.log(advanceFilter.testIndex,'testIndex')
-            }
+                console.log(advanceFilter.mainData,'mainData')
+            },
+            searchGroupId (selectedId, data) {
+
+                if(data){
+                    for (var i = 0; i < data.length; i++) {
+                        if (selectedId === data[i].groupId) {
+                            console.log('found id')
+                            console.log(data[i],'is popped?');
+                            data.splice(i, 1);
+                            console.log('deleted')
+    
+                        } else {console.log('not found')
+                            this.searchGroupId(selectedId, data[i].groups)
+                        }
+                    }
+
+                }
+
+
+                console.log(advanceFilter.mainData,'maindata')
+            },
+            deleteGroupfn (selectedGroupId) {
+                console.log(selectedGroupId)
+                console.log(advanceFilter.mainData,'maindata')
+                this.searchGroupId(selectedGroupId, advanceFilter.mainData)
+            },
 
         },
         watch: {},
 
         mounted:function () {
             console.log('call api before created')
-            fetch(PROD_URL + `offerSelection?instanceId=${INSTANCE_ID}`)
+            fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
 				.then(res => res.json())
 				.then(data => {
-                    this.sqlView = data
-                    console.log(this.sqlView)
                     console.log(data)
 				})
 				.catch(error => console.log(error))
