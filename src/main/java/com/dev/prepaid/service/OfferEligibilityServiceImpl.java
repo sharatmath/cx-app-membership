@@ -257,6 +257,19 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 prepaidCxOfferEligibility.getIsOfferLevelCapOnly(),
                 prepaidCxOfferEligibility.getOfferLevelCapValue()
         );
+
+        boolean isOfferLevelCapOnly=false;
+        boolean isOfferLevelCapAndPeriod=false;
+        if(prepaidCxOfferEligibility.getIsOfferLevelCapOnly() != null){
+            isOfferLevelCapOnly = prepaidCxOfferEligibility.getIsOfferLevelCapOnly();
+        }
+
+        if(prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod() != null){
+            isOfferLevelCapAndPeriod = prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod();
+        }
+
+
+
         log.info("process#4|IS_OFFER_LEVEL_CAP_AND_PERIOD|{}|VALUE|{} IN {} Days",
                 prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod()
                 , prepaidCxOfferEligibility.getOfferLevelCapPeriodValue()
@@ -264,7 +277,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         );
 
         if (rows.size() > 0) {
-            if (prepaidCxOfferEligibility.getIsOfferLevelCapOnly()) {
+            if (isOfferLevelCapOnly) {
                 int currentCap = countOfferCapPerOfferConfigId(instanceConfiguration.getId());
                 log.info("process#4|eligible|{}|currentCap|{}|maximumCapValue|{}",
                         rows.size(),
@@ -282,7 +295,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                         offerMembershipExcluseRows = rows.subList(capacityCap, rows.size());
                     }
                 }
-            } else if (prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod()) {
+            } else if (isOfferLevelCapAndPeriod) {
                 int currentCap = countOfferCapPerOfferConfigIdAndRangePeriod(instanceConfiguration.getId(), prepaidCxOfferEligibility);
                 log.info("process#4|eligible|{}|currentCap|{}|maximumCapValue|{}|in|{}|period_days",
                         rows.size(),
@@ -297,6 +310,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     offerMembershipRows = rows.subList(0, capacityCap);
                     offerMembershipExcluseRows = rows.subList(capacityCap, rows.size());
                 }
+            }else{
+                offerMembershipRows = rows;
             }
 
             if (offerMembershipExcluseRows.size() > 0)
