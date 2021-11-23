@@ -174,17 +174,19 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		PrepaidCxOfferEligibility prepaidCxOfferEligibility;
 		OfferEligibility offerEligibility = saveConfigRequest.getPayload().getOfferEligibility();
 		log.info("saveOfferEligibility {}", offerEligibility);
-		if(offerEligibility != null){
-			if(offerEligibility.getIsOfferLevelCapAndPeriod() == null
-					&& offerEligibility.getIsFrequencyOnly() == null
-					&& offerEligibility.getIsOfferLevelCapOnly() == null
-			        && offerEligibility.getIsFrequencyAndTime() == null) {
-				log.info("Skip saved Eligibility {} ", offerEligibility);
-				return;
-			}
-		}
 		Optional<PrepaidCxOfferEligibility> optionalPrepaidCxOfferEligibility =  prepaidCxOfferEligibilityRepository.findByOfferConfigId(offerConfigId);
 		if(optionalPrepaidCxOfferEligibility.isPresent()){
+			if(offerEligibility != null){
+				if(offerEligibility.getIsOfferLevelCapAndPeriod() == null
+						&& offerEligibility.getIsFrequencyOnly() == null
+						&& offerEligibility.getIsOfferLevelCapOnly() == null
+						&& offerEligibility.getIsFrequencyAndTime() == null) {
+					log.info("Skip saved Eligibility and clear table {} ", offerEligibility);
+					prepaidCxOfferEligibilityRepository.delete(optionalPrepaidCxOfferEligibility.get());
+					return;
+				}
+			}
+
 			log.info("optionalPrepaidCxOfferEligibility {}", optionalPrepaidCxOfferEligibility);
 			prepaidCxOfferEligibility = optionalPrepaidCxOfferEligibility.get();
 
