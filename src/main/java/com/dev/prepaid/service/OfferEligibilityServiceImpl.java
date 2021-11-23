@@ -258,6 +258,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 prepaidCxOfferEligibility.getOfferLevelCapValue()
         );
 
+        log.info("process#4|IS_OFFER_LEVEL_CAP_AND_PERIOD|{}|VALUE|{} IN {} Days",
+                prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod()
+                , prepaidCxOfferEligibility.getOfferLevelCapPeriodValue()
+                , prepaidCxOfferEligibility.getOfferLevelCapPeriodDays()
+        );
+
         boolean isOfferLevelCapOnly=false;
         boolean isOfferLevelCapAndPeriod=false;
         if(prepaidCxOfferEligibility.getIsOfferLevelCapOnly() != null){
@@ -268,13 +274,11 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             isOfferLevelCapAndPeriod = prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod();
         }
 
-
-
-        log.info("process#4|IS_OFFER_LEVEL_CAP_AND_PERIOD|{}|VALUE|{} IN {} Days",
-                prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod()
-                , prepaidCxOfferEligibility.getOfferLevelCapPeriodValue()
-                , prepaidCxOfferEligibility.getOfferLevelCapPeriodDays()
+        log.info("process#4|IS_OFFER_LEVEL_CAP_ONLY|{}|VALUE|{}",
+                isOfferLevelCapOnly,
+                isOfferLevelCapAndPeriod
         );
+
 
         if (rows.size() > 0) {
             if (isOfferLevelCapOnly) {
