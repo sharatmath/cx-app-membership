@@ -180,7 +180,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 				if(offerEligibility.getIsOfferLevelCapAndPeriod() == null
 						&& offerEligibility.getIsFrequencyOnly() == null
 						&& offerEligibility.getIsOfferLevelCapOnly() == null
-						&& offerEligibility.getIsFrequencyAndTime() == null) {
+						&& offerEligibility.getIsFrequencyAndTime() == null
+						&& offerEligibility.getExcludeProgramId() == null) {
 					log.info("Skip saved Eligibility and clear table {} ", offerEligibility);
 					prepaidCxOfferEligibilityRepository.delete(optionalPrepaidCxOfferEligibility.get());
 					return;
