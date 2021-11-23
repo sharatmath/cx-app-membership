@@ -500,8 +500,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 // getMsisdn from query
                 // compare msisdn eligible with msisdn from advance filter query
                 // match msisdn put in queue redemption
-                if(ProvisionType.DIRECT_PROVISION.getDescription().equals(prepaidCxOfferConfig.getProvisionType()) ||
-                        ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.equals(prepaidCxOfferConfig.getProvisionType())
+                if(ProvisionType.EVENT_CONDITION.getDescription().equals(prepaidCxOfferConfig.getProvisionType()) ||
+                        ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.getDescription().equals(prepaidCxOfferConfig.getProvisionType())
                 ) {
                     for (PrepaidOfferMembership p : saved) {
                         Map<String, Object> map = new HashMap<>();
@@ -520,8 +520,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
             List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, i + batchSize);
             List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
-            if(ProvisionType.DIRECT_PROVISION.getDescription().equals(prepaidCxOfferConfig.getProvisionType()) ||
-                    ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.equals(prepaidCxOfferConfig.getProvisionType())
+            if(ProvisionType.EVENT_CONDITION.getDescription().equals(prepaidCxOfferConfig.getProvisionType()) ||
+                    ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.getDescription().equals(prepaidCxOfferConfig.getProvisionType())
             ) {
                 for (PrepaidOfferMembership p : saved) {
                     Map<String, Object> map = new HashMap<>();
