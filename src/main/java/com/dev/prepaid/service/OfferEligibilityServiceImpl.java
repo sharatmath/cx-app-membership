@@ -132,7 +132,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         String getExcludeProgramId = opsFind.get().getExcludeProgramId();
         log.info("process#1|excludeOverallOfferName|{}|", getExcludeProgramId);
         for (List<String> row : rows) {
-            if (getExcludeProgramId.isEmpty() || getExcludeProgramId == null || opsFind.get().getExcludeProgramId() == "" || Objects.isNull(getExcludeProgramId)) {
+            if (getExcludeProgramId.isEmpty() || getExcludeProgramId == null || getExcludeProgramId == "" ||  getExcludeProgramId =="null" ) {
                 log.info("process#1|3|EXCLUSION|{}|PASS", row.get(1));
                 resultRows.add(row);
             }
