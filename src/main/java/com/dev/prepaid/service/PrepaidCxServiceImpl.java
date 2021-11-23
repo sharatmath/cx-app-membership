@@ -178,7 +178,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			if(offerEligibility.getIsOfferLevelCapAndPeriod() == null
 					&& offerEligibility.getIsFrequencyOnly() == null
 					&& offerEligibility.getIsOfferLevelCapOnly() == null
-					&& offerEligibility.getIsOfferLevelCapAndPeriod() == null) {
+			        && offerEligibility.getIsFrequencyAndTime() == null) {
 				log.info("Skip saved Eligibility {} ", offerEligibility);
 				return;
 			}
