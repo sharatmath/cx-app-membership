@@ -94,7 +94,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.instanceId(serviceInstance.getUuid())
 					.programId(serviceInstance.getAssetId())
 //					.programName(serviceInstance.getApplicationServiceInstall().getName())
-					.provisionType(serviceInstance.getAssetType())
+//					.provisionType(serviceInstance.getAssetType())
 					.build();
 
 			prepaidCxOfferConfigRepository.save(prepaidCxOfferConfig);
@@ -174,17 +174,20 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		PrepaidCxOfferEligibility prepaidCxOfferEligibility;
 		OfferEligibility offerEligibility = saveConfigRequest.getPayload().getOfferEligibility();
 		log.info("saveOfferEligibility {}", offerEligibility);
-		if(offerEligibility != null){
-			if(offerEligibility.getIsOfferLevelCapAndPeriod() == null
-					&& offerEligibility.getIsFrequencyOnly() == null
-					&& offerEligibility.getIsOfferLevelCapOnly() == null
-					&& offerEligibility.getIsOfferLevelCapAndPeriod() == null) {
-				log.info("Skip saved Eligibility {} ", offerEligibility);
-				return;
-			}
-		}
 		Optional<PrepaidCxOfferEligibility> optionalPrepaidCxOfferEligibility =  prepaidCxOfferEligibilityRepository.findByOfferConfigId(offerConfigId);
 		if(optionalPrepaidCxOfferEligibility.isPresent()){
+			if(offerEligibility != null){
+				if(offerEligibility.getIsOfferLevelCapAndPeriod() == null
+						&& offerEligibility.getIsFrequencyOnly() == null
+						&& offerEligibility.getIsOfferLevelCapOnly() == null
+						&& offerEligibility.getIsFrequencyAndTime() == null
+						&& offerEligibility.getExcludeProgramId() == null) {
+					log.info("Skip saved Eligibility and clear table {} ", offerEligibility);
+					prepaidCxOfferEligibilityRepository.delete(optionalPrepaidCxOfferEligibility.get());
+					return;
+				}
+			}
+
 			log.info("optionalPrepaidCxOfferEligibility {}", optionalPrepaidCxOfferEligibility);
 			prepaidCxOfferEligibility = optionalPrepaidCxOfferEligibility.get();
 
@@ -288,7 +291,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 	private void saveOfferMonitoring(String offerConfigId, SaveConfigRequest saveConfigRequest) {
 		if(!ProvisionType.OFFER_MONITORING_WITH_OFFER_ASSIGNMENT.getDescription().equals(saveConfigRequest.getPayload().getType())){
-			log.info("saveOfferMonitoring skip process or not applicable for type{}", saveConfigRequest.getPayload().getType());
+			log.info("saveOfferMonitoring skip process or not applicable for type {}", saveConfigRequest.getPayload().getType());
 			return;
 		}
 		log.info("saveOfferMonitoring {}", saveConfigRequest.getPayload().getOfferMonitoring());
@@ -354,6 +357,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferMonitoring.setUsageType(saveConfigRequest.getPayload().getOfferMonitoring().getUsageType());
 			prepaidCxOfferMonitoring.setUsageOp(saveConfigRequest.getPayload().getOfferMonitoring().getUsageOperator());
 			prepaidCxOfferMonitoring.setUsageValue(saveConfigRequest.getPayload().getOfferMonitoring().getUsageValue());
+			prepaidCxOfferMonitoring.setUsageUnit(saveConfigRequest.getPayload().getOfferMonitoring().getUsageUnit());
 			prepaidCxOfferMonitoring.setCountryCode(saveConfigRequest.getPayload().getOfferMonitoring().getCountryCode());
 			prepaidCxOfferMonitoring.setTopUpDaId(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaId());
 			prepaidCxOfferMonitoring.setTopUpDaBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceOp());
@@ -491,15 +495,16 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 					.offerConfigId(offerConfigId)
 					.build();
 		}
-		prepaidCxOfferEventCondition.setEventConditionType(saveConfigRequest.getPayload().getOfferEventCondition().getEventConditionType());
+
+		prepaidCxOfferEventCondition.setEventConditionType(saveConfigRequest.getPayload().getOfferEventCondition().getEventType());
 		prepaidCxOfferEventCondition.setEventConditionName(saveConfigRequest.getPayload().getOfferEventCondition().getEventConditionName());
 		if(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignStartDate() != null) {
-			prepaidCxOfferEventCondition.setCampaignStartDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignStartDate()));
+			prepaidCxOfferEventCondition.setCampaignStartDate(DateUtil.stringToLocalDateTime(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignStartDate()));
 		}
 		if(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate() != null) {
-			prepaidCxOfferEventCondition.setCampaignEndDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate()));
+			prepaidCxOfferEventCondition.setCampaignEndDate(DateUtil.stringToLocalDateTime(saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate()));
 		}
-
+		log.info("saveOfferEventCondition type {}", prepaidCxOfferEventCondition.getEventConditionType());
 		if("Top-Up".equals(prepaidCxOfferEventCondition.getEventConditionType())){
 			prepaidCxOfferEventCondition.setCreditMethod(saveConfigRequest.getPayload().getOfferEventCondition().getCreditMethod());
 			prepaidCxOfferEventCondition.setUsageServiceType(saveConfigRequest.getPayload().getOfferEventCondition().getUsageServiceType());
@@ -514,10 +519,10 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferEventCondition.setTopUpOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpOp());
 			prepaidCxOfferEventCondition.setTopUpTransactionValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpTransactionValue());
 
-			prepaidCxOfferEventCondition.setDaId(saveConfigRequest.getPayload().getOfferEventCondition().getDaId());
-			prepaidCxOfferEventCondition.setDaBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getDaBalanceOp());
-			prepaidCxOfferEventCondition.setDaBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getDaBalanceValue());
-			prepaidCxOfferEventCondition.setTempServiceClass(saveConfigRequest.getPayload().getOfferEventCondition().getTempServiceClass());
+			prepaidCxOfferEventCondition.setDaId(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaId());
+			prepaidCxOfferEventCondition.setDaBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaBalanceOp());
+			prepaidCxOfferEventCondition.setDaBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaBalanceValue());
+			prepaidCxOfferEventCondition.setTempServiceClass(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpTempServiceClass());
 
 
 		}else if("ARPU".equals(prepaidCxOfferEventCondition.getEventConditionType())){
@@ -533,6 +538,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferEventCondition.setEventTypeUsages(saveConfigRequest.getPayload().getOfferEventCondition().getEventTypeUsages());
 			prepaidCxOfferEventCondition.setEventUsagesOp(saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesOp());
 			prepaidCxOfferEventCondition.setEventUsagesValue(saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesValue());
+			prepaidCxOfferEventCondition.setEventUsagesUnit(saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesUnit());
+
 			prepaidCxOfferEventCondition.setCountryCode(saveConfigRequest.getPayload().getOfferEventCondition().getCountryCode());
 			prepaidCxOfferEventCondition.setAggregationPeriodDays(saveConfigRequest.getPayload().getOfferEventCondition().getAggregationPeriodDays());
 

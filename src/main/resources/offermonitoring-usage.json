@@ -16,16 +16,17 @@
     },
     "offerMonitoring": {
       "eventType": "Usage",
-      "monitorEndDate": "2021-07-30T04:37:31.849Z",
+      "monitorEndDate": "2021-07-30 04:37",
       "monitorPeriod": 0,
       "monitorPeriodDayMonth": "string",
       "monitorPeriodRadio": true,
       "monitorSpecifiedPeriodRadio": true,
-      "monitorStartDate": "2021-07-30T04:37:31.849Z",
+      "monitorStartDate": "2021-07-30 04:37",
       "usageOperator": "string",
       "usageServiceType": "string",
       "usageType": "string",
-      "usageValue": "10"
+      "usageValue": "10",
+      "usageUnit": "GB"
     },
     "offerRedemption": {
       "frequencyValue": 0,
@@ -67,7 +68,7 @@
     ],
     "programId": "string",
     "programName": "string",
-    "type": "string",
-    "uuid": "string"
+    "type": "offerMonitoringWithAssignment",
+    "uuid": "63483226-49f3-48a2-8720-4f4c47021e32"
   }
 }

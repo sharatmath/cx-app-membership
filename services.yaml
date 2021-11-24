@@ -36,7 +36,7 @@ kind: Service
 metadata:
   name: prepaid-cx-membership-api-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 80
     protocol: TCP

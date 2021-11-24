@@ -16,7 +16,7 @@ public class EventCondition {
     @SerializedName("campaignStartDate") private String campaignStartDate;
     @SerializedName("campaignEndDate") private  String campaignEndDate;
     @SerializedName("eventConditionName") private  String eventConditionName;
-    @SerializedName("eventConditionType") private  String eventConditionType;
+    @SerializedName("eventType") private  String eventType;
 
     @SerializedName("creditMethod") private  String creditMethod;
     @SerializedName("usageServiceType") private  String usageServiceType;
@@ -30,6 +30,13 @@ public class EventCondition {
 
     @SerializedName("topupAccBalanceBeforeOp") private  String topUpAccBalanceBeforeOp;
     @SerializedName("topupAccBalanceBeforeValue") private  Long topUpAccBalanceBeforeValue;
+
+    @SerializedName("topUpDaId") private  String topUpDaId;
+    @SerializedName("topUpDaBalanceOp") private  String topUpDaBalanceOp;
+    @SerializedName("topUpDaBalanceValue") private  Long topUpDaBalanceValue;
+    @SerializedName("topUpTempServiceClass") private  String topUpTempServiceClass;
+
+
 
     @SerializedName("topupOp") private  String topUpOp;
     @SerializedName("topupTransactionValue") private  Long topUpTransactionValue;
@@ -45,6 +52,7 @@ public class EventCondition {
     @SerializedName("eventTypeUsages") private  Long eventTypeUsages;
     @SerializedName("eventUsagesOp") private  String eventUsagesOp;
     @SerializedName("eventUsagesValue") private  Long eventUsagesValue;
+    @SerializedName("eventUsagesUnit") private  String eventUsagesUnit;
     @SerializedName("aggregationPeriodDays") private  Integer aggregationPeriodDays;
 
     @SerializedName("countryCode") private  String countryCode;

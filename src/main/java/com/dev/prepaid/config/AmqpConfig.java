@@ -24,6 +24,11 @@ public class AmqpConfig {
 	@Value("${offer.monitoring.queue.concurrent:1}")
 	private Integer offerMonitoringQueueConcurrent;
 
+	@Value("${offer.event.condition.queue.prefetch:1}")
+	private Integer offerEventConditionQueuePrefetch;
+	@Value("${offer.event.condition.queue.concurrent:1}")
+	private Integer offerEventConditionQueueConcurrent;
+
 	@Value("${offer.eligibility.queue.prefetch:1}")
 	private Integer offerEligibilityQueuePrefetch;
 	@Value("${offer.monitoring.queue.concurrent:1}")
@@ -77,6 +82,21 @@ public class AmqpConfig {
 	public Binding bindingOfferMonitoring(Queue queueOfferMonitoring, TopicExchange exchangeMembership) {
 		return BindingBuilder.bind(queueOfferMonitoring).to(exchangeMembership)
 				.with(Constant.QUEUE_NAME_MEMBERSHIP_MONITORING); //route.key.name=queue.name
+	}
+
+	// eventCondition
+	@Bean
+	public Queue queueOfferEventCondition() {
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("x-max-priority", 1);
+		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_EVENT_CONDITION, true, false, false, args);
+		return queue;
+	}
+
+	@Bean
+	public Binding bindingOfferEventCondition(Queue queueOfferEventCondition, TopicExchange exchangeMembership) {
+		return BindingBuilder.bind(queueOfferEventCondition).to(exchangeMembership)
+				.with(Constant.QUEUE_NAME_MEMBERSHIP_EVENT_CONDITION); //route.key.name=queue.name
 	}
 	//============================================================================= //
 	// Subscriber

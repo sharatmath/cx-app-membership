@@ -1,14 +1,11 @@
 package com.dev.prepaid.domain;
 
-import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "PREPAID_CX_OFFER_MONITORING")
 @Data
@@ -31,6 +28,8 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private String usageType;
     private String usageOp;
     private Long usageValue;
+    private String usageUnit;
+
 
     private String countryCode;
 

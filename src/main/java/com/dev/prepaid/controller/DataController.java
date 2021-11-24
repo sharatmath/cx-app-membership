@@ -1,5 +1,6 @@
 package com.dev.prepaid.controller;
 
+import java.net.http.HttpResponse;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.dev.prepaid.constant.Constant;
+import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.configuration.*;
+import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,299 +26,329 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dev.prepaid.constant.Constant;
-import com.dev.prepaid.domain.Country;
-import com.dev.prepaid.domain.OverallOfferName;
-import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
-import com.dev.prepaid.domain.PrepaidCxOfferEligibility;
-import com.dev.prepaid.domain.PrepaidCxOfferEventCondition;
-import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
-import com.dev.prepaid.domain.PrepaidDaOfferBucket;
-import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
-import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
-import com.dev.prepaid.domain.PrepaidOmsOfferCampaign;
-import com.dev.prepaid.domain.PromoCode;
-import com.dev.prepaid.model.AdvFltrTblDTO;
 import com.dev.prepaid.model.DataOffer;
 import com.dev.prepaid.model.PrepaidBucketDetailDTO;
 import com.dev.prepaid.model.PrepaidCampaignOfferDetailDTO;
-import com.dev.prepaid.model.configuration.EventCondition;
-import com.dev.prepaid.model.configuration.OfferFulfilment;
-import com.dev.prepaid.model.configuration.OfferPromoCode;
-import com.dev.prepaid.model.configuration.OfferRedemption;
-import com.dev.prepaid.model.configuration.OfferSelection;
-import com.dev.prepaid.model.configuration.ResponSysProgram;
-import com.dev.prepaid.model.request.DataControllRequest;
-import com.dev.prepaid.model.request.GetAccumulatedTopups;
-import com.dev.prepaid.model.request.GetPackageFrequency;
-import com.dev.prepaid.model.request.GetTopupFrequency;
-import com.dev.prepaid.model.request.IsPaidTopupInLastXDays;
-import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
 import com.dev.prepaid.service.OfferService;
 import com.dev.prepaid.util.AppUtil;
 import com.dev.prepaid.util.DateUtil;
-import com.dev.prepaid.util.OperationUtil;
 
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.PostConstruct;
 
 @Slf4j
 @RestController
 @RequestMapping("/data/")
 public class DataController {
 
-	@Autowired
-	private OfferService offerService;
+    @Autowired
+    private OfferService offerService;
 
-	@Autowired
-	RabbitTemplate rabbitTemplate;
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
-	/*
-	 * @Autowired private PrepaidCxOfferAdvanceFilterRepository
-	 * prepaidCxOfferAdvanceFilterRepository;
-	 */
-
-	@Autowired
-	IPrepaidCxOfferAdvanceFilterService prepaidCxOfferAdvanceFilterService;
-
-	@GetMapping(value = "offerDetail")
-	public PrepaidCampaignOfferDetailDTO offerDetail(
+    @GetMapping(value = "offerDetail")
+    public PrepaidCampaignOfferDetailDTO offerDetail(
 //    		@RequestParam(value = "bucketName", required = false) String bucketName,
-			@RequestParam(value = "bucketOfferId", required = false) String bucketOfferId,
-			@RequestParam(value = "campaignOfferId", required = false) String campaignOfferId) throws Exception {
+            @RequestParam(value = "bucketOfferId", required = false) String bucketOfferId,
+            @RequestParam(value = "campaignOfferId", required = false) String campaignOfferId) throws Exception {
 
-		String offerBucketType = AppUtil.stringTokenizer(bucketOfferId, "|").get(0);
-		bucketOfferId = AppUtil.stringTokenizer(bucketOfferId, "|").get(1);
+        String offerBucketType = AppUtil.stringTokenizer(bucketOfferId, "|").get(0);
+        bucketOfferId = AppUtil.stringTokenizer(bucketOfferId, "|").get(1);
 
-		log.debug("offerBucketType: {}", offerBucketType);
-		log.debug("offerId 	: {}", bucketOfferId);
-		log.debug("campaignOfferId: {}", campaignOfferId);
+        log.debug("offerBucketType: {}", offerBucketType);
+        log.debug("offerId 	: {}", bucketOfferId);
+        log.debug("campaignOfferId: {}", campaignOfferId);
 
-		if (offerBucketType.equalsIgnoreCase("OMS")) {
-			PrepaidOmsOfferCampaign prepaidOmsOfferCampaign = offerService
-					.getOmsOfferCampaign(Long.parseLong(campaignOfferId));
-			PrepaidOmsOfferBucket prepaidOmsOfferBucket = offerService
-					.getOmsOfferBucket(prepaidOmsOfferCampaign.getOfferId());
-			return PrepaidCampaignOfferDetailDTO.builder().offerBucketType(offerBucketType) // OMS
-					.offerName(prepaidOmsOfferCampaign.getName())
-					.offerId(Long.parseLong(prepaidOmsOfferBucket.getCode())).offerType(prepaidOmsOfferBucket.getType()) // timebased
-																															// or
-																															// accountbased
-					.description(prepaidOmsOfferCampaign.getDescription()).value(prepaidOmsOfferCampaign.getValue())
-					.valueUnit(prepaidOmsOfferCampaign.getValueUnit())
-					.valueToDeductFromMa(prepaidOmsOfferCampaign.getValueToDeductFromMa())
-					.counterId(prepaidOmsOfferCampaign.getCounterId())
-					.thresholdId(prepaidOmsOfferCampaign.getThresholdId())
-					.thresholdValue(prepaidOmsOfferCampaign.getThresholdValue())
-					.thresholdValueUnit(prepaidOmsOfferCampaign.getThresholdValueUnit())
-					.startDate(DateUtil.dateToString(prepaidOmsOfferCampaign.getStartDate(), "yyyy-MMM-dd"))
-					.endDate(DateUtil.dateToString(prepaidOmsOfferCampaign.getEndDate(), "yyyy-MMM-dd"))
-					.action(prepaidOmsOfferCampaign.getAction()).bucketName(prepaidOmsOfferBucket.getDescription())
-					.offerBucketId(offerBucketType.concat("|").concat(bucketOfferId)).offerBucketType(offerBucketType)
-					.offerCampaignId(Long.valueOf(campaignOfferId)).offerCampaignName(prepaidOmsOfferCampaign.getName())
-					.dayHourMinute(String.valueOf(prepaidOmsOfferCampaign.getDay()) + " Day "
-							+ String.valueOf(prepaidOmsOfferCampaign.getHour()) + " Hour "
-							+ String.valueOf(prepaidOmsOfferCampaign.getMinute()) + " Minute ")
-					.build();
+        if (offerBucketType.equalsIgnoreCase("OMS")) {
+            PrepaidOmsOfferCampaign prepaidOmsOfferCampaign = offerService.getOmsOfferCampaign(Long.parseLong(campaignOfferId));
+            PrepaidOmsOfferBucket prepaidOmsOfferBucket = offerService.getOmsOfferBucket(prepaidOmsOfferCampaign.getOfferId());
+            return PrepaidCampaignOfferDetailDTO.builder()
+                    .offerBucketType(offerBucketType) //OMS
+                    .offerName(prepaidOmsOfferCampaign.getName())
+                    .offerId(Long.parseLong(prepaidOmsOfferBucket.getCode()))
+                    .offerType(prepaidOmsOfferBucket.getType()) //timebased or accountbased
+                    .description(prepaidOmsOfferCampaign.getDescription())
+                    .value(prepaidOmsOfferCampaign.getValue())
+                    .valueUnit(prepaidOmsOfferCampaign.getValueUnit())
+                    .valueToDeductFromMa(prepaidOmsOfferCampaign.getValueToDeductFromMa())
+                    .counterId(prepaidOmsOfferCampaign.getCounterId())
+                    .thresholdId(prepaidOmsOfferCampaign.getThresholdId())
+                    .thresholdValue(prepaidOmsOfferCampaign.getThresholdValue())
+                    .thresholdValueUnit(prepaidOmsOfferCampaign.getThresholdValueUnit())
+                    .startDate(DateUtil.dateToString(prepaidOmsOfferCampaign.getStartDate(), "yyyy-MMM-dd"))
+                    .endDate(DateUtil.dateToString(prepaidOmsOfferCampaign.getEndDate(), "yyyy-MMM-dd"))
+                    .action(prepaidOmsOfferCampaign.getAction())
+                    .bucketName(prepaidOmsOfferBucket.getDescription())
+                    .offerBucketId(offerBucketType.concat("|").concat(bucketOfferId))
+                    .offerBucketType(offerBucketType)
+                    .offerCampaignId(Long.valueOf(campaignOfferId))
+                    .offerCampaignName(prepaidOmsOfferCampaign.getName())
+                    .dayHourMinute(
+                            String.valueOf(prepaidOmsOfferCampaign.getDay()) + " Day " +
+                                    String.valueOf(prepaidOmsOfferCampaign.getHour()) + " Hour " +
+                                    String.valueOf(prepaidOmsOfferCampaign.getMinute()) + " Minute "
+                    )
+                    .build();
 
-		}
 
-		if (offerBucketType.equalsIgnoreCase("DA")) {
-			PrepaidDaOfferBucket prepaidDaOfferBucket = offerService.getDaOfferBucket(Long.valueOf(bucketOfferId));
-			PrepaidDaOfferCampaign prepaidDaOfferCampaign = offerService
-					.getDaOfferCampaign(Long.parseLong(campaignOfferId));
-			return PrepaidCampaignOfferDetailDTO.builder().offerName(prepaidDaOfferCampaign.getName())
-					.bucketName(prepaidDaOfferBucket.getDescription())
-					.description(prepaidDaOfferCampaign.getDescription()).value(prepaidDaOfferCampaign.getValue())
-					.valueUnit(prepaidDaOfferCampaign.getValueUnit()).valueCap(prepaidDaOfferCampaign.getValueCap())
-					.valueToDeductFromMa(prepaidDaOfferCampaign.getValueToDeductFromMa())
-					.valueValidityInDays(prepaidDaOfferCampaign.getValueValidityInDays())
-					.startDate(DateUtil.dateToString(prepaidDaOfferCampaign.getStartDate(), "yyyy-MMM-dd"))
-					.endDate(DateUtil.dateToString(prepaidDaOfferCampaign.getEndDate(), "yyyy-MMM-dd"))
-					.action(prepaidDaOfferCampaign.getAction())
-					.offerBucketId(offerBucketType.concat("|").concat(bucketOfferId)).offerBucketType(offerBucketType)
-					.offerCampaignId(Long.valueOf(campaignOfferId)).offerCampaignName(prepaidDaOfferCampaign.getName())
-					.build();
-		}
+        }
 
-		return new PrepaidCampaignOfferDetailDTO();
-	}
+        if (offerBucketType.equalsIgnoreCase("DA")) {
+            PrepaidDaOfferBucket prepaidDaOfferBucket = offerService.getDaOfferBucket(Long.valueOf(bucketOfferId));
+            PrepaidDaOfferCampaign prepaidDaOfferCampaign = offerService.getDaOfferCampaign(Long.parseLong(campaignOfferId));
+            return PrepaidCampaignOfferDetailDTO.builder()
+                    .offerName(prepaidDaOfferCampaign.getName())
+                    .bucketName(prepaidDaOfferBucket.getDescription())
+                    .description(prepaidDaOfferCampaign.getDescription())
+                    .value(prepaidDaOfferCampaign.getValue())
+                    .valueUnit(prepaidDaOfferCampaign.getValueUnit())
+                    .valueCap(prepaidDaOfferCampaign.getValueCap())
+                    .valueToDeductFromMa(prepaidDaOfferCampaign.getValueToDeductFromMa())
+                    .valueValidityInDays(prepaidDaOfferCampaign.getValueValidityInDays())
+                    .startDate(DateUtil.dateToString(prepaidDaOfferCampaign.getStartDate(), "yyyy-MMM-dd"))
+                    .endDate(DateUtil.dateToString(prepaidDaOfferCampaign.getEndDate(), "yyyy-MMM-dd"))
+                    .action(prepaidDaOfferCampaign.getAction())
+                    .offerBucketId(offerBucketType.concat("|").concat(bucketOfferId))
+                    .offerBucketType(offerBucketType)
+                    .offerCampaignId(Long.valueOf(campaignOfferId))
+                    .offerCampaignName(prepaidDaOfferCampaign.getName())
+                    .build();
+        }
 
-	@GetMapping(value = "bucketDetail")
-	public PrepaidBucketDetailDTO bucketDetail(@RequestParam(value = "bucketId", required = false) String bucketId2)
-			throws Exception {
+        return new PrepaidCampaignOfferDetailDTO();
+    }
 
-		log.debug("bucketId: {}", bucketId2);
+    @GetMapping(value = "bucketDetail")
+    public PrepaidBucketDetailDTO bucketDetail(
+            @RequestParam(value = "bucketId", required = false) String bucketId2) throws Exception {
 
-		String bucketType = AppUtil.stringTokenizer(bucketId2, "|").get(0);
-		String bucketId = AppUtil.stringTokenizer(bucketId2, "|").get(1);
+        log.debug("bucketId: {}", bucketId2);
 
-		if (bucketType.equalsIgnoreCase("OMS")) {
-			PrepaidOmsOfferBucket prepaidOmsOfferBucket = offerService.getOmsOfferBucket(Long.parseLong(bucketId));
-			return PrepaidBucketDetailDTO.builder().bucketName(prepaidOmsOfferBucket.getCode())
-					.offerType(prepaidOmsOfferBucket.getType()).counterId(prepaidOmsOfferBucket.getCounterId())
-					.thresholdId(prepaidOmsOfferBucket.getThresholdId()).build();
-		}
+        String bucketType = AppUtil.stringTokenizer(bucketId2, "|").get(0);
+        String bucketId = AppUtil.stringTokenizer(bucketId2, "|").get(1);
 
-		if (bucketType.equalsIgnoreCase("DA")) {
-			PrepaidDaOfferBucket prepaidDaOfferBucket = offerService.getDaOfferBucket(Long.parseLong(bucketId));
-			return PrepaidBucketDetailDTO.builder().bucketName(prepaidDaOfferBucket.getCode()).build();
-		}
+        if (bucketType.equalsIgnoreCase("OMS")) {
+            PrepaidOmsOfferBucket prepaidOmsOfferBucket = offerService.getOmsOfferBucket(Long.parseLong(bucketId));
+            return PrepaidBucketDetailDTO.builder()
+                    .bucketName(prepaidOmsOfferBucket.getCode())
+                    .offerType(prepaidOmsOfferBucket.getType())
+                    .counterId(prepaidOmsOfferBucket.getCounterId())
+                    .thresholdId(prepaidOmsOfferBucket.getThresholdId())
+                    .build();
+        }
 
-		return new PrepaidBucketDetailDTO();
-	}
+        if (bucketType.equalsIgnoreCase("DA")) {
+            PrepaidDaOfferBucket prepaidDaOfferBucket = offerService.getDaOfferBucket(Long.parseLong(bucketId));
+            return PrepaidBucketDetailDTO.builder()
+                    .bucketName(prepaidDaOfferBucket.getCode())
+                    .build();
+        }
 
-	@GetMapping(value = "offerBucket")
-	public List<DataOffer> offerBucketList(@RequestParam(value = "search", required = false) String query,
-			@RequestParam(value = "offerType", required = false) String offerType) throws ParseException {
-		log.info("queryBucket : {}", query);
+        return new PrepaidBucketDetailDTO();
+    }
 
-		List<DataOffer> listBucket = new ArrayList<DataOffer>();
+    @GetMapping(value = "offerBucket")
+    public List<DataOffer> offerBucketList(
+            @RequestParam(value = "search", required = false) String query,
+            @RequestParam(value = "offerType", required = false) String offerType) throws ParseException {
+        log.info("queryBucket : {}", query);
 
-		if (offerType == null || offerType.isEmpty()) {
+        List<DataOffer> listBucket = new ArrayList<DataOffer>();
 
-			if (query == null || query.isEmpty()) {
+        if (offerType == null || offerType.isEmpty()) {
 
-				listBucket.addAll(offerService.listOmsOfferBucket().stream().map(this::mapOmsBucketToOffer)
-						.collect(Collectors.toList()));
-				listBucket.addAll(offerService.listDaOfferBucket().stream().map(this::mapDaBucketToOffer)
-						.collect(Collectors.toList()));
-			} else {
+            if (query == null || query.isEmpty()) {
 
-				listBucket.addAll(offerService.listOmsOfferBucket().stream()
-						.filter(p -> p.getCode().toLowerCase().contains(query)).map(this::mapOmsBucketToOffer)
-						.collect(Collectors.toList()));
-				listBucket.addAll(
-						offerService.listDaOfferBucket().stream().filter(p -> p.getCode().toLowerCase().contains(query))
-								.map(this::mapDaBucketToOffer).collect(Collectors.toList()));
-			}
-		} else if (offerType.equalsIgnoreCase("DA")) {
+                listBucket.addAll(offerService.listOmsOfferBucket()
+                        .stream()
+                        .map(this::mapOmsBucketToOffer)
+                        .collect(Collectors.toList()));
+                listBucket.addAll(offerService.listDaOfferBucket()
+                        .stream()
+                        .map(this::mapDaBucketToOffer)
+                        .collect(Collectors.toList()));
+            } else {
 
-			if (query == null || query.isEmpty()) {
+                listBucket.addAll(offerService.listOmsOfferBucket()
+                        .stream()
+                        .filter(p -> p.getCode().toLowerCase().contains(query))
+                        .map(this::mapOmsBucketToOffer)
+                        .collect(Collectors.toList()));
+                listBucket.addAll(offerService.listDaOfferBucket()
+                        .stream()
+                        .filter(p -> p.getCode().toLowerCase().contains(query))
+                        .map(this::mapDaBucketToOffer)
+                        .collect(Collectors.toList()));
+            }
+        } else if (offerType.equalsIgnoreCase("DA")) {
 
-				listBucket.addAll(offerService.listDaOfferBucket().stream().map(this::mapDaBucketToOffer)
-						.collect(Collectors.toList()));
-			} else {
+            if (query == null || query.isEmpty()) {
 
-				listBucket.addAll(
-						offerService.listDaOfferBucket().stream().filter(p -> p.getCode().toLowerCase().contains(query))
-								.map(this::mapDaBucketToOffer).collect(Collectors.toList()));
-			}
+                listBucket.addAll(offerService.listDaOfferBucket()
+                        .stream()
+                        .map(this::mapDaBucketToOffer)
+                        .collect(Collectors.toList()));
+            } else {
 
-		} else if (offerType.equalsIgnoreCase("OMS")) {
-			if (query == null || query.isEmpty()) {
+                listBucket.addAll(offerService.listDaOfferBucket()
+                        .stream()
+                        .filter(p -> p.getCode().toLowerCase().contains(query))
+                        .map(this::mapDaBucketToOffer)
+                        .collect(Collectors.toList()));
+            }
 
-				listBucket.addAll(offerService.listOmsOfferBucket().stream().map(this::mapOmsBucketToOffer)
-						.collect(Collectors.toList()));
-			} else {
+        } else if (offerType.equalsIgnoreCase("OMS")) {
+            if (query == null || query.isEmpty()) {
 
-				listBucket.addAll(offerService.listOmsOfferBucket().stream()
-						.filter(p -> p.getCode().toLowerCase().contains(query)).map(this::mapOmsBucketToOffer)
-						.collect(Collectors.toList()));
-			}
+                listBucket.addAll(offerService.listOmsOfferBucket()
+                        .stream()
+                        .map(this::mapOmsBucketToOffer)
+                        .collect(Collectors.toList()));
+            } else {
 
-		} else if (offerType.equalsIgnoreCase("MA")) {
-			if (query == null || query.isEmpty()) {
+                listBucket.addAll(offerService.listOmsOfferBucket()
+                        .stream()
+                        .filter(p -> p.getCode().toLowerCase().contains(query))
+                        .map(this::mapOmsBucketToOffer)
+                        .collect(Collectors.toList()));
+            }
 
-				listBucket.addAll(offerService.listOmsOfferBucket().stream().map(this::mapOmsBucketToOffer)
-						.collect(Collectors.toList()));
-			} else {
+        } else if (offerType.equalsIgnoreCase("MA")) {
+            if (query == null || query.isEmpty()) {
 
-				listBucket.addAll(offerService.listOmsOfferBucket().stream()
-						.filter(p -> p.getCode().toLowerCase().contains(query)).map(this::mapOmsBucketToOffer)
-						.collect(Collectors.toList()));
-			}
+                listBucket.addAll(offerService.listOmsOfferBucket()
+                        .stream()
+                        .map(this::mapOmsBucketToOffer)
+                        .collect(Collectors.toList()));
+            } else {
 
-		} else {
-		}
+                listBucket.addAll(offerService.listOmsOfferBucket()
+                        .stream()
+                        .filter(p -> p.getCode().toLowerCase().contains(query))
+                        .map(this::mapOmsBucketToOffer)
+                        .collect(Collectors.toList()));
+            }
 
-		return listBucket;
-	}
+        } else {
+        }
 
-	@GetMapping(value = "offerCampaign")
-	public List<DataOffer> offerCampaignList(@RequestParam(value = "offerId", required = false) String offerId,
-			@RequestParam(value = "search", required = false) String query) throws ParseException {
+        return listBucket;
+    }
 
-		if (offerId.isBlank()) {
-			return null;
-		}
+    @GetMapping(value = "offerCampaign")
+    public List<DataOffer> offerCampaignList(
+            @RequestParam(value = "offerId", required = false) String offerId,
+            @RequestParam(value = "search", required = false) String query) throws ParseException {
 
-		String offerBucketType = AppUtil.stringTokenizer(offerId, "|").get(0);
-		offerId = AppUtil.stringTokenizer(offerId, "|").get(1);
-		log.debug("offerBucketType: {}", offerBucketType);
-		log.debug("offerId 	: {}", offerId);
-		log.debug("queryOffer: {}", query);
+        if (offerId.isBlank()) {
+            return null;
+        }
 
-		if (query == null || query.isEmpty()) {
-			if (offerBucketType.equalsIgnoreCase("OMS")) {
-				return offerService.listOmsOfferCampaign(Long.parseLong(offerId)).stream()
-						.map(this::mapOmsCampaignToOffer).collect(Collectors.toList());
+        String offerBucketType = AppUtil.stringTokenizer(offerId, "|").get(0);
+        offerId = AppUtil.stringTokenizer(offerId, "|").get(1);
+        log.debug("offerBucketType: {}", offerBucketType);
+        log.debug("offerId 	: {}", offerId);
+        log.debug("queryOffer: {}", query);
 
-			} else if (offerBucketType.equalsIgnoreCase("DA")) {
-				return offerService.listDaOfferCampaign(Long.parseLong(offerId)).stream()
-						.map(this::mapDaCampaignToOffer).collect(Collectors.toList());
 
-			}
-		}
+        if (query == null || query.isEmpty()) {
+            if (offerBucketType.equalsIgnoreCase("OMS")) {
+                return offerService.listOmsOfferCampaign(Long.parseLong(offerId))
+                        .stream()
+                        .map(this::mapOmsCampaignToOffer)
+                        .collect(Collectors.toList());
 
-		if (offerBucketType.equalsIgnoreCase("OMS")) {
-			return offerService.listOmsOfferCampaign(Long.parseLong(offerId)).stream()
-					.filter(p -> p.getName().toLowerCase().contains(query)).map(this::mapOmsCampaignToOffer)
-					.collect(Collectors.toList());
+            } else if (offerBucketType.equalsIgnoreCase("DA")) {
+                return offerService.listDaOfferCampaign(Long.parseLong(offerId))
+                        .stream()
+                        .map(this::mapDaCampaignToOffer)
+                        .collect(Collectors.toList());
 
-		} else if (offerBucketType.equalsIgnoreCase("DA")) {
-			return offerService.listDaOfferCampaign(Long.parseLong(offerId)).stream()
-					.filter(p -> p.getName().toLowerCase().contains(query)).map(this::mapDaCampaignToOffer)
-					.collect(Collectors.toList());
+            }
+        }
 
-		}
+        if (offerBucketType.equalsIgnoreCase("OMS")) {
+            return offerService.listOmsOfferCampaign(Long.parseLong(offerId))
+                    .stream()
+                    .filter(p -> p.getName().toLowerCase().contains(query))
+                    .map(this::mapOmsCampaignToOffer)
+                    .collect(Collectors.toList());
 
-		return null;
-	}
+        } else if (offerBucketType.equalsIgnoreCase("DA")) {
+            return offerService.listDaOfferCampaign(Long.parseLong(offerId))
+                    .stream()
+                    .filter(p -> p.getName().toLowerCase().contains(query))
+                    .map(this::mapDaCampaignToOffer)
+                    .collect(Collectors.toList());
 
-	private DataOffer mapOmsBucketToOffer(PrepaidOmsOfferBucket oms) {
-		// OMS|123
-		return DataOffer.builder().id("OMS|" + oms.getId()).text(oms.getCode()).slug(oms.getCode()).build();
-	}
+        }
 
-	private DataOffer mapOmsCampaignToOffer(PrepaidOmsOfferCampaign oms) {
-		return DataOffer.builder().id(oms.getId().toString()).text(oms.getName()).slug(oms.getName()).build();
-	}
+        return null;
+    }
 
-	private DataOffer mapDaBucketToOffer(PrepaidDaOfferBucket da) {
-		// OMS|123
-		return DataOffer.builder().id("DA|" + da.getId()).text(da.getCode()).slug(da.getCode()).build();
-	}
+    private DataOffer mapOmsBucketToOffer(PrepaidOmsOfferBucket oms) {
+        //OMS|123
+        return DataOffer.builder()
+                .id("OMS|" + oms.getId())
+                .text(oms.getCode())
+                .slug(oms.getCode())
+                .build();
+    }
 
-	private DataOffer mapDaCampaignToOffer(PrepaidDaOfferCampaign da) {
-		return DataOffer.builder().id(da.getId().toString()).text(da.getName()).slug(da.getName()).build();
-	}
+    private DataOffer mapOmsCampaignToOffer(PrepaidOmsOfferCampaign oms) {
+        return DataOffer.builder()
+                .id(oms.getId().toString())
+                .text(oms.getName())
+                .slug(oms.getName())
+                .build();
+    }
 
-	@GetMapping(value = "evictCache")
-	public void evict() {
-		offerService.evictAllCaches();
-	}
 
-	@GetMapping(value = "offerPromoCode")
-	public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId)
-			throws Exception {
-		return offerService.getOfferPromoCode(instanceId);
-	}
+    private DataOffer mapDaBucketToOffer(PrepaidDaOfferBucket da) {
+        //OMS|123
+        return DataOffer.builder()
+                .id("DA|" + da.getId())
+                .text(da.getCode())
+                .slug(da.getCode())
+                .build();
+    }
 
-	@GetMapping(value = "offerSelection")
-	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(
-			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
-		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
-		List<OfferSelection> data = offerService.getOfferSelection(instanceId);
-		for (OfferSelection prepaidCxOfferSelection : data) {
-			log.info("{}", prepaidCxOfferSelection);
-			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
-			offerDetailDTO = offerDetail(
-					prepaidCxOfferSelection.getOfferBucketType().concat("|")
-							.concat(prepaidCxOfferSelection.getOfferBucketId()),
-					String.valueOf(prepaidCxOfferSelection.getOfferId()));
+    private DataOffer mapDaCampaignToOffer(PrepaidDaOfferCampaign da) {
+        return DataOffer.builder()
+                .id(da.getId().toString())
+                .text(da.getName())
+                .slug(da.getName())
+                .build();
+    }
+
+    @GetMapping(value = "evictCache")
+    public void evict() {
+        offerService.evictAllCaches();
+    }
+
+
+    @GetMapping(value = "offerPromoCode")
+    public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+        return offerService.getOfferPromoCode(instanceId);
+    }
+
+    @GetMapping(value = "provisionType")
+    public String getProvisionType(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+        return offerService.getProvisionType(instanceId);
+    }
+
+    @GetMapping(value = "offerSelection")
+    public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+        List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
+        List<OfferSelection> data = offerService.getOfferSelection(instanceId);
+        for (OfferSelection prepaidCxOfferSelection : data) {
+            log.info("{}", prepaidCxOfferSelection);
+            PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
+            offerDetailDTO = offerDetail(
+                    prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()),
+                    String.valueOf(prepaidCxOfferSelection.getOfferId()));
 //			offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()));
 //			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
 //			offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferType());
@@ -326,172 +361,195 @@ public class DataController {
 //			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
 //			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
 //			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
-			log.info("{}", offerDetailDTO);
-			list.add(offerDetailDTO);
-		}
-		return list;
-	}
+            log.info("{}", offerDetailDTO);
+            list.add(offerDetailDTO);
+        }
+        return list;
+    }
 
-	@GetMapping(value = "offerEligibility")
-	public PrepaidCxOfferEligibility getOfferEligibility(
-			@RequestParam(value = "instanceId", required = false) String instanceId) {
-		return offerService.getOfferEligibility(instanceId);
-	}
+    @GetMapping(value = "offerEligibility")
+    public PrepaidCxOfferEligibility getOfferEligibility(@RequestParam(value = "instanceId", required = false) String instanceId) {
+        return offerService.getOfferEligibility(instanceId);
+    }
 
-	@GetMapping(value = "offerMonitoring")
-	public OfferFulfilment getOfferMonitoring(@RequestParam(value = "instanceId", required = false) String instanceId) {
-		return offerService.getOfferMonitoring(instanceId);
-	}
+    @GetMapping(value = "offerMonitoring")
+    public OfferFulfilment getOfferMonitoring(@RequestParam(value = "instanceId", required = false) String instanceId) {
+        return offerService.getOfferMonitoring(instanceId);
+    }
 
-	@GetMapping(value = "offerRedemption")
-	public OfferRedemption getOfferRedemption(@RequestParam(value = "instanceId", required = false) String instanceId) {
-		PrepaidCxOfferRedemption prepaidCxOfferRedemption = offerService.getOfferRedemption(instanceId);
-		if (prepaidCxOfferRedemption != null) {
+    @GetMapping(value = "offerRedemption")
+    public OfferRedemption getOfferRedemption(@RequestParam(value = "instanceId", required = false) String instanceId) {
+        PrepaidCxOfferRedemption prepaidCxOfferRedemption = offerService.getOfferRedemption(instanceId);
+        if (prepaidCxOfferRedemption != null) {
 
-			OfferRedemption offerRedemption = OfferRedemption.builder()
-					.isDateRange(prepaidCxOfferRedemption.isDateRange()).isPeriod(prepaidCxOfferRedemption.isPeriod())
-					.optPeriod(prepaidCxOfferRedemption.getOptPeriod())
-					.smsCampaignName(prepaidCxOfferRedemption.getSmsCampaignName())
-					.postSmsCampaignName(prepaidCxOfferRedemption.getPostSmsCampaignName())
-					.optKeyword(prepaidCxOfferRedemption.getOptKeyword())
-					.isFrequencyAndTime(prepaidCxOfferRedemption.getIsFrequencyAndTime())
-					.isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
-					.redemptionMethod(prepaidCxOfferRedemption.getRedemptionMethod())
-					.recurringFrequencyDayOfMonth(prepaidCxOfferRedemption.getRecurringFrequencyDayOfMonth())
-					.recurringFrequencyPeriodType(prepaidCxOfferRedemption.getRecurringFrequencyPeriodType())
-					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
-					.recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
-					.totalRecurringFrequency(prepaidCxOfferRedemption.getTotalRecurringFrequency())
-					.totalRedemptionPeriodEvery(prepaidCxOfferRedemption.getTotalRedemptionPeriodEvery())
-					.totalRedemptionPeriodValue(prepaidCxOfferRedemption.getTotalRedemptionPeriodValue())
-					.totalRedemptionPeriodType(prepaidCxOfferRedemption.getTotalRedemptionPeriodType())
-					.dynamicVariable1(prepaidCxOfferRedemption.getDynamicVariable1())
-					.dynamicVariable2(prepaidCxOfferRedemption.getDynamicVariable2())
-					.dynamicVariable3(prepaidCxOfferRedemption.getDynamicVariable3())
-					.dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4())
-					.dynamicVariable5(prepaidCxOfferRedemption.getDynamicVariable5())
-					.isRedemptionCapOnly(prepaidCxOfferRedemption.getIsRedemptionCapOnly())
-					.redemptionCapValue(prepaidCxOfferRedemption.getRedemptionCapValue())
-					.isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
-					.frequencyValue(prepaidCxOfferRedemption.getFrequencyValue())
-					.timePeriodEvery(prepaidCxOfferRedemption.getTimePeriodEvery())
-					.timePeriodType(prepaidCxOfferRedemption.getTimePeriodType())
-					.timePeriodValue(prepaidCxOfferRedemption.getTimePeriodValue())
-					.totalRecurringFrequency(prepaidCxOfferRedemption.getTotalRecurringFrequency())
-					.recurringFrequencyDayOfMonth(prepaidCxOfferRedemption.getRecurringFrequencyDayOfMonth())
-					.isRecurringFrequencyEachMonth(prepaidCxOfferRedemption.getIsRecurringFrequencyEachMonth())
-					.recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
-					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
-					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
-					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod()).build();
+            OfferRedemption offerRedemption = OfferRedemption.builder()
+                    .isDateRange(prepaidCxOfferRedemption.isDateRange())
+                    .isPeriod(prepaidCxOfferRedemption.isPeriod())
+                    .optPeriod(prepaidCxOfferRedemption.getOptPeriod())
+                    .smsCampaignName(prepaidCxOfferRedemption.getSmsCampaignName())
+                    .postSmsCampaignName(prepaidCxOfferRedemption.getPostSmsCampaignName())
+                    .optKeyword(prepaidCxOfferRedemption.getOptKeyword())
+                    .isFrequencyAndTime(prepaidCxOfferRedemption.getIsFrequencyAndTime())
+                    .isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
+                    .redemptionMethod(prepaidCxOfferRedemption.getRedemptionMethod())
+                    .recurringFrequencyDayOfMonth(prepaidCxOfferRedemption.getRecurringFrequencyDayOfMonth())
+                    .recurringFrequencyPeriodType(prepaidCxOfferRedemption.getRecurringFrequencyPeriodType())
+                    .recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
+                    .recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
+                    .totalRecurringFrequency(prepaidCxOfferRedemption.getTotalRecurringFrequency())
+                    .totalRedemptionPeriodEvery(prepaidCxOfferRedemption.getTotalRedemptionPeriodEvery())
+                    .totalRedemptionPeriodValue(prepaidCxOfferRedemption.getTotalRedemptionPeriodValue())
+                    .totalRedemptionPeriodType(prepaidCxOfferRedemption.getTotalRedemptionPeriodType())
+                    .dynamicVariable1(prepaidCxOfferRedemption.getDynamicVariable1())
+                    .dynamicVariable2(prepaidCxOfferRedemption.getDynamicVariable2())
+                    .dynamicVariable3(prepaidCxOfferRedemption.getDynamicVariable3())
+                    .dynamicVariable4(prepaidCxOfferRedemption.getDynamicVariable4())
+                    .dynamicVariable5(prepaidCxOfferRedemption.getDynamicVariable5())
+                    .isRedemptionCapOnly(prepaidCxOfferRedemption.getIsRedemptionCapOnly())
+                    .redemptionCapValue(prepaidCxOfferRedemption.getRedemptionCapValue())
+                    .isFrequencyOnly(prepaidCxOfferRedemption.getIsFrequencyOnly())
+                    .frequencyValue(prepaidCxOfferRedemption.getFrequencyValue())
+                    .timePeriodEvery(prepaidCxOfferRedemption.getTimePeriodEvery())
+                    .timePeriodType(prepaidCxOfferRedemption.getTimePeriodType())
+                    .timePeriodValue(prepaidCxOfferRedemption.getTimePeriodValue())
+                    .totalRecurringFrequency(prepaidCxOfferRedemption.getTotalRecurringFrequency())
+                    .recurringFrequencyDayOfMonth(prepaidCxOfferRedemption.getRecurringFrequencyDayOfMonth())
+                    .isRecurringFrequencyEachMonth(prepaidCxOfferRedemption.getIsRecurringFrequencyEachMonth())
+                    .recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
+                    .recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
+                    .isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
+                    .isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod())
+                    .build();
+            try {
+                log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
+                if (prepaidCxOfferRedemption.getOptEndDate() != null)
+                    offerRedemption.setOptEndDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptEndDate()));
+                if (prepaidCxOfferRedemption.getOptStartDate() != null)
+                    offerRedemption.setOptStartDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptStartDate()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-			try {
-				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
-				if (prepaidCxOfferRedemption.getOptEndDate() != null)
-					offerRedemption.setOptEndDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptEndDate()));
-				if (prepaidCxOfferRedemption.getOptStartDate() != null)
-					offerRedemption.setOptStartDate(DateUtil.fromDate(prepaidCxOfferRedemption.getOptStartDate()));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+            return offerRedemption;
+        }
 
-			return offerRedemption;
-		}
+        return new OfferRedemption();
+    }
 
-		return new OfferRedemption();
-	}
+    @GetMapping(value = "offerEventCondition")
+    public EventCondition getOfferEventCondition(@RequestParam(value = "instanceId", required = false) String instanceId) {
+        PrepaidCxOfferEventCondition prepaidCxOfferEventCondition = offerService.getOfferEventCondition(instanceId);
+        if (prepaidCxOfferEventCondition != null) {
 
-	@GetMapping(value = "offerEventCondition")
-	public EventCondition getOfferEventCondition(
-			@RequestParam(value = "instanceId", required = false) String instanceId) {
-		PrepaidCxOfferEventCondition prepaidCxOfferEventCondition = offerService.getOfferEventCondition(instanceId);
-		if (prepaidCxOfferEventCondition != null) {
+            EventCondition eventCondition = EventCondition.builder()
+                    .eventConditionName(prepaidCxOfferEventCondition.getEventConditionName())
+                    .eventType(prepaidCxOfferEventCondition.getEventConditionType())
+                    .eventTypeUsages(prepaidCxOfferEventCondition.getEventTypeUsages())
+                    .eventUsagesOp(prepaidCxOfferEventCondition.getEventUsagesOp())
+                    .eventUsagesValue(prepaidCxOfferEventCondition.getEventUsagesValue())
+                    .eventUsagesUnit(prepaidCxOfferEventCondition.getEventUsagesUnit())
+                    .arpuOp(prepaidCxOfferEventCondition.getArpuOp())
+                    .arpuType(prepaidCxOfferEventCondition.getArpuType())
+                    .arpuValue(prepaidCxOfferEventCondition.getArpuValue())
+                    .arpuSelectedTopUpCode(prepaidCxOfferEventCondition.getArpuSelectedTopUpCode())
+                    .topUpAccBalanceBeforeOp(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeOp())
+                    .topUpCode(prepaidCxOfferEventCondition.getTopUpCode())
+                    .topUpType(prepaidCxOfferEventCondition.getTopUpType())
+                    .topUpAccBalanceBeforeValue(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeValue())
+                    .topUpCurBalanceOp(prepaidCxOfferEventCondition.getTopUpCurBalanceOp())
+                    .topUpCurBalanceValue(prepaidCxOfferEventCondition.getTopUpCurBalanceValue())
+                    .topUpOp(prepaidCxOfferEventCondition.getTopUpOp())
+                    .topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())
+                    .chargedAmount(prepaidCxOfferEventCondition.getChargedAmount())
+                    .imei(prepaidCxOfferEventCondition.getImei())
+                    .aggregationPeriodDays(prepaidCxOfferEventCondition.getAggregationPeriodDays())
+                    .daBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
+                    .daChange(prepaidCxOfferEventCondition.getDaChange())
+                    .daBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
+                    .creditMethod(prepaidCxOfferEventCondition.getCreditMethod())
+                    .usageServiceType(prepaidCxOfferEventCondition.getUsageServiceType())
+                    .operatorId(prepaidCxOfferEventCondition.getOperatorId())
+                    .daId(prepaidCxOfferEventCondition.getDaId())
+                    .topUpDaId(prepaidCxOfferEventCondition.getDaId())
+                    .topUpDaBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
+                    .topUpDaBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
+                    .topUpTempServiceClass(prepaidCxOfferEventCondition.getTempServiceClass())
+                    .roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
+                    .ratePlanId(prepaidCxOfferEventCondition.getRatePlanId())
+                    .build();
+            try {
+                log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
+                if (prepaidCxOfferEventCondition.getCampaignEndDate() != null) {
+                    eventCondition.setCampaignEndDate(DateUtil.fromLocalDateTime(prepaidCxOfferEventCondition.getCampaignEndDate()));
+                }
+                if (prepaidCxOfferEventCondition.getCampaignStartDate() != null) {
+                    eventCondition.setCampaignStartDate(DateUtil.fromLocalDateTime(prepaidCxOfferEventCondition.getCampaignStartDate()));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-			EventCondition eventCondition = EventCondition.builder()
-					.eventConditionName(prepaidCxOfferEventCondition.getEventConditionName())
-					.eventConditionType(prepaidCxOfferEventCondition.getEventConditionType())
-					.eventTypeUsages(prepaidCxOfferEventCondition.getEventTypeUsages())
-					.eventUsagesOp(prepaidCxOfferEventCondition.getEventUsagesOp())
-					.eventUsagesValue(prepaidCxOfferEventCondition.getEventUsagesValue())
-					.arpuOp(prepaidCxOfferEventCondition.getArpuOp())
-					.arpuType(prepaidCxOfferEventCondition.getArpuType())
-					.arpuValue(prepaidCxOfferEventCondition.getArpuValue())
-					.arpuSelectedTopUpCode(prepaidCxOfferEventCondition.getArpuSelectedTopUpCode())
-					.topUpAccBalanceBeforeOp(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeOp())
-					.topUpCode(prepaidCxOfferEventCondition.getTopUpCode())
-					.topUpType(prepaidCxOfferEventCondition.getTopUpType())
-					.topUpAccBalanceBeforeValue(prepaidCxOfferEventCondition.getTopUpAccBalanceBeforeValue())
-					.topUpCurBalanceValue(prepaidCxOfferEventCondition.getTopUpCurBalanceValue())
-					.topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())
-					.chargedAmount(prepaidCxOfferEventCondition.getChargedAmount())
-					.imei(prepaidCxOfferEventCondition.getImei())
-					.aggregationPeriodDays(prepaidCxOfferEventCondition.getAggregationPeriodDays())
-					.daBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
-					.daChange(prepaidCxOfferEventCondition.getDaChange())
-					.daBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
-//					.daId(prepaidCxOfferEventCondition.getDaId()).build();
+            return eventCondition;
 
-					.daId(prepaidCxOfferEventCondition.getDaId())
-					.roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
-					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId()).build();
-			try {
-				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
-				if (prepaidCxOfferEventCondition.getCampaignEndDate() != null) {
-					eventCondition
-							.setCampaignEndDate(DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignEndDate()));
-				}
-				if (prepaidCxOfferEventCondition.getCampaignStartDate() != null) {
-					eventCondition.setCampaignStartDate(
-							DateUtil.fromDate(prepaidCxOfferEventCondition.getCampaignStartDate()));
-				}
+        } else {
+            return new EventCondition();
+        }
 
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+    }
 
-			return eventCondition;
+    @GetMapping(value = "listProgram")
+    public List<ResponSysProgram> listProgram() {
+        return offerService.listProgram();
+    }
 
-		} else {
-			return new EventCondition();
-		}
+    @GetMapping(value = "listCountry")
+    public List<Country> listCountry() {
+        return offerService.listCountry();
+    }
 
-	}
+    @PostMapping(value = "offerMonitoringTrx")
+    public ResponseEntity<String> offerMonitoringTrx(@RequestBody Map<String, Object> payload) {
+        rabbitTemplate.convertAndSend(
+                Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+                Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
+                payload
+        );
+        log.info(" send to monitoring queue {}", payload);
+        rabbitTemplate.convertAndSend(
+                Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+                Constant.QUEUE_NAME_MEMBERSHIP_EVENT_CONDITION,
+                payload
+        );
+        log.info(" send to event condition queue {}", payload);
+        return ResponseEntity.ok("Success");
+    }
 
-	@GetMapping(value = "listProgram")
-	public List<ResponSysProgram> listProgram() {
-		return offerService.listProgram();
-	}
+    @PostMapping(value = "offerMonitoringTrxBulk")
+    public ResponseEntity<String> offerMonitoringTrxBulk(@RequestBody List<Map<String, Object>> payload) {
+		rabbitTemplate.convertAndSend(
+				Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+				Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
+				payload
+		);
+		log.info(" send to monitoring queue {}", payload);
+		rabbitTemplate.convertAndSend(
+				Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
+				Constant.QUEUE_NAME_MEMBERSHIP_EVENT_CONDITION,
+				payload
+		);
+		log.info(" send to event condition queue {}", payload);
+        return ResponseEntity.ok("Success");
+    }
 
-	@GetMapping(value = "listCountry")
-	public List<Country> listCountry() {
-		return offerService.listCountry();
-	}
+    @GetMapping(value = "listTest")
+    public List<Country> listTest() {
+        return offerService.listCountry();
+    }
 
-	@PostMapping(value = "offerMonitoringTrx")
-	public ResponseEntity<String> offerMonitoringTrx(@RequestBody Map<String, Object> payload) {
-		rabbitTemplate.convertAndSend(Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
-				Constant.QUEUE_NAME_MEMBERSHIP_MONITORING, payload);
-		log.info("{}", payload);
-		return ResponseEntity.ok("Success");
-	}
-
-	@PostMapping(value = "offerMonitoringTrxBulk")
-	public ResponseEntity<String> offerMonitoringTrxBulk(@RequestBody List<Map<String, Object>> payload) {
-		rabbitTemplate.convertAndSend(Constant.TOPIC_EXCHANGE_NAME_MEMBERSHIP,
-				Constant.QUEUE_NAME_MEMBERSHIP_MONITORING, payload);
-		log.info("{}", payload);
-		return ResponseEntity.ok("Success");
-	}
-
-	@GetMapping(value = "listTest")
-	public List<Country> listTest() {
-		return offerService.listCountry();
-	}
-
-	@GetMapping(value = "listOfferType")
-	public List<PromoCode> listOfferType() {
-		return offerService.listOfferType();
-	}
+    @GetMapping(value = "listOfferType")
+    public List<PromoCode> listOfferType() {
+        return offerService.listOfferType();
+    }
 
 	@GetMapping(value = "checkUniqueOverallOfferName")
 	public OverallOfferName checkUniqueOverallOfferName(
@@ -535,9 +593,9 @@ public class DataController {
 				result.put("GetPackageFrequency", sql);
 			}
 		}
-//		
+//
 //		if() {
-//			
+//
 //		}
 
 //		}
@@ -592,26 +650,26 @@ public class DataController {
 			}
 		}
 		/*
-		 * 
+		 *
 		 * --- Response
-		 * 
+		 *
 		 * {
-		 * 
+		 *
 		 * "queryText" :
 		 * "SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND CREATEDATE < '15/11/2021'"
 		 * ,
-		 * 
+		 *
 		 * "recordCount" : "12"
-		 * 
+		 *
 		 * }
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
 		 * SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
 		 * CREATEDATE < '15/11/2021';
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
 		 * SELECT count(*) FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
 		 * CREATEDATE < '15/11/2021'; -- execute and send the count in recordCount Tag
 		 */

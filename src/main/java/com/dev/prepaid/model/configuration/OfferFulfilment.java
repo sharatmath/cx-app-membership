@@ -44,6 +44,7 @@ public class OfferFulfilment {
     @SerializedName("usageType") private String usageType;
     @SerializedName("usageOperator") private String usageOperator;
     @SerializedName("usageValue") private Long usageValue;
+    @SerializedName("usageUnit") private String usageUnit;
 
     @SerializedName("countryCode") private String countryCode;
 
