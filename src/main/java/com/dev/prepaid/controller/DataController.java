@@ -33,6 +33,7 @@ import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
 import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
 import com.dev.prepaid.domain.PrepaidOmsOfferCampaign;
 import com.dev.prepaid.domain.PromoCode;
+import com.dev.prepaid.model.AdvFltrTblDTO;
 import com.dev.prepaid.model.DataOffer;
 import com.dev.prepaid.model.PrepaidBucketDetailDTO;
 import com.dev.prepaid.model.PrepaidCampaignOfferDetailDTO;
@@ -68,38 +69,39 @@ public class DataController {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	/*
 	 * @Autowired private PrepaidCxOfferAdvanceFilterRepository
 	 * prepaidCxOfferAdvanceFilterRepository;
 	 */
-	
+
 	@Autowired
 	IPrepaidCxOfferAdvanceFilterService prepaidCxOfferAdvanceFilterService;
 
 	@GetMapping(value = "offerDetail")
-    public PrepaidCampaignOfferDetailDTO offerDetail(
+	public PrepaidCampaignOfferDetailDTO offerDetail(
 //    		@RequestParam(value = "bucketName", required = false) String bucketName,
-    		@RequestParam(value = "bucketOfferId", required = false) String bucketOfferId,
-    		@RequestParam(value = "campaignOfferId", required = false) String campaignOfferId) throws Exception{
-		
+			@RequestParam(value = "bucketOfferId", required = false) String bucketOfferId,
+			@RequestParam(value = "campaignOfferId", required = false) String campaignOfferId) throws Exception {
+
 		String offerBucketType = AppUtil.stringTokenizer(bucketOfferId, "|").get(0);
 		bucketOfferId = AppUtil.stringTokenizer(bucketOfferId, "|").get(1);
 
-		log.debug("offerBucketType: {}",offerBucketType);
-		log.debug("offerId 	: {}",bucketOfferId);
-		log.debug("campaignOfferId: {}",campaignOfferId);
-		
-		if(offerBucketType.equalsIgnoreCase("OMS")) {
-			PrepaidOmsOfferCampaign prepaidOmsOfferCampaign = offerService.getOmsOfferCampaign(Long.parseLong(campaignOfferId));
-			PrepaidOmsOfferBucket prepaidOmsOfferBucket = offerService.getOmsOfferBucket(prepaidOmsOfferCampaign.getOfferId());
-			return PrepaidCampaignOfferDetailDTO.builder()
-					.offerBucketType(offerBucketType) //OMS
+		log.debug("offerBucketType: {}", offerBucketType);
+		log.debug("offerId 	: {}", bucketOfferId);
+		log.debug("campaignOfferId: {}", campaignOfferId);
+
+		if (offerBucketType.equalsIgnoreCase("OMS")) {
+			PrepaidOmsOfferCampaign prepaidOmsOfferCampaign = offerService
+					.getOmsOfferCampaign(Long.parseLong(campaignOfferId));
+			PrepaidOmsOfferBucket prepaidOmsOfferBucket = offerService
+					.getOmsOfferBucket(prepaidOmsOfferCampaign.getOfferId());
+			return PrepaidCampaignOfferDetailDTO.builder().offerBucketType(offerBucketType) // OMS
 					.offerName(prepaidOmsOfferCampaign.getName())
-					.offerId(Long.parseLong(prepaidOmsOfferBucket.getCode()))
-					.offerType(prepaidOmsOfferBucket.getType()) //timebased or accountbased
-					.description(prepaidOmsOfferCampaign.getDescription())
-					.value(prepaidOmsOfferCampaign.getValue())
+					.offerId(Long.parseLong(prepaidOmsOfferBucket.getCode())).offerType(prepaidOmsOfferBucket.getType()) // timebased
+																															// or
+																															// accountbased
+					.description(prepaidOmsOfferCampaign.getDescription()).value(prepaidOmsOfferCampaign.getValue())
 					.valueUnit(prepaidOmsOfferCampaign.getValueUnit())
 					.valueToDeductFromMa(prepaidOmsOfferCampaign.getValueToDeductFromMa())
 					.counterId(prepaidOmsOfferCampaign.getCounterId())
@@ -108,19 +110,13 @@ public class DataController {
 					.thresholdValueUnit(prepaidOmsOfferCampaign.getThresholdValueUnit())
 					.startDate(DateUtil.dateToString(prepaidOmsOfferCampaign.getStartDate(), "yyyy-MMM-dd"))
 					.endDate(DateUtil.dateToString(prepaidOmsOfferCampaign.getEndDate(), "yyyy-MMM-dd"))
-					.action(prepaidOmsOfferCampaign.getAction())
-					.bucketName(prepaidOmsOfferBucket.getDescription())
-					.offerBucketId(offerBucketType.concat("|").concat(bucketOfferId))
-					.offerBucketType(offerBucketType)
-					.offerCampaignId(Long.valueOf(campaignOfferId))
-					.offerCampaignName(prepaidOmsOfferCampaign.getName())
-					.dayHourMinute(
-							String.valueOf(prepaidOmsOfferCampaign.getDay()) + " Day " +
-									String.valueOf(prepaidOmsOfferCampaign.getHour()) + " Hour " +
-									String.valueOf(prepaidOmsOfferCampaign.getMinute()) + " Minute "
-					)
+					.action(prepaidOmsOfferCampaign.getAction()).bucketName(prepaidOmsOfferBucket.getDescription())
+					.offerBucketId(offerBucketType.concat("|").concat(bucketOfferId)).offerBucketType(offerBucketType)
+					.offerCampaignId(Long.valueOf(campaignOfferId)).offerCampaignName(prepaidOmsOfferCampaign.getName())
+					.dayHourMinute(String.valueOf(prepaidOmsOfferCampaign.getDay()) + " Day "
+							+ String.valueOf(prepaidOmsOfferCampaign.getHour()) + " Hour "
+							+ String.valueOf(prepaidOmsOfferCampaign.getMinute()) + " Minute ")
 					.build();
-			
 
 		}
 
@@ -170,92 +166,71 @@ public class DataController {
 	}
 
 	@GetMapping(value = "offerBucket")
-    public List<DataOffer> offerBucketList(
-    		@RequestParam(value = "search", required = false) String query, 
-    		@RequestParam(value = "offerType", required = false) String offerType) throws ParseException {
-		log.info("queryBucket : {}",query);
-		
+	public List<DataOffer> offerBucketList(@RequestParam(value = "search", required = false) String query,
+			@RequestParam(value = "offerType", required = false) String offerType) throws ParseException {
+		log.info("queryBucket : {}", query);
+
 		List<DataOffer> listBucket = new ArrayList<DataOffer>();
-		
+
 		if (offerType == null || offerType.isEmpty()) {
-			
+
 			if (query == null || query.isEmpty()) {
 
-				listBucket.addAll(offerService.listOmsOfferBucket()
-								    		.stream()
-								            .map(this::mapOmsBucketToOffer)
-								            .collect(Collectors.toList()));
-				listBucket.addAll(offerService.listDaOfferBucket()
-											.stream()
-											.map(this::mapDaBucketToOffer)
-											.collect(Collectors.toList()));
-			}else {
+				listBucket.addAll(offerService.listOmsOfferBucket().stream().map(this::mapOmsBucketToOffer)
+						.collect(Collectors.toList()));
+				listBucket.addAll(offerService.listDaOfferBucket().stream().map(this::mapDaBucketToOffer)
+						.collect(Collectors.toList()));
+			} else {
 
-	        	listBucket.addAll(offerService.listOmsOfferBucket()
-											.stream()
-											.filter(p -> p.getCode().toLowerCase().contains(query))
-											.map(this::mapOmsBucketToOffer)
-											.collect(Collectors.toList()));
-	        	listBucket.addAll(offerService.listDaOfferBucket()
-											.stream()
-											.filter(p -> p.getCode().toLowerCase().contains(query))
-											.map(this::mapDaBucketToOffer)
-											.collect(Collectors.toList()));
+				listBucket.addAll(offerService.listOmsOfferBucket().stream()
+						.filter(p -> p.getCode().toLowerCase().contains(query)).map(this::mapOmsBucketToOffer)
+						.collect(Collectors.toList()));
+				listBucket.addAll(
+						offerService.listDaOfferBucket().stream().filter(p -> p.getCode().toLowerCase().contains(query))
+								.map(this::mapDaBucketToOffer).collect(Collectors.toList()));
 			}
-        } else if (offerType.equalsIgnoreCase("DA")) {
-        	
-        	if (query == null || query.isEmpty()) {
+		} else if (offerType.equalsIgnoreCase("DA")) {
 
-            	listBucket.addAll(offerService.listDaOfferBucket()
-    					.stream()
-    					.map(this::mapDaBucketToOffer)
-    					.collect(Collectors.toList()));
-        	} else {
+			if (query == null || query.isEmpty()) {
 
-            	listBucket.addAll(offerService.listDaOfferBucket()
-    					.stream()
-    					.filter(p -> p.getCode().toLowerCase().contains(query))
-    					.map(this::mapDaBucketToOffer)
-    					.collect(Collectors.toList()));
-        	}
-        	
-        } else if (offerType.equalsIgnoreCase("OMS")) {
-        	if (query == null || query.isEmpty()) {
+				listBucket.addAll(offerService.listDaOfferBucket().stream().map(this::mapDaBucketToOffer)
+						.collect(Collectors.toList()));
+			} else {
 
-            	listBucket.addAll(offerService.listOmsOfferBucket()
-    					.stream()
-    					.map(this::mapOmsBucketToOffer)
-    					.collect(Collectors.toList()));
-        	} else {
+				listBucket.addAll(
+						offerService.listDaOfferBucket().stream().filter(p -> p.getCode().toLowerCase().contains(query))
+								.map(this::mapDaBucketToOffer).collect(Collectors.toList()));
+			}
 
-            	listBucket.addAll(offerService.listOmsOfferBucket()
-    					.stream()
-    					.filter(p -> p.getCode().toLowerCase().contains(query))
-    					.map(this::mapOmsBucketToOffer)
-    					.collect(Collectors.toList()));
-        	}
-        	
-        } else if (offerType.equalsIgnoreCase("MA")) {
-        	if (query == null || query.isEmpty()) {
+		} else if (offerType.equalsIgnoreCase("OMS")) {
+			if (query == null || query.isEmpty()) {
 
-            	listBucket.addAll(offerService.listOmsOfferBucket()
-    					.stream()
-    					.map(this::mapOmsBucketToOffer)
-    					.collect(Collectors.toList()));
-        	} else {
+				listBucket.addAll(offerService.listOmsOfferBucket().stream().map(this::mapOmsBucketToOffer)
+						.collect(Collectors.toList()));
+			} else {
 
-            	listBucket.addAll(offerService.listOmsOfferBucket()
-    					.stream()
-    					.filter(p -> p.getCode().toLowerCase().contains(query))
-    					.map(this::mapOmsBucketToOffer)
-    					.collect(Collectors.toList()));
-        	}
-        	
-        } else {
-        }
-		
+				listBucket.addAll(offerService.listOmsOfferBucket().stream()
+						.filter(p -> p.getCode().toLowerCase().contains(query)).map(this::mapOmsBucketToOffer)
+						.collect(Collectors.toList()));
+			}
+
+		} else if (offerType.equalsIgnoreCase("MA")) {
+			if (query == null || query.isEmpty()) {
+
+				listBucket.addAll(offerService.listOmsOfferBucket().stream().map(this::mapOmsBucketToOffer)
+						.collect(Collectors.toList()));
+			} else {
+
+				listBucket.addAll(offerService.listOmsOfferBucket().stream()
+						.filter(p -> p.getCode().toLowerCase().contains(query)).map(this::mapOmsBucketToOffer)
+						.collect(Collectors.toList()));
+			}
+
+		} else {
+		}
+
 		return listBucket;
-    }
+	}
 
 	@GetMapping(value = "offerCampaign")
 	public List<DataOffer> offerCampaignList(@RequestParam(value = "offerId", required = false) String offerId,
@@ -327,16 +302,17 @@ public class DataController {
 		return offerService.getOfferPromoCode(instanceId);
 	}
 
-
 	@GetMapping(value = "offerSelection")
-	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(
+			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		List<PrepaidCampaignOfferDetailDTO> list = new ArrayList<>();
-		List<OfferSelection>  data = offerService.getOfferSelection(instanceId);
-		for (OfferSelection prepaidCxOfferSelection: data){
+		List<OfferSelection> data = offerService.getOfferSelection(instanceId);
+		for (OfferSelection prepaidCxOfferSelection : data) {
 			log.info("{}", prepaidCxOfferSelection);
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
 			offerDetailDTO = offerDetail(
-					prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()),
+					prepaidCxOfferSelection.getOfferBucketType().concat("|")
+							.concat(prepaidCxOfferSelection.getOfferBucketId()),
 					String.valueOf(prepaidCxOfferSelection.getOfferId()));
 //			offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()));
 //			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
@@ -353,7 +329,7 @@ public class DataController {
 			log.info("{}", offerDetailDTO);
 			list.add(offerDetailDTO);
 		}
-		return  list;
+		return list;
 	}
 
 	@GetMapping(value = "offerEligibility")
@@ -457,8 +433,7 @@ public class DataController {
 
 					.daId(prepaidCxOfferEventCondition.getDaId())
 					.roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
-					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId())
-					.build();
+					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId()).build();
 			try {
 				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
 				if (prepaidCxOfferEventCondition.getCampaignEndDate() != null) {
@@ -545,14 +520,16 @@ public class DataController {
 				result.put("GetPackageFrequency", sql);
 			}
 		}
-		
+
 //		GetTopupFrequency
 		if (request.getGetTopupFrequency() != null) {
 			GetTopupFrequency topupFrequency = request.getGetTopupFrequency();
-			String topupFrequencyMatchForXMonthsPackageName = topupFrequency.getGetTopupFrequencyMatchForXMonthsPackageName();
+			String topupFrequencyMatchForXMonthsPackageName = topupFrequency
+					.getGetTopupFrequencyMatchForXMonthsPackageName();
 //			int startMonth = pkgFrequency.getGetPackageFrequencyStartMonth();
 
-			String sql = "SELECT * FROM F_TBL_TOPUP_MT_A " + " WHERE topupFrequencyMatchForXMonthsPackageName = " + topupFrequencyMatchForXMonthsPackageName;
+			String sql = "SELECT * FROM F_TBL_TOPUP_MT_A " + " WHERE topupFrequencyMatchForXMonthsPackageName = "
+					+ topupFrequencyMatchForXMonthsPackageName;
 			System.out.println(sql);
 			if (!OperationUtil.isEmpty(sql) && sql != null) {
 				result.put("GetPackageFrequency", sql);
@@ -595,25 +572,77 @@ public class DataController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 
 	}
-	
+
+//	SQL Data New (Saket)
+	@RequestMapping(value = { "/generateSQLQuery" }, method = { RequestMethod.GET, RequestMethod.POST })
+	public ResponseEntity<Map<String, Object>> generateSQLQuery(@RequestBody AdvFltrTblDTO request) {
+		Map<String, Object> result = new HashMap<>();
+
+		if (request.getTableName() != null) {
+			String tableName = request.getTableName();
+			request.getColumnName();
+
+			String queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getColumnName() + " LIKE " + '%'
+					+ request.getValue() + '%' + request.getCondition();
+			System.out.println(queryText);
+			System.out.println("Expected Result : SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND\r\n"
+					+ "		 * CREATEDATE < '15/11/2021';");
+			if (!OperationUtil.isEmpty(queryText) && queryText != null) {
+				result.put("GetPackageFrequency", queryText);
+			}
+		}
+		/*
+		 * 
+		 * --- Response
+		 * 
+		 * {
+		 * 
+		 * "queryText" :
+		 * "SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND CREATEDATE < '15/11/2021'"
+		 * ,
+		 * 
+		 * "recordCount" : "12"
+		 * 
+		 * }
+		 * 
+		 * 
+		 * 
+		 * SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
+		 * CREATEDATE < '15/11/2021';
+		 * 
+		 * 
+		 * 
+		 * SELECT count(*) FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
+		 * CREATEDATE < '15/11/2021'; -- execute and send the count in recordCount Tag
+		 */
+		return new ResponseEntity<>(result, HttpStatus.OK);
+
+	}
+
 //	Saket(PREPAID_CX_OFFER_ADVANCE_FILTER)
-	
+
 	@RequestMapping(value = { "/doInsertCXOffer" }, method = { RequestMethod.POST })
-    public HttpJsonResult<Hashtable<String, Object>> doInsertCXOffer(
-            @RequestBody PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter) {
-        Hashtable<String, Object> returnTable = new Hashtable<String, Object>();
-        HttpJsonResult<Hashtable<String, Object>> result = new HttpJsonResult<Hashtable<String, Object>>(returnTable);
-        try {
-        	
-        	prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
-        	
-        } catch (Exception e) {
-            log.error("Error", e);
-            log.error("[Prepaid Membership][DataController][doInsertCXOffer] failed!", e);
-        }
-        return result;
-    }
-	
+	public HttpJsonResult<Hashtable<String, Object>> doInsertCXOffer(
+			@RequestBody PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter) {
+		Hashtable<String, Object> returnTable = new Hashtable<String, Object>();
+		HttpJsonResult<Hashtable<String, Object>> result = new HttpJsonResult<Hashtable<String, Object>>(returnTable);
+		try {
+			if (prepaidCxOfferAdvanceFilter != null) {
+				prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
+			}
+
+		} catch (Exception e) {
+			log.error("Error", e);
+			log.error("[Prepaid Membership][DataController][doInsertCXOffer] failed!", e);
+		}
+		return result;
+	}
+
+//	 List of PREPAID_CX_OFFER_ADVANCE_FILTER
+	@GetMapping(value = "listCXOffer")
+	public List<PrepaidCxOfferAdvanceFilter> listCXOffer() {
+
+		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOffers();
+	}
 
 }
-
