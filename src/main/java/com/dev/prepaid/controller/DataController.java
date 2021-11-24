@@ -11,7 +11,12 @@ import java.util.stream.Collectors;
 
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.AdvFltrTblDTO;
 import com.dev.prepaid.model.configuration.*;
+import com.dev.prepaid.model.request.*;
+import com.dev.prepaid.repository.PrepaidCxOfferAdvanceFilterRepository;
+import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
+import com.dev.prepaid.util.OperationUtil;
 import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +49,9 @@ public class DataController {
 
     @Autowired
     private OfferService offerService;
+
+    @Autowired
+    private IPrepaidCxOfferAdvanceFilterService prepaidCxOfferAdvanceFilterService;
 
     @Autowired
     RabbitTemplate rabbitTemplate;
