@@ -191,7 +191,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.1);
             display: table;
             transition: opacity 0.3s ease;
         }
@@ -208,7 +208,7 @@
             padding: 10px 15px;
             background-color: #fff;
             border-radius: 2px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+            /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33); */
             transition: all 0.3s ease;
             font-family: Helvetica, Arial, sans-serif;
         }
@@ -1079,18 +1079,23 @@
                         <div class="card-body">
 
                             <div id="advanceFilterComponent" class="advance-filter-container">
-                                {{testData}} {{showModal}} {{tableList}}
+                                
                                 <query-component 
                                     v-bind:xxx="testData"
                                     v-bind:maindata="mainData" 
                                     v-bind:modaltriggerfn="showModalfn"
                                     v-bind:deletegroupfn="deleteGroupfn"
+                                    v-bind:deletedatafn="deleteDatafn"
+                                    v-bind:modaltrigger="showModal" 
+                                    v-bind:tablelist="tableList"
+                                    v-bind:getadddatagroupidfn="getAddDataGroupIdfn"
+                                    v-bind:savedatafn="saveDatafn"
                                     
                                     ></query-component>
-                                <table-column-modal 
+                                <!-- <table-column-modal 
                                     v-bind:modaltrigger="showModal" 
                                     v-bind:modaltriggerfn="showModalfn" 
-                                    v-bind:tablelist="tableList"></table-column-modal>
+                                    v-bind:tablelist="tableList"></table-column-modal> -->
                                     {{mainData}}
                             </div>
                             
@@ -2998,7 +3003,7 @@
 
 
     Vue.component('table-column-modal',{
-        props:['modaltrigger', 'modaltriggerfn','tablelist'],
+        props:['modaltrigger', 'modaltriggerfn','tablelist', 'groupid','savedatafn'],
         data:function () {
             return {
                 dataId:null,
@@ -3023,7 +3028,6 @@
         },
         template: 
             `<div  v-show="modaltrigger === true">
-                {{modaltrigger}}
                 <div name="modal">
                   <div class="modal-mask">
                     <div class="modal-wrapper">
@@ -3305,7 +3309,7 @@
             },
 
             removeNegative(e,type, value) {
-                console.log(e,'eeee')
+
                 value = Math.max(0, parseInt(e.target.value) || 0);
 
                 if(type==='numberValue'){
@@ -3318,6 +3322,7 @@
             },
             clearDropdown () {
                 console.log(this.selectedColumn,'data')
+                this.mergeData();
                 this.dataId = null;
                 this.selectedTable = null;
                 this.selectedColumn = null;
@@ -3331,12 +3336,30 @@
                 this.duration = 0;
                 this.selectedVarCharOption = 'MATCHES';
                 this.varCharValue = '';
+            },
+            mergeData () {
+                var mergedData = {};
+                mergedData['dataId'] = uuidv4();
+                mergedData['selectedTable'] = this.selectedTable;
+                mergedData['selectedColumn'] = this.selectedColumn;
+                mergedData['selectedNumberOption'] = this.selectedNumberOption;
+                mergedData['selectedNumberOperand'] = this.selectedNumberOperand;
+                mergedData['numberValue'] = this.numberValue;
+                mergedData['selectedDateType'] = this.selectedDateType;
+                mergedData['exactDate'] = this.exactDate;
+                mergedData['daysBefore'] = this.daysBefore;
+                mergedData['duration'] = this.duration;
+                mergedData['selectedVarCharOption'] = this.selectedVarCharOption;
+                mergedData['varCharValue'] = this.varCharValue;
+                console.log(mergedData);
+
+                this.savedatafn(mergedData);
             }
         },
     })
 
     Vue.component('data-component', {
-        props:['data'],
+        props:['data' , 'deletedatafn','groupid'],
         template:
             `<div class="data-card wrapper" style="margin-left: 1% !important;">
                     <div class="row">
@@ -3363,7 +3386,9 @@
                         </div>
                         <div class="col-md-2"></div>
                         <div class="col-md-2 justify-content-end" >
-                            <button type="button"class="btn btn-outline-danger btn-sm" style="float:right; border-radius: 50%;
+                            <button @click="deletedatafn(groupid, data.dataId)" 
+                                type="button"class="btn btn-outline-danger btn-sm"
+                                style="float:right; border-radius: 50%;
                                 border: 1px solid #ff000061; margin-top: 5px"><i class="fas fa fa-trash"></i> 
                         </div>
                     </div>
@@ -3449,11 +3474,11 @@
 //                 </div>
 
     Vue.component('query-component', {
-            props: ['xxx', 'maindata', 'modaltriggerfn','checkdata','deletegroupfn'],
+            props: ['xxx', 'maindata', 'modaltriggerfn','checkdata','deletegroupfn', 'deletedatafn', 'modaltrigger', 'tablelist', 'getadddatagroupidfn','savedatafn'],
             data: function () {
             return {
                 groupId:null,
-                condition:['----','AND', 'OR'],
+                condition:['AND', 'OR'],
                 selectedCondition:'AND'
             } 
         },
@@ -3461,7 +3486,7 @@
             `<div>
                 <div class="row component-card" v-for="y in maindata" :key="y">
                     <div class=" col-sm-4 ">
-                            <div v-show="y.groups || y.dataList">
+                            <div v-show="y.groups.length > 0 || y.dataList.length > 0">
                                 <v-select 
                                     placeholder='----'
                                     class="operators"
@@ -3473,25 +3498,40 @@
                             </div>
                     </div>
                     <div class="col-sm-4"></div>
-                    <div class="col-sm-4" >
-                        <button @click="modaltriggerfn" class="btn btn-create-group btn-sm" style="margin-left:20%"> Add Data</button>
+                    <div class="col-sm-4" style="margin-top:3px;" >
+                        <button @click="modaltriggerfn" @click="getadddatagroupidfn(y.groupId)" class="btn btn-create-group btn-sm" style="margin-left:15%"> Add Data</button>
                         <button @click="modaltriggerfn" class="btn btn-create-group btn-sm" style="margin-right:3%"> Create Group</button>
                         <button @click="deletegroupfn(y.groupId)" type="button"class="btn btn-danger btn-sm" style="max-width: 35px !important;" 
                             v-show="!y.rootGroup"><i class="fas fa fa-trash"></i>
                     </div>
                     
-                     <div class="col-sm-12 " v-show="y.dataList">
-                         <div v-for="data in y.dataList"> 
-                             <data-component v-bind:data="data"></data-component>
-                         </div>
-                     </div>
-                     <div class="col-sm-12" v-show="y.groups">
-                            <query-component 
-                                v-bind:maindata="y.groups"
-                                v-bind:modaltriggerfn="modaltriggerfn"
-                                v-bind:deletegroupfn="deletegroupfn"
-                            ></query-component> 
-                     </div>
+                    <div class="col-sm-12 " v-show="y.dataList">
+                        <div v-for="data in y.dataList"> 
+                            <data-component 
+                               v-bind:data="data"
+                               v-bind:deletedatafn="deletedatafn"
+                               v-bind:groupid="y.groupId"></data-component>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" v-show="y.groups">
+                           <query-component 
+                               v-bind:maindata="y.groups"
+                               v-bind:modaltriggerfn="modaltriggerfn"
+                               v-bind:deletegroupfn="deletegroupfn"
+                               v-bind:deletedatafn="deletedatafn"
+                               v-bind:modaltrigger="modaltrigger" 
+                               v-bind:tablelist="tablelist"
+                               v-bind:getadddatagroupidfn="getadddatagroupidfn"
+                               v-bind:savedatafn="savedatafn"
+                           ></query-component> 
+                    </div>
+                    {{y.groupId}}
+                    <table-column-modal 
+                        v-bind:modaltrigger="modaltrigger" 
+                        v-bind:modaltriggerfn="modaltriggerfn" 
+                        v-bind:tablelist="tablelist"
+                        v-bind:groupid="y.groupId"
+                        v-bind:savedatafn="savedatafn"></table-column-modal>
                 </div>
             </div>`,
        
@@ -3509,18 +3549,18 @@
             showModal: false,
             tableList:[],
             testData: 'test pass props',
-            tempData:{
-                groupId:'',
-                groupId:1,
+            tempGroupData:{
+                groupId:6969,
                 rootGroup:true,
                 groupCondition:'AND',
-                //groups:[]   -> must be pushed
-                //dataList:[] -> must be pushed
+                groups:[],   
+                dataList:[]
             },
+            selectedGroupId: null,
             mainData: [{
                 groupId:1,
                 rootGroup:true,
-                groupCondition:'AND',
+                groupCondition:'AND', 
                 groups:[{
                     groupId:1.2,
                     rootGroup:false,
@@ -3533,13 +3573,27 @@
                             groupId:1.234,
                             rootGroup:false,
                             groupCondition:'AND',
-                            groups:[{
+                            groups:[{                      
                                 groupId:1.2345,
                                 rootGroup:false,
                                 groupCondition:'AND',
-                                dataList:[] }],
+                                groups:[{                      
+                                    groupId:1.23456,
+                                    rootGroup:false,
+                                    groupCondition:'AND',
+                                    groups:[],
+                                    dataList:[],
+                                }, {                      
+                                    groupId:1.23457,
+                                    rootGroup:false,
+                                    groupCondition:'AND',
+                                    groups:[],
+                                    dataList:[],
+                                }],
+                                dataList:[],
+                            }],
                             dataList:[{ 
-                                dataId: 'data1.112',
+                                dataId: 'data1.aaa',
                                 selectedTable: '1.234',
                                 selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
                                 selectedNumberOption:'SUM',
@@ -3551,7 +3605,7 @@
                                 duration: 31,
                                 selectedVarCharOption: 'MATCHES',
                                 varCharValue: 'asdasdasds',},
-                                {   dataId: 'data1.112',
+                                {   dataId: 'data1.bbb',
                                 selectedTable: '1.234',
                                 selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
                                 selectedNumberOption:'SUM',
@@ -3562,11 +3616,23 @@
                                 daysBefore: 4,
                                 duration: 31,
                                 selectedVarCharOption: 'MATCHES',
-                                varCharValue: '22222',}
+                                varCharValue: '22222',},
+                                // {   dataId: 'data1.bbb',
+                                // selectedTable: '1.234',
+                                // selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
+                                // selectedNumberOption:'SUM',
+                                // selectedNumberOperand: '>',
+                                // numberValue: 11,
+                                // selectedDateType: 'exactDate',
+                                // exactDate: dateToday,
+                                // daysBefore: 4,
+                                // duration: 31,
+                                // selectedVarCharOption: 'MATCHES',
+                                // varCharValue: 'xxxxxxxxxxxxx',}
                             ]
                         }],
                         dataList:[{
-                            dataId: 'data3',
+                            dataId: 'xxx',
                             selectedTable: '1.23',
                             selectedColumn: { name: "CREATED_DATE", dataType: "DATE" },
                             selectedNumberOption:'SUM',
@@ -3580,7 +3646,7 @@
                             varCharValue: '',}
                         ]
                     }]
-                    }],
+                }],
                 dataList:[
                     {   dataId: 'data1',
                         selectedTable: '1',
@@ -3625,39 +3691,103 @@
         },
         methods: {
             showModalfn() {
-                console.log('function clicked')
                 advanceFilter.showModal = !advanceFilter.showModal;
-                console.log(advanceFilter.showModal)
             },
-            checkDatafn () {
-                console.log('checkDatafn')
-                console.log(advanceFilter.mainData,'mainData')
-            },
-            searchGroupId (selectedId, data) {
+            deleteViaGroupId (selectedGroupId, data) {
 
                 if(data){
                     for (var i = 0; i < data.length; i++) {
-                        if (selectedId === data[i].groupId) {
+                        if (selectedGroupId === data[i].groupId) {
                             console.log('found id')
-                            console.log(data[i],'is popped?');
-                            data.splice(i, 1);
-                            console.log('deleted')
+                            
+
+                                data.splice(i, 1);  // delete the specified group
+
+
+                        } else {
+                            console.log('not found')
+                            this.deleteViaGroupId(selectedGroupId, data[i].groups)
+                        }
+                    }                 
+                }
+                console.log(advanceFilter.mainData,'maindata')
+            },
+
+            deleteGroupfn (selectedGroupId) {
+                console.log(selectedGroupId, advanceFilter.mainData)
+                //this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
+            },
+
+            deleteViaGroupIdAndDataId (selectedGroupId, selectedDataId, data) {
+
+                if(data){
+                    for (var i = 0; i < data.length; i++) {
+                        if (selectedGroupId === data[i].groupId) {
+                            
+                            if (data[i].dataList) {
+                                for (var d = 0; d < data[i].dataList.length; d++) {
+                                    var obj = data[i].dataList[d];
+                                    
+                                    if (obj.dataId === selectedDataId) {
+                                        // serarch for index under dataList
+
+                                            var index = data[i].dataList.findIndex(function(o){ 
+                                                 return o.dataId === selectedDataId;
+                                            })
     
-                        } else {console.log('not found')
-                            this.searchGroupId(selectedId, data[i].groups)
+                                            if (index !== -1) {
+                                                data[i].dataList.splice(index, 1)
+                                            }
+
+                                        
+                                    }
+                                }
+                            }
+                        } else {
+                            console.log('id not found')
+                            this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, data[i].groups)
                         }
                     }
-
                 }
+            },
+            deleteDatafn (selectedGroupId, selectedDataId ) {
+                console.log(selectedGroupId, selectedDataId, advanceFilter.mainData)
+                //this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, advanceFilter.mainData)
+            },
+            addDataViaGroupId (selectedGroupId , data, savedData) {
+
+                if(data && savedData){
+                    for (var i = 0; i < data.length; i++) {
+                        if (selectedGroupId === data[i].groupId) {
+                            console.log('found id')
+                            console.log(data[i].dataList,'add data here')
+                            data[i].dataList.push(savedData)
+
+                        } else {
+                            console.log('not found')
+                            this.addDataViaGroupId(selectedGroupId, data[i].groups, savedData)
+                        }
+                    }                 
+                }
+                console.log(advanceFilter.mainData,'maindata')
+
+            },
+            getAddDataGroupIdfn (selectedGroupId) {
+                console.log(selectedGroupId,'selectedGroupId')
+                advanceFilter.selectedGroupId = selectedGroupId; // save when add data is clicked
+            },
+            saveDatafn(savedData) {
+                console.log(savedData,'savedData');
+                console.log(advanceFilter.selectedGroupId,'group id');
+
+                //this.addDataViaGroupId(advanceFilter.selectedGroupId, advanceFilter.mainData, savedData)
+
+                advanceFilter.selectedGroupId = null;
+
+                
 
 
-                console.log(advanceFilter.mainData,'maindata')
-            },
-            deleteGroupfn (selectedGroupId) {
-                console.log(selectedGroupId)
-                console.log(advanceFilter.mainData,'maindata')
-                this.searchGroupId(selectedGroupId, advanceFilter.mainData)
-            },
+            }
 
         },
         watch: {},
