@@ -23,7 +23,7 @@ public class OfferMonitoring {
     @SerializedName("periodEndDate") private  String periodEndDate;
     @SerializedName("topupCode") private  String topupCode;
     @SerializedName("usageType") private  String usageType;
-    @SerializedName("transactionValue") private  Long transactionValue;
+    @SerializedName("transactionValue") private  String transactionValue;
     @SerializedName("operatorValue") private  String operatorValue;
     @SerializedName("paidArpuOperator") private  String paidArpuOperator;
     @SerializedName("paidArpuValue") private  Long paidArpuValue;

@@ -28,7 +28,7 @@ public class OfferFulfilment {
     @SerializedName("topupAccBalanceBeforeOp") private  String topUpAccBalanceBeforeOp;
     @SerializedName("topupAccBalanceBeforeValue") private  Long topUpAccBalanceBeforeValue;
     @SerializedName("topupOp") private  String topUpOp;
-    @SerializedName("topupTransactionValue") private  Long topUpTransactionValue;
+    @SerializedName("topupTransactionValue") private  String topUpTransactionValue;
     @SerializedName("topupDaId") private  String topUpDaId;
     @SerializedName("topupDaBalanceOp") private  String topUpDaBalanceOp;
     @SerializedName("topupDaBalanceValue") private  Long topUpDaBalanceValue;
