@@ -4,6 +4,10 @@ import com.dev.prepaid.InitData;
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.DataRowDTO;
+import com.dev.prepaid.model.customevent.CustomEvent;
+import com.dev.prepaid.model.customevent.CustomEventDto;
+import com.dev.prepaid.model.customevent.Recipient;
+import com.dev.prepaid.model.customevent.RecipientData;
 import com.dev.prepaid.model.imports.DataImportDTO;
 import com.dev.prepaid.model.invocation.DataSet;
 import com.dev.prepaid.model.invocation.InvocationRequest;
@@ -17,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +56,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     private PrepaidOfferEligibilityTrxRepository prepaidOfferEligibilityTrxRepository;
     @Autowired
     RetryableService retryableService;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+    @Autowired
+    PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter;
+    @Autowired
+    CustomEventService customEventService;
 
     @Override
     public List<List<String>> processData(List<List<String>> rows,
@@ -91,6 +102,27 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 saveToPrepaidOfferMembership(offerLevelRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration);
             }else{
                 log.info("Not Save Membership Caused Provision Type {}", instanceConfiguration.getProvisionType());
+
+                CustomEvent customEvent= CustomEvent.builder()
+                        .eventDateDataMapping(null)
+                        .eventNumberDataMapping(null)
+                        .eventStringDataMapping(null)
+                        .build();
+                Recipient recipient = Recipient.builder()
+                        .customerId("")
+                        .build();
+                RecipientData recipientData = RecipientData.builder()
+                        .recipient(recipient)
+                        .build();
+                List<RecipientData> listRecipient = new ArrayList<>();
+                listRecipient.add(recipientData);
+
+                CustomEventDto dto = CustomEventDto.builder()
+                        .customEvent(customEvent)
+                        .recipientData(listRecipient)
+                        .build();
+
+                customEventService.invokeCustomEvent(dto);
             }
         }
 
@@ -496,13 +528,16 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             if (i + batchSize > totalObjects) {
                 List<PrepaidOfferMembership> prepaidOfferMemberships = memberships.subList(i, totalObjects);
                 List<PrepaidOfferMembership> saved = (List<PrepaidOfferMembership>) prepaidOfferMembershipRepository.saveAll(prepaidOfferMemberships);
-                // getConfigAdvanceFilterQuery with parameter offerConfigId
-                // getMsisdn from query
-                // compare msisdn eligible with msisdn from advance filter query
-                // match msisdn put in queue redemption
+
                 if(ProvisionType.DIRECT_PROVISION.getDescription().equals(prepaidCxOfferConfig.getProvisionType()) ||
                         ProvisionType.EVENT_CONDITION_WITH_DIRECT_PROVISION.getDescription().equals(prepaidCxOfferConfig.getProvisionType())
                 ) {
+                    // getConfigAdvanceFilterQuery with parameter offerConfigId
+                    // getMsisdn from query
+                    // compare msisdn eligible with msisdn from advance filter query
+                    // match msisdn put in queue redemption
+
+                    List<String> msisdnList = queryMsisdnByAdvanceFilter()
                     for (PrepaidOfferMembership p : saved) {
                         Map<String, Object> map = new HashMap<>();
                         map.put("offerMembershipId", p.getId());
@@ -587,6 +622,18 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         );
         log.info("process#6|END|sendToRedemptionQueue|id|{}", invId);
         return ResponseEntity.ok("Success");
+    }
+
+    @Override
+    public List<String> queryMsisdnByAdvanceFilter(String query) {
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
+        List<String> msisdnList = new ArrayList<>();
+        for (Map row : rows) {
+            msisdnList.add((String)row.get("msisdn"));
+        }
+        log.info("{}", msisdnList);
+        return msisdnList;
     }
 
 }

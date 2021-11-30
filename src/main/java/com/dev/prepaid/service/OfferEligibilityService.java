@@ -32,4 +32,7 @@ public interface OfferEligibilityService {
     public void productImportEndpoint(List<List<String>> rows, InvocationRequest invocation, InvocationRequest invocationOri,  PrepaidCxOfferConfig instanceConfiguration) throws Exception;
 
     public ResponseEntity<String> sendToRedemptionQueue(String invId, Map<String, Object> payload);
+
+    public List<String> queryMsisdnByAdvanceFilter(String query);
+
 }
