@@ -11,9 +11,7 @@ import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.PrepaidCxOfferConfig;
 import com.dev.prepaid.model.invocation.InvocationRequest;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
-import com.dev.prepaid.service.InvocationService;
 import com.dev.prepaid.service.OfferEligibilityService;
-import com.dev.prepaid.service.OfferMonitoringService;
 import com.dev.prepaid.type.EventType;
 import com.dev.prepaid.util.BaseRabbitTemplate;
 import com.dev.prepaid.util.GUIDUtil;
@@ -29,28 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 public class AmqpListener extends BaseRabbitTemplate {
 
     @Autowired
-    OfferMonitoringService offerMonitoringService;
-    @Autowired
     OfferEligibilityService offerEligibilityService;
     @Autowired
     PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
-
-    @RabbitListener(queues = Constant.QUEUE_NAME_MEMBERSHIP_MONITORING,
-            containerFactory = Constant.CONNECTION_FACTORY_NAME_MEMBERSHIP_MONITORING,
-            id = Constant.QUEUE_NAME_MEMBERSHIP_MONITORING)
-    public void receivedMessageOfferMonitoring(final Map<String, Object> request) throws Exception {
-        String requestId = getRequestId(request);
-        log.debug("{}|Event type|{}|Membership data|{}", requestId, request.get("evenType"), request);
-        EventType eventType = EventType.get((String) request.get("eventType"));
-        log.debug("{}|Event type|{}", requestId, eventType);
-        if(EventType.USAGE.equals(eventType)){
-            offerMonitoringService.processUsage(request);
-        }else if(EventType.ARPU.equals(eventType)){
-            offerMonitoringService.processArpu(request);
-        }else if(EventType.TOPUP.equals(eventType)){
-            offerMonitoringService.processTopup(request);
-        }
-    }
 
     private String getRequestId(Map<String, Object> payload) {
         String requestId = null;

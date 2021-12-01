@@ -311,6 +311,7 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setUsageType(prepaidCxOfferMonitoring.getUsageType());
 					offerFulfilment.setUsageOperator(prepaidCxOfferMonitoring.getUsageOp());
 					offerFulfilment.setUsageValue(prepaidCxOfferMonitoring.getUsageValue());
+					offerFulfilment.setUsageUnit(prepaidCxOfferMonitoring.getUsageUnit());
 					return  offerFulfilment;
 				}
 			}

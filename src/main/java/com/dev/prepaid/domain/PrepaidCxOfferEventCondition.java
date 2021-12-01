@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -23,10 +24,8 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String offerConfigId;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    private Date campaignStartDate;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    private Date campaignEndDate;
+    private LocalDateTime campaignStartDate;
+    private LocalDateTime campaignEndDate;
     private String eventConditionName;
     private String eventConditionType;
 
@@ -53,6 +52,7 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private Long eventTypeUsages;
     private String eventUsagesOp;
     private Long eventUsagesValue;
+    private String eventUsagesUnit;
     private Integer aggregationPeriodDays;
 
     private String countryCode;

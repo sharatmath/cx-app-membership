@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name="PREPAID_MA_CREDIT_OFFER")
+@Table(name="PREPAID_MA_CREDIT_OFFERS")
 @Data
 @Builder
 @NoArgsConstructor
