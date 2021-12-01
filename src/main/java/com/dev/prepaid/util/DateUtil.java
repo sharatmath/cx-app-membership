@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -98,4 +99,26 @@ public class DateUtil {
 //        return cal.getTime();
         return new SimpleDateFormat("dd").format(cal.getTime());
     }
+	
+	public static Date add(Date date, int field, int amount) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date.getTime());
+        calendar.add(field, amount);
+        return calendar.getTime();
+    }
+	public static String formatCommonYMD(Date date) {
+        String pattern = "dd/MM/yyyy";
+        if (date == null)
+            return "";
+        if (OperationUtil.isEmpty(pattern))
+            return date.toString();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+            return sdf.format(date);
+        } catch (Throwable e) {
+            log.error("can not format date, date: " + date.toString() + ", pattern:" + pattern + ".", e);
+            throw new BusinessException("Unable to format date and time：" + date.toString() + ", Format：" + pattern);
+        }
+    }
+	
 }
