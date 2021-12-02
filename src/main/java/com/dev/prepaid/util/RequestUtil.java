@@ -78,13 +78,4 @@ public class RequestUtil {
         
         return new HttpEntity<>(httpHeaders);
     }
-
-    public static ArrayList<ClientHttpRequestInterceptor> getClientHttpInterceptorBasic2(String token,String contentType) {
-        ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
-        interceptors.add(new HeaderRequestInterceptor(HEADER_KEY, token));
-        interceptors.add(new HeaderRequestInterceptor("Content-Type", contentType));
-        interceptors.add(new LoggingRequestInterceptor());
-
-        return interceptors;
-    }
 }
