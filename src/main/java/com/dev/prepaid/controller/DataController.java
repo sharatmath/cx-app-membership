@@ -1,5 +1,6 @@
 package com.dev.prepaid.controller;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -679,10 +680,10 @@ public class DataController {
 
 //				if (request.getClauseDto().getCondition().equalsIgnoreCase("MATCHES")) {
 //					queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getClauseDto().getColumnName()
-//							+ " LIKE '" + '%' + request.getClauseDto().getValue() + '%' + "'";
+//							+ " LIKE '" + "%" + request.getClauseDto().getValue() + "%" + "'";
 //				} else if (request.getClauseDto().getCondition().equalsIgnoreCase("STARTSWITH")) {
 //					queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getClauseDto().getColumnName()
-//							+ " LIKE" + "'" + request.getClauseDto().getValue() + '%';
+//							+ " LIKE" + "'" + request.getClauseDto().getValue() + "%";
 //
 //				} else if (request.getClauseDto().getCondition().equalsIgnoreCase("EQUALS")) {
 //					queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getClauseDto().getColumnName()
@@ -693,10 +694,10 @@ public class DataController {
 //
 //				if (request.getClauseDto().getCondition().equalsIgnoreCase("MATCHES")) {
 //					queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getClauseDto().getColumnName()
-//							+ " LIKE '" + '%' + request.getClauseDto().getValue() + '%' + "'";
+//							+ " LIKE '" + "%" + request.getClauseDto().getValue() + "%" + "'";
 //				} else if (request.getCondition().equalsIgnoreCase("STARTSWITH")) {
 //					queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getClauseDto().getColumnName()
-//							+ " LIKE" + "'" + request.getClauseDto().getValue() + '%';
+//							+ " LIKE" + "'" + request.getClauseDto().getValue() + "%";
 //
 //				} else if (request.getClauseDto().getCondition().equalsIgnoreCase("EQUALS")) {
 //					queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getClauseDto().getColumnName()
@@ -705,8 +706,8 @@ public class DataController {
 //				}
 		}
 
-//			 queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getColumnName() + " LIKE '" + '%'
-//					+ request.getValue() + '%'+"'";
+//			 queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getColumnName() + " LIKE '" + "%"
+//					+ request.getValue() + "%"+"'";
 		System.out.println(queryText);
 //			System.out.println("Expected Result : SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND\r\n"
 //					+ "		 * CREATEDATE < '15/11/2021';");
@@ -771,14 +772,14 @@ public class DataController {
 
 						if (caseBean.getOperator().equalsIgnoreCase("MATCHES")) {
 							strBuilder.append(caseBean.getColumnName());
-							strBuilder.append(" LIKE '" + '%' + caseBean.getValue() + '%' + "'");
+							strBuilder.append(" LIKE '" + "%" + caseBean.getValue() + "%" + "'");
 							strCountBuilder.append(caseBean.getColumnName());
-							strCountBuilder.append(" LIKE '" + '%' + caseBean.getValue() + '%' + "'");
+							strCountBuilder.append(" LIKE '" + "%" + caseBean.getValue() + "%" + "'");
 						} else if (caseBean.getOperator().equalsIgnoreCase("STARTSWITH")) {
 							strBuilder.append(caseBean.getColumnName());
-							strBuilder.append(" LIKE '" + caseBean.getValue() + '%' + "'");
+							strBuilder.append(" LIKE '" + caseBean.getValue() + "%" + "'");
 							strCountBuilder.append(caseBean.getColumnName());
-							strCountBuilder.append(" LIKE '" + caseBean.getValue() + '%' + "'");
+							strCountBuilder.append(" LIKE '" + caseBean.getValue() + "%" + "'");
 
 						} else if (caseBean.getOperator().equalsIgnoreCase("EQUALS")) {
 							strBuilder.append(caseBean.getColumnName());
@@ -796,29 +797,29 @@ public class DataController {
 								&& caseBean.getNumberOfDays() > 0) {
 							beforeDate = DateUtil.formatCommonYMD(
 									DateUtil.add(now, Calendar.DAY_OF_MONTH, -(caseBean.getNumberOfDays())));
-							dateTimeStrBuilder.append(caseBean.getColumnName());
+							dateTimeStrBuilder.append("TRUNC(" + caseBean.getColumnName() + ")");
 							dateTimeStrBuilder.append(" < " + "'" + beforeDate + "'");
-							strCountBuilder.append(caseBean.getColumnName());
+							strCountBuilder.append("TRUNC(" + caseBean.getColumnName() + ")");
 							strCountBuilder.append(" < " + "'" + caseBean.getValue() + "'");
 						} else if (caseBean.getOperator().equalsIgnoreCase("IS AFTER") && caseBean.isDaysAfter() == true
 								&& caseBean.getNumberOfDays() > 0) {
 							afterDate = DateUtil.formatCommonYMD(
 									DateUtil.add(now, Calendar.DAY_OF_MONTH, +(caseBean.getNumberOfDays())));
-							dateTimeStrBuilder.append(caseBean.getColumnName());
+							dateTimeStrBuilder.append("TRUNC(" + caseBean.getColumnName() + ")");
 							dateTimeStrBuilder.append(" > " + "'" + afterDate + "'");
-							strCountBuilder.append(caseBean.getColumnName());
+							strCountBuilder.append("TRUNC(" + caseBean.getColumnName() + ")");
 							strCountBuilder.append(" > " + "'" + caseBean.getValue() + "'");
 //						}else if (caseBean.getOperator().equalsIgnoreCase("STARTSWITH")) {
-//							dateTimeStrBuilder.append(caseBean.getColumnName());
-//							dateTimeStrBuilder.append(" LIKE '" + caseBean.getValue() + '%' + "'");
+//							'dateTimeStrBuilder.append("TRUNC(" + caseBean.getColumnName() + ")");
+//							dateTimeStrBuilder.append(" LIKE '" + caseBean.getValue() + "%" + "'");
 //							strCountBuilder.append(caseBean.getColumnName());
-//							strCountBuilder.append(" LIKE '" + caseBean.getValue() + '%' + "'");
+//							strCountBuilder.append(" LIKE '" + caseBean.getValue() + "%" + "'");
 
 						} else if (caseBean.getOperator().equalsIgnoreCase("EQUALS")
 								&& caseBean.isExactDate() == true) {
-							dateTimeStrBuilder.append(caseBean.getColumnName());
+							dateTimeStrBuilder.append("TRUNC(" + caseBean.getColumnName() + ")");
 							dateTimeStrBuilder.append(" = '" + caseBean.getValue() + "'");
-							strCountBuilder.append(caseBean.getColumnName());
+							strCountBuilder.append("TRUNC(" + caseBean.getColumnName() + ")");
 							strCountBuilder.append(" = '" + caseBean.getValue() + "'");
 
 						}
@@ -863,18 +864,15 @@ public class DataController {
 //		@Procedure
 		String countQuery =strCountBuilder.toString();
 //		int countRecord = ADV_FILTER_GET_RECORD_COUNT(strCountBuilder);
-		String wwe = advFilterRecordCountServices.getAdvFilterRecordCount(countQuery);
+        BigDecimal recordCount = advFilterRecordCountServices.getAdvFilterRecordCount(countQuery);
 		result.put("status", "success");
-		result.put("recordCount", Integer.parseInt(wwe));
+		result.put("recordCount", recordCount);
 //		result.put("recordCount", 1);
 		result.put("queryText", strBuilder.append(dateTimeStrBuilder).toString());
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	private int ADV_FILTER_GET_RECORD_COUNT(StringBuilder strCountBuilder) {
 
-		return 0;
-	}
 
 //	Saket(PREPAID_CX_OFFER_ADVANCE_FILTER)
 

@@ -3,6 +3,7 @@
  */
 package com.dev.prepaid.service;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,33 +38,39 @@ public class AdvFilterRecordCountImpl implements AdvFilterRecordCountServices {
 
 	private String ADV_FILTER_GET_RECORD_COUNT = "ADV_FILTER_GET_RECORD_COUNT";
 
-	private void setSimpleJdbcCall(String procedureName) {
+	private BigDecimal setSimpleJdbcCall(String procedureName, String IN_SQL_QUERY) {
 		jdbcTemplate.setResultsMapCaseInsensitive(true);
 		simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate);
 		simpleJdbcCall.withProcedureName(procedureName);
-		SqlParameterSource in = new MapSqlParameterSource().addValue("in_request_id", procedureName);
+		SqlParameterSource in = new MapSqlParameterSource().addValue("IN_SQL_QUERY", IN_SQL_QUERY);
 
 		log.info("{}|start execute procedure|parameter|{}", in);
 		Map out = simpleJdbcCall.execute(in);
+
 		log.info("{}|result execute procedure|output|{}", out);
+		return (BigDecimal) out.get("OUT_RECORD_COUNT");
 	}
 
-	private void evaluationEventCondition(String procedureName) {
+	private BigDecimal evaluationEventCondition(String procedureName,String IN_SQL_QUERY) {
 		log.info("{}| procedureName {} ", procedureName);
+		BigDecimal count = new BigDecimal(-1);
 		try {
-			setSimpleJdbcCall(procedureName);
-			log.info("{} procedure evaluation {} result {} ", true);
+
+			log.info("{} procedure evaluation {} result {} ",procedureName, true);
+			  count = setSimpleJdbcCall(procedureName,IN_SQL_QUERY);
 
 		} catch (Exception e) {
 			log.error("failed", e);
 		}
+
+		return count;
 	}
 
 	@Override
-	public String getAdvFilterRecordCount(String IN_SQL_QUERY) {
+	public BigDecimal  getAdvFilterRecordCount(String IN_SQL_QUERY) {
 		log.info("{}|getAdvFilterRecordCount call procedure ... ", IN_SQL_QUERY);
-		evaluationEventCondition(ADV_FILTER_GET_RECORD_COUNT);
-		return IN_SQL_QUERY;
+		return evaluationEventCondition(ADV_FILTER_GET_RECORD_COUNT,IN_SQL_QUERY);
+
 	}
 
 }

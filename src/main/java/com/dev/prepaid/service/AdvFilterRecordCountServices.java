@@ -3,6 +3,8 @@
  */
 package com.dev.prepaid.service;
 
+import java.math.BigDecimal;
+
 /**
  * @author Saket
  *
@@ -10,6 +12,6 @@ package com.dev.prepaid.service;
  */
 public interface AdvFilterRecordCountServices {
 
-	String getAdvFilterRecordCount(String IN_SQL_QUERY);
+	BigDecimal getAdvFilterRecordCount(String IN_SQL_QUERY);
 
 }
