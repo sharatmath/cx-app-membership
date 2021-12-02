@@ -10,6 +10,6 @@ package com.dev.prepaid.service;
  */
 public interface AdvFilterRecordCountServices {
 
-	void getAdvFilterRecordCount(String IN_SQL_QUERY);
+	String getAdvFilterRecordCount(String IN_SQL_QUERY);
 
 }

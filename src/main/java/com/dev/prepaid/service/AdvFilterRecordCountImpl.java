@@ -60,9 +60,10 @@ public class AdvFilterRecordCountImpl implements AdvFilterRecordCountServices {
 	}
 
 	@Override
-	public void getAdvFilterRecordCount(String IN_SQL_QUERY) {
+	public String getAdvFilterRecordCount(String IN_SQL_QUERY) {
 		log.info("{}|getAdvFilterRecordCount call procedure ... ", IN_SQL_QUERY);
 		evaluationEventCondition(ADV_FILTER_GET_RECORD_COUNT);
+		return IN_SQL_QUERY;
 	}
 
 }
