@@ -51,6 +51,7 @@ import com.dev.prepaid.model.request.IsPaidTopupInLastXDays;
 import com.dev.prepaid.model.tableRequest.AdvFltrTblDTO;
 import com.dev.prepaid.model.tableRequest.CasesDTO;
 import com.dev.prepaid.model.tableRequest.ClauseDto;
+import com.dev.prepaid.service.AdvFilterRecordCountServices;
 import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
 import com.dev.prepaid.service.OfferService;
 import com.dev.prepaid.util.AppUtil;
@@ -72,6 +73,9 @@ public class DataController {
 
     @Autowired
     RabbitTemplate rabbitTemplate;
+    
+    @Autowired
+    AdvFilterRecordCountServices advFilterRecordCountServices;
 
     @GetMapping(value = "offerDetail")
     public PrepaidCampaignOfferDetailDTO offerDetail(
@@ -856,7 +860,10 @@ public class DataController {
 				}
 			}
 		}
+//		@Procedure
+		String countQuery =strCountBuilder.toString();
 		int countRecord = ADV_FILTER_GET_RECORD_COUNT(strCountBuilder);
+		advFilterRecordCountServices.getAdvFilterRecordCount(countQuery);
 		result.put("status", "success");
 		result.put("recordCount", String.valueOf(countRecord));
 //		result.put("recordCount", 1);
