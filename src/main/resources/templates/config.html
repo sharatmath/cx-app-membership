@@ -3826,7 +3826,7 @@
 
             deleteGroupfn (selectedGroupId) {
                 console.log(selectedGroupId, advanceFilter.mainData)
-                //this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
+                this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
             },
 
             deleteViaGroupIdAndDataId (selectedGroupId, selectedDataId, data) {
@@ -3937,7 +3937,8 @@
 
         mounted:function () {
             console.log('call api before created')
-            fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
+             fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
+                //fetch(PROD_URL + `offerBucket?offerType=DA`)
 				.then(res => res.json())
 				.then(data => {
                     console.log(data)
