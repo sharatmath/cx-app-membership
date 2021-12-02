@@ -862,10 +862,10 @@ public class DataController {
 		}
 //		@Procedure
 		String countQuery =strCountBuilder.toString();
-		int countRecord = ADV_FILTER_GET_RECORD_COUNT(strCountBuilder);
+//		int countRecord = ADV_FILTER_GET_RECORD_COUNT(strCountBuilder);
 		advFilterRecordCountServices.getAdvFilterRecordCount(countQuery);
 		result.put("status", "success");
-		result.put("recordCount", String.valueOf(countRecord));
+//		result.put("recordCount", String.valueOf(countRecord));
 //		result.put("recordCount", 1);
 		result.put("queryText", strBuilder.append(dateTimeStrBuilder).toString());
 		return new ResponseEntity<>(result, HttpStatus.OK);

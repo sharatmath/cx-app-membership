@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class AdvFilterRecordCountImpl implements AdvFilterRecordCountServices {
 
-	@Autowired
+//	@Autowired
 	SimpleJdbcCall simpleJdbcCall;
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -65,69 +65,4 @@ public class AdvFilterRecordCountImpl implements AdvFilterRecordCountServices {
 		evaluationEventCondition(ADV_FILTER_GET_RECORD_COUNT);
 	}
 
-	@Override
-	public <S extends AdvFilterRecordCount> S save(S entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <S extends AdvFilterRecordCount> Iterable<S> saveAll(Iterable<S> entities) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Optional<AdvFilterRecordCount> findById(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean existsById(String id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Iterable<AdvFilterRecordCount> findAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Iterable<AdvFilterRecordCount> findAllById(Iterable<String> ids) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public long count() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void deleteById(String id) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void delete(AdvFilterRecordCount entity) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void deleteAll(Iterable<? extends AdvFilterRecordCount> entities) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void deleteAll() {
-		// TODO Auto-generated method stub
-
-	}
 }
