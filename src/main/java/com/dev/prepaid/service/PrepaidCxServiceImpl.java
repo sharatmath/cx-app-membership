@@ -226,39 +226,41 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		}
 		// PROMO
 		if(saveConfigRequest.getPayload().getOfferPromoCode() != null) {
-			if (OfferType.PROMO.toString().equals(saveConfigRequest.getPayload().getOfferPromoCode().getOfferType())) {
-				OfferPromoCode promoCode = saveConfigRequest.getPayload().getOfferPromoCode();
-				Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository.findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(
-						offerConfigId,
-						OfferType.PROMO.toString(),
-						"0",
-						String.valueOf(0)
-				);
-				log.info("offerSelection PROMO {} {}", opsFind, promoCode);
-				PrepaidCxOfferSelection prepaidCxOfferSelection;
-				if (opsFind.isPresent()) {
-					prepaidCxOfferSelection = opsFind.get();
-					prepaidCxOfferSelection.setSmsCampaignName(promoCode.getSmsCampaignName());
-					prepaidCxOfferSelection.setPromoCodeList(promoCode.getPromoCodeList());
-					prepaidCxOfferSelection.setMessageText1(promoCode.getMessageText1());
-					prepaidCxOfferSelection.setMessageText2(promoCode.getMessageText2());
-					prepaidCxOfferSelection.setMessageText3(promoCode.getMessageText3());
-					prepaidCxOfferSelection.setMessageText4(promoCode.getMessageText4());
-				} else {
-					prepaidCxOfferSelection = PrepaidCxOfferSelection.builder()
-							.offerConfigId(offerConfigId)
-							.offerBucketType(OfferType.PROMO.toString())
-							.offerBucketId("0")
-							.offerId("0")
-							.smsCampaignName(promoCode.getSmsCampaignName())
-							.promoCodeList(promoCode.getPromoCodeList())
-							.messageText1(promoCode.getMessageText1())
-							.messageText2(promoCode.getMessageText2())
-							.messageText3(promoCode.getMessageText3())
-							.messageText4(promoCode.getMessageText4())
-							.build();
+			if(saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList() !=null) {
+				if (OfferType.PROMO.toString().equals(saveConfigRequest.getPayload().getOfferPromoCode().getOfferType())) {
+					OfferPromoCode promoCode = saveConfigRequest.getPayload().getOfferPromoCode();
+					Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository.findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(
+							offerConfigId,
+							OfferType.PROMO.toString(),
+							"0",
+							String.valueOf(0)
+					);
+					log.info("offerSelection PROMO {} {}", opsFind, promoCode);
+					PrepaidCxOfferSelection prepaidCxOfferSelection;
+					if (opsFind.isPresent()) {
+						prepaidCxOfferSelection = opsFind.get();
+						prepaidCxOfferSelection.setSmsCampaignName(promoCode.getSmsCampaignName());
+						prepaidCxOfferSelection.setPromoCodeList(promoCode.getPromoCodeList());
+						prepaidCxOfferSelection.setMessageText1(promoCode.getMessageText1());
+						prepaidCxOfferSelection.setMessageText2(promoCode.getMessageText2());
+						prepaidCxOfferSelection.setMessageText3(promoCode.getMessageText3());
+						prepaidCxOfferSelection.setMessageText4(promoCode.getMessageText4());
+					} else {
+						prepaidCxOfferSelection = PrepaidCxOfferSelection.builder()
+								.offerConfigId(offerConfigId)
+								.offerBucketType(OfferType.PROMO.toString())
+								.offerBucketId("0")
+								.offerId("0")
+								.smsCampaignName(promoCode.getSmsCampaignName())
+								.promoCodeList(promoCode.getPromoCodeList())
+								.messageText1(promoCode.getMessageText1())
+								.messageText2(promoCode.getMessageText2())
+								.messageText3(promoCode.getMessageText3())
+								.messageText4(promoCode.getMessageText4())
+								.build();
+					}
+					prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
 				}
-				prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
 			}
 		}
 		//OMS & DA

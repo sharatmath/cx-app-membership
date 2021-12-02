@@ -18,4 +18,5 @@ public interface PrepaidOfferMonitoringTrxRepository extends CrudRepository<Prep
     int countByMsisdnAndCreatedDateBetween(@Param("msisdn") String msisdn,
                                                   @Param("startDate") Date startDate,
                                                   @Param("endDate") Date endDate);
+    
 }

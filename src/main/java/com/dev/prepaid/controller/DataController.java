@@ -3,19 +3,33 @@ package com.dev.prepaid.controller;
 import java.net.http.HttpResponse;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.AdvFltrTblDTO;
 import com.dev.prepaid.model.configuration.*;
+import com.dev.prepaid.model.request.*;
+import com.dev.prepaid.repository.PrepaidCxOfferAdvanceFilterRepository;
+import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
+import com.dev.prepaid.util.OperationUtil;
 import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.prepaid.model.DataOffer;
 import com.dev.prepaid.model.PrepaidBucketDetailDTO;
@@ -35,6 +49,9 @@ public class DataController {
 
     @Autowired
     private OfferService offerService;
+
+    @Autowired
+    private IPrepaidCxOfferAdvanceFilterService prepaidCxOfferAdvanceFilterService;
 
     @Autowired
     RabbitTemplate rabbitTemplate;
@@ -542,9 +559,156 @@ public class DataController {
         return offerService.listOfferType();
     }
 
-    @GetMapping(value = "checkUniqueOverallOfferName")
-    public OverallOfferName checkUniqueOverallOfferName(
-            @RequestParam(value = "overallOfferName", required = true) String overallOfferName) throws ParseException {
-        return offerService.checkOverallOfferName(overallOfferName);
-    }
+	@GetMapping(value = "checkUniqueOverallOfferName")
+	public OverallOfferName checkUniqueOverallOfferName(
+			@RequestParam(value = "overallOfferName", required = true) String overallOfferName) throws ParseException {
+		return offerService.checkOverallOfferName(overallOfferName);
+	}
+
+//	Saket
+
+	@RequestMapping(value = { "/getMyQuery" }, method = { RequestMethod.GET, RequestMethod.POST })
+	public ResponseEntity<Map<String, Object>> getQuery(@RequestBody DataControllRequest request) {
+		Map<String, Object> result = new HashMap<>();
+		if (request == null) {
+
+		}
+//		GetTopupFrequencyMatchForXMonths
+		if (request.getGetPackageFrequency() != null) {
+			GetPackageFrequency pkgFrequency = request.getGetPackageFrequency();
+			String packageFrequencyPackageName = pkgFrequency.getGetPackageFrequencyPackageName();
+			int startMonth = pkgFrequency.getGetPackageFrequencyStartMonth();
+
+			String sql = "SELECT * FROM F_TBL_TOPUP_MT_A " + " WHERE getPackageFrequencyStartMonth = " + startMonth
+					+ " and " + "packageFrequencyPackageName = " + packageFrequencyPackageName;
+			System.out.println(sql);
+			if (!OperationUtil.isEmpty(sql) && sql != null) {
+				result.put("GetPackageFrequency", sql);
+			}
+		}
+
+//		GetTopupFrequency
+		if (request.getGetTopupFrequency() != null) {
+			GetTopupFrequency topupFrequency = request.getGetTopupFrequency();
+			String topupFrequencyMatchForXMonthsPackageName = topupFrequency
+					.getGetTopupFrequencyMatchForXMonthsPackageName();
+//			int startMonth = pkgFrequency.getGetPackageFrequencyStartMonth();
+
+			String sql = "SELECT * FROM F_TBL_TOPUP_MT_A " + " WHERE topupFrequencyMatchForXMonthsPackageName = "
+					+ topupFrequencyMatchForXMonthsPackageName;
+			System.out.println(sql);
+			if (!OperationUtil.isEmpty(sql) && sql != null) {
+				result.put("GetPackageFrequency", sql);
+			}
+		}
+//
+//		if() {
+//
+//		}
+
+//		}
+
+		if (request.getIsPaidTopupInLastXDays() != null) {
+			IsPaidTopupInLastXDays isPaidTopupInLastXDays = request.getIsPaidTopupInLastXDays();
+			log.info("Duration:" + isPaidTopupInLastXDays.getDuration());
+
+			String sql = "SELECT * FROM F_TBL_TOPUP"; // " WHERE xxxx="+ isPaidTopupInLastXDays.getDuration();
+			log.info(sql);
+			result.put("IsPaidTopupInLastXDays", sql);
+		}
+
+		if (request.getGetAccumulatedTopups() != null) {
+			GetAccumulatedTopups getAccumulatedTopups = request.getGetAccumulatedTopups();
+			log.info("Start Day:" + getAccumulatedTopups.getGetAccumulatedTopupsStartDay());
+			log.info("Duration:" + getAccumulatedTopups.getGetAccumulatedTopupsDuration());
+			log.info("Accumulate Combo:" + getAccumulatedTopups.getVs2__combobox());
+			log.info("Accumulate Value:" + getAccumulatedTopups.getGetAccumulatedValue());
+
+			String sql = "SELECT * FROM F_TBL_TOPUP"; // " WHERE xxxx="+ isPaidTopupInLastXDays.getDuration();
+			log.info(sql);
+			result.put("GetAccumulatedTopups", sql);
+		}
+
+		if (result.isEmpty()) {
+			result.put("status", false);
+		} else {
+			result.put("status", true);
+		}
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
+
+	}
+
+//	SQL Data New (Saket)
+	@RequestMapping(value = { "/generateSQLQuery" }, method = { RequestMethod.GET, RequestMethod.POST })
+	public ResponseEntity<Map<String, Object>> generateSQLQuery(@RequestBody AdvFltrTblDTO request) {
+		Map<String, Object> result = new HashMap<>();
+
+		if (request.getTableName() != null) {
+			String tableName = request.getTableName();
+			request.getColumnName();
+
+			String queryText = "SELECT MSISDN FROM " + tableName + " where " + request.getColumnName() + " LIKE " + '%'
+					+ request.getValue() + '%' + request.getCondition();
+			System.out.println(queryText);
+			System.out.println("Expected Result : SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND\r\n"
+					+ "		 * CREATEDATE < '15/11/2021';");
+			if (!OperationUtil.isEmpty(queryText) && queryText != null) {
+				result.put("GetPackageFrequency", queryText);
+			}
+		}
+		/*
+		 *
+		 * --- Response
+		 *
+		 * {
+		 *
+		 * "queryText" :
+		 * "SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND CREATEDATE < '15/11/2021'"
+		 * ,
+		 *
+		 * "recordCount" : "12"
+		 *
+		 * }
+		 *
+		 *
+		 *
+		 * SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
+		 * CREATEDATE < '15/11/2021';
+		 *
+		 *
+		 *
+		 * SELECT count(*) FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
+		 * CREATEDATE < '15/11/2021'; -- execute and send the count in recordCount Tag
+		 */
+		return new ResponseEntity<>(result, HttpStatus.OK);
+
+	}
+
+//	Saket(PREPAID_CX_OFFER_ADVANCE_FILTER)
+
+	@RequestMapping(value = { "/doInsertCXOffer" }, method = { RequestMethod.POST })
+	public HttpJsonResult<Hashtable<String, Object>> doInsertCXOffer(
+			@RequestBody PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter) {
+		Hashtable<String, Object> returnTable = new Hashtable<String, Object>();
+		HttpJsonResult<Hashtable<String, Object>> result = new HttpJsonResult<Hashtable<String, Object>>(returnTable);
+		try {
+			if (prepaidCxOfferAdvanceFilter != null) {
+				prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
+			}
+
+		} catch (Exception e) {
+			log.error("Error", e);
+			log.error("[Prepaid Membership][DataController][doInsertCXOffer] failed!", e);
+		}
+		return result;
+	}
+
+//	 List of PREPAID_CX_OFFER_ADVANCE_FILTER
+	@GetMapping(value = "listCXOffer")
+	public List<PrepaidCxOfferAdvanceFilter> listCXOffer() {
+
+		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOffers();
+	}
+
 }
