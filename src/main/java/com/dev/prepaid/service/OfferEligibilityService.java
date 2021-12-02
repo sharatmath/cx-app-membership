@@ -33,6 +33,7 @@ public interface OfferEligibilityService {
 
     public ResponseEntity<String> sendToRedemptionQueue(String invId, Map<String, Object> payload);
 
-    public List<String> queryMsisdnByAdvanceFilter(String query);
+
+    public ResponseEntity<String> sendToCustomEventQueue(String invocationId, List<String> msisdnList);
 
 }
