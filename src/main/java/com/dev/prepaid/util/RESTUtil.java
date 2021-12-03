@@ -156,4 +156,14 @@ public class RESTUtil {
 	    log.info("restServiceExchange {} body {}", httpMethod , request);
         return restTemplate.exchange(host, httpMethod, request, c, varargs);
     }
+
+	public static ResponseEntity invokeCustomEvent(String token, String host, Object object, Class c, String contentType) {
+		ResponseEntity status = restServiceExchange(
+				RequestUtil.getClientHttpInterceptorBasic2(token, contentType),
+				host,
+				HttpMethod.POST,
+				new HttpEntity<>(object),
+				c);
+		return status;
+	}
 }

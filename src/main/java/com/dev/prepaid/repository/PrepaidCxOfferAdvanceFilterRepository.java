@@ -1,19 +1,11 @@
-/**
- * 
- */
 package com.dev.prepaid.repository;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
 import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
-/**
- * @author Saket
- *
- * 
- */
-@Repository
-public interface PrepaidCxOfferAdvanceFilterRepository extends  CrudRepository<PrepaidCxOfferAdvanceFilter, Long> {
+import java.util.Optional;
 
+public interface PrepaidCxOfferAdvanceFilterRepository extends CrudRepository<PrepaidCxOfferAdvanceFilter, Long> {
+    Optional<PrepaidCxOfferAdvanceFilter> findByOfferConfigId(@Param("offerConfigId") String offerConfigId);
 }
