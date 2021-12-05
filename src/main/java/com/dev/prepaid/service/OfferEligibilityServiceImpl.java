@@ -55,6 +55,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     PrepaidCxOfferAdvanceFilterRepository prepaidCxOfferAdvanceFilterRepository;
     @Autowired
     OfferAdvanceFilterService offerAdvanceFilterService;
+    @Autowired
+    PrepaidCxOfferEventConditionRepository prepaidCxOfferEventConditionRepository;
 
     @Override
     public List<List<String>> processData(List<List<String>> rows,
@@ -94,7 +96,17 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 saveToPrepaidOfferMembership(offerLevelRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration);
             } else {
                 log.info("Not Save Membership Caused Provision Type {}", instanceConfiguration.getProvisionType());
-                sendToCustomEventQueue(invocationOri.getUuid(), offerLevelRows);
+                Optional<PrepaidCxOfferEventCondition> opsFindEvent = prepaidCxOfferEventConditionRepository.findByOfferConfigId(instanceConfiguration.getId());
+                if(opsFindEvent.isPresent()) {
+                    if(opsFindEvent.get().getEventConditionName() != null) {
+                        log.info("sendToCustomEventQueue");
+                        sendToCustomEventQueue(invocationOri.getUuid(), opsFindEvent.get().getEventConditionName(), offerLevelRows);
+                    }else{
+                        log.info("no sendToCustomEventQueue caused event condition name {} ", opsFindEvent.get().getEventConditionName() );
+                    }
+                }else{
+                    log.info("no sendToCustomEventQueue cause no found config {} ", instanceConfiguration.getId());
+                }
             }
         }
         //7
@@ -610,7 +622,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         //type directProvisioning and event + directProvisioning -> invoke redemption
         //type eventConditionOnly -> invoke Custom Event
         //type offerAssignment And Offer Monitoring -> do nothing
-        log.info("process#6|START|sendToRedemptionQueue");
+        log.info("process#6|START|{}",Constant.QUEUE_NAME_SINGTEL_REDEMPTION);
         log.info("process#6|id|{}|payload|{}",
                 invId,
                 payload);
@@ -619,11 +631,11 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 Constant.QUEUE_NAME_SINGTEL_REDEMPTION,
                 payload
         );
-        log.info("process#6|END|sendToRedemptionQueue|id|{}", invId);
+        log.info("process#6|END|{}|id|{}",Constant.QUEUE_NAME_SINGTEL_REDEMPTION, invId);
         return ResponseEntity.ok("Success");
     }
 
-    public ResponseEntity<String> sendToCustomEventQueue(String invId, List<List<String>> offerLevelRows) {
+    public ResponseEntity<String> sendToCustomEventQueue(String invId, String eventName, List<List<String>> offerLevelRows) {
         Map<String, Object> payload = new HashMap<>();
         List<String> msisdnList = new ArrayList<>();
 
@@ -634,8 +646,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
         payload.put("invocationId", invId);
         payload.put("msisdn", msisdnList);
+        payload.put("eventName", eventName);
 
-        log.info("process#6|START|sendToRedemptionQueue");
+        log.info("process#6|START|{}",Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT);
         log.info("process#6|id|{}|payload|{}",
                 invId,
                 payload);
@@ -644,7 +657,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT,
                 payload
         );
-        log.info("process#6|END|sendToRedemptionQueue|id|{}", invId);
+        log.info("process#6|END|{}|id|{}", Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT invId);
         return ResponseEntity.ok("Success");
     }
 

@@ -39,6 +39,26 @@ public class AmqpConfig {
 	@Value("${redemption.queue.concurrent:1}")
 	private Integer redemptionQueueConcurrent;
 
+	@Value("${singtel.prepaid.responsys.custom.event.queue.prefetch:1}")
+	private Integer singtelPrepaidResponsysCustomEventQueuePrefetch;
+	@Value("${singtel.prepaid.responsys.custom.event.queue.concurrent:1}")
+	private Integer singtelPrepaidResponsysCustomEventConcurrent;
+
+
+	@Bean
+	public Queue queueSingtelResponsysCustomEvent() {
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("x-max-priority", 1);
+		Queue queue = new Queue(Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT, true, false, false, args);
+		return queue;
+	}
+	//binding
+	@Bean
+	public Binding bindingSingtelResponsysCustomEvent(Queue queueSingtelResponsysCustomEvent, TopicExchange exchangeMembership) {
+		return BindingBuilder.bind(queueSingtelResponsysCustomEvent).to(exchangeMembership)
+				.with(Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT); //route.key.name=queue.name
+	}
+
 
 	//REDEMPTION
 	// ============================================================================= //
@@ -146,16 +166,6 @@ public class AmqpConfig {
 		return new Jackson2JsonMessageConverter();
 	}
 
-	@Bean
-	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
-	rabbitListenerContainerFactoryForOfferMonitoring(ConnectionFactory rabbitConnectionFactory) {
-		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-		factory.setConnectionFactory(rabbitConnectionFactory);
-		factory.setPrefetchCount(offerMonitoringQueuePrefetch);
-		factory.setConcurrentConsumers(offerMonitoringQueueConcurrent);
-		factory.setMessageConverter(jackson2MessageConverter());
-		return factory;
-	}
 
 	@Bean
 	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
