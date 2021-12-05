@@ -657,7 +657,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT,
                 payload
         );
-        log.info("process#6|END|{}|id|{}", Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT invId);
+        log.info("process#6|END|{}|id|{}", Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT, invId);
         return ResponseEntity.ok("Success");
     }
 
