@@ -808,11 +808,12 @@ public class DataController {
 		}
 //		@Procedure
 		String countQuery = strCountBuilder.toString();
-//		int countRecord = ADV_FILTER_GET_RECORD_COUNT(strCountBuilder);
+		String numberQuery = strBuilder.toString();
 		BigDecimal recordCount = advFilterRecordCountServices.getAdvFilterRecordCount(countQuery);
+		BigDecimal numberQueryRecord = advFilterRecordCountServices.getAdvFilterRecordCount(numberQuery);
 		result.put("status", "success");
 		result.put("recordCount", recordCount);
-		result.put("numberQuery", strBuilder);
+		result.put("numberQuery", numberQueryRecord);
 		result.put("countQuery", countQuery);
 //		result.put("recordCount", 1);
 		result.put("queryText", strBuilder.append(dateTimeStrBuilder).toString());
