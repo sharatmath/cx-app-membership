@@ -7,6 +7,8 @@ public class Constant {
   public static final String QUEUE_NAME_MEMBERSHIP_SUBSCRIBER = "membership.offer.subscriber.queue";
   public static final String QUEUE_NAME_SINGTEL_REDEMPTION = "singtel.redemption.queue";
   public static final String QUEUE_NAME_MEMBERSHIP_ELIGIBILITY = "membership.offer.eligibility.queue";
+  public static final String QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT = "singtel.prepaid.custom.event.queue";
+
 
   public static final String CONNECTION_FACTORY_NAME_MEMBERSHIP_MONITORING = "rabbitListenerContainerFactoryForOfferMonitoring";
   public static final String CONNECTION_FACTORY_NAME_MEMBERSHIP_ELIGIBILITY = "rabbitListenerContainerFactoryForOfferEligibility";

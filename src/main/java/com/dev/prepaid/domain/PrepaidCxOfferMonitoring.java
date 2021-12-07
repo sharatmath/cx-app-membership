@@ -53,7 +53,7 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private String topUpAccBalanceBeforeOp;
     private Long topUpAccBalanceBeforeValue;
     private String topUpOp;
-    private Long topUpTransactionValue;
+    private String topUpTransactionValue;
     private String topUpDaId;
     private String topUpDaBalanceOp;
     private Long topUpDaBalanceValue;
