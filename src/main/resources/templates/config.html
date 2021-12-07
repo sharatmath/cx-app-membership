@@ -161,6 +161,12 @@
             border-color: #da7200 !important;
         }
 
+        .btn-green {
+            color: #fff !important;
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+        }
+
     </style>
 </head>
 
@@ -288,8 +294,11 @@
                                                         <option value="moreOrEqualTo">More than or Equal to</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-5" x-show="eventConditionData.topUpOp != 'equalTo'">
                                                     <input type="text" class="form-control" id="eventConditionDataTopUpValue" x-model="eventConditionData.topUpTransactionValue">
+                                                </div>
+                                                <div class="col-sm-5" x-show="eventConditionData.topUpOp == 'equalTo'">
+                                                    <input type="number" class="form-control" x-model="eventConditionData.topUpTransactionValue">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
@@ -654,17 +663,18 @@
                                         <label for="overallOfferName">Overall Offer Name<sup><i class="fas fa-asterisk"></i></sup></label>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input id="overallOfferName" type="text" class="form-control" x-model="overallOfferName">
+                                        <input id="overallOfferName" @keyup="reValidate()" type="text" class="form-control" x-model="overallOfferName">
                                     </div>
                                     <div class="col-sm-3">
-                                        <button @click="checkUniqueOfferName" class="btn btn-singtel"><i class="fas fa-check-double"></i> Validate</button>
+                                        <button @click="checkUniqueOfferName" class="btn btn-singtel" id="validateOffer"><i class="fas fa-check-double"></i> Validate</button>
+<!--                                        <button @click="reValidate" class="btn btn-singtel" id="reValidate"><i class="fas fa-redo"></i></button>-->
                                     </div>
                                 </div><br>
                                 <div class="form-inline col-sm-12">
                                     <div class="col-sm-4 row">
                                         <label for="offerType">Offer Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                         <select :disabled="uniqueData == false" id="offerType" class="custom-select col-sm-7" x-model="offerTypeDropdown">
-                                            <option>Choose...</option>
+                                            <option value="empty">Choose...</option>
                                             <option value="DA">DA Offer</option>
                                             <option value="OMS">OMS Offer</option>
                                             <option value="MA">MA Offer</option>
@@ -818,6 +828,10 @@
                                                                                 <div class="col-md-6 mb-3">
                                                                                     <label :for="'action' + index">Action</label>
                                                                                     <input type="text" class="form-control" :id="'action' + index" x-model="offer.action" disabled>
+                                                                                </div>
+                                                                                <div class="col-md-6 mb-3">
+                                                                                    <label :for="'validity' + index">Offer Type</label>
+                                                                                    <input type="text" class="form-control" :id="'bucketType' + index" x-model="offer.offerBucketType" disabled>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1031,8 +1045,8 @@
                                                 <div class="mb-3 row">
                                                     <label class="col-sm-2 col-form-label">Top-Up Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                                     <div class="col-sm-10">
-                                                        <div class="form-group d-flex justify-content-between" x-model="monitoringData.topUpType">
-                                                            <select class="form-control">
+                                                        <div class="form-group d-flex justify-content-between">
+                                                            <select class="form-control" x-model="monitoringData.topUpType">
                                                                 <option value="All">All</option>
                                                                 <option value="Paid">Paid</option>
                                                                 <option value="Non-Paid">Non-Paid</option>
@@ -1065,8 +1079,11 @@
                                                         <option value="isBetween">Is Between</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-5" x-show="monitoringData.topUpOp != 'equalTo'">
                                                     <input type="text" class="form-control" id="topUpValue" x-model="monitoringData.topUpTransactionValue">
+                                                </div>
+                                                <div class="col-sm-5" x-show="monitoringData.topUpOp == 'equalTo'">
+                                                    <input type="number" class="form-control" x-model="monitoringData.topUpTransactionValue">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
@@ -2028,7 +2045,7 @@
             selectedBucket                  : null,
             selectedBucketLabel             : null,
             selectedCampaign                : null,
-            offerTypeDropdown               : 'DA',
+            offerTypeDropdown               : 'empty',
             configureMembership             : null,
             eligibilityData                 : {},
             monitoringData                  : {},
@@ -2119,24 +2136,36 @@
             },
 
             checkUniqueOfferName() {
-                fetch(PROD_URL + `checkUniqueOverallOfferName?overallOfferName=${this.overallOfferName}`)
-                    .then(res => res.json())
-                    .then(data => {
+                if(!!this.overallOfferName) {
+                    fetch(PROD_URL + `checkUniqueOverallOfferName?overallOfferName=${this.overallOfferName}`)
+                        .then(res => res.json())
+                        .then(data => {
 
-                        this.uniqueData = data.unique
-                        this.uniqueMessage = data.message
+                            this.uniqueData = data.unique
+                            this.uniqueMessage = data.message
 
-                        if (this.uniqueData == false) {
-                            swal("Error!", "Data Already Exist", "error");
-                        } else if (this.uniqueData == true) {
-                            swal("Success!", "Data Eligible to Use", "success");
-                        }
+                            if (this.uniqueData == false) {
+                                swal("Error!", "Data Already Exist", "error");
+                            } else if (this.uniqueData == true) {
+                                swal("Success!", "Data Eligible to Use", "success");
+                                $("#validateOffer").attr('class', 'btn btn-green').attr("disabled", true);
+                                // $("#overallOfferName").attr("disabled", true);
+                            }
 
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-                    .finally()
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                        .finally()
+                } else {
+                    swal("Error!", "You have to fill in Overall Offer Name", "error");
+                }
+            },
+
+            reValidate() {
+                // swal("Re-Validate", "You need to Re-Validate Overall Offer Name", "success");
+                $("#validateOffer").attr('class', 'btn btn-singtel').attr("disabled", false);
+                // $("#overallOfferName").prop("disabled", false);
             },
 
             addNewData() {
@@ -2152,11 +2181,13 @@
                         })
                         .catch(error => console.log(error))
                         .finally()
+                } else {
+                    swal("Error!", "No Data", "error");
                 }
             },
 
             eventTypeDropdown() {
-                if(this.offerTypeDropdown == 'DA' || this.offerTypeDropdown == 'OMS' || this.offerTypeDropdown == 'MA') {
+                if(this.offerTypeDropdown == 'DA' || this.offerTypeDropdown == 'OMS' || this.offerTypeDropdown == 'MA' || this.offerTypeDropdown == 'empty') {
                     this.$watch("offerTypeDropdown", (value) => {
                         this.offerBucketList = [];
                         this.campaignOfferList = [];
@@ -2304,6 +2335,7 @@
                         } else if (data.monitorSpecifiedPeriodRadio == true) {
                             this.monitoringFulfillmentRadio = 'specified-period'
                         }
+
                     })
                     .catch(error => console.log(error))
                     .finally()
