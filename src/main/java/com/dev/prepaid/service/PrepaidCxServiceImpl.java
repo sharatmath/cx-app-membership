@@ -345,7 +345,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferMonitoring.setTopUpDaBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceOp());
 			prepaidCxOfferMonitoring.setTopUpDaBalanceValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceValue());
 			prepaidCxOfferMonitoring.setTopUpTempServiceClass(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
-
+			prepaidCxOfferMonitoring.setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
+			prepaidCxOfferMonitoring.setTopUpCurBalanceValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceValue());
 
 		}else if("ARPU".equals(prepaidCxOfferMonitoring.getEventType())){
 			prepaidCxOfferMonitoring.setOperatorId(saveConfigRequest.getPayload().getOfferMonitoring().getOperatorId());
