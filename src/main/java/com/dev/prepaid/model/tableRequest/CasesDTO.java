@@ -19,14 +19,33 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CasesDTO {
-	
+
 	private String columnName;
+
 	private String value;
+
 	private String caseType;
+
 	private String operator;
+
 	private boolean exactDate;
+
 	private boolean daysBefore;
+
 	private boolean daysAfter;
+
 	private int numberOfDays;
+
+	private String aggregrationOp;
+
+	private String aggregationDateType;
+
+	private String startDate;
+
+	private String dateSeek;
+
+	private int duration;
+	
+	private String productPackageId;
 
 }
