@@ -171,6 +171,11 @@ public class OfferServiceImpl implements OfferService {
 	}
 
 	@Override
+	public PrepaidMaCreditOffer getMaCreditOfferById(Long id) {
+		return null;
+	}
+
+	@Override
 	public void deletePrepaidMaCreditOffer(Long id) {
 		PrepaidMaCreditOffer prepaidMaCreditOffer = prepaidMaOfferBucketRepository.
 				findOneById(id);
