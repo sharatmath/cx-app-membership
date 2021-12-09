@@ -75,6 +75,7 @@
             color: #fff;
         }
 
+
         #main #faq .card .card-header .btn-header-link.collapsed:after {
             content: "\f106";
         }
@@ -93,6 +94,7 @@
             line-height: 30px;
             color: #222;
         }
+
         /*Accordion Custom END*/
 
         body {font-family: Arial, Helvetica, sans-serif;}
@@ -908,6 +910,25 @@
                                                     <label class="col-sm-2 col-form-label col-form-label">Message Text 4</label>
                                                     <div class="col-sm-4">
                                                         <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic4">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="noneOfferSelection" x-show="offerTypeDropdown === 'NONE'">
+                                            <div class="accordion" id="none">
+                                                <div class="noneTemplate">
+                                                    <div class="row-flex">
+                                                        <div class="card">
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <div class="card-header" id="none1" style="background-color: #da7200 !important; background-image: none !important;">
+                                                                        <b>NO Offer</b>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
