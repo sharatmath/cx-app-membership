@@ -151,16 +151,6 @@ public class AmqpConfig {
 	public Binding offerMonitoringDlqBinding() {
 		return BindingBuilder.bind(dlqOfferMonitoring()).to(dlxOfferMonitoring()).with("offer.monitoring.rk");
 	}
-
-	@Bean
-	public DirectExchange dlxOfferMonitoring() {
-		return new DirectExchange("offer.monitoring.dlx");
-	}
-
-	@Bean
-	public Binding offerMonitoringDlqBinding() {
-		return BindingBuilder.bind(dlqOfferMonitoring()).to(dlxOfferMonitoring()).with("offer.monitoring.rk");
-	}
 	//============================================================================= //
 	// Subscriber
 	@Bean
