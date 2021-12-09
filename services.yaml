@@ -18,11 +18,11 @@ spec:
         image: fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit
         resources:
           requests:
-            memory: "1024Mi"
-            cpu: "750m"
+            memory: "2048Mi"
+            cpu: "0.1"
           limits:
             memory: "5000Mi"
-            cpu: "1500m"
+            cpu: "0.15"
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
