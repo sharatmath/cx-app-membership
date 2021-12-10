@@ -14,4 +14,6 @@ public interface AdvFilterRecordCountServices {
 
 	BigDecimal getAdvFilterRecordCount(String IN_SQL_QUERY);
 
+	String getAdvFilterNumber(String IN_SQL_NUM_QUERY);
+
 }

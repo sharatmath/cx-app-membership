@@ -3,6 +3,8 @@
  */
 package com.dev.prepaid.model.tableRequest;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,5 +49,44 @@ public class CasesDTO {
 	private int duration;
 	
 	private String productPackageId;
+	
+	
+//	///New Objs
+	
+	private int groupId;
+	
+	private boolean rootGroup;
+	
+	private String groupCondition;
+	
+	private String groups;
+	
+	private String dataId;
+	
+	private String selectedTable; // String/int??
+	
+	private String selectedColumnName;
+	
+	private String selectedDataType;
+	
+	private String selectedOption;
+	
+	private String isGreaterThan;//>
+	
+	private int numberValue;
+	
+	private String selectedDateType;
+	
+	private Date exactDates;//exactDate
+	
+//	private int daysBefore;//daysBefore
+	
+//	private int duration;//already created
+	
+	
+	
+	
+	
+	
 
 }
