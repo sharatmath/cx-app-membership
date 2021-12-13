@@ -1103,76 +1103,127 @@ public class DataController {
 	public ResponseEntity<Map<String, Object>> getSQLQuery(@RequestBody List<Group> groupList) {
 		Map<String, Object> result = new HashMap<>();
 		StringBuilder finalQueryStringBuilder = new StringBuilder();
-		String queryText = getQuery(groupList, "");
+		StringBuilder joinStringBuilder = new StringBuilder();
+		String tableOne = null;
+		HashMap<String, String> tableMap = new HashMap<>();
+		int alphaCode = 65;
+		tableMap = getTables(groupList, tableMap, alphaCode);
+		finalQueryStringBuilder.append("SELECT DISTINCT A.MSISDN FROM ");
+		HashMap<String, String> revTableMap = new HashMap<>();
+		for (Map.Entry m : tableMap.entrySet()) {
 
+			System.out.println(m.getKey() + " " + m.getValue());
+			revTableMap.put(m.getValue().toString(), m.getKey().toString());
+			
+			//			if (m.getValue() == "A") {
+//				tableOne = "A." + m.getKey() + " = ";
+//			} else {
+//				finalQueryStringBuilder.append(",");
+//				joinStringBuilder.append(tableOne + m.getValue() + "." + m.getKey() + " AND ");
+//			}
+//			finalQueryStringBuilder
+//					.append(m.getValue() + "." + m.getKey());
+		}
+
+		int maxIteration = alphaCode + revTableMap.size();
+		for (; alphaCode < maxIteration; alphaCode++) {
+			if (alphaCode == 65) {
+				tableOne = "A." + (revTableMap.get(String.valueOf((char) alphaCode))) + " = ";
+			} else {
+				finalQueryStringBuilder.append(",");
+				joinStringBuilder.append(tableOne
+						+ (String.valueOf((char) alphaCode) + "." + revTableMap.get(String.valueOf((char) alphaCode)))
+						+ " AND ");
+			}
+			finalQueryStringBuilder
+					.append(String.valueOf((char) alphaCode) + "." + revTableMap.get(String.valueOf((char) alphaCode)));
+		}
+		System.out.println(finalQueryStringBuilder);
+		String queryText = getQuery(groupList, tableMap, "");
+		finalQueryStringBuilder.append(" WHERE ");
+		if (joinStringBuilder.toString() != null) {
+			finalQueryStringBuilder.append(joinStringBuilder.toString());
+		}
+		finalQueryStringBuilder.append(queryText);
 		result.put("status", "success");
-		result.put("queryText", queryText);
-
+		result.put("queryText", finalQueryStringBuilder.toString());
 		return new ResponseEntity<>(result, HttpStatus.OK);
-
 	}
-	
+
 	public static <T> Iterable<T> emptyIfNull(Iterable<T> iterable) {
-	    return iterable == null ? Collections.<T>emptyList() : iterable;
+		return iterable == null ? Collections.<T>emptyList() : iterable;
 	}
 
-	private static String getQuery(List<Group> groupList, String groupByClause) {
-		List<String> statusList = new ArrayList<>();
+	private static HashMap<String, String> getTables(List<Group> groupList, HashMap<String, String> tableMap,
+			int alphaCode) {
+//              HashMap<String, String> tableMap = new HashMap<>();
+//		int alphaCode = 65;
+		for (Group groupBean : groupList) {
+			if (groupBean.getGroups() != null && !groupBean.getGroups().isEmpty() && groupBean.getGroups().size() > 0) {
+				tableMap = getTables(groupBean.getGroups(), tableMap, alphaCode);
+			}
+			for (DataList dataListBean : emptyIfNull(groupBean.getDataList())) {
+				if (groupBean.getDataList() != null && groupBean.getDataList().size() > 0) {
+					if (!tableMap.containsKey(dataListBean.getSelectedTable())) {
+						tableMap.put(dataListBean.getSelectedTable(),
+								String.valueOf((char) (alphaCode + tableMap.size())));
+					}
+//					alphaCode++;
+				}
+			}
+		}
+		return tableMap;
+	}
+
+	private static String getQuery(List<Group> groupList, HashMap<String, String> tableMap, String groupByClause) {
+//              List<String> statusList = new ArrayList<>();
 		StringBuilder queryStringBuilder = new StringBuilder();
 		// StringBuilder dateTimeStrBuilder = new StringBuilder();
 		StringBuilder groupByStrBuilder = new StringBuilder();
-		StringBuilder strCountBuilder = new StringBuilder();
-		List<StringBuilder> strBuilderList = null;
-		Date now = new Date();
-		String beforeDate = "";
-		String afterDate = "";
-		String operator = "";
+//              StringBuilder strCountBuilder = new StringBuilder();
+//              List<StringBuilder> strBuilderList = null;
+//              Date now = new Date();
+//              String beforeDate = "";
+//              String afterDate = "";
+//              String operator = "";
 		int dataListCount = 0;
-		int alphaCode = 65;
-		int groupsCount = 0;
-
-		HashMap<String, String> tableMap = new HashMap<>();
-		HashMap<Integer, String> groupMap = new HashMap<>();
-
+//              int alphaCode = 65;
+//              int groupsCount = 0;
+//              HashMap<String, String> tableMap = new HashMap<>();
+//              HashMap<Integer, String> groupMap = new HashMap<>();
 		for (Group groupBean : groupList) {
-
 			if (groupBean.getGroups() != null && !groupBean.getGroups().isEmpty() && groupBean.getGroups().size() > 0) {
 				queryStringBuilder
 						.append(groupBean.getGroupCondition() + " ("
-								+ getQuery(groupBean.getGroups(),
+								+ getQuery(groupBean.getGroups(), tableMap,
 										(groupByStrBuilder.toString() != null ? groupByStrBuilder.toString() : ""))
 								+ ")");
-
 			}
-
-			queryStringBuilder.append("SELECT DISTINCT A.MSISDN FROM ");
-			int tableCount = 0;
+//                          queryStringBuilder.append("SELECT DISTINCT A.MSISDN FROM ");
+//                          int tableCount = 0;
+//                          for (DataList dataListBean : emptyIfNull(groupBean.getDataList())) {
+////                       for (DataList dataListBean : groupBean.getDataList()) {
+//                                      if (groupBean.getDataList() != null && groupBean.getDataList().size() > 0) {
+//                                                  if (!tableMap.containsKey(dataListBean.getSelectedTable())) {
+//                                                              tableMap.put(dataListBean.getSelectedTable(), String.valueOf((char) alphaCode));
+//                                                              tableCount++;
+//                                                              if (tableCount > 1) {
+//                                                                          queryStringBuilder.append(", ");
+//                                                              }
+//                                                              queryStringBuilder
+//                                                                                      .append(dataListBean.getSelectedTable() + " " + String.valueOf((char) alphaCode));
+//                                                              alphaCode++;
+//                                                  }
+//                                      }
+//                          }
+//                          queryStringBuilder.append(" WHERE");// SELECT DISTINCT A.MSISDN FROM f_tbl_topup A, F_TBL_PROFILE B WHERE
 			for (DataList dataListBean : emptyIfNull(groupBean.getDataList())) {
-//			for (DataList dataListBean : groupBean.getDataList()) {
-				if (groupBean.getDataList() != null && groupBean.getDataList().size() > 0) {
-					if (!tableMap.containsKey(dataListBean.getSelectedTable())) {
-						tableMap.put(dataListBean.getSelectedTable(), String.valueOf((char) alphaCode));
-						tableCount++;
-						if (tableCount > 1) {
-							queryStringBuilder.append(", ");
-						}
-						queryStringBuilder
-								.append(dataListBean.getSelectedTable() + " " + String.valueOf((char) alphaCode));
-						alphaCode++;
-					}
-				}
-			}
-			queryStringBuilder.append(" WHERE");// SELECT DISTINCT A.MSISDN FROM f_tbl_topup A, F_TBL_PROFILE B WHERE
-
-			for (DataList dataListBean : emptyIfNull(groupBean.getDataList())) {
-
 				// strCountBuilder.append("SELECT COUNT(*) FROM " +
 				// dataListBean.getSelectedTable() + " WHERE ");
 				// numberStrBuilder.append("SELECT MSISDN FROM " +
 				// dataListBean.getSelectedTable() + " WHERE ");
 				dataListCount = groupBean.getDataList().size();
-
-//				VARCHAR
+//                                      VARCHAR
 				if (dataListBean.getSelectedDataType().equalsIgnoreCase("VARCHAR")
 						&& dataListBean.getSelectedDataType() != null
 						&& !dataListBean.getSelectedDataType().isEmpty()) {
@@ -1190,8 +1241,7 @@ public class DataController {
 						queryStringBuilder.append(" = '" + dataListBean.getNumberValue() + "'");
 					}
 				}
-
-//				Date and TRUNC(DOB) > ('01-JAN-90')
+//                                      Date and TRUNC(DOB) > ('01-JAN-90')
 				if (dataListBean.getSelectedDataType().equalsIgnoreCase("DATE")
 						&& dataListBean.getSelectedDataType() != null
 						&& !dataListBean.getSelectedDataType().isEmpty()) {
@@ -1213,7 +1263,6 @@ public class DataController {
 							queryStringBuilder.append(" > ");
 							queryStringBuilder.append("(" + date + " - " + dataListBean.getDaysBefore() + " - "
 									+ dataListBean.getDuration() + "))");
-
 						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("IS After")) {
 							queryStringBuilder.append("(TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
 									+ dataListBean.getSelectedColumnName() + ")");
@@ -1238,7 +1287,6 @@ public class DataController {
 									+ dataListBean.getSelectedColumnName() + ")");
 							queryStringBuilder.append(" < " + "'");
 							queryStringBuilder.append(date + "'");
-
 						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("IS After")) {
 							queryStringBuilder.append("TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
 									+ dataListBean.getSelectedColumnName() + ")");
@@ -1249,12 +1297,9 @@ public class DataController {
 									+ dataListBean.getSelectedColumnName() + ")");
 							queryStringBuilder.append(" = " + "'");
 							queryStringBuilder.append(date + "'");
-
 						}
 					}
-
 				}
-
 				if (dataListBean.getSelectedDataType().equalsIgnoreCase("NUMBER")
 						&& dataListBean.getSelectedDataType() != null
 						&& !dataListBean.getSelectedDataType().isEmpty()) {
@@ -1281,7 +1326,6 @@ public class DataController {
 							queryStringBuilder.append(" > ");
 							queryStringBuilder.append("(" + date + " - " + dataListBean.getDaysBefore() + " - "
 									+ dataListBean.getDuration() + "))");
-
 						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("IS After")) {
 							queryStringBuilder.append("(TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
 									+ dataListBean.getSelectedColumnName() + ")");
@@ -1306,7 +1350,6 @@ public class DataController {
 									+ dataListBean.getSelectedColumnName() + ")");
 							queryStringBuilder.append(" < " + "'");
 							queryStringBuilder.append(date + "'");
-
 						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("IS After")) {
 							queryStringBuilder.append("TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
 									+ dataListBean.getSelectedColumnName() + ")");
@@ -1317,33 +1360,24 @@ public class DataController {
 									+ dataListBean.getSelectedColumnName() + ")");
 							queryStringBuilder.append(" = " + "'");
 							queryStringBuilder.append(date + "'");
-
 						}
 					}
-
 				}
-
 				// if (dataListCount > 1) {
 				// if (groupBean.getGroupCondition() != null &&
 				// !groupBean.getGroupCondition().isEmpty()
 				// && groupBean.getGroupCondition().equalsIgnoreCase("AND")) {
-
 				// queryStringBuilder.append("\r\n INTERSECT \r\n");
 				// } else {
 				// queryStringBuilder.append("\r\n UNION \r\n");
 				// }
-
 				// }
-
 				if (dataListCount > 1) {
 					queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
 				}
 				dataListCount--;
-
 			}
-
 			queryStringBuilder.append(groupByStrBuilder.toString());
-
 		}
 		return queryStringBuilder.toString();
 	}
