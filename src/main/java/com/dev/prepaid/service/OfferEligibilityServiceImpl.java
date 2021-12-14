@@ -67,9 +67,24 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                           Long dataSetSize) throws Exception {
 
         log.info("FindBatchId|Request|{}|{}", invocationOri.getUuid(), invocation.getBatchId());
+        //check msisdn
+        List<List<String>> newData = new ArrayList<>();
+        for(List<String> dt: rows){
+            String msisdn = dt.get(1);
+            if(msisdn == null | msisdn==""){
+                log.info("{}|No CUSTOMER_ID or MSISDN Found|{}", invocationOri.getUuid(), msisdn);
+            }else{
+                newData.add(dt);
+            }
+        }
+
+        if(newData.isEmpty() || newData.size() == 0){
+            log.info("{}|No Process Data |{}", invocationOri.getUuid(), newData);
+            return newData ;
+        }
         //1
         List<List<String>> exclusionRows = new ArrayList<>();
-        exclusionRows = evaluationSubscriberExclusion(rows, invocation, instanceConfiguration);
+        exclusionRows = evaluationSubscriberExclusion(newData, invocation, instanceConfiguration);
         //2
         List<List<String>> eligibleRows = new ArrayList<>();
         eligibleRows = evaluationSubscriberLevel(exclusionRows, invocation, instanceConfiguration);
