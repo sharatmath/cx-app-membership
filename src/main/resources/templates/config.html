@@ -96,6 +96,61 @@
 
         /*Accordion Custom END*/
 
+        /*Accordion PROMO BEGIN*/
+        #main #prom .card {
+            margin-bottom: 30px;
+            border: 0;
+        }
+
+        #main #prom .card .card-header {
+            border: 0;
+            -webkit-box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+            box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+            border-radius: 2px;
+            padding: 0;
+        }
+
+        #main #prom .card .card-header .btn-header-link {
+            color: #fff;
+            display: block;
+            text-align: left;
+            background: #8e9cb7;
+            color: #222;
+            padding: 20px;
+        }
+
+        #main #prom .card .card-header .btn-header-link:after {
+            content: "\f107";
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            float: right;
+        }
+
+        #main #prom .card .card-header .btn-header-link.collapsed {
+            background: #da7200 !important;
+            color: #fff;
+        }
+
+        #main #prom .card .card-header .btn-header-link.collapsed:after {
+            content: "\f106";
+        }
+
+        #main #prom .card .collapsing {
+            background: #8e9cb7;
+            line-height: 30px;
+        }
+
+        #main #prom .card .collapse {
+            border: 0;
+        }
+
+        #main #prom .card .collapse.show {
+            background: #8e9cb7;
+            line-height: 30px;
+            color: #222;
+        }
+        /*Accordion PROMO END*/
+
         body {font-family: Arial, Helvetica, sans-serif;}
 
         /* The Modal (background) */
@@ -857,62 +912,83 @@
                                         </template>
                                     </div>
                                     <div class="container">
-                                        <div class="manualRedemptionSelection" x-show="offerTypeDropdown === 'PROMO' || offerSelectionSmsCampaignName != null">
-                                            <div class="form-group row">
-                                                <b>Unique Promo Code Message</b><br><br>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionSmsCampaignName">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Promo Type<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                    <div class="col-sm-4">
-                                                        <select multiple id="promoCodeMultiple" class="w-100">
-                                                            <option>Choose...</option>
-                                                            <template x-for="list in promoList">
-                                                                <option :key="list.name" x-text="list.name"></option>
-                                                            </template>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Message Text 1</label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic1">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Message Text 2</label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic2">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Message Text 3</label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic3">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Message Text 4</label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic4">
+                                        <!--PROMO ACCORDION BEGIN-->
+                                        <div class="accordion" id="prom" x-show="offerTypeDropdown === 'PROMO' || offerSelectionSmsCampaignName != null">
+                                            <div class="offerSelectionTemplate">
+                                                <div class="card">
+                                                    <div class="row">
+                                                        <div class="col-sm-11">
+                                                            <div class="card-header" id="promoAccordion">
+                                                                <a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" data-target="#prom1"
+                                                                   aria-expanded="true" aria-controls="faq1"><b>UNIQUE PROMO CODE</b></a>
+                                                            </div>
+                                                            <div id="prom1" class="panel-collapse collapse" aria-labelledby="promoAccordion" data-parent="#prom">
+                                                                <div class="card-body">
+                                                                    <div class="form-row">
+                                                                        <b>Unique Promo Code Message</b><br><br>
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionSmsCampaignName">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Promo Type<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                                            <div class="col-sm-4">
+                                                                                <select multiple id="promoCodeMultiple" class="w-100">
+                                                                                    <option>Choose...</option>
+                                                                                    <template x-for="list in promoList">
+                                                                                        <option :key="list.name" x-text="list.name"></option>
+                                                                                    </template>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 1</label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic1">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 2</label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic2">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 3</label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic3">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 4</label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic4">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-1">
+                                                            <button type="submit" class="btn btn-danger my-1" @click="removePromo()"><i class="fas fa-minus-circle"></i></button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <!--PROMO ACCORDION END-->
                                     </div>
                                     <div class="container">
                                         <div class="noneOfferSelection" x-show="offerTypeDropdown === 'NONE'">
@@ -2295,6 +2371,16 @@
 
             removeOffer(index) {
                 this.offers.splice(index, 1)
+            },
+
+            removePromo() {
+                this.offerSelectionSmsCampaignName  = null
+                this.offerSelectionDynamic1         = null
+                this.offerSelectionDynamic2         = null
+                this.offerSelectionDynamic3         = null
+                this.offerSelectionDynamic4         = null
+
+                $('#promoCodeMultiple').val([]).trigger('change');
             },
 
             getOfferSelection() {
