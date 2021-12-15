@@ -429,13 +429,22 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             List<String> row = dataSetTemp.getRows().get(i);
             log.info("process#7|productImportEndpoint|index|{}|row|{}", i, row);
             Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
+            log.info("process#7|productImportEndpoint|index|{}|input|{}", i, input);
             Map<String, Object> output = invocation.getInstanceContext().getRecordDefinition().generateOutputRowAsNewMap(input);
-            List<String> listOutput = List.of(
-                    output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
-                    "success", //appcloud_row_status
-                    "", //appcloud_row_errormessage
-                    instanceConfiguration.getOverallOfferName(),
-                    "success"); //STATUS
+            log.info("process#7|productImportEndpoint|index|{}|output|{}", i, output);
+            log.info("process#7|productImportEndpoint|instanceConfiguration|{}|", instanceConfiguration);
+            List<String> listOutput = new ArrayList<>();
+            listOutput.add(0, output.get("appcloud_row_correlation_id").toString());
+            listOutput.add(1, "success");
+            listOutput.add(2, "");
+            listOutput.add(3, instanceConfiguration.getOverallOfferName());
+            listOutput.add(4, "success");
+//            List<String> listOutput = List.of(
+//                    output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
+//                    "success", //appcloud_row_status
+//                    "", //appcloud_row_errormessage
+//                    instanceConfiguration.getOverallOfferName(),
+//                    "success"); //STATUS
             rows.add(listOutput);
         }
 
@@ -551,7 +560,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 int rangeTime = opsFind.get().getPeriodDays();
                 String rangeType = opsFind.get().getPeriod();
                 startDate = new Date();
-                log.info("process#5|monitorPeriod {}} in {} ", rangeType, rangeTime);
+                log.info("process#5|monitorPeriod {} in {} ", rangeType, rangeTime);
                 if("days".equals(rangeType)){
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(startDate);
