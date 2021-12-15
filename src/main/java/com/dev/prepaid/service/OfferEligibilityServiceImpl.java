@@ -31,6 +31,13 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
     @Value("${eligibility.batch_size:100}")
     private int batchSize;
+    @Value("${responsys.custom.event.url}")
+    private String responsysCustomEventUrl;
+    @Value("${responsys.custom.event.folderName}")
+    String folderName;
+    @Value("${responsys.custom.event.objectName}")
+    String objectName;
+
     @Autowired
     private PrepaidCxOfferEligibilityRepository prepaidCxOfferEligibilityRepository;
     @Autowired
@@ -522,10 +529,43 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         Date startDate = null;
         Date endDate = null;
         Optional<PrepaidCxOfferMonitoring> opsFind = prepaidCxOfferMonitoringRepository.findByOfferConfigId(prepaidCxOfferConfig.getId());
+        log.info("opsFind {}", opsFind);
         if (opsFind.isPresent()) {
-            startDate = opsFind.get().getPeriodStartDate();
-            endDate = opsFind.get().getPeriodEndDate();
+            PrepaidCxOfferMonitoring prepaidCxOfferMonitoring = opsFind.get();
+            log.info("PrepaidCxOfferMonitoring {}", prepaidCxOfferMonitoring);
+            boolean monitorSpecificPeriod = false;
+            if(prepaidCxOfferMonitoring.getIsMonitorSpecificPeriod() != null){
+                monitorSpecificPeriod = prepaidCxOfferMonitoring.getIsMonitorSpecificPeriod();
+            }
+            boolean monitorPeriod = false;
+            if(prepaidCxOfferMonitoring.getIsMonitorDateRange() != null) {
+                monitorPeriod = prepaidCxOfferMonitoring.getIsMonitorDateRange();
+            }
+            log.info("process#5|monitorSpecificPeriod-monitorPeriod {} {}", monitorSpecificPeriod, monitorPeriod);
+            if(monitorSpecificPeriod) {
+                log.info("process#5|monitorSpecificPeriod {} ", monitorSpecificPeriod);
+                    startDate = opsFind.get().getPeriodStartDate();
+                    endDate = opsFind.get().getPeriodEndDate();
+            }else if(monitorPeriod){
+                log.info("process#5|monitorPeriod {} ", monitorPeriod);
+                int rangeTime = opsFind.get().getPeriodDays();
+                String rangeType = opsFind.get().getPeriod();
+                startDate = new Date();
+                log.info("process#5|monitorPeriod {}} in {} ", rangeType, rangeTime);
+                if("days".equals(rangeType)){
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startDate);
+                    cal.add(Calendar.DATE, rangeTime);
+                    endDate = cal.getTime();
+                }else if("month".equals(rangeType)){
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startDate);
+                    cal.add(Calendar.MONTH, rangeTime);
+                    endDate = cal.getTime();
+                }
+            }
         }
+
         Date finalStartDate = startDate;
         Date finalEndDate = endDate;
         log.info("process#5|monitoringEndDate-monitoringStartDate {} {}", finalEndDate, finalStartDate);
@@ -659,9 +699,18 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             msisdnList.add(msisdn);
         }
 
-        payload.put("invocationId", invId);
-        payload.put("msisdn", msisdnList);
+        payload.put("responsysCustomEvent", responsysCustomEventUrl);
+        payload.put("token", "null");
         payload.put("eventName", eventName);
+//        request.put("listName", lbsLocationRequest.getListName());
+        payload.put("folderName", folderName);
+//        request.put("correlationId", entry2.getKey());
+
+        payload.put("customerId", msisdnList);
+//        request.put("status", "MULTIPLE RECIPIENTS FOUND");
+
+        payload.put("list", msisdnList);
+        payload.put("listLbsTargetedId", msisdnList);
 
         log.info("process#6|START|{}",Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT);
         log.info("process#6|id|{}|payload|{}",
