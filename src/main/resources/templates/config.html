@@ -4111,6 +4111,14 @@
             },
             generateSQL () {
                 console.log(advanceFilter.mainData,'generate sql')
+                fetch(PROD_URL + `generateSQLQuery`)
+                //fetch(PROD_URL + `offerBucket?offerType=DA`)
+				.then(res => res.json())
+				.then(data => {
+                    console.log(data)
+				})
+				.catch(error => console.log(error))
+				.finally()
             }
 
         },
