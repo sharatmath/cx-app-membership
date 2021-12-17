@@ -4,12 +4,6 @@
     <meta charset="UTF-8"/>
     <title>CONFIGURE OFFER & AUDIENCE SELECTION</title>
 
-<!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">-->
-<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">-->
-<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />-->
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
-<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">-->
-<!--    <link rel="shortcut icon" href="https://www.singtel.com/content/dam/singtel/Standard/favicon.ico" type="image/vnd.microsoft.icon"/>-->
     <link rel="stylesheet" href="https://oracle.kakatoa.net/assets/css/all.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://oracle.kakatoa.net/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://oracle.kakatoa.net/assets/css/select2.min.css" />
@@ -274,7 +268,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="input-group date" data-provider="datepicker">
-                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignStarDate" x-model="eventConditionData.campaignStartDate">
+                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignStarDate" x-model="campaignStartDate">
                                                         <div class="input-group-addon">
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
@@ -285,7 +279,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="input-group date" data-provider="datepicker">
-                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate" x-model="eventConditionData.campaignEndDate">
+                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate" x-model="campaignEndDate">
                                                         <div class="input-group-addon">
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
@@ -1996,15 +1990,6 @@
 
 </div>
 
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>-->
-<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
-<!--<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>-->
-<!--<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
-<!--<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>-->
 <script src="https://oracle.kakatoa.net/assets/js/jquery.min.js"></script>
 <script src="https://oracle.kakatoa.net/assets/js/popper.min.js"></script>
 <script src="https://oracle.kakatoa.net/assets/js/bootstrap.min.js"></script>
@@ -2024,6 +2009,14 @@
             //     maximumSelectionLength: 2
             // });
             $('#promoCodeMultiple').select2();
+            $('#promoCodeMultiple').on("select2:select", function (evt) {
+                var element = evt.params.data.element;
+                var $element = $(element);
+
+                $element.detach();
+                $(this).append($element);
+                $(this).trigger("change");
+            });
         });
 
         // Plus Minus Icon for Accordion BEGIN
@@ -2192,6 +2185,9 @@
             // Redemption BEGIN
             redemptionOptKeywordRadio       : null,
             // Redemption END
+
+            campaignStartDate               : null,
+            campaignEndDate                 : null,
 
             init() {
                 this.eventTypeDropdown(),
@@ -2476,6 +2472,12 @@
                             this.eventConditionTypeData = 'Top-Up'
                         }
 
+                        // For Start Date
+                        this.campaignStartDate = data.campaignStartDate != null ? data.campaignStartDate : moment().format("yyyy-MM-DD") + "T00:00";
+
+                        // For End Date
+                        this.campaignEndDate = data.campaignEndDate != null ? data.campaignEndDate : moment().format("yyyy-MM-DD") + "T00:00";
+
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -2586,8 +2588,8 @@
                 var message = { amsAction : "save", requestId : "save" };
                 const offerEventCondition = {
                     "eventType"             : this.eventConditionTypeData,
-                    "campaignStartDate"     : this.eventConditionData.campaignStartDate,
-                    "campaignEndDate"       : this.eventConditionData.campaignEndDate,
+                    "campaignStartDate"     : this.campaignStartDate,
+                    "campaignEndDate"       : this.campaignEndDate,
                     "eventConditionName"    : this.eventConditionData.eventConditionName,
                 };
 
