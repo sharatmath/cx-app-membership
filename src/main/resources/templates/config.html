@@ -1982,10 +1982,10 @@
 
         $(document).ready(function() {
             $('#select2multiple').select2();
-            // $('#promoCodeMultiple').select2({
-            //     maximumSelectionLength: 2
-            // });
-            $('#promoCodeMultiple').select2();
+            $('#promoCodeMultiple').select2({
+                maximumSelectionLength: 2
+            });
+            // $('#promoCodeMultiple').select2();
             $('#promoCodeMultiple').on("select2:select", function (evt) {
                 var element = evt.params.data.element;
                 var $element = $(element);
