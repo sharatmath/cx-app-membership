@@ -1,7 +1,9 @@
 /**
  * 
  */
-package com.dev.prepaid.model;
+package com.dev.prepaid.model.tableRequest;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,11 +20,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdvFltrTblDTO {
-
-	private String tableName;
-	private String columnName;
-	private String condition;
-	private String value;
+public class ClauseDto {
+	
+	private List<CasesDTO> cases;
 
 }

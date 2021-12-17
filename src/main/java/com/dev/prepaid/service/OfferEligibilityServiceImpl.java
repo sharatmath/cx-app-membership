@@ -31,6 +31,13 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
     @Value("${eligibility.batch_size:100}")
     private int batchSize;
+    @Value("${responsys.custom.event.url}")
+    private String responsysCustomEventUrl;
+    @Value("${responsys.custom.event.folderName}")
+    String folderName;
+    @Value("${responsys.custom.event.objectName}")
+    String objectName;
+
     @Autowired
     private PrepaidCxOfferEligibilityRepository prepaidCxOfferEligibilityRepository;
     @Autowired
@@ -67,9 +74,24 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                           Long dataSetSize) throws Exception {
 
         log.info("FindBatchId|Request|{}|{}", invocationOri.getUuid(), invocation.getBatchId());
+        //check msisdn
+        List<List<String>> newData = new ArrayList<>();
+        for(List<String> dt: rows){
+            String msisdn = dt.get(1);
+            if(msisdn == null | msisdn==""){
+                log.info("{}|No CUSTOMER_ID or MSISDN Found|{}", invocationOri.getUuid(), msisdn);
+            }else{
+                newData.add(dt);
+            }
+        }
+
+        if(newData.isEmpty() || newData.size() == 0){
+            log.info("{}|No Process Data |{}", invocationOri.getUuid(), newData);
+            return newData ;
+        }
         //1
         List<List<String>> exclusionRows = new ArrayList<>();
-        exclusionRows = evaluationSubscriberExclusion(rows, invocation, instanceConfiguration);
+        exclusionRows = evaluationSubscriberExclusion(newData, invocation, instanceConfiguration);
         //2
         List<List<String>> eligibleRows = new ArrayList<>();
         eligibleRows = evaluationSubscriberLevel(exclusionRows, invocation, instanceConfiguration);
@@ -407,13 +429,22 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             List<String> row = dataSetTemp.getRows().get(i);
             log.info("process#7|productImportEndpoint|index|{}|row|{}", i, row);
             Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
+            log.info("process#7|productImportEndpoint|index|{}|input|{}", i, input);
             Map<String, Object> output = invocation.getInstanceContext().getRecordDefinition().generateOutputRowAsNewMap(input);
-            List<String> listOutput = List.of(
-                    output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
-                    "success", //appcloud_row_status
-                    "", //appcloud_row_errormessage
-                    instanceConfiguration.getOverallOfferName(),
-                    "success"); //STATUS
+            log.info("process#7|productImportEndpoint|index|{}|output|{}", i, output);
+            log.info("process#7|productImportEndpoint|instanceConfiguration|{}|", instanceConfiguration);
+            List<String> listOutput = new ArrayList<>();
+            listOutput.add(0, output.get("appcloud_row_correlation_id").toString());
+            listOutput.add(1, "success");
+            listOutput.add(2, "");
+            listOutput.add(3, instanceConfiguration.getOverallOfferName());
+            listOutput.add(4, "success");
+//            List<String> listOutput = List.of(
+//                    output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
+//                    "success", //appcloud_row_status
+//                    "", //appcloud_row_errormessage
+//                    instanceConfiguration.getOverallOfferName(),
+//                    "success"); //STATUS
             rows.add(listOutput);
         }
 
@@ -507,10 +538,43 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         Date startDate = null;
         Date endDate = null;
         Optional<PrepaidCxOfferMonitoring> opsFind = prepaidCxOfferMonitoringRepository.findByOfferConfigId(prepaidCxOfferConfig.getId());
+        log.info("opsFind {}", opsFind);
         if (opsFind.isPresent()) {
-            startDate = opsFind.get().getPeriodStartDate();
-            endDate = opsFind.get().getPeriodEndDate();
+            PrepaidCxOfferMonitoring prepaidCxOfferMonitoring = opsFind.get();
+            log.info("PrepaidCxOfferMonitoring {}", prepaidCxOfferMonitoring);
+            boolean monitorSpecificPeriod = false;
+            if(prepaidCxOfferMonitoring.getIsMonitorSpecificPeriod() != null){
+                monitorSpecificPeriod = prepaidCxOfferMonitoring.getIsMonitorSpecificPeriod();
+            }
+            boolean monitorPeriod = false;
+            if(prepaidCxOfferMonitoring.getIsMonitorDateRange() != null) {
+                monitorPeriod = prepaidCxOfferMonitoring.getIsMonitorDateRange();
+            }
+            log.info("process#5|monitorSpecificPeriod-monitorPeriod {} {}", monitorSpecificPeriod, monitorPeriod);
+            if(monitorSpecificPeriod) {
+                log.info("process#5|monitorSpecificPeriod {} ", monitorSpecificPeriod);
+                    startDate = opsFind.get().getPeriodStartDate();
+                    endDate = opsFind.get().getPeriodEndDate();
+            }else if(monitorPeriod){
+                log.info("process#5|monitorPeriod {} ", monitorPeriod);
+                int rangeTime = opsFind.get().getPeriodDays();
+                String rangeType = opsFind.get().getPeriod();
+                startDate = new Date();
+                log.info("process#5|monitorPeriod {} in {} ", rangeType, rangeTime);
+                if("days".equals(rangeType)){
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startDate);
+                    cal.add(Calendar.DATE, rangeTime);
+                    endDate = cal.getTime();
+                }else if("month".equals(rangeType)){
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startDate);
+                    cal.add(Calendar.MONTH, rangeTime);
+                    endDate = cal.getTime();
+                }
+            }
         }
+
         Date finalStartDate = startDate;
         Date finalEndDate = endDate;
         log.info("process#5|monitoringEndDate-monitoringStartDate {} {}", finalEndDate, finalStartDate);
@@ -644,9 +708,18 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             msisdnList.add(msisdn);
         }
 
-        payload.put("invocationId", invId);
-        payload.put("msisdn", msisdnList);
+        payload.put("responsysCustomEvent", responsysCustomEventUrl);
+        payload.put("token", "null");
         payload.put("eventName", eventName);
+//        request.put("listName", lbsLocationRequest.getListName());
+        payload.put("folderName", folderName);
+//        request.put("correlationId", entry2.getKey());
+
+        payload.put("customerId", msisdnList);
+//        request.put("status", "MULTIPLE RECIPIENTS FOUND");
+
+        payload.put("list", msisdnList);
+        payload.put("listLbsTargetedId", msisdnList);
 
         log.info("process#6|START|{}",Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT);
         log.info("process#6|id|{}|payload|{}",

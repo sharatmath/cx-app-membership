@@ -126,12 +126,19 @@ public class RetryableServiceImpl implements RetryableService {
 		invocation.getDataSet().getRows().forEach(row -> {
 			Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
 			Map<String, Object> output = invocation.getInstanceContext().getRecordDefinition().generateOutputRowAsNewMap(input);
-			List<String> listOutput = List.of(
-					output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
-					"success", //appcloud_row_status
-					"", //appcloud_row_errormessage
-					config.getOverallOfferName(), //overallOfferName
-					"success"); //STATUS
+			List<String> listOutput = new ArrayList<>();
+			listOutput.add(0, output.get("appcloud_row_correlation_id").toString());
+			listOutput.add(1, "success");
+			listOutput.add(2, "");
+			listOutput.add(3, config.getOverallOfferName());
+			listOutput.add(4, "success");
+
+//			List<String> listOutput = List.of(
+//					output.get("appcloud_row_correlation_id").toString(), //appcloud_row_correlation_id
+//					"success", //appcloud_row_status
+//					"", //appcloud_row_errormessage
+//					config.getOverallOfferName(), //overallOfferName
+//					"success"); //STATUS
 			rows.add(listOutput);
 		});
 
