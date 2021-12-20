@@ -62,6 +62,6 @@ public class OfferFulfilment {
     @SerializedName("ratePlanId") private  String ratePlanId;
     @SerializedName("aggregationPeriodDays")  private Integer aggregationPeriodDays;
 
-    @SerializedName("daExpiryDate")  private Date daExpiryDate;
-
+    @SerializedName("daExpiryDate")  private String daExpiryDate;
+    @SerializedName("permanentServiceClass") private  String permanentServiceClass;
 }

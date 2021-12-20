@@ -45,9 +45,11 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private String daBalanceOp;
     private Long daBalanceValue;
     private String tempServiceClass;
+    private String permanentServiceClass;
     private  String imei;
     private  Long daChange;
     private  Long chargedAmount;
+    private  LocalDateTime daExpiryDate;
 
     private Long eventTypeUsages;
     private String eventUsagesOp;

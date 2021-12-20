@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -28,8 +29,8 @@ public class PrepaidOfferMembership extends Auditable {
     private String offerConfigId;
     private Long msisdn;
     private Date offerDate;
-    private Date monitoringStartDate;
-    private Date monitoringEndDate;
+    private LocalDateTime monitoringStartDate;
+    private LocalDateTime monitoringEndDate;
     private String optinFlag;
     // sprint 1
     private String offerMembershipStatus;
