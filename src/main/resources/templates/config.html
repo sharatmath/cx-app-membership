@@ -419,9 +419,26 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
+                                                <label class="col-sm-2 col-form-label">DA Expiry Date</label>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group date" data-provider="datepicker">
+                                                        <input type="datetime-local" class="form-control" x-model="daExpiryDate">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="permanentServiceClass" class="col-sm-2 col-form-label">Permanent Service Class</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass" x-model="eventConditionData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="permanentServiceClass" x-model="eventConditionData.permanentServiceClass">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="topUpTempServiceClass" class="col-sm-2 col-form-label">Temporary Service Class</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="topUpTempServiceClass" x-model="eventConditionData.topUpTempServiceClass">
                                                 </div>
                                             </div>
                                         </div>
@@ -2165,6 +2182,7 @@
 
             campaignStartDate               : null,
             campaignEndDate                 : null,
+            daExpiryDate                    : null,
 
             init() {
                 this.eventTypeDropdown(),
@@ -2455,6 +2473,9 @@
                         // For End Date
                         this.campaignEndDate = data.campaignEndDate != null ? data.campaignEndDate : moment().format("yyyy-MM-DD") + "T00:00";
 
+                        // for Da Expiry Date
+                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : moment().format("yyyy-MM-DD") + "T00:00";
+
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -2586,6 +2607,8 @@
                     offerEventCondition.topUpDaBalanceOp            = this.eventConditionData.topUpDaBalanceOp || 'lessThan';
                     offerEventCondition.topUpDaBalanceValue         = this.eventConditionData.topUpDaBalanceValue;
                     offerEventCondition.topUpTempServiceClass       = this.eventConditionData.topUpTempServiceClass;
+                    offerEventCondition.daExpiryDate                = this.daExpiryDate;
+                    offerEventCondition.permanentServiceClass       = this.eventConditionData.permanentServiceClass;
                 } else if (this.eventConditionTypeData === 'Usage') {
                     offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
                     offerEventCondition.eventTypeUsages             = this.eventConditionData.eventTypeUsages;
