@@ -66,6 +66,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/invoke",
 //						Saket
 						"/saveFunction",
+						"/doInsertCXOffer",
+						"listCXOffer",
+						"/getSQLQuery",
 						
 //						"/**",
 						"/saveconfiguration",
