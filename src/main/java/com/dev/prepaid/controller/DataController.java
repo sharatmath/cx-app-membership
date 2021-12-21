@@ -1129,8 +1129,8 @@ public class DataController {
 				joinStringBuilder.append("(" + tableOne + " , "
 						+ (revTableMap.get(String.valueOf((char) alphaCode)) + " " + String.valueOf((char) alphaCode))
 						+ ")");
-				finalJoinStringBuilder.append("(" + revTableMap.get(String.valueOf((alphaCode))) + ".MSISDN" + " =  "
-						+ revTableMap.get(String.valueOf((char) alphaCode)) + ".MSISDN" + ")");
+				finalJoinStringBuilder.append("(" + "A" + ".MSISDN" + " =  "
+						+ (String.valueOf((char) alphaCode)) + ".MSISDN" + ")");
 			}
 			finalQueryStringBuilder
 					.append(revTableMap.get(String.valueOf((char) alphaCode)) + " " + String.valueOf((char) alphaCode));
@@ -1274,9 +1274,9 @@ public class DataController {
 						&& !dataListBean.getSelectedDataType().isEmpty()) {
 					groupByStrBuilder
 							.append(" GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
-//					groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
-//							+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
-//					groupByStrBuilder.append(" "  + dataListBean.getSelectedValue());
+					groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
+							+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
+					groupByStrBuilder.append(" "  + dataListBean.getSelectedValue());
 					String date = "";
 					if (dataListBean.getSelectedDateType().equalsIgnoreCase("DAYS")) {
 						date = "SYSDATE";
