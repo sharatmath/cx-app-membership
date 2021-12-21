@@ -13,4 +13,8 @@ public interface PrepaidMaOfferBucketRepository extends CrudRepository<PrepaidMa
 
     @Query("select ma from PrepaidMaCreditOffer ma where ma.productName = :code")
     PrepaidMaCreditOffer findOneByCode(String code);
+
+    public List<PrepaidMaCreditOffer> findAllByProductName(String productName);
+
+    public List<PrepaidMaCreditOffer> findAllByOfferId(Long offerId);
 }

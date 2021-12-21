@@ -12,7 +12,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrepaidMaCreaditOfferDTO {
+public class PrepaidMaCreditOfferDTO {
 
     @SerializedName("id")private Long id;
     @SerializedName("productName")private String productName;

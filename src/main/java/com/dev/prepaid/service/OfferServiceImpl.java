@@ -172,7 +172,12 @@ public class OfferServiceImpl implements OfferService {
 
 	@Override
 	public PrepaidMaCreditOffer getMaCreditOfferById(Long id) {
-		return null;
+		return prepaidMaOfferBucketRepository.findOneById(id);
+	}
+
+	@Override
+	public List<PrepaidMaCreditOffer> listMaByOffer(String programName){
+		return prepaidMaOfferBucketRepository.findAllByProductName(programName);
 	}
 
 	@Override

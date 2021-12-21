@@ -25,6 +25,8 @@ public interface OfferService {
 	public List<PrepaidMaCreditOffer> listMaOfferBucket();
 	public PrepaidMaCreditOffer getMaCreditOfferById(Long id);
 	public void deletePrepaidMaCreditOffer(Long id);
+	public List<PrepaidMaCreditOffer> listMaByOffer(String programName);
+//	public PrepaidMaCreditOffer getMaCreditOfferByProgramName(String programName);
 
 	public void evictAllCaches();
 	public OfferPromoCode getOfferPromoCode(String instanceId);
