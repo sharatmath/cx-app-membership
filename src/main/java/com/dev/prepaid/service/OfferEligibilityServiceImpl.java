@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -535,8 +537,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#5|DATA|{}", membershipRows.size());
         int totalObjects = membershipRows.size();
         Date offerDate = new Date();
-        Date startDate = null;
-        Date endDate = null;
+        LocalDateTime startDate = null;
+        LocalDateTime endDate = null;
         Optional<PrepaidCxOfferMonitoring> opsFind = prepaidCxOfferMonitoringRepository.findByOfferConfigId(prepaidCxOfferConfig.getId());
         log.info("opsFind {}", opsFind);
         if (opsFind.isPresent()) {
@@ -559,24 +561,18 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 log.info("process#5|monitorPeriod {} ", monitorPeriod);
                 int rangeTime = opsFind.get().getPeriodDays();
                 String rangeType = opsFind.get().getPeriod();
-                startDate = new Date();
+                startDate = LocalDateTime.now();
                 log.info("process#5|monitorPeriod {} in {} ", rangeType, rangeTime);
                 if("days".equals(rangeType)){
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(startDate);
-                    cal.add(Calendar.DATE, rangeTime);
-                    endDate = cal.getTime();
+                    endDate = startDate.plusDays(rangeTime);
                 }else if("month".equals(rangeType)){
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(startDate);
-                    cal.add(Calendar.MONTH, rangeTime);
-                    endDate = cal.getTime();
+                    endDate = startDate.plusMonths(rangeTime);
                 }
             }
         }
 
-        Date finalStartDate = startDate;
-        Date finalEndDate = endDate;
+        LocalDateTime finalStartDate = startDate;
+        LocalDateTime finalEndDate = endDate;
         log.info("process#5|monitoringEndDate-monitoringStartDate {} {}", finalEndDate, finalStartDate);
         List<PrepaidOfferMembership> memberships = membershipRows
                 .stream()

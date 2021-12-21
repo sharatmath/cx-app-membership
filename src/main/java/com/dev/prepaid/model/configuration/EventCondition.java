@@ -41,10 +41,10 @@ public class EventCondition {
     @SerializedName("topupOp") private  String topUpOp;
     @SerializedName("topupTransactionValue") private  String topUpTransactionValue;
 
-    @SerializedName("DaId") private  String daId;
-    @SerializedName("DaBalanceOp") private  String daBalanceOp;
-    @SerializedName("DaBalanceValue") private  Long daBalanceValue;
-    @SerializedName("TempServiceClass") private  String tempServiceClass;
+    @SerializedName("daId") private  String daId;
+    @SerializedName("daBalanceOp") private  String daBalanceOp;
+    @SerializedName("daBalanceValue") private  Long daBalanceValue;
+    @SerializedName("tempServiceClass") private  String tempServiceClass;
     @SerializedName("imei") private  String imei;
     @SerializedName("daChange") private  Long daChange;
     @SerializedName("chargedAmount") private  Long chargedAmount;
@@ -65,5 +65,7 @@ public class EventCondition {
     @SerializedName("roamingFlag") private  String roamingFlag;
     @SerializedName("ratePlanId") private  String ratePlanId;
 
+    @SerializedName("daExpiryDate")  private String daExpiryDate;
+    @SerializedName("permanentServiceClass") private  String permanentServiceClass;
 
 }
