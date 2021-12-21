@@ -317,8 +317,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 		if(isMonitorSpecificPeriod) {
 			prepaidCxOfferMonitoring.setIsMonitorSpecificPeriod(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorSpecifiedPeriodRadio());
-			prepaidCxOfferMonitoring.setPeriodEndDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorStartDate()));
-			prepaidCxOfferMonitoring.setPeriodStartDate(DateUtil.stringToDate(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorEndDate()));
+			prepaidCxOfferMonitoring.setPeriodEndDate(DateUtil.stringToLocalDateTime(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorStartDate()));
+			prepaidCxOfferMonitoring.setPeriodStartDate(DateUtil.stringToLocalDateTime(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorEndDate()));
 		}
 		if(isMonitorDateRange) {
 			prepaidCxOfferMonitoring.setIsMonitorDateRange(saveConfigRequest.getPayload().getOfferMonitoring().getMonitorPeriodRadio());

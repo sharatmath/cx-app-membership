@@ -4,13 +4,12 @@
     <meta charset="UTF-8"/>
     <title>CONFIGURE OFFER & AUDIENCE SELECTION</title>
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
-
-    <link rel="shortcut icon" href="https://www.singtel.com/content/dam/singtel/Standard/favicon.ico" type="image/vnd.microsoft.icon"/>
+    <link rel="stylesheet" href="https://oracle.kakatoa.net/assets/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://oracle.kakatoa.net/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://oracle.kakatoa.net/assets/css/select2.min.css" />
+    <link rel="stylesheet" href="https://oracle.kakatoa.net/assets/css/bootstrap-datepicker.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://oracle.kakatoa.net/assets/css/select2-bootstrap4.min.css">
+    <link rel="shortcut icon" href="https://oracle.kakatoa.net/image/favicon.ico" type="image/vnd.microsoft.icon"/>
 
     <style>
 
@@ -88,6 +87,61 @@
             color: #222;
         }
         /*Accordion Custom END*/
+
+        /*Accordion PROMO BEGIN*/
+        #main #prom .card {
+            margin-bottom: 30px;
+            border: 0;
+        }
+
+        #main #prom .card .card-header {
+            border: 0;
+            -webkit-box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+            box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+            border-radius: 2px;
+            padding: 0;
+        }
+
+        #main #prom .card .card-header .btn-header-link {
+            color: #fff;
+            display: block;
+            text-align: left;
+            background: #8e9cb7;
+            color: #222;
+            padding: 20px;
+        }
+
+        #main #prom .card .card-header .btn-header-link:after {
+            content: "\f107";
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            float: right;
+        }
+
+        #main #prom .card .card-header .btn-header-link.collapsed {
+            background: #da7200 !important;
+            color: #fff;
+        }
+
+        #main #prom .card .card-header .btn-header-link.collapsed:after {
+            content: "\f106";
+        }
+
+        #main #prom .card .collapsing {
+            background: #8e9cb7;
+            line-height: 30px;
+        }
+
+        #main #prom .card .collapse {
+            border: 0;
+        }
+
+        #main #prom .card .collapse.show {
+            background: #8e9cb7;
+            line-height: 30px;
+            color: #222;
+        }
+        /*Accordion PROMO END*/
 
         body {font-family: Arial, Helvetica, sans-serif;}
 
@@ -211,7 +265,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="input-group date" data-provider="datepicker">
-                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignStarDate" x-model="eventConditionData.campaignStartDate">
+                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignStarDate" x-model="campaignStartDate">
                                                         <div class="input-group-addon">
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
@@ -222,7 +276,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="input-group date" data-provider="datepicker">
-                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate" x-model="eventConditionData.campaignEndDate">
+                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate" x-model="campaignEndDate">
                                                         <div class="input-group-addon">
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
@@ -365,9 +419,26 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
+                                                <label class="col-sm-2 col-form-label">DA Expiry Date</label>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group date" data-provider="datepicker">
+                                                        <input type="datetime-local" class="form-control" x-model="daExpiryDate">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="permanentServiceClass" class="col-sm-2 col-form-label">Permanent Service Class</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass" x-model="eventConditionData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="permanentServiceClass" x-model="eventConditionData.permanentServiceClass">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="topUpTempServiceClass" class="col-sm-2 col-form-label">Temporary Service Class</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="topUpTempServiceClass" x-model="eventConditionData.topUpTempServiceClass">
                                                 </div>
                                             </div>
                                         </div>
@@ -848,62 +919,83 @@
                                         </template>
                                     </div>
                                     <div class="container">
-                                        <div class="manualRedemptionSelection" x-show="offerTypeDropdown === 'PROMO' || offerSelectionSmsCampaignName != null">
-                                            <div class="form-group row">
-                                                <b>Unique Promo Code Message</b><br><br>
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionSmsCampaignName">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Promo Type<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                    <div class="col-sm-4">
-                                                        <select multiple id="promoCodeMultiple" class="w-100">
-                                                            <option>Choose...</option>
-                                                            <template x-for="list in promoList">
-                                                                <option :key="list.name" x-text="list.name"></option>
-                                                            </template>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Message Text 1</label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic1">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Message Text 2</label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic2">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Message Text 3</label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic3">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-2 col-form-label col-form-label">Message Text 4</label>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic4">
+                                        <!--PROMO ACCORDION BEGIN-->
+                                        <div class="accordion" id="prom" x-show="offerTypeDropdown === 'PROMO' || offerSelectionSmsCampaignName != null">
+                                            <div class="offerSelectionTemplate">
+                                                <div class="card">
+                                                    <div class="row">
+                                                        <div class="col-sm-11">
+                                                            <div class="card-header" id="promoAccordion">
+                                                                <a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" data-target="#prom1"
+                                                                   aria-expanded="true" aria-controls="faq1"><b>UNIQUE PROMO CODE</b></a>
+                                                            </div>
+                                                            <div id="prom1" class="panel-collapse collapse" aria-labelledby="promoAccordion" data-parent="#prom">
+                                                                <div class="card-body">
+                                                                    <div class="form-row">
+                                                                        <b>Unique Promo Code Message</b><br><br>
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionSmsCampaignName">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Promo Type<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                                            <div class="col-sm-4">
+                                                                                <select multiple id="promoCodeMultiple" class="w-100">
+                                                                                    <option>Choose...</option>
+                                                                                    <template x-for="list in promoList">
+                                                                                        <option :key="list.name" x-text="list.name"></option>
+                                                                                    </template>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 1</label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic1">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 2</label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic2">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 3</label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic3">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group row">
+                                                                            <label class="col-sm-2 col-form-label col-form-label">Message Text 4</label>
+                                                                            <div class="col-sm-4">
+                                                                                <input type="text" class="form-control form-control-sm" x-model="offerSelectionDynamic4">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-1">
+                                                            <button type="submit" class="btn btn-danger my-1" @click="removePromo()"><i class="fas fa-minus-circle"></i></button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <!--PROMO ACCORDION END-->
                                     </div>
                                 </div>
                             </div>
@@ -1892,26 +1984,33 @@
 
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/mattkingshott/iodine@3/dist/iodine.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://oracle.kakatoa.net/assets/js/jquery.min.js"></script>
+<script src="https://oracle.kakatoa.net/assets/js/popper.min.js"></script>
+<script src="https://oracle.kakatoa.net/assets/js/bootstrap.min.js"></script>
+<script src="https://oracle.kakatoa.net/assets/js/alpine.min.js"></script>
+<script src="https://oracle.kakatoa.net/assets/js/moment.min.js"></script>
+<script src="https://oracle.kakatoa.net/assets/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="https://oracle.kakatoa.net/assets/js/select2.min.js"></script>
+<script src="https://oracle.kakatoa.net/assets/js/bootstrap-datepicker.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://oracle.kakatoa.net/assets/js/sweetalert.min.js"></script>
 <!--jQUERY BEGIN-->
 <script>
     function jQuery() {
 
         $(document).ready(function() {
             $('#select2multiple').select2();
-            // $('#promoCodeMultiple').select2({
-            //     maximumSelectionLength: 2
-            // });
-            $('#promoCodeMultiple').select2();
+            $('#promoCodeMultiple').select2({
+                maximumSelectionLength: 2
+            });
+            // $('#promoCodeMultiple').select2();
+            $('#promoCodeMultiple').on("select2:select", function (evt) {
+                var element = evt.params.data.element;
+                var $element = $(element);
+
+                $element.detach();
+                $(this).append($element);
+                $(this).trigger("change");
+            });
         });
 
         // Plus Minus Icon for Accordion BEGIN
@@ -2080,6 +2179,10 @@
             // Redemption BEGIN
             redemptionOptKeywordRadio       : null,
             // Redemption END
+
+            campaignStartDate               : null,
+            campaignEndDate                 : null,
+            daExpiryDate                    : null,
 
             init() {
                 this.eventTypeDropdown(),
@@ -2261,6 +2364,16 @@
                 this.offers.splice(index, 1)
             },
 
+            removePromo() {
+                this.offerSelectionSmsCampaignName  = null
+                this.offerSelectionDynamic1         = null
+                this.offerSelectionDynamic2         = null
+                this.offerSelectionDynamic3         = null
+                this.offerSelectionDynamic4         = null
+
+                $('#promoCodeMultiple').val([]).trigger('change');
+            },
+
             getOfferSelection() {
                 fetch(PROD_URL + `offerSelection?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
@@ -2353,6 +2466,15 @@
                         } else {
                             this.eventConditionTypeData = 'Top-Up'
                         }
+
+                        // For Start Date
+                        this.campaignStartDate = data.campaignStartDate != null ? data.campaignStartDate : moment().format("yyyy-MM-DD") + "T00:00";
+
+                        // For End Date
+                        this.campaignEndDate = data.campaignEndDate != null ? data.campaignEndDate : moment().format("yyyy-MM-DD") + "T00:00";
+
+                        // for Da Expiry Date
+                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : moment().format("yyyy-MM-DD") + "T00:00";
 
                     })
                     .catch(error => console.log(error))
@@ -2464,8 +2586,8 @@
                 var message = { amsAction : "save", requestId : "save" };
                 const offerEventCondition = {
                     "eventType"             : this.eventConditionTypeData,
-                    "campaignStartDate"     : this.eventConditionData.campaignStartDate,
-                    "campaignEndDate"       : this.eventConditionData.campaignEndDate,
+                    "campaignStartDate"     : this.campaignStartDate,
+                    "campaignEndDate"       : this.campaignEndDate,
                     "eventConditionName"    : this.eventConditionData.eventConditionName,
                 };
 
@@ -2485,6 +2607,8 @@
                     offerEventCondition.topUpDaBalanceOp            = this.eventConditionData.topUpDaBalanceOp || 'lessThan';
                     offerEventCondition.topUpDaBalanceValue         = this.eventConditionData.topUpDaBalanceValue;
                     offerEventCondition.topUpTempServiceClass       = this.eventConditionData.topUpTempServiceClass;
+                    offerEventCondition.daExpiryDate                = this.daExpiryDate;
+                    offerEventCondition.permanentServiceClass       = this.eventConditionData.permanentServiceClass;
                 } else if (this.eventConditionTypeData === 'Usage') {
                     offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
                     offerEventCondition.eventTypeUsages             = this.eventConditionData.eventTypeUsages;
