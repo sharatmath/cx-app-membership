@@ -395,6 +395,7 @@
         .data-type {
             padding:7px;
             background-color:#dadef9;
+            margin: 3px;
         }
         .btn-green {
             color: #fff !important;
@@ -1176,10 +1177,10 @@
                             <div id="advanceFilterComponent" class="advance-filter-container">
                                 
                                 <query-component 
-                                    v-bind:xxx="testData"
+
                                     v-bind:maindata="mainData" 
                                     v-bind:modaltrigger="showModal" 
-                                    v-bind:tablelist="tableList"
+                                    v-bind:fetchedtablelist = "fetchedTableList"
                                     v-bind:modaltriggerfn="showModalfn"
                                     v-bind:deletegroupfn="deleteGroupfn"
                                     v-bind:deletedatafn="deleteDatafn"
@@ -1188,10 +1189,7 @@
                                     v-bind:creategroupfn ="createGroupfn"
                                     
                                     ></query-component>
-                                <!-- <table-column-modal 
-                                    v-bind:modaltrigger="showModal" 
-                                    v-bind:modaltriggerfn="showModalfn" 
-                                    v-bind:tablelist="tableList"></table-column-modal> -->
+
                                 <button  class="btn btn-singtel" style="float:right; margin:10px; margin-top: 5%;" v-on:click="generateSQL">Generate SQL</button>
                                 <textarea 
                                     placeholder="View SQL"
@@ -2330,6 +2328,7 @@
     const INSTANCE_ID = $("#instanceId").text();
     // const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
+    const TEST_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
     const testImport = 'value test'
 
     function configureMembership() {
@@ -3103,7 +3102,6 @@
 
 <!--VueJS START-->
 <script>
-
     // handle the state management of data
     var store = {  
         debug: true,
@@ -3146,7 +3144,7 @@
 
 
     Vue.component('table-column-modal',{
-        props:['modaltrigger', 'modaltriggerfn','tablelist', 'groupid','savedatafn'],
+        props:['modaltrigger', 'modaltriggerfn', 'groupid','savedatafn', 'fetchedtablelist'],
         data:function () {
             return {
                 dataId:null,
@@ -3170,6 +3168,9 @@
                 selectedOption: null,
                 value: null,
 
+                selectedFetchTable:null,
+                fetchedColumnList:[],
+
                 
             }
         },
@@ -3190,34 +3191,37 @@
                         <div class="modal-body-add-data">
                           <slot name="body">
                             <div class="row" style="margin-bottom:10px;">
-                                <div class=" col-sm-4 ">
+                                <div class=" col-sm-5 ">
+
                                     <v-select 
                                         placeholder='Select Table'
                                         class="basic-dropdown"
                                         style="margin:5px; padding:0px !Important;"
-                                        :options="tablelist"
+                                        :options="fetchedtablelist"
+                                        label="table_name"
                                         :clearable="false"
-                                        v-model="selectedTable"
-                                        @input="setSelectedTable"
-                                    ></v-select>    
+                                        v-model="selectedFetchTable"
+                                        @input="setSelectedFetchTable"
+                                    ></v-select>   
+                                    
                                 </div>
-                                <div class=" col-sm-4 ">
-                                    <div v-show="selectedTable !== null && tableColumnList.length > 0">
+                                <div class=" col-sm-5 ">
+                                    <div v-show="selectedFetchTable !== null && fetchedColumnList.length > 0">
                                         <v-select 
                                             placeholder='Select Column'
                                             class="basic-dropdown"
                                             style="margin:5px; padding:0px !Important;"
-                                            :options="tableColumnList"
+                                            :options="fetchedColumnList"
                                             :clearable="false"
                                             v-model="selectedColumn"
-                                            label="name"
+                                            label="column_name"
                                         ></v-select>    
                                     
                                     </div>
                                 </div>
                             </div>
                             <div>
-                                <div v-show="selectedColumn && selectedColumn.dataType === 'NUMBER'">
+                                <div v-show="selectedColumn && selectedColumn.column_type === 'NUMBER'">
                                     <div class="row data-type">
                                         <div class=" col-sm-12" style=" margin-top:5px; align-self: center;">
                                             <div style="margin-left: 5px !important;"><b>Datatype: NUMBER Condition </b> </div> 
@@ -3301,7 +3305,7 @@
                                     </div>
                                     
                                 </div>
-                                <div v-show="selectedColumn && selectedColumn.dataType === 'VARCHAR'">
+                                <div v-show="selectedColumn && selectedColumn.column_type === 'VARCHAR'">
                                     <div class="row data-type">
                                         <div class=" col-sm-12" style=" margin-top:5px; align-self: center;">
                                             <div style="margin-left: 5px !important;"><b>Datatype: VARCHAR Condition </b> </div> 
@@ -3326,7 +3330,7 @@
                                         </div>      
                                     </div>
                                 </div>
-                                <div v-show="selectedColumn && selectedColumn.dataType === 'DATE'">
+                                <div v-show="selectedColumn && selectedColumn.column_type === 'DATE'">
                                     <div class="row data-type">
                                         <div class=" col-sm-2" style=" margin-top:20px; align-self: center;">
                                             <div style="margin-left: 5px !important;"><b> Duration (days)</b> </div> 
@@ -3382,7 +3386,7 @@
                                 <button class="btn" @click="modaltriggerfn" @click="clearDropdown">
                                     Back
                                 </button>
-                                <button class="btn btn-singtel" @click="modaltriggerfn" @click="clearDropdown" :disabled="selectedColumn=== null">  
+                                <button class="btn btn-singtel" @click="modaltriggerfn" @click="saveAndClearDropdown" :disabled="selectedColumn=== null">  
                                     Save
                                 </button>
                             </div>
@@ -3394,45 +3398,17 @@
                 </div>
             </div>`,
         methods:{
-            setSelectedTable () {
-                console.log(this.selectedTable,'selectedTable')
-                console.log(uuidv4());
-               
+            setSelectedFetchTable () {
 
-                fetch(PROD_URL + `offerSelection?instanceId=${INSTANCE_ID}`)
+                fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/${this.selectedFetchTable.af_tables_id}`)
+                //fetch(TEST_URL + `AdvFilters/${this.selectedFetchTable.af_tables_id}`)
 				.then(res => res.json())
 				.then(data => {
-                    this.sqlView = data
-                    console.log(this.sqlView)
-                    console.log(data)
+                    this.fetchedColumnList = data.items;
+                    return this.fetchedColumnList;
 				})
 				.catch(error => console.log(error))
 				.finally()
-                console.log(this.tableColumnList,'tableColumnList')
-
-                //temporary function 
-                if (this.selectedTable === 'F_TBL_CDR_DA_DT_A') {
-                    this.tableColumnList = [
-                        { name:'CDR_DA_DT_A_ID', dataType:'NUMBER'},
-                        { name:'MSISDN', dataType:'VARCHAR'},
-                        { name:'TRANSACTION_DATE_KEY', dataType:'NUMBER'},
-                        { name:'DA_EXPIRY_DATE', dataType:'DATE'}]
-
-                } else if (this.selectedTable === 'F_TBL_TOPUP') {
-                    this.tableColumnList = [
-                        { name:'TRANSACTION_VALUE', dataType:'NUMBER'},
-                        { name:'REFILL_PROFILE_ID', dataType:'VARCHAR'},
-                        { name:'CURRENT_BALANCE', dataType:'NUMBER'},
-                        { name:'SERVICE_FEE_EXPIRY_DATE', dataType:'DATE'}]
-
-                } else if (this.selectedTable === 'F_TBL_CDR_IDD_DT_A') {
-                    this.tableColumnList = [
-                        { name:'TRANSACTION_DATE_KEY', dataType:'NUMBER'},
-                        { name:'COUNTRY_NAME', dataType:'VARCHAR'},
-                        { name:'COUNT', dataType:'NUMBER'},
-                        { name:'CREATED_DATE', dataType:'DATE'}]
-
-                }
 
                 // everytime table was changed, this will clear the previous data
                 this.selectedColumn = null;
@@ -3445,11 +3421,9 @@
                 this.duration = 0;
                 this.selectedVarCharOption = 'MATCHES';
                 this.varCharValue = '';
-                
-                console.log(this.tableColumnList,'tableColumnList after')
-
 
             },
+
             updateExactDate () {
                 console.log(this.exactDate)
             },
@@ -3468,6 +3442,27 @@
             },
             clearDropdown () {
                 console.log(this.selectedColumn,'data')
+                this.dataId = null;
+                this.selectedTable = null;
+                this.selectedColumn = null;
+                this.selectedColumnName = null;
+                this.selectedColumnType = null;
+                this.tableColumnList = [];
+                this.selectedNumberOption='SUM';
+                this.selectedOperand = '>';
+                this.numberValue = 0;
+                this.selectedDateType = 'exactDate';
+                this.exactDate = dateToday;
+                this.daysBefore = 0;
+                this.duration = 0;
+                this.selectedVarCharOption = 'MATCHES';
+                this.varCharValue = '';
+                this.value = null;
+
+                this.selectedFetchTable = null;
+            },
+            saveAndClearDropdown () {
+                console.log(this.selectedColumn,'data')
                 this.mergeData();
                 this.dataId = null;
                 this.selectedTable = null;
@@ -3485,14 +3480,17 @@
                 this.selectedVarCharOption = 'MATCHES';
                 this.varCharValue = '';
                 this.value = null;
+
+                this.selectedFetchTable = null;
             },
             mergeData () {
                 var mergedData = {};
                 mergedData['dataId'] = uuidv4();
-                mergedData['selectedTable'] = this.selectedTable;
+                mergedData['selectedTable'] = this.selectedFetchTable.table_name;
                 mergedData['selectedColumn'] = this.selectedColumn;
-                mergedData['selectedColumnName'] = this.selectedColumn.name;
-                mergedData['selectedColumnType'] = this.selectedColumn.dataType;
+                mergedData['selectedColumnName'] = this.selectedColumn.column_name;
+                mergedData['selectedColumnType'] = this.selectedColumn.column_type;
+                mergedData['selectedDataType'] = this.selectedColumn.column_type;
                 mergedData['selectedNumberOption'] = this.selectedNumberOption;
                 mergedData['selectedOperand'] = this.selectedOperand;
                 mergedData['numberValue'] = this.numberValue;
@@ -3504,61 +3502,21 @@
                 mergedData['varCharValue'] = this.varCharValue;
                 
 
-                if(this.selectedColumn.dataType === 'NUMBER') {
+                if(this.selectedColumn.column_type === 'NUMBER') {
                     mergedData ['selectedOption'] = this.selectedNumberOption;
                     mergedData ['value'] = this.numberValue;
                     // selectedOption
-                } else if (this.selectedColumn.dataType === 'VARCHAR') {
+                } else if (this.selectedColumn.column_type === 'VARCHAR') {
                     mergedData ['selectedOption'] = this.selectedVarCharOption;
                     mergedData ['value'] = this.varCharValue;
                 }
-                console.log(mergedData);
+                console.log(mergedData,'merged data');
 
                 this.savedatafn(mergedData);
             },
-            // flattenSelectedColumn () {
-            //     console.log(this.selectedColumn)
-            // }
+
         },
     })
-
-
-///////////// RESERVED///////////////
-    
-
-
-    // OLD 
-    // `<div class="data-card wrapper" style="margin-left: 1% !important;">
-    //             <div class="row justify-content-between">
-    //                 <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
-    //                     <div><b>Table:</b> {{data.selectedTable}}</div>
-    //                     <div><b>Column:</b> {{data.selectedColumn.name}}</div>
-    //                 </div>
-    //                 <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.dataType==='NUMBER'">
-    //                     <div><b>Data:</b> {{data.selectedNumberOption}} {{data.selectedOperand}} {{data.numberValue}}</div>
-    //                     <div><b>Duration(days):</b>{{data.duration}}</div>
-    //                     <div v-if="data.selectedDateType ==='exactDate'">
-    //                         <div><b>Start date:</b>  {{data.exactDate}}</div>
-    //                     </div>
-    //                     <div v-show="data.selectedDateType ==='daysBefore'">
-    //                         <div><b>Days before:</b>{{data.daysBefore}}</div>
-    //                     </div>
-    //                 </div>
-    //                 <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.dataType==='VARCHAR'">
-    //                     <div><b>Data:</b>  {{data.selectedVarCharOption}} {{data.varCharValue}}</div>
-    //                 </div>
-    //                 <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.dataType==='DATE'">
-    //                     <div><b>Duration (days):</b>  {{data.duration}}</div>
-    //                     <div><b>Days Before:</b>  {{data.daysBefore}}</div>
-    //                 </div>
-    //                 <div class="col-md-2" >
-    //                     <button @click="deletedatafn(groupid, data.dataId)" 
-    //                         type="button"class="btn btn-outline-danger btn-sm"
-    //                         style="float:right; border-radius: 50%;
-    //                         border: 1px solid #ff000061; margin-top: 5px; margin-right:5px"><i class="fas fa fa-trash"></i> 
-    //                 </div>
-    //             </div>
-    //         </div>`
 
 
 
@@ -3578,9 +3536,9 @@
                     <div class="row justify-content-between">
                         <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
                             <div><b>Table:</b> {{data.selectedTable}}</div>
-                            <div><b>Column:</b> {{data.selectedColumn.name}}</div>
+                            <div><b>Column:</b> {{data.selectedColumn.column_name}}</div>
                         </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.dataType==='NUMBER'">
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='NUMBER'">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
                                 <div class="col-md-4" style="padding:0px">
                                             <v-select 
@@ -3624,7 +3582,7 @@
                                         class="form-control form-control-sm input-custom"
                                         style="width:100px; margin-left:10px"
                                         v-model.number="data.duration"
-                                        @input="removeNegative($event,'duration', duration)"/> 
+                                        @input="removeNegative($event,'duration', data.duration)"/> 
                                 </span>
                                 
                             </div>
@@ -3661,7 +3619,7 @@
                             
 
                         </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.dataType==='VARCHAR'">
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='VARCHAR'">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
                                         <div class=" col-sm-4 " style="padding:0px">
                                             <v-select 
@@ -3683,7 +3641,7 @@
                                         </div>      
                                 </div>
                         </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.dataType==='DATE'">
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='DATE'">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
                                 <span style="margin-top:7px; margin-left:5px;"> Duration (days)</span>
                                 <span>
@@ -3754,7 +3712,7 @@
 
 
     Vue.component('query-component', {
-            props: ['xxx', 'maindata', 'modaltriggerfn','checkdata','deletegroupfn', 'deletedatafn', 'modaltrigger', 'tablelist', 'getadddatagroupidfn','savedatafn', 'creategroupfn'],
+            props: ['maindata', 'modaltriggerfn','deletegroupfn', 'deletedatafn', 'modaltrigger', 'getadddatagroupidfn','savedatafn', 'creategroupfn','fetchedtablelist'],
             data: function () {
             return {
                 groupId:null,
@@ -3802,7 +3760,8 @@
                                v-bind:deletegroupfn="deletegroupfn"
                                v-bind:deletedatafn="deletedatafn"
                                v-bind:modaltrigger="modaltrigger" 
-                               v-bind:tablelist="tablelist"
+                               
+                               v-bind:fetchedtablelist = "fetchedtablelist"
                                v-bind:getadddatagroupidfn="getadddatagroupidfn"
                                v-bind:savedatafn="savedatafn"
                                v-bind:creategroupfn ="creategroupfn"
@@ -3812,7 +3771,8 @@
                     <table-column-modal 
                         v-bind:modaltrigger="modaltrigger" 
                         v-bind:modaltriggerfn="modaltriggerfn" 
-                        v-bind:tablelist="tablelist"
+                        
+                        v-bind:fetchedtablelist = "fetchedtablelist"
                         v-bind:groupid="y.groupId"
                         v-bind:savedatafn="savedatafn"></table-column-modal>
                 </div>
@@ -3830,8 +3790,6 @@
         el: '#advanceFilterComponent',
         data: {
             showModal: false,
-            tableList:[],
-            testData: 'test pass props',
             tempGroupData:{
                 groupId:uuidv4(),
                 rootGroup:false,
@@ -3846,139 +3804,8 @@
                 groupCondition:'AND',
                 groups:[],   
                 dataList:[]
-            }]
-            // mainData: [{
-            //     groupId:uuidv4(),
-            //     rootGroup:true,
-            //     groupCondition:'AND', 
-            //     groups:[{
-            //         groupId:uuidv4(),
-            //         rootGroup:false,
-            //         groupCondition:'OR',
-            //         groups:[{
-            //             groupId:uuidv4(),
-            //             rootGroup:false, 
-            //             groupCondition:'AND',
-            //             groups:[{
-            //                 groupId:uuidv4(),
-            //                 rootGroup:false,
-            //                 groupCondition:'AND',
-            //                 groups:[{                      
-            //                     groupId:uuidv4(),
-            //                     rootGroup:false,
-            //                     groupCondition:'AND',
-            //                     groups:[{                      
-            //                         groupId:uuidv4(),
-            //                         rootGroup:false,
-            //                         groupCondition:'AND',
-            //                         groups:[],
-            //                         dataList:[],
-            //                     }, {                      
-            //                         groupId:uuidv4(),
-            //                         rootGroup:false,
-            //                         groupCondition:'AND',
-            //                         groups:[],
-            //                         dataList:[],
-            //                     }],
-            //                     dataList:[],
-            //                 }],
-            //                 dataList:[{ 
-            //                     dataId: uuidv4(),
-            //                     selectedTable: '1.234',
-            //                     selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
-            //                     selectedNumberOption:'SUM',
-            //                     selectedOperand: '>',
-            //                     numberValue: 11,
-            //                     selectedDateType: 'exactDate',
-            //                     exactDate: dateToday,
-            //                     daysBefore: 4,
-            //                     duration: 31,
-            //                     selectedVarCharOption: 'MATCHES',
-            //                     varCharValue: 'asdasdasds',},
-            //                     {   dataId: uuidv4(),
-            //                     selectedTable: '1.234',
-            //                     selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
-            //                     selectedNumberOption:'SUM',
-            //                     selectedOperand: '>',
-            //                     numberValue: 11,
-            //                     selectedDateType: 'exactDate',
-            //                     exactDate: dateToday,
-            //                     daysBefore: 4,
-            //                     duration: 31,
-            //                     selectedVarCharOption: 'MATCHES',
-            //                     varCharValue: '22222',},
-            //                     // {   dataId: uuidv4(),
-            //                     // selectedTable: '1.234',
-            //                     // selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
-            //                     // selectedNumberOption:'SUM',
-            //                     // selectedOperand: '>',
-            //                     // numberValue: 11,
-            //                     // selectedDateType: 'exactDate',
-            //                     // exactDate: dateToday,
-            //                     // daysBefore: 4,
-            //                     // duration: 31,
-            //                     // selectedVarCharOption: 'MATCHES',
-            //                     // varCharValue: 'xxxxxxxxxxxxx',}
-            //                 ]
-            //             }],
-            //             dataList:[{
-            //                 dataId: uuidv4(),
-            //                 selectedTable: '1.23',
-            //                 selectedColumn: { name: "CREATED_DATE", dataType: "DATE" },
-            //                 selectedNumberOption:'SUM',
-            //                 selectedOperand: '>',
-            //                 numberValue: 0,
-            //                 selectedDateType: 'exactDate',
-            //                 exactDate: dateToday,
-            //                 daysBefore: 0,
-            //                 duration: 0,
-            //                 selectedVarCharOption: 'MATCHES',
-            //                 varCharValue: '',}
-            //             ]
-            //         }],
-            //         dataList:[],
-            //     }],
-            //     dataList:[
-            //         {   dataId:uuidv4(),
-            //             selectedTable: '1',
-            //             selectedColumn: { name: "CDR_DA_DT_A_ID", dataType: "NUMBER" },
-            //             selectedNumberOption:'AVERAGE',
-            //             selectedOperand: '>',
-            //             numberValue: 12,
-            //             selectedDateType: 'exactDate',
-            //             exactDate: dateToday,
-            //             daysBefore: 222,
-            //             duration: 10,
-            //             selectedVarCharOption: 'MATCHES',
-            //             varCharValue: '',
-            //         },
-            //         {   dataId: uuidv4(),
-            //             selectedTable: '1',
-            //             selectedColumn: { name: "REFILL_PROFILE_ID", dataType: "VARCHAR" },
-            //             selectedNumberOption:'SUM',
-            //             selectedOperand: '<',
-            //             numberValue: 8,
-            //             selectedDateType: 'exactDate',
-            //             exactDate: dateToday,
-            //             daysBefore: 88,
-            //             duration: 15,
-            //             selectedVarCharOption: 'MATCHES',
-            //             varCharValue: 'test VChar',
-            //         },
-            //         {   dataId: uuidv4(),
-            //             selectedTable: '1',
-            //             selectedColumn: { name: "CREATED_DATE", dataType: "DATE" },
-            //             selectedNumberOption:'SUM',
-            //             selectedOperand: '+',
-            //             numberValue: 6,
-            //             selectedDateType: 'exactDate',
-            //             exactDate: dateToday,
-            //             daysBefore:3,
-            //             duration: 22,
-            //             selectedVarCharOption: 'MATCHES',
-            //             varCharValue: 'test var char',}
-            //     ]
-            // }],
+            }],
+            fetchedTableList:[],   
         },
         methods: {
             showModalfn() {
@@ -3989,8 +3816,7 @@
                 if(data){
                     for (var i = 0; i < data.length; i++) {
                         if (selectedGroupId === data[i].groupId) {
-                            console.log('found id')
-                            
+
                                 data.splice(i, 1);  // delete the specified group
                                 break;
 
@@ -4000,11 +3826,10 @@
                         }
                     }                 
                 }
-                console.log(advanceFilter.mainData,'maindata')
+                configureMembership
             },
 
             deleteGroupfn (selectedGroupId) {
-                console.log(selectedGroupId, advanceFilter.mainData)
                 this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
             },
 
@@ -4042,7 +3867,6 @@
                 }
             },
             deleteDatafn (selectedGroupId, selectedDataId ) {
-                console.log(selectedGroupId, selectedDataId, advanceFilter.mainData)
                 this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, advanceFilter.mainData)
             },
             addDataViaGroupId (selectedGroupId , data, savedData) {
@@ -4050,8 +3874,6 @@
                 if(data && savedData){
                     for (var i = 0; i < data.length; i++) {
                         if (selectedGroupId === data[i].groupId) {
-                            console.log('found id')
-                            console.log(data[i].dataList,'add data here')
                             data[i].dataList.push(savedData)
                             break;
 
@@ -4061,17 +3883,12 @@
                         }
                     }                 
                 }
-                console.log(advanceFilter.mainData,'maindata')
 
             },
             getAddDataGroupIdfn (selectedGroupId) {
-                console.log(selectedGroupId,'selectedGroupId')
                 advanceFilter.selectedGroupId = selectedGroupId; // save when add data is clicked
             },
             saveDatafn(savedData) {
-                console.log(savedData,'savedData');
-                console.log(advanceFilter.selectedGroupId,'group id');
-
                 this.addDataViaGroupId(advanceFilter.selectedGroupId, advanceFilter.mainData, savedData)
                 advanceFilter.selectedGroupId = null;
             },
@@ -4081,8 +3898,6 @@
                 if(data){
                     for (var i = 0; i < data.length; i++) {
                         if (selectedGroupId === data[i].groupId) {
-                            console.log('found id')
-                            console.log(data[i].groups,'add group here')
 
                             var  tempGroupData ={
                                     groupId:uuidv4(),
@@ -4102,17 +3917,26 @@
                         }
                     }                 
                 }
-                console.log(advanceFilter.mainData,'maindata')
-
             },
             createGroupfn(selectedGroupId) { 
-                console.log(selectedGroupId,'selectedGroupId')
                 this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
             },
             generateSQL () {
                 console.log(advanceFilter.mainData,'generate sql')
-                fetch(PROD_URL + `generateSQLQuery`)
-                //fetch(PROD_URL + `offerBucket?offerType=DA`)
+                console.log(JSON.stringify(advanceFilter.mainData),'stringify')
+
+                fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/getSQLQuery`, {
+                    method: 'POST',
+                    mode: 'no-cors', // no-cors, *cors, same-origin
+                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: 'same-origin', // include, *same-origin, omit
+                    headers: {
+                      'Content-Type': 'application/json'
+                      // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: JSON.stringify(advanceFilter.mainData)
+                })
+
 				.then(res => res.json())
 				.then(data => {
                     console.log(data)
@@ -4125,23 +3949,21 @@
         watch: {},
 
         mounted:function () {
-            console.log('call api before created')
-             fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
-                //fetch(PROD_URL + `offerBucket?offerType=DA`)
+            //  this call the table list
+              fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
+                //fetch(TEST_URL + `AdvFilters/`)
 				.then(res => res.json())
 				.then(data => {
-                    console.log(data)
+                    this.fetchedTableList = data.items;
+                    return this.fetchedTableList;
 				})
 				.catch(error => console.log(error))
 				.finally()
-                console.log(this.tableList,'tableList')
-                this.tableList = ['F_TBL_CDR_DA_DT_A','F_TBL_TOPUP','F_TBL_CDR_IDD_DT_A'],
-                console.log(this.tableList,'tableList after')
 
         }
        
     })
-
+console.log(advanceFilter.mainData,'xxxx')
 </script>
 <!--VueJS END-->
 
