@@ -447,6 +447,7 @@ public class DataController {
 					.topUpDaBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
 					.topUpDaBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
 					.topUpTempServiceClass(prepaidCxOfferEventCondition.getTempServiceClass())
+					.permanentServiceClass(prepaidCxOfferEventCondition.getPermanentServiceClass())
 					.roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
 					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId()).build();
 			try {
@@ -458,6 +459,11 @@ public class DataController {
 				if (prepaidCxOfferEventCondition.getCampaignStartDate() != null) {
 					eventCondition.setCampaignStartDate(
 							DateUtil.fromLocalDateTime(prepaidCxOfferEventCondition.getCampaignStartDate()));
+				}
+
+				if (prepaidCxOfferEventCondition.getDaExpiryDate() != null) {
+					eventCondition.setDaExpiryDate(
+							DateUtil.fromLocalDateTime(prepaidCxOfferEventCondition.getDaExpiryDate()));
 				}
 			} catch (ParseException e) {
 				e.printStackTrace();

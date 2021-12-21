@@ -1,8 +1,10 @@
 package com.dev.prepaid.domain;
 
 import lombok.*;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
@@ -39,8 +41,8 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private String arpuSelectedTopUpCode;
 
     private Boolean isMonitorDateRange;
-    private Date periodStartDate;
-    private Date periodEndDate;
+    private LocalDateTime periodStartDate;
+    private LocalDateTime periodEndDate;
 
     private Boolean isMonitorSpecificPeriod;
     private Integer periodDays;
@@ -58,8 +60,8 @@ public class PrepaidCxOfferMonitoring extends Auditable {
     private String topUpDaBalanceOp;
     private Long topUpDaBalanceValue;
     private String topUpTempServiceClass;
-
-    private Date daExpiryDate;
+    private String permanentServiceClass;
+    private LocalDateTime daExpiryDate;
 
     private  String imei;
     private  Long daChange;

@@ -252,11 +252,15 @@ public class OfferServiceImpl implements OfferService {
 					try {
 						log.info("getOfferMonitoring DateUtil.fromDate {}",prepaidCxOfferMonitoring);
 						if(prepaidCxOfferMonitoring.getPeriodStartDate() != null) {
-							offerFulfilment.setMonitorStartDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodStartDate()));
+							offerFulfilment.setMonitorStartDate(DateUtil.fromLocalDateTime(prepaidCxOfferMonitoring.getPeriodStartDate()));
 						}
 						if(prepaidCxOfferMonitoring.getPeriodEndDate() != null){
-							offerFulfilment.setMonitorEndDate(DateUtil.fromDate(prepaidCxOfferMonitoring.getPeriodEndDate()));
+							offerFulfilment.setMonitorEndDate(DateUtil.fromLocalDateTime(prepaidCxOfferMonitoring.getPeriodEndDate()));
 						}
+						if(prepaidCxOfferMonitoring.getDaExpiryDate() != null){
+							offerFulfilment.setDaExpiryDate(DateUtil.fromLocalDateTime(prepaidCxOfferMonitoring.getDaExpiryDate()));
+						}
+
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
