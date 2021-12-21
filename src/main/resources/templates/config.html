@@ -422,9 +422,26 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
+                                                <label class="col-sm-2 col-form-label">DA Expiry Date</label>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group date" data-provider="datepicker">
+                                                        <input type="datetime-local" class="form-control" x-model="daExpiryDate">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="topUpTempServiceClass" class="col-sm-2 col-form-label">Temporary Service Class</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="eventConditionDataTopUpTemporaryServiceClass" x-model="eventConditionData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="topUpTempServiceClass" x-model="eventConditionData.topUpTempServiceClass">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="permanentServiceClass" class="col-sm-2 col-form-label">Permanent Service Class</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="permanentServiceClass" x-model="eventConditionData.permanentServiceClass">
                                                 </div>
                                             </div>
                                         </div>
@@ -644,9 +661,21 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label class="col-sm-2 col-form-label">Charge Amount</label>
+                                                <label class="col-sm-2 col-form-label">Charged Amount</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="usageTopUpChargeAmount" x-model="eventConditionData.chargedAmount">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label class="col-sm-2 col-form-label">Roaming Flag</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="roamingFlagValEvent" x-model="eventConditionData.roamingFlag">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label class="col-sm-2 col-form-label">Rate Plan ID</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="ratePlanIDValEvent" x-model="eventConditionData.ratePlanId">
                                                 </div>
                                             </div>
                                         </div>
@@ -757,7 +786,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <button :disabled="uniqueData == false" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+                                    <button :disabled="uniqueData == false || offerTypeDropdown == 'none'" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
                                     </button>
                                 </div>
                                 <hr>
@@ -1251,9 +1280,26 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
+                                                <label class="col-sm-2 col-form-label">DA Expiry Date</label>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group date" data-provider="datepicker">
+                                                        <input type="datetime-local" class="form-control" x-model="daExpiryDateMonitor">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
                                                 <label for="topupCreditMethod" class="col-sm-2 col-form-label">Temporary Service Class</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="topUpTemporaryServiceClass" x-model="monitoringData.topUpTempServiceClass">
+                                                    <input type="text" class="form-control" id="topUpTemporaryServiceClassMonitor" x-model="monitoringData.topUpTempServiceClass">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="permanentServiceClass" class="col-sm-2 col-form-label">Permanent Service Class</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="permanentServiceClassMonitor" x-model="monitoringData.permanentServiceClass">
                                                 </div>
                                             </div>
                                         </div>
@@ -1473,9 +1519,21 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
-                                                <label class="col-sm-2 col-form-label">Charge Amount</label>
+                                                <label class="col-sm-2 col-form-label">Charged Amount</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="monitoringDataUTopUpChargeAmount" x-model="monitoringData.chargedAmount">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label class="col-sm-2 col-form-label">Roaming Flag</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="roamingFlagValMonitor" x-model="monitoringData.roamingFlag">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label class="col-sm-2 col-form-label">Rate Plan ID</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="ratePlanIDValMonitor" x-model="monitoringData.ratePlanId">
                                                 </div>
                                             </div>
                                         </div>
@@ -2005,10 +2063,10 @@
 
         $(document).ready(function() {
             $('#select2multiple').select2();
-            // $('#promoCodeMultiple').select2({
-            //     maximumSelectionLength: 2
-            // });
-            $('#promoCodeMultiple').select2();
+            $('#promoCodeMultiple').select2({
+                maximumSelectionLength: 2
+            });
+            // $('#promoCodeMultiple').select2();
             $('#promoCodeMultiple').on("select2:select", function (evt) {
                 var element = evt.params.data.element;
                 var $element = $(element);
@@ -2188,6 +2246,8 @@
 
             campaignStartDate               : null,
             campaignEndDate                 : null,
+            daExpiryDate                    : null,
+            daExpiryDateMonitor             : null,
 
             init() {
                 this.eventTypeDropdown(),
@@ -2454,6 +2514,9 @@
                             this.monitoringFulfillmentRadio = 'specified-period'
                         }
 
+                        // for Da Expiry Date
+                        this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : moment().format("yyyy-MM-DD") + "T00:00";
+
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -2477,6 +2540,9 @@
 
                         // For End Date
                         this.campaignEndDate = data.campaignEndDate != null ? data.campaignEndDate : moment().format("yyyy-MM-DD") + "T00:00";
+
+                        // for Da Expiry Date
+                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : moment().format("yyyy-MM-DD") + "T00:00";
 
                     })
                     .catch(error => console.log(error))
@@ -2609,6 +2675,8 @@
                     offerEventCondition.topUpDaBalanceOp            = this.eventConditionData.topUpDaBalanceOp || 'lessThan';
                     offerEventCondition.topUpDaBalanceValue         = this.eventConditionData.topUpDaBalanceValue;
                     offerEventCondition.topUpTempServiceClass       = this.eventConditionData.topUpTempServiceClass;
+                    offerEventCondition.daExpiryDate                = this.daExpiryDate;
+                    offerEventCondition.permanentServiceClass       = this.eventConditionData.permanentServiceClass;
                 } else if (this.eventConditionTypeData === 'Usage') {
                     offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
                     offerEventCondition.eventTypeUsages             = this.eventConditionData.eventTypeUsages;
@@ -2627,6 +2695,8 @@
                     offerEventCondition.imei                        = this.eventConditionData.imei;
                     offerEventCondition.daChange                    = this.eventConditionData.daChange;
                     offerEventCondition.chargedAmount               = this.eventConditionData.chargedAmount;
+                    offerEventCondition.roamingFlag                 = this.eventConditionData.roamingFlag;
+                    offerEventCondition.ratePlanId                  = this.eventConditionData.ratePlanId;
                 } else if (this.eventConditionTypeData === 'ARPU') {
                     offerEventCondition.operatorId                  = this.eventConditionData.operatorId;
                     offerEventCondition.arpuType                    = this.eventConditionData.arpuType;
@@ -2675,6 +2745,8 @@
                     offerMonitoring.topUpDaBalanceOp            = this.monitoringData.topUpDaBalanceOp || 'lessThan';
                     offerMonitoring.topUpDaBalanceValue         = this.monitoringData.topUpDaBalanceValue;
                     offerMonitoring.topUpTempServiceClass       = this.monitoringData.topUpTempServiceClass;
+                    offerMonitoring.daExpiryDateMonitor         = this.daExpiryDateMonitor;
+                    offerMonitoring.permanentServiceClass       = this.monitoringData.permanentServiceClass;
                 } else if (this.eventTypeData === 'Usage') {
                     offerMonitoring.usageServiceType            = this.monitoringData.usageServiceType;
                     offerMonitoring.usageType                   = this.monitoringData.usageType;
@@ -2694,6 +2766,8 @@
                     offerMonitoring.usageValue                  = this.monitoringData.usageValue;
                     offerMonitoring.aggregationPeriodDays       = this.monitoringData.aggregationPeriodDays;
                     offerMonitoring.usageUnit                   = this.monitoringData.usageUnit;
+                    offerMonitoring.roamingFlag                 = this.monitoringData.roamingFlag;
+                    offerMonitoring.ratePlanId                  = this.monitoringData.ratePlanId;
                 } else if (this.eventTypeData === 'ARPU') {
                     offerMonitoring.arpuOp                      = this.monitoringData.arpuOp;
                     offerMonitoring.arpuType                    = this.monitoringData.arpuType;
