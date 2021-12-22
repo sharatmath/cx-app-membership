@@ -2499,7 +2499,7 @@
                         }
 
                         // for Da Expiry Date
-                        this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : moment().format("yyyy-MM-DD") + "T00:00";
+                        this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : null;
 
                     })
                     .catch(error => console.log(error))
@@ -2526,7 +2526,7 @@
                         this.campaignEndDate = data.campaignEndDate != null ? data.campaignEndDate : moment().format("yyyy-MM-DD") + "T00:00";
 
                         // for Da Expiry Date
-                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : moment().format("yyyy-MM-DD") + "T00:00";
+                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : null;
 
                     })
                     .catch(error => console.log(error))
