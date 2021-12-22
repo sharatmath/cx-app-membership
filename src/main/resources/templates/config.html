@@ -68,6 +68,7 @@
             color: #fff;
         }
 
+
         #main #faq .card .card-header .btn-header-link.collapsed:after {
             content: "\f106";
         }
@@ -86,6 +87,7 @@
             line-height: 30px;
             color: #222;
         }
+
         /*Accordion Custom END*/
 
         /*Accordion PROMO BEGIN*/
@@ -230,7 +232,8 @@
         <div class="col-md-12 mt-12 card">
 
             <div class="form-group">
-                <h4 class="mt-3"><img src="https://cdn1.singteldigital.com/content/dam/singtel/online-draft/singtel_logo_coloured.png" style="max-height: 64px;"> Configure Offer & Audience Selection</h4>
+<!--                <h4 class="mt-3"><img src="https://cdn1.singteldigital.com/content/dam/singtel/online-draft/singtel_logo_coloured.png" style="max-height: 64px;"> Configure Offer & Audience Selection</h4>-->
+                <h4 class="mt-3"><img src="https://oracle.kakatoa.net/assets/image/singtel_logo_coloured.png" style="max-height: 64px;"> Configure Offer & Audience Selection</h4>
             </div>
 
             <div class="form-group">
@@ -762,6 +765,7 @@
                                             <option value="OMS">OMS Offer</option>
                                             <option value="MA">MA Offer</option>
                                             <option value="PROMO">Unique Promo Code</option>
+                                            <option value="NONE">None Type</option>
                                         </select>
                                     </div>
                                     <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS' || offerTypeDropdown == 'MA'" class="col-sm-7 row" style="margin-right: 75px">
@@ -782,7 +786,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <button :disabled="uniqueData == false || offerTypeDropdown == 'none'" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+                                    <button :disabled="uniqueData == false  || offerTypeDropdown == 'PROMO' || offerTypeDropdown == 'NONE'" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
                                     </button>
                                 </div>
                                 <hr>
@@ -1002,6 +1006,26 @@
                                                         </div>
                                                         <div class="col-sm-1">
                                                             <button type="submit" class="btn btn-danger my-1" @click="removePromo()"><i class="fas fa-minus-circle"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--PROMO ACCORDION END-->
+                                    </div>
+                                    <div class="container">
+                                        <div class="noneOfferSelection" x-show="offerTypeDropdown === 'NONE'">
+                                            <div class="accordion" id="none">
+                                                <div class="noneTemplate">
+                                                    <div class="row-flex">
+                                                        <div class="card">
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <div class="card-header" id="none1" style="background-color: #da7200 !important; background-image: none !important;">
+                                                                        <b>NO Offer</b>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2383,7 +2407,8 @@
                             .catch(error => console.log(error))
                             .finally()
                     } else {
-                        fetch(PROD_URL + `offerCampaign?offerId=MA`)
+                        // fetch(PROD_URL + `offerCampaign?offerId=MA`)
+                        fetch(PROD_URL + `maOfferList`)
                             .then(res => res.json())
                             .then(data => {
                                 this.campaignOfferList = data
@@ -2392,7 +2417,8 @@
                             .finally()
                     }
                 } else if (this.offerTypeDropdown == 'MA') {
-                    fetch(PROD_URL + `offerCampaign?offerId=MA`)
+                    // fetch(PROD_URL + `offerCampaign?offerId=MA`)
+                    fetch(PROD_URL + `maOfferList`)
                         .then(res => res.json())
                         .then(data => {
                             this.campaignOfferList = data

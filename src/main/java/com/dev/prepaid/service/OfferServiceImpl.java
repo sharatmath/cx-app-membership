@@ -1,7 +1,9 @@
 package com.dev.prepaid.service;
 
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
 @Service
@@ -164,6 +168,29 @@ public class OfferServiceImpl implements OfferService {
 	@Override
 	public List<PrepaidMaCreditOffer> listMaOfferBucket() {
 		return prepaidMaOfferBucketRepository.findAll();
+	}
+
+	@Override
+	public PrepaidMaCreditOffer getMaCreditOfferById(Long id) {
+		return prepaidMaOfferBucketRepository.findOneById(id);
+	}
+
+	@Override
+	public List<PrepaidMaCreditOffer> listMaByOffer(String programName){
+		return prepaidMaOfferBucketRepository.findAllByProductName(programName);
+	}
+
+	@Override
+	public void deletePrepaidMaCreditOffer(Long id) {
+		PrepaidMaCreditOffer prepaidMaCreditOffer = prepaidMaOfferBucketRepository.
+				findOneById(id);
+
+		if(prepaidMaCreditOffer != null){
+			prepaidMaCreditOffer.setDeletedBy("-");
+			prepaidMaCreditOffer.setDeletedDate(new Date());
+
+			prepaidMaOfferBucketRepository.save(prepaidMaCreditOffer);
+		}
 	}
 
 	public List<OfferSelection> getOfferSelection(String instanceId){
