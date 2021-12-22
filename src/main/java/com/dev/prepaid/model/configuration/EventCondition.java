@@ -36,8 +36,6 @@ public class EventCondition {
     @SerializedName("topUpDaBalanceValue") private  Long topUpDaBalanceValue;
     @SerializedName("topUpTempServiceClass") private  String topUpTempServiceClass;
 
-
-
     @SerializedName("topupOp") private  String topUpOp;
     @SerializedName("topupTransactionValue") private  String topUpTransactionValue;
 

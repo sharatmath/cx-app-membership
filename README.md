@@ -5,11 +5,18 @@ prepaid-cx-api.git
 export JAVA_HOME=/usr/lib/jvm/openjdk-11.0.2_linux-x64/jdk-11.0.2
 git pull
 mvn clean package -DskipTests=true
-sudo docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.4.3 .
-sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.4.3
+sudo docker build -f Dockerfile -t fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.4.4 .
+sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.4.4
 
 sudo docker image ls --kubeconfig /home/opc/.kube/config_prepaid_dev
 ```
+
+##  CHANGE LOG
+```sh
+0.4.4 fixing saving da_expiry_date
+
+```
+
 
 ##  DEPLOYMENT
 ```sh
@@ -18,6 +25,13 @@ kubectl proxy --kubeconfig /home/opc/.kube/config_prepaid_dev
 kubectl delete deployment prepaid-cx-membership-api-deployment --kubeconfig /home/opc/.kube/config_prepaid_dev
 kubectl create -f services.yaml --kubeconfig /home/opc/.kube/config_prepaid_dev
 kubectl logs prepaid-cx-membership-api-deployment-5645d97ccd-mhjzj   --kubeconfig /home/opc/.kube/config_prepaid_dev
+```
+
+
+##  DEPLOYMENT SHORTCUT
+```sh
+git pull
+./deployment.sh
 ```
 
 ## RUNNING
