@@ -16,5 +16,5 @@ public interface PrepaidMaOfferBucketRepository extends CrudRepository<PrepaidMa
 
     public List<PrepaidMaCreditOffer> findAllByProductName(String productName);
 
-    public List<PrepaidMaCreditOffer> findAllByOfferId(Long offerId);
+    public List<PrepaidMaCreditOffer> findAllById(Long id);
 }
