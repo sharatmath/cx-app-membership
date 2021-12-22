@@ -2407,7 +2407,8 @@
                             .catch(error => console.log(error))
                             .finally()
                     } else {
-                        fetch(PROD_URL + `offerCampaign?offerId=MA`)
+                        // fetch(PROD_URL + `offerCampaign?offerId=MA`)
+                        fetch(PROD_URL + `maOfferList`)
                             .then(res => res.json())
                             .then(data => {
                                 this.campaignOfferList = data
@@ -2416,7 +2417,8 @@
                             .finally()
                     }
                 } else if (this.offerTypeDropdown == 'MA') {
-                    fetch(PROD_URL + `offerCampaign?offerId=MA`)
+                    // fetch(PROD_URL + `offerCampaign?offerId=MA`)
+                    fetch(PROD_URL + `maOfferList`)
                         .then(res => res.json())
                         .then(data => {
                             this.campaignOfferList = data

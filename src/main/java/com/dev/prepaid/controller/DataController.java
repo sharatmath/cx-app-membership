@@ -247,10 +247,11 @@ public class DataController {
 			} else if (offerBucketType.equalsIgnoreCase("DA")) {
 				return offerService.listDaOfferCampaign(Long.parseLong(offerId)).stream()
 						.map(this::mapDaCampaignToOffer).collect(Collectors.toList());
-			} else if (offerId.equalsIgnoreCase("MA")){
-				return offerService.listMaOfferBucket().stream()
-						.map(this::mapMaCreditToOffer).collect(Collectors.toList());
 			}
+//			} else if (offerId.equalsIgnoreCase("MA")){
+//				return offerService.listMaOfferBucket().stream()
+//						.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+//			}
 		}
 
 		if (offerBucketType.equalsIgnoreCase("OMS")) {
@@ -262,11 +263,11 @@ public class DataController {
 			return offerService.listDaOfferCampaign(Long.parseLong(offerId)).stream()
 					.filter(p -> p.getName().toLowerCase().contains(query)).map(this::mapDaCampaignToOffer)
 					.collect(Collectors.toList());
-
-		} else if (offerId.equalsIgnoreCase("MA")) {
-			return offerService.listMaByOffer(query).stream()
-					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
 		}
+//		} else if (offerId.equalsIgnoreCase("MA")) {
+//			return offerService.listMaByOffer(query).stream()
+//					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+//		}
 
 
 		return null;
@@ -288,6 +289,10 @@ public class DataController {
 
 	private DataOffer mapDaCampaignToOffer(PrepaidDaOfferCampaign da) {
 		return DataOffer.builder().id(da.getId().toString()).text(da.getName()).slug(da.getName()).build();
+	}
+
+	private DataOffer mapMaCreditBucketToOffer(PrepaidMaCreditOffer ma){
+		return DataOffer.builder().id("MA|"+ma.getId()).text(ma.getProductName()).slug(ma.getProductName()).build();
 	}
 
 	private DataOffer mapMaCreditToOffer(PrepaidMaCreditOffer ma) {
