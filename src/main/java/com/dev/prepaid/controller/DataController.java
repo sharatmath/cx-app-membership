@@ -357,6 +357,11 @@ public class DataController {
 		}
 	}
 
+	@GetMapping(value = "maOfferDetail")
+	public PrepaidMaCreditOffer getMaOffer(@RequestParam(value = "id", required = true) Long id){
+		return offerService.getMaCreditOfferById(id);
+	}
+
 	@GetMapping(value = "offerEligibility")
 	public PrepaidCxOfferEligibility getOfferEligibility(
 			@RequestParam(value = "instanceId", required = false) String instanceId) {
