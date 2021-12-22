@@ -20,6 +20,12 @@ kubectl create -f services.yaml --kubeconfig /home/opc/.kube/config_prepaid_dev
 kubectl logs prepaid-cx-membership-api-deployment-5645d97ccd-mhjzj   --kubeconfig /home/opc/.kube/config_prepaid_dev
 ```
 
+##  DEPLOYMENT SHORTCUT
+```sh
+git pull
+./deployment.sh
+```
+
 ## RUNNING
 ```sh
 mvn clean package spring-boot:run -DskipTests=true

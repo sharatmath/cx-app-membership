@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.dev.prepaid.domain.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,17 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.prepaid.constant.Constant;
-import com.dev.prepaid.domain.Country;
-import com.dev.prepaid.domain.OverallOfferName;
-import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
-import com.dev.prepaid.domain.PrepaidCxOfferEligibility;
-import com.dev.prepaid.domain.PrepaidCxOfferEventCondition;
-import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
-import com.dev.prepaid.domain.PrepaidDaOfferBucket;
-import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
-import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
-import com.dev.prepaid.domain.PrepaidOmsOfferCampaign;
-import com.dev.prepaid.domain.PromoCode;
 import com.dev.prepaid.model.DataOffer;
 import com.dev.prepaid.model.PrepaidBucketDetailDTO;
 import com.dev.prepaid.model.PrepaidCampaignOfferDetailDTO;
@@ -257,8 +247,11 @@ public class DataController {
 			} else if (offerBucketType.equalsIgnoreCase("DA")) {
 				return offerService.listDaOfferCampaign(Long.parseLong(offerId)).stream()
 						.map(this::mapDaCampaignToOffer).collect(Collectors.toList());
-
 			}
+//			} else if (offerId.equalsIgnoreCase("MA")){
+//				return offerService.listMaOfferBucket().stream()
+//						.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+//			}
 		}
 
 		if (offerBucketType.equalsIgnoreCase("OMS")) {
@@ -270,8 +263,12 @@ public class DataController {
 			return offerService.listDaOfferCampaign(Long.parseLong(offerId)).stream()
 					.filter(p -> p.getName().toLowerCase().contains(query)).map(this::mapDaCampaignToOffer)
 					.collect(Collectors.toList());
-
 		}
+//		} else if (offerId.equalsIgnoreCase("MA")) {
+//			return offerService.listMaByOffer(query).stream()
+//					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+//		}
+
 
 		return null;
 	}
@@ -292,6 +289,14 @@ public class DataController {
 
 	private DataOffer mapDaCampaignToOffer(PrepaidDaOfferCampaign da) {
 		return DataOffer.builder().id(da.getId().toString()).text(da.getName()).slug(da.getName()).build();
+	}
+
+	private DataOffer mapMaCreditBucketToOffer(PrepaidMaCreditOffer ma){
+		return DataOffer.builder().id("MA|"+ma.getId()).text(ma.getProductName()).slug(ma.getProductName()).build();
+	}
+
+	private DataOffer mapMaCreditToOffer(PrepaidMaCreditOffer ma) {
+		return DataOffer.builder().id(ma.getId().toString()).text(ma.getProductName()).slug(ma.getProductName()).build();
 	}
 
 	@GetMapping(value = "evictCache")
@@ -339,6 +344,17 @@ public class DataController {
 			list.add(offerDetailDTO);
 		}
 		return list;
+	}
+
+	@GetMapping(value = "maOfferList")
+	public List<DataOffer> getMaOfferList(@RequestParam(value = "search", required = false) String query){
+		if(query == null || query.isEmpty()){
+			return offerService.listMaOfferBucket().stream()
+					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+		} else {
+			return offerService.listMaByOffer(query).stream()
+					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+		}
 	}
 
 	@GetMapping(value = "offerEligibility")

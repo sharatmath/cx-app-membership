@@ -1,10 +1,8 @@
 package com.dev.prepaid.config;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -67,6 +65,8 @@ public class AmqpConfig {
 	public Queue queueSingtelRedemption() {
 			Map<String, Object> args = new HashMap<String, Object>();
 			args.put("x-max-priority", 1);
+			args.put("x-dead-letter-exchange", "singtel.redemption.dlx");
+			args.put("x-dead-letter-routing-key", "singtel.redemption.rk");
 			Queue queue = new Queue(Constant.QUEUE_NAME_SINGTEL_REDEMPTION, true, false, false, args);
 			return queue;
 		}
@@ -88,14 +88,37 @@ public class AmqpConfig {
 		factory.setMessageConverter(jackson2MessageConverter());
 		return factory;
 	}
+	//redemption DLQ
+	@Bean
+	public Queue dlqSingtelRedemption() {
+		return new Queue(Constant.QUEUE_NAME_DLQ_SINGTEL_REDEMPTION);
+	}
+
+	@Bean
+	public DirectExchange dlxSingtelRedemption() {
+		return new DirectExchange("singtel.redemption.dlx");
+	}
+
+	@Bean
+	public Binding singtelRedemptionDlqBinding() {
+		return BindingBuilder.bind(dlqSingtelRedemption()).to(dlxSingtelRedemption()).with("singtel.redemption.rk");
+	}
+
 	//============================================================================= //
 	// offerMonitoring
 	@Bean
 	public Queue queueOfferMonitoring() {
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("x-max-priority", 1);
+		args.put("x-dead-letter-exchange", "offer.monitoring.dlx");
+		args.put("x-dead-letter-routing-key", "offer.monitoring.rk");
 		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_MONITORING, true, false, false, args);
 		return queue;
+	}
+
+	@Bean
+	public Queue dlqOfferMonitoring() {
+		return new Queue(Constant.QUEUE_NAME_DLQ_MEMBERSHIP_MONITORING);
 	}
 
 	@Bean
@@ -118,14 +141,41 @@ public class AmqpConfig {
 		return BindingBuilder.bind(queueOfferEventCondition).to(exchangeMembership)
 				.with(Constant.QUEUE_NAME_MEMBERSHIP_EVENT_CONDITION); //route.key.name=queue.name
 	}
+
+	@Bean
+	public DirectExchange dlxOfferMonitoring() {
+		return new DirectExchange("offer.monitoring.dlx");
+	}
+
+	@Bean
+	public Binding offerMonitoringDlqBinding() {
+		return BindingBuilder.bind(dlqOfferMonitoring()).to(dlxOfferMonitoring()).with("offer.monitoring.rk");
+	}
 	//============================================================================= //
 	// Subscriber
 	@Bean
 	public Queue queueMembershipOfferSubscriber() {
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("x-max-priority", 1);
+		args.put("x-dead-letter-exchange", "offer.subscriber.dlx");
+		args.put("x-dead-letter-routing-key", "offer.subscriber.rk");
 		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_SUBSCRIBER, true, false, false, args);
 		return queue;
+	}
+
+	@Bean
+	public Queue dlqMembershipOfferSubscriber() {
+		return new Queue(Constant.QUEUE_NAME_DLQ_MEMBERSHIP_SUBSCRIBER);
+	}
+
+	@Bean
+	public DirectExchange dlxOfferSubscriber() {
+		return new DirectExchange("offer.subscriber.dlx");
+	}
+
+	@Bean
+	public Binding offerSubscriberDlqBinding() {
+		return BindingBuilder.bind(dlqMembershipOfferSubscriber()).to(dlxOfferSubscriber()).with("offer.subscriber.rk");
 	}
 
 	@Bean
@@ -139,8 +189,25 @@ public class AmqpConfig {
 	public Queue queueMembershipOfferEligibility() {
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("x-max-priority", 1);
+		args.put("x-dead-letter-exchange", "membership.offer.dlx");
+		args.put("x-dead-letter-routing-key", "membership.offer.rk");
 		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY, true, false, false, args);
 		return queue;
+	}
+
+	@Bean
+	public Queue dlqMembershipOfferEigibility() {
+		return new Queue(Constant.QUEUE_NAME_DLQ_MEMBERSHIP_ELIGIBILITY);
+	}
+
+	@Bean
+	public DirectExchange dlxMembershipOfferEigibility() {
+		return new DirectExchange("membership.offer.dlx");
+	}
+
+	@Bean
+	public Binding membershipOfferEigibilityDlqBinding() {
+		return BindingBuilder.bind(dlqMembershipOfferEigibility()).to(dlxMembershipOfferEigibility()).with("membership.offer.rk");
 	}
 
 	@Bean
