@@ -1204,7 +1204,7 @@
                                 <button  class="btn btn-singtel" style="float:right; margin:10px; margin-top: 5%;" v-on:click="generateSQL">Generate SQL</button>
                                 <textarea 
                                     placeholder="View SQL"
-                                     
+                                     v-model="generatedQuery"
                                     :readonly="true" 
                                     :rows="4" 
                                     style="width:100%;resize: none;" 
@@ -2332,6 +2332,886 @@
 </script>
 <!--jQUERY END-->
 
+
+
+
+<!--VueJS START-->
+<script>
+    // handle the state management of data
+    var store = {  
+        debug: true,
+        state: {},
+    }
+
+    const formatDate = date => date.toISOString().slice(0, 10);
+    var dateToday = formatDate(new Date());
+
+    function uuidv4() {
+	    var a, b, c, d;
+	    var time = Math.round(new Date().getTime() / 1000);
+	    var version = window.navigator.appVersion;
+	    var href = window.location.href;
+        
+	    // a - unix timestamp
+	    a = time.toString(16).substring(0, 8);
+
+	    // b - browser
+	    var match = version.match(/\d+/g);
+	    if (!match) {
+	    	throw 'Invalid browser version string';
+	    }
+	    var sum = 0;
+	    for (var i = 0, ii = match.length; i < ii; ++i) {
+	    	sum += parseInt(match[i], 10);
+	    }
+	    b = (sum * sum * sum).toString(16).substring(0, 6);
+
+	    // c - url
+	    c = (href.length * href.length * href.length).toString(16).substring(0, 4);
+
+	    // d - random
+	    d = Math.random().toString().substring(2);
+	    d = parseInt(d, 10);
+	    d = d.toString(16).substring(0, 6);
+
+	    return [a, b, c, d].join('-');
+    };
+
+
+    Vue.component('table-column-modal',{
+        props:['modaltrigger', 'modaltriggerfn', 'groupid','savedatafn', 'fetchedtablelist'],
+        data:function () {
+            return {
+                dataId:null,
+                selectedTable:null,
+                selectedColumn:null,
+                selectedColumnName:null,
+                selectedColumnType:null,
+                tableColumnList:[],
+                numberOption: ['SUM','AVERAGE','MEAN','MEDIAN'],
+                numberOperand: ['>','<', '>=', '<=', '=', '!='],
+                varCharOption:['MATCHES','EQUAL','START WITH'],
+                selectedNumberOption:'SUM',
+                selectedOperand:'>',
+                numberValue:0,
+                selectedDateType:'exactDate',
+                exactDate:dateToday,
+                daysBefore:0,
+                duration:0,
+                selectedVarCharOption: 'MATCHES',
+                varCharValue:'',
+                selectedOption: null,
+                value: null,
+
+                selectedFetchTable:null,
+                fetchedColumnList:[],
+
+                
+            }
+        },
+        template: 
+            `<div  v-show="modaltrigger === true">
+                <div name="modal">
+                  <div class="modal-mask">
+                    <div class="modal-wrapper">
+                      <div class="modal-container">
+                        <div class="modal-header">
+                          <slot name="header">
+                           <h5> Add Data </h5>
+                           <button class="btn" @click="modaltriggerfn" @click="clearDropdown">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                          </slot>
+                        </div>
+                        <div class="modal-body-add-data">
+                          <slot name="body">
+                            <div class="row" style="margin-bottom:10px;">
+                                <div class=" col-sm-5 ">
+
+                                    <v-select 
+                                        placeholder='Select Table'
+                                        class="basic-dropdown"
+                                        style="margin:5px; padding:0px !Important;"
+                                        :options="fetchedtablelist"
+                                        label="table_name"
+                                        :clearable="false"
+                                        v-model="selectedFetchTable"
+                                        @input="setSelectedFetchTable"
+                                    ></v-select>   
+                                    
+                                </div>
+                                <div class=" col-sm-5 ">
+                                    <div v-show="selectedFetchTable !== null && fetchedColumnList.length > 0">
+                                        <v-select 
+                                            placeholder='Select Column'
+                                            class="basic-dropdown"
+                                            style="margin:5px; padding:0px !Important;"
+                                            :options="fetchedColumnList"
+                                            :clearable="false"
+                                            v-model="selectedColumn"
+                                            label="column_name"
+                                        ></v-select>    
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div v-show="selectedColumn && selectedColumn.column_type === 'NUMBER'">
+                                    <div class="row data-type">
+                                        <div class=" col-sm-12" style=" margin-top:5px; align-self: center;">
+                                            <div style="margin-left: 5px !important;"><b>Datatype: NUMBER Condition </b> </div> 
+                                            
+                                        </div>
+                                        <div class=" col-sm-3 ">
+                                            <v-select 
+                                                placeholder='-----'
+                                                class="basic-dropdown"
+                                                style="margin:5px; padding:0px !Important;"
+                                                :options="numberOption"
+                                                :clearable="false"
+                                                v-model="selectedNumberOption"
+                                            ></v-select> 
+                                        </div>
+                                        <div class=" col-sm-2 ">
+                                            <v-select 
+                                                placeholder='-----'
+                                                class="basic-dropdown"
+                                                style="margin:5px; padding:0px !Important;"
+                                                :options="numberOperand"
+                                                :clearable="false"
+                                                v-model="selectedOperand"
+                                            ></v-select> 
+                                        </div>
+                                        <div class=" col-sm-2 ">
+                                            <input
+                                                type="number" min="0"
+                                                class="form-control form-control-sm input-custom"
+                                                style="margin-left:0px"
+                                                v-model.number="numberValue"
+                                                @input="removeNegative($event,'numberValue', numberValue)"/> 
+                                        </div>
+                                        <div class=" col-sm-5"> </div>
+                                        
+                                        <div class=" col-sm-2" style=" margin-top:20px; align-self: center;">
+                                            <div style="margin-left: 5px !important;"><b> Duration (days)</b> </div> 
+                                            
+                                        </div>
+                                        <div class=" col-sm-2" style="margin-top:20px;">
+                                            <div style="margin-left: 5px !important;"><b> Start Date</b></div> 
+                                            
+                                            
+                                        </div>
+                                        <div class=" col-sm-8"></div>
+
+                                        <div class=" col-sm-2">
+                                            <input
+                                                type="number" min="0"
+                                                class="form-control form-control-sm input-custom"
+                                                style="margin-left: 5px !important;"
+                                                v-model.number="duration"
+                                                @input="removeNegative($event,'duration', duration)"/>
+                                        </div>
+                                        <div class=" col-sm-2">
+                                            <input type="radio" id="exactDate" value="exactDate" v-model="selectedDateType">
+                                            <label for="exactDate" style="margin-bottom:0px;">exact date</label>
+                                            <br>
+                                            <input type="radio" id="daysBefore" value="daysBefore" v-model="selectedDateType">
+                                            <label for="daysBefore">days before</label>
+                                        </div>
+                                        <div class=" col-sm-8">
+                                            <div  v-show="selectedDateType === 'exactDate'">
+                                                <input 
+                                                    type="date"
+                                                    @change="updateExactDate"
+                                                    style="width:25%; margin-left:0px !important;"
+                                                    class="form-control form-control-sm input-custom"
+                                                    v-model="exactDate"
+                                                    id="exactDate"/>  
+                                            </div>
+                                            <div v-show="selectedDateType === 'daysBefore'">
+                                                <input
+                                                type="number" min="0"
+                                                class="form-control form-control-sm input-custom"
+                                                style="width:20%; margin-left:0px !important;"
+                                                v-model.number="daysBefore"
+                                                @input="removeNegative($event,'daysBefore', daysBefore)"/>    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div v-show="selectedColumn && selectedColumn.column_type === 'VARCHAR'">
+                                    <div class="row data-type">
+                                        <div class=" col-sm-12" style=" margin-top:5px; align-self: center;">
+                                            <div style="margin-left: 5px !important;"><b>Datatype: VARCHAR Condition </b> </div> 
+                                        </div>
+                                        <div class=" col-sm-3 ">
+                                            <v-select 
+                                                placeholder='-----'
+                                                class="basic-dropdown"
+                                                style="margin:3px; padding:0px !Important;"
+                                                :options="varCharOption"
+                                                :clearable="false"
+                                                v-model="selectedVarCharOption"
+                                            ></v-select> 
+                                        </div>
+                                        <div class=" col-sm-4 ">
+                                            <input
+                                                placeholder='type any here...'
+                                                type="text"
+                                                class="form-control form-control-sm input-custom"
+                                                style="margin-left:0px !important;"
+                                                v-model="varCharValue"/> 
+                                        </div>      
+                                    </div>
+                                </div>
+                                <div v-show="selectedColumn && selectedColumn.column_type === 'DATE'">
+                                    <div class="row data-type">
+                                        <div class=" col-sm-2" style=" margin-top:20px; align-self: center;">
+                                            <div style="margin-left: 5px !important;"><b> Duration (days)</b> </div> 
+                                            
+                                        </div>
+                                        <div class=" col-sm-2" style="margin-top:20px;">
+                                            <div style="margin-left: 5px !important;"><b> Start Date</b></div> 
+                                            
+                                            
+                                        </div>
+                                        <div class=" col-sm-8"></div>
+
+                                        <div class=" col-sm-2">
+                                            <input
+                                                type="number" min="0"
+                                                class="form-control form-control-sm input-custom"
+                                                style="margin-left: 5px !important;"
+                                                v-model.number="numberValue"
+                                                @input="removeNegative($event,'numberValue', numberValue)"/>
+                                        </div>
+                                        <div class=" col-sm-2">
+                                            <input type="radio" id="exactDate" value="exactDate" v-model="selectedDateType">
+                                            <label for="exactDate" style="margin-bottom:0px;">exact date</label>
+                                            <br>
+                                            <input type="radio" id="daysBefore" value="daysBefore" v-model="selectedDateType">
+                                            <label for="daysBefore">days before</label>
+                                        </div>
+                                        <div class=" col-sm-8">
+                                            <div  v-show="selectedDateType === 'exactDate'">
+                                                <input 
+                                                    type="date"
+                                                    @change="updateExactDate"
+                                                    style="width:25%; margin-left:0px !important;"
+                                                    class="form-control form-control-sm input-custom"
+                                                    v-model="exactDate"
+                                                    id="exactDate"/>  
+                                            </div>
+                                            <div v-show="selectedDateType === 'daysBefore'">
+                                                <input
+                                                type="number" min="0"
+                                                class="form-control form-control-sm input-custom"
+                                                style="width:20%; margin-left:0px !important;"
+                                                v-model.number="daysBefore"
+                                                @input="removeNegative($event, 'daysBefore', daysBefore)"/>    
+                                            </div>
+                                        </div>
+                                    </div>    
+                                </div>
+                                
+                            
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" @click="modaltriggerfn" @click="clearDropdown">
+                                    Back
+                                </button>
+                                <button class="btn btn-singtel" @click="modaltriggerfn" @click="saveAndClearDropdown" :disabled="selectedColumn=== null">  
+                                    Save
+                                </button>
+                            </div>
+                          </slot>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>`,
+        methods:{
+            setSelectedFetchTable () {
+
+                fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/${this.selectedFetchTable.af_tables_id}`)
+                //fetch(TEST_URL + `AdvFilters/${this.selectedFetchTable.af_tables_id}`)
+				.then(res => res.json())
+				.then(data => {
+                    this.fetchedColumnList = data.items;
+                    return this.fetchedColumnList;
+				})
+				.catch(error => console.log(error))
+				.finally()
+
+                // everytime table was changed, this will clear the previous data
+                this.selectedColumn = null;
+                this.selectedNumberOption='SUM';
+                this.selectedOperand = '>';
+                this.numberValue = 0;
+                this.selectedDateType = 'exactDate';
+                this.exactDate = dateToday;
+                this.daysBefore = 0;
+                this.duration = 0;
+                this.selectedVarCharOption = 'MATCHES';
+                this.varCharValue = '';
+
+            },
+
+            updateExactDate () {
+                console.log(this.exactDate)
+            },
+
+            removeNegative(e,type, value) {
+
+                value = Math.max(0, parseInt(e.target.value) || 0);
+
+                if(type==='numberValue'){
+                    this.numberValue = value;
+                } else if (type==='daysBefore') {
+                    this.daysBefore = value;
+                } else if (type==='duration') {
+                    this.duration = value;
+                }
+            },
+            clearDropdown () {
+                console.log(this.selectedColumn,'data')
+                this.dataId = null;
+                this.selectedTable = null;
+                this.selectedColumn = null;
+                this.selectedColumnName = null;
+                this.selectedColumnType = null;
+                this.tableColumnList = [];
+                this.selectedNumberOption='SUM';
+                this.selectedOperand = '>';
+                this.numberValue = 0;
+                this.selectedDateType = 'exactDate';
+                this.exactDate = dateToday;
+                this.daysBefore = 0;
+                this.duration = 0;
+                this.selectedVarCharOption = 'MATCHES';
+                this.varCharValue = '';
+                this.value = null;
+
+                this.selectedFetchTable = null;
+            },
+            saveAndClearDropdown () {
+                console.log(this.selectedColumn,'data')
+                this.mergeData();
+                this.dataId = null;
+                this.selectedTable = null;
+                this.selectedColumn = null;
+                this.selectedColumnName = null;
+                this.selectedColumnType = null;
+                this.tableColumnList = [];
+                this.selectedNumberOption='SUM';
+                this.selectedOperand = '>';
+                this.numberValue = 0;
+                this.selectedDateType = 'exactDate';
+                this.exactDate = dateToday;
+                this.daysBefore = 0;
+                this.duration = 0;
+                this.selectedVarCharOption = 'MATCHES';
+                this.varCharValue = '';
+                this.value = null;
+
+                this.selectedFetchTable = null;
+            },
+            mergeData () {
+                var mergedData = {};
+                mergedData['dataId'] = uuidv4();
+                mergedData['selectedTable'] = this.selectedFetchTable.table_name;
+                mergedData['selectedColumn'] = this.selectedColumn;
+                mergedData['selectedColumnName'] = this.selectedColumn.column_name;
+                mergedData['selectedColumnType'] = this.selectedColumn.column_type;
+                mergedData['selectedDataType'] = this.selectedColumn.column_type;
+                mergedData['selectedNumberOption'] = this.selectedNumberOption;
+                mergedData['selectedOperand'] = this.selectedOperand;
+                mergedData['numberValue'] = this.numberValue;
+                mergedData['selectedDateType'] = this.selectedDateType;
+                mergedData['exactDate'] = this.exactDate;
+                mergedData['daysBefore'] = this.daysBefore;
+                mergedData['duration'] = this.duration;
+                mergedData['selectedVarCharOption'] = this.selectedVarCharOption;
+                mergedData['varCharValue'] = this.varCharValue;
+                
+
+                if(this.selectedColumn.column_type === 'NUMBER') {
+                    mergedData ['selectedOption'] = this.selectedNumberOption;
+                    mergedData ['value'] = this.numberValue;
+                    // selectedOption
+                } else if (this.selectedColumn.column_type === 'VARCHAR') {
+                    mergedData ['selectedOption'] = this.selectedVarCharOption;
+                    mergedData ['value'] = this.varCharValue;
+                }
+                console.log(mergedData,'merged data');
+
+                this.savedatafn(mergedData);
+            },
+
+        },
+    })
+
+
+
+   
+    Vue.component('data-component', {
+        props:['data' , 'deletedatafn','groupid'],
+        data: function() {
+            return {
+                numberOption: ['SUM','AVERAGE','MEAN','MEDIAN'],
+                numberOperand: ['>','<', '>=', '<=', '=', '!='],
+                varCharOption:['MATCHES','EQUAL','START WITH'],
+                selectedDateType:'exactDate',
+            }
+        },
+        template:
+        `  <div class="data-card wrapper" style="margin-left: 1% !important;">
+                    <div class="row justify-content-between">
+                        <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
+                            <div><b>Table:</b> {{data.selectedTable}}</div>
+                            <div><b>Column:</b> {{data.selectedColumn.column_name}}</div>
+                        </div>
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='NUMBER'">
+                            <div class="form-group row justify-content-start" style="margin-bottom: 0px">
+                                <div class="col-md-4" style="padding:0px">
+                                            <v-select 
+                                                placeholder='-----'
+                                                class="basic-dropdown"
+                                                style="margin:5px; padding:0px !Important;"
+                                                :options="numberOption"
+                                                :clearable="false"
+                                                v-model="data.selectedNumberOption"
+                                            ></v-select> 
+                                        </div>
+                                       
+                                        <div class="col-md-3" style="padding-left:5px; padding-right:5px"> 
+                                            <v-select 
+                                                placeholder='-----'
+                                                class="basic-dropdown"
+                                                style="margin:5px; padding:0px !Important;"
+                                                :options="numberOperand"
+                                                :clearable="false"
+                                                v-model="data.selectedOperand"
+                                            ></v-select> 
+                                            
+                                        </div>
+                                        
+                                        <div class="col-md-3" style="padding:0px">
+                                            <input
+                                            type="number" min="0"
+                                            class="form-control form-control-sm input-custom"
+                                            style="margin-left:0px; height:78%"
+                                            v-model.number="data.numberValue"
+                                            @input="removeNegative($event,'numberValue', data.numberValue)"/> 
+                                        </div>
+                                
+                                        
+                            </div>
+                            <div class="form-group row justify-content-start">
+                                <span style="margin-top:7px; margin-left:5px;"> Duration (days)</span>
+                                <span>
+                                    <input
+                                        type="number" min="0"
+                                        class="form-control form-control-sm input-custom"
+                                        style="width:100px; margin-left:10px"
+                                        v-model.number="data.duration"
+                                        @input="removeNegative($event,'duration', data.duration)"/> 
+                                </span>
+                                
+                            </div>
+                            <div class="form-group row justify-content-start" style="margin-bottom: 1px">
+                                <span style="margin-top:7px; margin-left:5px;">Start Date</span>
+                                <span style="margin-left:10px;"> 
+                                            <input type="radio" id="exactDate" value="exactDate" v-model="data.selectedDateType"/>
+                                            <label style="margin-bottom:0px;">exact date</label>
+                                            <br>
+                                            <input type="radio" id="daysBefore" value="daysBefore" v-model="data.selectedDateType"/>
+                                            <label >days before</label>
+                                </span>
+                                <span style="margin-left:15px;">
+                                    <div  v-show="data.selectedDateType === 'exactDate'">
+                                                <input 
+                                                    type="date"
+                                                    @change="updateExactDate"
+                                                    style="width:100%; margin-left:0px !important;"
+                                                    class="form-control form-control-sm input-custom"
+                                                    v-model="data.exactDate"
+                                                    id="exactDate"/>  
+                                            </div>
+                                            <div v-show="data.selectedDateType === 'daysBefore'">
+                                                <input
+                                                type="number" min="0"
+                                                class="form-control form-control-sm input-custom"
+                                                style="width:100px; margin-left:0px !important;"
+                                                v-model.number="data.daysBefore"
+                                                @input="removeNegative($event,'daysBefore', daysBefore)"
+                                                id="daysBefore" />    
+                                            </div>    
+                                </span>
+                            </div>
+                            
+
+                        </div>
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='VARCHAR'">
+                            <div class="form-group row justify-content-start" style="margin-bottom: 0px">
+                                        <div class=" col-sm-4 " style="padding:0px">
+                                            <v-select 
+                                                placeholder='-----'
+                                                class="basic-dropdown"
+                                                style="margin:5px; padding:0px !Important;"
+                                                :options="varCharOption"
+                                                :clearable="false"
+                                                v-model="data.selectedVarCharOption"
+                                            ></v-select> 
+                                        </div>
+                                        <div class=" col-sm-4 ">
+                                            <input
+                                                placeholder='type any here...'
+                                                type="text"
+                                                class="form-control form-control-sm input-custom"
+                                                style="margin-left:0px; height:80%"
+                                                v-model="data.varCharValue"/> 
+                                        </div>      
+                                </div>
+                        </div>
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='DATE'">
+                            <div class="form-group row justify-content-start" style="margin-bottom: 0px">
+                                <span style="margin-top:7px; margin-left:5px;"> Duration (days)</span>
+                                <span>
+                                    <input
+                                        type="number" min="0"
+                                        class="form-control form-control-sm input-custom"
+                                        style="width:100px; margin-left:10px"
+                                        v-model.number="data.duration"
+                                        @input="removeNegative($event,'duration', duration)"/> 
+                                </span>
+                            </div>
+                            <div class="form-group row justify-content-start" style="margin-bottom: 1px">
+                                <span style="margin-top:7px; margin-left:5px;">Start Date</span>
+                                <span style="margin-left:10px;"> 
+                                    <input type="radio" id="exactDate" value="exactDate" v-model="data.selectedDateType">
+                                            <label style="margin-bottom:0px;">exact date</label>
+                                            <br>
+                                            <input type="radio" id="daysBefore" value="daysBefore" v-model="data.selectedDateType">
+                                            <label >days before</label>
+                                </span>
+                                <span style="margin-left:15px;">
+                                    <div  v-show="data.selectedDateType === 'exactDate'">
+                                                <input 
+                                                    type="date"
+                                                    @change="updateExactDate"
+                                                    style="width:100%; margin-left:0px !important;"
+                                                    class="form-control form-control-sm input-custom"
+                                                    v-model="data.exactDate"
+                                                    id="exactDate"/>  
+                                            </div>
+                                            <div v-show="data.selectedDateType === 'daysBefore'">
+                                                <input
+                                                type="number" min="0"
+                                                class="form-control form-control-sm input-custom"
+                                                style="width:100px; margin-left:0px !important;"
+                                                v-model.number="data.daysBefore"
+                                                @input="removeNegative($event,'daysBefore', daysBefore)"/>    
+                                            </div>    
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2" >
+                            <button @click="deletedatafn(groupid, data.dataId)" 
+                                type="button"class="btn btn-outline-danger btn-sm"
+                                style="float:right; border-radius: 50%;
+                                border: 1px solid #ff000061; margin-top: 5px; margin-right:5px"><i class="fas fa fa-trash"></i> 
+                        </div>
+                    </div>
+            </div>`
+            ,
+        methods: {
+            removeNegative(e, type, value) {
+                value = Math.max(0, parseInt(e.target.value) || 0);
+
+                if(type==='numberValue'){
+                     this.data.numberValue = value;
+                } else if (type==='daysBefore') {
+                     this.data.daysBefore = value;
+                } else if (type==='duration') {
+                     this.data.duration = value;
+                }
+            },
+            updateExactDate () {
+                console.log(this.exactDate)
+            },
+        }
+  })
+
+
+    Vue.component('query-component', {
+            props: ['maindata', 'modaltriggerfn','deletegroupfn', 'deletedatafn', 'modaltrigger', 'getadddatagroupidfn','savedatafn', 'creategroupfn','fetchedtablelist'],
+            data: function () {
+            return {
+                groupId:null,
+                condition:['AND', 'OR'],
+                selectedCondition:'AND'
+            } 
+        },
+            template:
+            `<div>
+                <div class="row component-card justify-content-between" v-for="y in maindata" :key="y">
+                    <div class=" col-sm-4 ">
+                            <div v-show="y.groups.length > 0 || y.dataList.length > 0">
+                                <v-select 
+                                    placeholder='----'
+                                    class="operators"
+                                    style="margin:3px; padding:0px !Important;"
+                                    :options="condition"
+                                    :clearable="false"
+                                    v-model="y.groupCondition"
+                                ></v-select>
+                            </div>
+                    </div>
+                    
+                    <div class="col-sm-4" style="margin-top:3px;" >
+                        <div class="form-group row justify-content-end">
+                            <button @click="modaltriggerfn" @click="getadddatagroupidfn(y.groupId)" class="btn btn-create-group btn-sm" style="margin-right:2%" > Add Data</button>
+                            <button @click="creategroupfn(y.groupId)" class="btn btn-create-group btn-sm" style="margin-right:5%"> Create Group</button>
+                            <button @click="deletegroupfn(y.groupId)" type="button"class="btn btn-danger btn-sm" style="max-width: 35px !important;" 
+                                v-show="!y.rootGroup"><i class="fas fa fa-trash"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-12 " v-show="y.dataList">
+                        <div v-for="data in y.dataList"> 
+                            <data-component 
+                               v-bind:data="data"
+                               v-bind:deletedatafn="deletedatafn"
+                               v-bind:groupid="y.groupId"></data-component>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" v-show="y.groups">
+                           <query-component 
+                               v-bind:maindata="y.groups"
+                               v-bind:modaltriggerfn="modaltriggerfn"
+                               v-bind:deletegroupfn="deletegroupfn"
+                               v-bind:deletedatafn="deletedatafn"
+                               v-bind:modaltrigger="modaltrigger" 
+                               
+                               v-bind:fetchedtablelist = "fetchedtablelist"
+                               v-bind:getadddatagroupidfn="getadddatagroupidfn"
+                               v-bind:savedatafn="savedatafn"
+                               v-bind:creategroupfn ="creategroupfn"
+                           ></query-component> 
+                    </div>
+                    
+                    <table-column-modal 
+                        v-bind:modaltrigger="modaltrigger" 
+                        v-bind:modaltriggerfn="modaltriggerfn" 
+                        
+                        v-bind:fetchedtablelist = "fetchedtablelist"
+                        v-bind:groupid="y.groupId"
+                        v-bind:savedatafn="savedatafn"></table-column-modal>
+                </div>
+            </div>`,
+       
+        methods: { },
+        beforeCreate: function() {},
+    })
+
+    Vue.component('v-select', VueSelect.VueSelect)
+
+
+    // Main Component for ADVANCE FILTER
+    var advanceFilter = new Vue({
+        el: '#advanceFilterComponent',
+        data: {
+            showModal: false,
+            tempGroupData:{
+                groupId:uuidv4(),
+                rootGroup:false,
+                groupCondition:'AND',
+                groups:[],   
+                dataList:[]
+            },
+            selectedGroupId: null,
+            mainData:[{
+                groupId:uuidv4(),
+                rootGroup:true,
+                groupCondition:'AND',
+                groups:[],   
+                dataList:[]
+            }],
+            fetchedTableList:[],
+            generatedQuery:null,
+        },
+        methods: {
+            showModalfn() {
+                advanceFilter.showModal = !advanceFilter.showModal;
+            },
+            deleteViaGroupId (selectedGroupId, data) {
+
+                if(data){
+                    for (var i = 0; i < data.length; i++) {
+                        if (selectedGroupId === data[i].groupId) {
+
+                                data.splice(i, 1);  // delete the specified group
+                                break;
+
+                        } else {
+                            console.log('not found')
+                            this.deleteViaGroupId(selectedGroupId, data[i].groups)
+                        }
+                    }                 
+                }
+                configureMembership
+            },
+
+            deleteGroupfn (selectedGroupId) {
+                this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
+            },
+
+            deleteViaGroupIdAndDataId (selectedGroupId, selectedDataId, data) {
+
+                if(data){
+                    for (var i = 0; i < data.length; i++) {
+                        if (selectedGroupId === data[i].groupId) {
+                            
+                            if (data[i].dataList) {
+                                for (var d = 0; d < data[i].dataList.length; d++) {
+                                    var obj = data[i].dataList[d];
+                                    
+                                    if (obj.dataId === selectedDataId) {
+                                        // serarch for index under dataList
+
+                                            var index = data[i].dataList.findIndex(function(o){ 
+                                                 return o.dataId === selectedDataId;
+                                            })
+    
+                                            if (index !== -1) {
+                                                data[i].dataList.splice(index, 1)
+                                                break;
+                                            }
+
+                                        
+                                    }
+                                }
+                            }
+                        } else {
+                            console.log('id not found')
+                            this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, data[i].groups)
+                        }
+                    }
+                }
+            },
+            deleteDatafn (selectedGroupId, selectedDataId ) {
+                this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, advanceFilter.mainData)
+            },
+            addDataViaGroupId (selectedGroupId , data, savedData) {
+
+                if(data && savedData){
+                    for (var i = 0; i < data.length; i++) {
+                        if (selectedGroupId === data[i].groupId) {
+                            data[i].dataList.push(savedData)
+                            break;
+
+                        } else {
+                            console.log('not found')
+                            this.addDataViaGroupId(selectedGroupId, data[i].groups, savedData)
+                        }
+                    }                 
+                }
+
+            },
+            getAddDataGroupIdfn (selectedGroupId) {
+                advanceFilter.selectedGroupId = selectedGroupId; // save when add data is clicked
+            },
+            saveDatafn(savedData) {
+                this.addDataViaGroupId(advanceFilter.selectedGroupId, advanceFilter.mainData, savedData)
+                advanceFilter.selectedGroupId = null;
+            },
+
+            addGroupViaGroupId (selectedGroupId , data) {
+
+                if(data){
+                    for (var i = 0; i < data.length; i++) {
+                        if (selectedGroupId === data[i].groupId) {
+
+                            var  tempGroupData ={
+                                    groupId:uuidv4(),
+                                    rootGroup:false,
+                                    groupCondition:'AND',
+                                    groups:[],   
+                                    dataList:[]
+                                };
+
+
+                            data[i].groups.push(tempGroupData)
+                            break;
+                        
+                        } else {
+                            console.log('not found')
+                            this.addGroupViaGroupId(selectedGroupId, data[i].groups)
+                        }
+                    }                 
+                }
+            },
+            createGroupfn(selectedGroupId) { 
+                this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
+            },
+            generateSQL () {
+                console.log(advanceFilter.mainData,'generate sql')
+                console.log(JSON.stringify(advanceFilter.mainData),'stringify')
+
+                fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/getSQLQuery`, {
+                    method: 'POST',
+                    headers: {
+                       "Content-Type": "application/json",
+                       "Accept": "application/json",
+                       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+                       "Access-Control-Allow-Origin":"*",
+                       "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+                    },
+                    body: JSON.stringify(advanceFilter.mainData)
+                })
+
+				.then(res => res.json())
+				.then(data => {
+                    console.log(data.queryText)
+                    this.generatedQuery = data.queryText;
+                    return this.generatedQuery;
+				})
+				.catch(error => console.log(error))
+				.finally()
+            }
+
+        },
+        watch: {},
+
+        mounted:function () {
+            //  this call the table list
+              fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
+                //fetch(TEST_URL + `AdvFilters/`)
+				.then(res => res.json())
+				.then(data => {
+                    this.fetchedTableList = data.items;
+                    return this.fetchedTableList;
+				})
+				.catch(error => console.log(error))
+				.finally()
+
+        }
+       
+    })
+console.log(advanceFilter.mainData,'xxxx')
+</script>
+<!--VueJS END-->
+
+
+
+
+
+
+
+
 <!--AlpineJS BEGIN-->
 <script>
     const INSTANCE_ID = $("#instanceId").text();
@@ -2395,6 +3275,7 @@
             daExpiryDate                    : null,
 
             init() {
+                console.log(advanceFilter.mainData,'advance filter data')
                 this.eventTypeDropdown(),
                 this.offerBucketDropdown(),
                 this.campaignOfferDropdown(),
@@ -3124,872 +4005,7 @@
 
 
 
-<!--VueJS START-->
-<script>
-    // handle the state management of data
-    var store = {  
-        debug: true,
-        state: {},
-    }
 
-    const formatDate = date => date.toISOString().slice(0, 10);
-    var dateToday = formatDate(new Date());
-
-    function uuidv4() {
-	    var a, b, c, d;
-	    var time = Math.round(new Date().getTime() / 1000);
-	    var version = window.navigator.appVersion;
-	    var href = window.location.href;
-        
-	    // a - unix timestamp
-	    a = time.toString(16).substring(0, 8);
-
-	    // b - browser
-	    var match = version.match(/\d+/g);
-	    if (!match) {
-	    	throw 'Invalid browser version string';
-	    }
-	    var sum = 0;
-	    for (var i = 0, ii = match.length; i < ii; ++i) {
-	    	sum += parseInt(match[i], 10);
-	    }
-	    b = (sum * sum * sum).toString(16).substring(0, 6);
-
-	    // c - url
-	    c = (href.length * href.length * href.length).toString(16).substring(0, 4);
-
-	    // d - random
-	    d = Math.random().toString().substring(2);
-	    d = parseInt(d, 10);
-	    d = d.toString(16).substring(0, 6);
-
-	    return [a, b, c, d].join('-');
-    };
-
-
-    Vue.component('table-column-modal',{
-        props:['modaltrigger', 'modaltriggerfn', 'groupid','savedatafn', 'fetchedtablelist'],
-        data:function () {
-            return {
-                dataId:null,
-                selectedTable:null,
-                selectedColumn:null,
-                selectedColumnName:null,
-                selectedColumnType:null,
-                tableColumnList:[],
-                numberOption: ['SUM','AVERAGE','MEAN','MEDIAN'],
-                numberOperand: ['>','<', '>=', '<=', '=', '!='],
-                varCharOption:['MATCHES','EQUAL','START WITH'],
-                selectedNumberOption:'SUM',
-                selectedOperand:'>',
-                numberValue:0,
-                selectedDateType:'exactDate',
-                exactDate:dateToday,
-                daysBefore:0,
-                duration:0,
-                selectedVarCharOption: 'MATCHES',
-                varCharValue:'',
-                selectedOption: null,
-                value: null,
-
-                selectedFetchTable:null,
-                fetchedColumnList:[],
-
-                
-            }
-        },
-        template: 
-            `<div  v-show="modaltrigger === true">
-                <div name="modal">
-                  <div class="modal-mask">
-                    <div class="modal-wrapper">
-                      <div class="modal-container">
-                        <div class="modal-header">
-                          <slot name="header">
-                           <h5> Add Data </h5>
-                           <button class="btn" @click="modaltriggerfn" @click="clearDropdown">
-                            <i class="fa fa-times" aria-hidden="true"></i>
-                                </button>
-                          </slot>
-                        </div>
-                        <div class="modal-body-add-data">
-                          <slot name="body">
-                            <div class="row" style="margin-bottom:10px;">
-                                <div class=" col-sm-5 ">
-
-                                    <v-select 
-                                        placeholder='Select Table'
-                                        class="basic-dropdown"
-                                        style="margin:5px; padding:0px !Important;"
-                                        :options="fetchedtablelist"
-                                        label="table_name"
-                                        :clearable="false"
-                                        v-model="selectedFetchTable"
-                                        @input="setSelectedFetchTable"
-                                    ></v-select>   
-                                    
-                                </div>
-                                <div class=" col-sm-5 ">
-                                    <div v-show="selectedFetchTable !== null && fetchedColumnList.length > 0">
-                                        <v-select 
-                                            placeholder='Select Column'
-                                            class="basic-dropdown"
-                                            style="margin:5px; padding:0px !Important;"
-                                            :options="fetchedColumnList"
-                                            :clearable="false"
-                                            v-model="selectedColumn"
-                                            label="column_name"
-                                        ></v-select>    
-                                    
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div v-show="selectedColumn && selectedColumn.column_type === 'NUMBER'">
-                                    <div class="row data-type">
-                                        <div class=" col-sm-12" style=" margin-top:5px; align-self: center;">
-                                            <div style="margin-left: 5px !important;"><b>Datatype: NUMBER Condition </b> </div> 
-                                            
-                                        </div>
-                                        <div class=" col-sm-3 ">
-                                            <v-select 
-                                                placeholder='-----'
-                                                class="basic-dropdown"
-                                                style="margin:5px; padding:0px !Important;"
-                                                :options="numberOption"
-                                                :clearable="false"
-                                                v-model="selectedNumberOption"
-                                            ></v-select> 
-                                        </div>
-                                        <div class=" col-sm-2 ">
-                                            <v-select 
-                                                placeholder='-----'
-                                                class="basic-dropdown"
-                                                style="margin:5px; padding:0px !Important;"
-                                                :options="numberOperand"
-                                                :clearable="false"
-                                                v-model="selectedOperand"
-                                            ></v-select> 
-                                        </div>
-                                        <div class=" col-sm-2 ">
-                                            <input
-                                                type="number" min="0"
-                                                class="form-control form-control-sm input-custom"
-                                                style="margin-left:0px"
-                                                v-model.number="numberValue"
-                                                @input="removeNegative($event,'numberValue', numberValue)"/> 
-                                        </div>
-                                        <div class=" col-sm-5"> </div>
-                                        
-                                        <div class=" col-sm-2" style=" margin-top:20px; align-self: center;">
-                                            <div style="margin-left: 5px !important;"><b> Duration (days)</b> </div> 
-                                            
-                                        </div>
-                                        <div class=" col-sm-2" style="margin-top:20px;">
-                                            <div style="margin-left: 5px !important;"><b> Start Date</b></div> 
-                                            
-                                            
-                                        </div>
-                                        <div class=" col-sm-8"></div>
-
-                                        <div class=" col-sm-2">
-                                            <input
-                                                type="number" min="0"
-                                                class="form-control form-control-sm input-custom"
-                                                style="margin-left: 5px !important;"
-                                                v-model.number="duration"
-                                                @input="removeNegative($event,'duration', duration)"/>
-                                        </div>
-                                        <div class=" col-sm-2">
-                                            <input type="radio" id="exactDate" value="exactDate" v-model="selectedDateType">
-                                            <label for="exactDate" style="margin-bottom:0px;">exact date</label>
-                                            <br>
-                                            <input type="radio" id="daysBefore" value="daysBefore" v-model="selectedDateType">
-                                            <label for="daysBefore">days before</label>
-                                        </div>
-                                        <div class=" col-sm-8">
-                                            <div  v-show="selectedDateType === 'exactDate'">
-                                                <input 
-                                                    type="date"
-                                                    @change="updateExactDate"
-                                                    style="width:25%; margin-left:0px !important;"
-                                                    class="form-control form-control-sm input-custom"
-                                                    v-model="exactDate"
-                                                    id="exactDate"/>  
-                                            </div>
-                                            <div v-show="selectedDateType === 'daysBefore'">
-                                                <input
-                                                type="number" min="0"
-                                                class="form-control form-control-sm input-custom"
-                                                style="width:20%; margin-left:0px !important;"
-                                                v-model.number="daysBefore"
-                                                @input="removeNegative($event,'daysBefore', daysBefore)"/>    
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div v-show="selectedColumn && selectedColumn.column_type === 'VARCHAR'">
-                                    <div class="row data-type">
-                                        <div class=" col-sm-12" style=" margin-top:5px; align-self: center;">
-                                            <div style="margin-left: 5px !important;"><b>Datatype: VARCHAR Condition </b> </div> 
-                                        </div>
-                                        <div class=" col-sm-3 ">
-                                            <v-select 
-                                                placeholder='-----'
-                                                class="basic-dropdown"
-                                                style="margin:3px; padding:0px !Important;"
-                                                :options="varCharOption"
-                                                :clearable="false"
-                                                v-model="selectedVarCharOption"
-                                            ></v-select> 
-                                        </div>
-                                        <div class=" col-sm-4 ">
-                                            <input
-                                                placeholder='type any here...'
-                                                type="text"
-                                                class="form-control form-control-sm input-custom"
-                                                style="margin-left:0px !important;"
-                                                v-model="varCharValue"/> 
-                                        </div>      
-                                    </div>
-                                </div>
-                                <div v-show="selectedColumn && selectedColumn.column_type === 'DATE'">
-                                    <div class="row data-type">
-                                        <div class=" col-sm-2" style=" margin-top:20px; align-self: center;">
-                                            <div style="margin-left: 5px !important;"><b> Duration (days)</b> </div> 
-                                            
-                                        </div>
-                                        <div class=" col-sm-2" style="margin-top:20px;">
-                                            <div style="margin-left: 5px !important;"><b> Start Date</b></div> 
-                                            
-                                            
-                                        </div>
-                                        <div class=" col-sm-8"></div>
-
-                                        <div class=" col-sm-2">
-                                            <input
-                                                type="number" min="0"
-                                                class="form-control form-control-sm input-custom"
-                                                style="margin-left: 5px !important;"
-                                                v-model.number="numberValue"
-                                                @input="removeNegative($event,'numberValue', numberValue)"/>
-                                        </div>
-                                        <div class=" col-sm-2">
-                                            <input type="radio" id="exactDate" value="exactDate" v-model="selectedDateType">
-                                            <label for="exactDate" style="margin-bottom:0px;">exact date</label>
-                                            <br>
-                                            <input type="radio" id="daysBefore" value="daysBefore" v-model="selectedDateType">
-                                            <label for="daysBefore">days before</label>
-                                        </div>
-                                        <div class=" col-sm-8">
-                                            <div  v-show="selectedDateType === 'exactDate'">
-                                                <input 
-                                                    type="date"
-                                                    @change="updateExactDate"
-                                                    style="width:25%; margin-left:0px !important;"
-                                                    class="form-control form-control-sm input-custom"
-                                                    v-model="exactDate"
-                                                    id="exactDate"/>  
-                                            </div>
-                                            <div v-show="selectedDateType === 'daysBefore'">
-                                                <input
-                                                type="number" min="0"
-                                                class="form-control form-control-sm input-custom"
-                                                style="width:20%; margin-left:0px !important;"
-                                                v-model.number="daysBefore"
-                                                @input="removeNegative($event, 'daysBefore', daysBefore)"/>    
-                                            </div>
-                                        </div>
-                                    </div>    
-                                </div>
-                                
-                            
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn" @click="modaltriggerfn" @click="clearDropdown">
-                                    Back
-                                </button>
-                                <button class="btn btn-singtel" @click="modaltriggerfn" @click="saveAndClearDropdown" :disabled="selectedColumn=== null">  
-                                    Save
-                                </button>
-                            </div>
-                          </slot>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>`,
-        methods:{
-            setSelectedFetchTable () {
-
-                fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/${this.selectedFetchTable.af_tables_id}`)
-                //fetch(TEST_URL + `AdvFilters/${this.selectedFetchTable.af_tables_id}`)
-				.then(res => res.json())
-				.then(data => {
-                    this.fetchedColumnList = data.items;
-                    return this.fetchedColumnList;
-				})
-				.catch(error => console.log(error))
-				.finally()
-
-                // everytime table was changed, this will clear the previous data
-                this.selectedColumn = null;
-                this.selectedNumberOption='SUM';
-                this.selectedOperand = '>';
-                this.numberValue = 0;
-                this.selectedDateType = 'exactDate';
-                this.exactDate = dateToday;
-                this.daysBefore = 0;
-                this.duration = 0;
-                this.selectedVarCharOption = 'MATCHES';
-                this.varCharValue = '';
-
-            },
-
-            updateExactDate () {
-                console.log(this.exactDate)
-            },
-
-            removeNegative(e,type, value) {
-
-                value = Math.max(0, parseInt(e.target.value) || 0);
-
-                if(type==='numberValue'){
-                    this.numberValue = value;
-                } else if (type==='daysBefore') {
-                    this.daysBefore = value;
-                } else if (type==='duration') {
-                    this.duration = value;
-                }
-            },
-            clearDropdown () {
-                console.log(this.selectedColumn,'data')
-                this.dataId = null;
-                this.selectedTable = null;
-                this.selectedColumn = null;
-                this.selectedColumnName = null;
-                this.selectedColumnType = null;
-                this.tableColumnList = [];
-                this.selectedNumberOption='SUM';
-                this.selectedOperand = '>';
-                this.numberValue = 0;
-                this.selectedDateType = 'exactDate';
-                this.exactDate = dateToday;
-                this.daysBefore = 0;
-                this.duration = 0;
-                this.selectedVarCharOption = 'MATCHES';
-                this.varCharValue = '';
-                this.value = null;
-
-                this.selectedFetchTable = null;
-            },
-            saveAndClearDropdown () {
-                console.log(this.selectedColumn,'data')
-                this.mergeData();
-                this.dataId = null;
-                this.selectedTable = null;
-                this.selectedColumn = null;
-                this.selectedColumnName = null;
-                this.selectedColumnType = null;
-                this.tableColumnList = [];
-                this.selectedNumberOption='SUM';
-                this.selectedOperand = '>';
-                this.numberValue = 0;
-                this.selectedDateType = 'exactDate';
-                this.exactDate = dateToday;
-                this.daysBefore = 0;
-                this.duration = 0;
-                this.selectedVarCharOption = 'MATCHES';
-                this.varCharValue = '';
-                this.value = null;
-
-                this.selectedFetchTable = null;
-            },
-            mergeData () {
-                var mergedData = {};
-                mergedData['dataId'] = uuidv4();
-                mergedData['selectedTable'] = this.selectedFetchTable.table_name;
-                mergedData['selectedColumn'] = this.selectedColumn;
-                mergedData['selectedColumnName'] = this.selectedColumn.column_name;
-                mergedData['selectedColumnType'] = this.selectedColumn.column_type;
-                mergedData['selectedDataType'] = this.selectedColumn.column_type;
-                mergedData['selectedNumberOption'] = this.selectedNumberOption;
-                mergedData['selectedOperand'] = this.selectedOperand;
-                mergedData['numberValue'] = this.numberValue;
-                mergedData['selectedDateType'] = this.selectedDateType;
-                mergedData['exactDate'] = this.exactDate;
-                mergedData['daysBefore'] = this.daysBefore;
-                mergedData['duration'] = this.duration;
-                mergedData['selectedVarCharOption'] = this.selectedVarCharOption;
-                mergedData['varCharValue'] = this.varCharValue;
-                
-
-                if(this.selectedColumn.column_type === 'NUMBER') {
-                    mergedData ['selectedOption'] = this.selectedNumberOption;
-                    mergedData ['value'] = this.numberValue;
-                    // selectedOption
-                } else if (this.selectedColumn.column_type === 'VARCHAR') {
-                    mergedData ['selectedOption'] = this.selectedVarCharOption;
-                    mergedData ['value'] = this.varCharValue;
-                }
-                console.log(mergedData,'merged data');
-
-                this.savedatafn(mergedData);
-            },
-
-        },
-    })
-
-
-
-   
-    Vue.component('data-component', {
-        props:['data' , 'deletedatafn','groupid'],
-        data: function() {
-            return {
-                numberOption: ['SUM','AVERAGE','MEAN','MEDIAN'],
-                numberOperand: ['>','<', '>=', '<=', '=', '!='],
-                varCharOption:['MATCHES','EQUAL','START WITH'],
-                selectedDateType:'exactDate',
-            }
-        },
-        template:
-        `  <div class="data-card wrapper" style="margin-left: 1% !important;">
-                    <div class="row justify-content-between">
-                        <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
-                            <div><b>Table:</b> {{data.selectedTable}}</div>
-                            <div><b>Column:</b> {{data.selectedColumn.column_name}}</div>
-                        </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='NUMBER'">
-                            <div class="form-group row justify-content-start" style="margin-bottom: 0px">
-                                <div class="col-md-4" style="padding:0px">
-                                            <v-select 
-                                                placeholder='-----'
-                                                class="basic-dropdown"
-                                                style="margin:5px; padding:0px !Important;"
-                                                :options="numberOption"
-                                                :clearable="false"
-                                                v-model="data.selectedNumberOption"
-                                            ></v-select> 
-                                        </div>
-                                       
-                                        <div class="col-md-3" style="padding-left:5px; padding-right:5px"> 
-                                            <v-select 
-                                                placeholder='-----'
-                                                class="basic-dropdown"
-                                                style="margin:5px; padding:0px !Important;"
-                                                :options="numberOperand"
-                                                :clearable="false"
-                                                v-model="data.selectedOperand"
-                                            ></v-select> 
-                                            
-                                        </div>
-                                        
-                                        <div class="col-md-3" style="padding:0px">
-                                            <input
-                                            type="number" min="0"
-                                            class="form-control form-control-sm input-custom"
-                                            style="margin-left:0px; height:78%"
-                                            v-model.number="data.numberValue"
-                                            @input="removeNegative($event,'numberValue', data.numberValue)"/> 
-                                        </div>
-                                
-                                        
-                            </div>
-                            <div class="form-group row justify-content-start">
-                                <span style="margin-top:7px; margin-left:5px;"> Duration (days)</span>
-                                <span>
-                                    <input
-                                        type="number" min="0"
-                                        class="form-control form-control-sm input-custom"
-                                        style="width:100px; margin-left:10px"
-                                        v-model.number="data.duration"
-                                        @input="removeNegative($event,'duration', data.duration)"/> 
-                                </span>
-                                
-                            </div>
-                            <div class="form-group row justify-content-start" style="margin-bottom: 1px">
-                                <span style="margin-top:7px; margin-left:5px;">Start Date</span>
-                                <span style="margin-left:10px;"> 
-                                            <input type="radio" id="exactDate" value="exactDate" v-model="data.selectedDateType"/>
-                                            <label style="margin-bottom:0px;">exact date</label>
-                                            <br>
-                                            <input type="radio" id="daysBefore" value="daysBefore" v-model="data.selectedDateType"/>
-                                            <label >days before</label>
-                                </span>
-                                <span style="margin-left:15px;">
-                                    <div  v-show="data.selectedDateType === 'exactDate'">
-                                                <input 
-                                                    type="date"
-                                                    @change="updateExactDate"
-                                                    style="width:100%; margin-left:0px !important;"
-                                                    class="form-control form-control-sm input-custom"
-                                                    v-model="data.exactDate"
-                                                    id="exactDate"/>  
-                                            </div>
-                                            <div v-show="data.selectedDateType === 'daysBefore'">
-                                                <input
-                                                type="number" min="0"
-                                                class="form-control form-control-sm input-custom"
-                                                style="width:100px; margin-left:0px !important;"
-                                                v-model.number="data.daysBefore"
-                                                @input="removeNegative($event,'daysBefore', daysBefore)"
-                                                id="daysBefore" />    
-                                            </div>    
-                                </span>
-                            </div>
-                            
-
-                        </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='VARCHAR'">
-                            <div class="form-group row justify-content-start" style="margin-bottom: 0px">
-                                        <div class=" col-sm-4 " style="padding:0px">
-                                            <v-select 
-                                                placeholder='-----'
-                                                class="basic-dropdown"
-                                                style="margin:5px; padding:0px !Important;"
-                                                :options="varCharOption"
-                                                :clearable="false"
-                                                v-model="data.selectedVarCharOption"
-                                            ></v-select> 
-                                        </div>
-                                        <div class=" col-sm-4 ">
-                                            <input
-                                                placeholder='type any here...'
-                                                type="text"
-                                                class="form-control form-control-sm input-custom"
-                                                style="margin-left:0px; height:80%"
-                                                v-model="data.varCharValue"/> 
-                                        </div>      
-                                </div>
-                        </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='DATE'">
-                            <div class="form-group row justify-content-start" style="margin-bottom: 0px">
-                                <span style="margin-top:7px; margin-left:5px;"> Duration (days)</span>
-                                <span>
-                                    <input
-                                        type="number" min="0"
-                                        class="form-control form-control-sm input-custom"
-                                        style="width:100px; margin-left:10px"
-                                        v-model.number="data.duration"
-                                        @input="removeNegative($event,'duration', duration)"/> 
-                                </span>
-                            </div>
-                            <div class="form-group row justify-content-start" style="margin-bottom: 1px">
-                                <span style="margin-top:7px; margin-left:5px;">Start Date</span>
-                                <span style="margin-left:10px;"> 
-                                    <input type="radio" id="exactDate" value="exactDate" v-model="data.selectedDateType">
-                                            <label style="margin-bottom:0px;">exact date</label>
-                                            <br>
-                                            <input type="radio" id="daysBefore" value="daysBefore" v-model="data.selectedDateType">
-                                            <label >days before</label>
-                                </span>
-                                <span style="margin-left:15px;">
-                                    <div  v-show="data.selectedDateType === 'exactDate'">
-                                                <input 
-                                                    type="date"
-                                                    @change="updateExactDate"
-                                                    style="width:100%; margin-left:0px !important;"
-                                                    class="form-control form-control-sm input-custom"
-                                                    v-model="data.exactDate"
-                                                    id="exactDate"/>  
-                                            </div>
-                                            <div v-show="data.selectedDateType === 'daysBefore'">
-                                                <input
-                                                type="number" min="0"
-                                                class="form-control form-control-sm input-custom"
-                                                style="width:100px; margin-left:0px !important;"
-                                                v-model.number="data.daysBefore"
-                                                @input="removeNegative($event,'daysBefore', daysBefore)"/>    
-                                            </div>    
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-2" >
-                            <button @click="deletedatafn(groupid, data.dataId)" 
-                                type="button"class="btn btn-outline-danger btn-sm"
-                                style="float:right; border-radius: 50%;
-                                border: 1px solid #ff000061; margin-top: 5px; margin-right:5px"><i class="fas fa fa-trash"></i> 
-                        </div>
-                    </div>
-            </div>`
-            ,
-        methods: {
-            removeNegative(e, type, value) {
-                value = Math.max(0, parseInt(e.target.value) || 0);
-
-                if(type==='numberValue'){
-                     this.data.numberValue = value;
-                } else if (type==='daysBefore') {
-                     this.data.daysBefore = value;
-                } else if (type==='duration') {
-                     this.data.duration = value;
-                }
-            },
-            updateExactDate () {
-                console.log(this.exactDate)
-            },
-        }
-  })
-
-
-    Vue.component('query-component', {
-            props: ['maindata', 'modaltriggerfn','deletegroupfn', 'deletedatafn', 'modaltrigger', 'getadddatagroupidfn','savedatafn', 'creategroupfn','fetchedtablelist'],
-            data: function () {
-            return {
-                groupId:null,
-                condition:['AND', 'OR'],
-                selectedCondition:'AND'
-            } 
-        },
-            template:
-            `<div>
-                <div class="row component-card justify-content-between" v-for="y in maindata" :key="y">
-                    <div class=" col-sm-4 ">
-                            <div v-show="y.groups.length > 0 || y.dataList.length > 0">
-                                <v-select 
-                                    placeholder='----'
-                                    class="operators"
-                                    style="margin:3px; padding:0px !Important;"
-                                    :options="condition"
-                                    :clearable="false"
-                                    v-model="y.groupCondition"
-                                ></v-select>
-                            </div>
-                    </div>
-                    
-                    <div class="col-sm-4" style="margin-top:3px;" >
-                        <div class="form-group row justify-content-end">
-                            <button @click="modaltriggerfn" @click="getadddatagroupidfn(y.groupId)" class="btn btn-create-group btn-sm" style="margin-right:2%" > Add Data</button>
-                            <button @click="creategroupfn(y.groupId)" class="btn btn-create-group btn-sm" style="margin-right:5%"> Create Group</button>
-                            <button @click="deletegroupfn(y.groupId)" type="button"class="btn btn-danger btn-sm" style="max-width: 35px !important;" 
-                                v-show="!y.rootGroup"><i class="fas fa fa-trash"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="col-sm-12 " v-show="y.dataList">
-                        <div v-for="data in y.dataList"> 
-                            <data-component 
-                               v-bind:data="data"
-                               v-bind:deletedatafn="deletedatafn"
-                               v-bind:groupid="y.groupId"></data-component>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" v-show="y.groups">
-                           <query-component 
-                               v-bind:maindata="y.groups"
-                               v-bind:modaltriggerfn="modaltriggerfn"
-                               v-bind:deletegroupfn="deletegroupfn"
-                               v-bind:deletedatafn="deletedatafn"
-                               v-bind:modaltrigger="modaltrigger" 
-                               
-                               v-bind:fetchedtablelist = "fetchedtablelist"
-                               v-bind:getadddatagroupidfn="getadddatagroupidfn"
-                               v-bind:savedatafn="savedatafn"
-                               v-bind:creategroupfn ="creategroupfn"
-                           ></query-component> 
-                    </div>
-                    
-                    <table-column-modal 
-                        v-bind:modaltrigger="modaltrigger" 
-                        v-bind:modaltriggerfn="modaltriggerfn" 
-                        
-                        v-bind:fetchedtablelist = "fetchedtablelist"
-                        v-bind:groupid="y.groupId"
-                        v-bind:savedatafn="savedatafn"></table-column-modal>
-                </div>
-            </div>`,
-       
-        methods: { },
-        beforeCreate: function() {},
-    })
-
-    Vue.component('v-select', VueSelect.VueSelect)
-
-
-    // Main Component for ADVANCE FILTER
-    var advanceFilter = new Vue({
-        el: '#advanceFilterComponent',
-        data: {
-            showModal: false,
-            tempGroupData:{
-                groupId:uuidv4(),
-                rootGroup:false,
-                groupCondition:'AND',
-                groups:[],   
-                dataList:[]
-            },
-            selectedGroupId: null,
-            mainData:[{
-                groupId:uuidv4(),
-                rootGroup:true,
-                groupCondition:'AND',
-                groups:[],   
-                dataList:[]
-            }],
-            fetchedTableList:[],   
-        },
-        methods: {
-            showModalfn() {
-                advanceFilter.showModal = !advanceFilter.showModal;
-            },
-            deleteViaGroupId (selectedGroupId, data) {
-
-                if(data){
-                    for (var i = 0; i < data.length; i++) {
-                        if (selectedGroupId === data[i].groupId) {
-
-                                data.splice(i, 1);  // delete the specified group
-                                break;
-
-                        } else {
-                            console.log('not found')
-                            this.deleteViaGroupId(selectedGroupId, data[i].groups)
-                        }
-                    }                 
-                }
-                configureMembership
-            },
-
-            deleteGroupfn (selectedGroupId) {
-                this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
-            },
-
-            deleteViaGroupIdAndDataId (selectedGroupId, selectedDataId, data) {
-
-                if(data){
-                    for (var i = 0; i < data.length; i++) {
-                        if (selectedGroupId === data[i].groupId) {
-                            
-                            if (data[i].dataList) {
-                                for (var d = 0; d < data[i].dataList.length; d++) {
-                                    var obj = data[i].dataList[d];
-                                    
-                                    if (obj.dataId === selectedDataId) {
-                                        // serarch for index under dataList
-
-                                            var index = data[i].dataList.findIndex(function(o){ 
-                                                 return o.dataId === selectedDataId;
-                                            })
-    
-                                            if (index !== -1) {
-                                                data[i].dataList.splice(index, 1)
-                                                break;
-                                            }
-
-                                        
-                                    }
-                                }
-                            }
-                        } else {
-                            console.log('id not found')
-                            this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, data[i].groups)
-                        }
-                    }
-                }
-            },
-            deleteDatafn (selectedGroupId, selectedDataId ) {
-                this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, advanceFilter.mainData)
-            },
-            addDataViaGroupId (selectedGroupId , data, savedData) {
-
-                if(data && savedData){
-                    for (var i = 0; i < data.length; i++) {
-                        if (selectedGroupId === data[i].groupId) {
-                            data[i].dataList.push(savedData)
-                            break;
-
-                        } else {
-                            console.log('not found')
-                            this.addDataViaGroupId(selectedGroupId, data[i].groups, savedData)
-                        }
-                    }                 
-                }
-
-            },
-            getAddDataGroupIdfn (selectedGroupId) {
-                advanceFilter.selectedGroupId = selectedGroupId; // save when add data is clicked
-            },
-            saveDatafn(savedData) {
-                this.addDataViaGroupId(advanceFilter.selectedGroupId, advanceFilter.mainData, savedData)
-                advanceFilter.selectedGroupId = null;
-            },
-
-            addGroupViaGroupId (selectedGroupId , data) {
-
-                if(data){
-                    for (var i = 0; i < data.length; i++) {
-                        if (selectedGroupId === data[i].groupId) {
-
-                            var  tempGroupData ={
-                                    groupId:uuidv4(),
-                                    rootGroup:false,
-                                    groupCondition:'AND',
-                                    groups:[],   
-                                    dataList:[]
-                                };
-
-
-                            data[i].groups.push(tempGroupData)
-                            break;
-                        
-                        } else {
-                            console.log('not found')
-                            this.addGroupViaGroupId(selectedGroupId, data[i].groups)
-                        }
-                    }                 
-                }
-            },
-            createGroupfn(selectedGroupId) { 
-                this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
-            },
-            generateSQL () {
-                console.log(advanceFilter.mainData,'generate sql')
-                console.log(JSON.stringify(advanceFilter.mainData),'stringify')
-
-                fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/getSQLQuery`, {
-                    method: 'POST',
-                    mode: 'no-cors', // no-cors, *cors, same-origin
-                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                    credentials: 'same-origin', // include, *same-origin, omit
-                    headers: {
-                      'Content-Type': 'application/json'
-                      // 'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: JSON.stringify(advanceFilter.mainData)
-                })
-
-				.then(res => res.json())
-				.then(data => {
-                    console.log(data)
-				})
-				.catch(error => console.log(error))
-				.finally()
-            }
-
-        },
-        watch: {},
-
-        mounted:function () {
-            //  this call the table list
-              fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
-                //fetch(TEST_URL + `AdvFilters/`)
-				.then(res => res.json())
-				.then(data => {
-                    this.fetchedTableList = data.items;
-                    return this.fetchedTableList;
-				})
-				.catch(error => console.log(error))
-				.finally()
-
-        }
-       
-    })
-console.log(advanceFilter.mainData,'xxxx')
-</script>
-<!--VueJS END-->
 
 </body>
 </html>
