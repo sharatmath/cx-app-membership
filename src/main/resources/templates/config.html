@@ -1213,7 +1213,7 @@
                                     
                                     ></query-component>
 
-                                <button  class="btn btn-singtel" style="float:right; margin:10px; margin-top: 5%;" v-on:click="generateSQL">Generate SQL</button>
+                                <button  class="btn btn-singtel" style="float:right; margin:10px; margin-top: 5%;" v-on:click="generateSQL" v-bind:disabled="advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0">Generate SQL</button>
                                 <textarea 
                                     placeholder="View SQL"
                                      v-model="generatedQuery"
@@ -3103,11 +3103,11 @@
                         }
                     }                 
                 }
-                configureMembership
             },
 
             deleteGroupfn (selectedGroupId) {
                 this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
+                this.generatedQuery = null;
             },
 
             deleteViaGroupIdAndDataId (selectedGroupId, selectedDataId, data) {
@@ -3145,6 +3145,7 @@
             },
             deleteDatafn (selectedGroupId, selectedDataId ) {
                 this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, advanceFilter.mainData)
+                this.generatedQuery = null;
             },
             addDataViaGroupId (selectedGroupId , data, savedData) {
 
@@ -3168,6 +3169,7 @@
             saveDatafn(savedData) {
                 this.addDataViaGroupId(advanceFilter.selectedGroupId, advanceFilter.mainData, savedData)
                 advanceFilter.selectedGroupId = null;
+                this.generatedQuery = null;
             },
 
             addGroupViaGroupId (selectedGroupId , data) {
@@ -3197,11 +3199,9 @@
             },
             createGroupfn(selectedGroupId) { 
                 this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
+                this.generatedQuery = null;
             },
             generateSQL () {
-                console.log(advanceFilter.mainData,'generate sql')
-                console.log(JSON.stringify(advanceFilter.mainData),'stringify')
-
                 fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/getSQLQuery`, {
                     method: 'POST',
                     headers: {
