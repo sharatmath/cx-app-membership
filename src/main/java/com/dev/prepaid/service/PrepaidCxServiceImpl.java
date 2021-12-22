@@ -657,6 +657,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaBalanceValue());
             prepaidCxOfferEventCondition.setTempServiceClass(
                     saveConfigRequest.getPayload().getOfferEventCondition().getTopUpTempServiceClass());
+            prepaidCxOfferEventCondition.setPermanentServiceClass(
+                    saveConfigRequest.getPayload().getOfferEventCondition().getPermanentServiceClass());
 
         } else if ("ARPU".equals(prepaidCxOfferEventCondition.getEventConditionType())) {
             prepaidCxOfferEventCondition
