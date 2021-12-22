@@ -686,9 +686,12 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 				prepaidCxOfferEventCondition.setPermanentServiceClass(
 						saveConfigRequest.getPayload().getOfferEventCondition().getPermanentServiceClass());
 
-				if (saveConfigRequest.getPayload().getOfferEventCondition().getDaExpiryDate() != null) {
-					prepaidCxOfferEventCondition.setDaExpiryDate(DateUtil.stringToLocalDateTime(
-							saveConfigRequest.getPayload().getOfferEventCondition().getDaExpiryDate()));
+				if(saveConfigRequest.getPayload().getOfferEventCondition().getDaExpiryDate() == "") {
+					prepaidCxOfferEventCondition.setDaExpiryDate(null);
+				}else if(saveConfigRequest.getPayload().getOfferEventCondition().getDaExpiryDate() != null) {
+					prepaidCxOfferEventCondition.setDaExpiryDate(DateUtil.stringToLocalDateTime(saveConfigRequest.getPayload().getOfferEventCondition().getDaExpiryDate()));
+				}else{
+					prepaidCxOfferEventCondition.setDaExpiryDate(null);
 				}
 
 			} else if ("ARPU".equals(prepaidCxOfferEventCondition.getEventConditionType())) {
