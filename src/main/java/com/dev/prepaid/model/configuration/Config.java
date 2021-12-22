@@ -1,6 +1,6 @@
 package com.dev.prepaid.model.configuration;
 
-
+import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * hitory
@@ -40,12 +38,12 @@ public class Config {
 	private OfferRedemption offerRedemption;
 
 	@SerializedName("notification")
-    private Boolean notification;
+	private Boolean notification;
 
 	@SerializedName("uuid")
-    private String uuid;
+	private String uuid;
 
-	//DROP 2 1
+	// DROP 2 1
 //	@SerializedName("programId")
 //	private String programId;
 	@SerializedName("type")
@@ -53,6 +51,7 @@ public class Config {
 //	@SerializedName("programName")
 //	private String programName;
 
-
+	@SerializedName("advancedFilter")
+	private PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter;
 
 }
