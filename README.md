@@ -11,6 +11,13 @@ sudo docker push fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership
 sudo docker image ls --kubeconfig /home/opc/.kube/config_prepaid_dev
 ```
 
+##  CHANGE LOG
+```sh
+0.4.4 fixing saving da_expiry_date
+
+```
+
+
 ##  DEPLOYMENT
 ```sh
 kubectl proxy --kubeconfig /home/opc/.kube/config_prepaid_dev
@@ -19,6 +26,7 @@ kubectl delete deployment prepaid-cx-membership-api-deployment --kubeconfig /hom
 kubectl create -f services.yaml --kubeconfig /home/opc/.kube/config_prepaid_dev
 kubectl logs prepaid-cx-membership-api-deployment-5645d97ccd-mhjzj   --kubeconfig /home/opc/.kube/config_prepaid_dev
 ```
+
 
 ##  DEPLOYMENT SHORTCUT
 ```sh
