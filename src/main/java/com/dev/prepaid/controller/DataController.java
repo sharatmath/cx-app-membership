@@ -1106,11 +1106,13 @@ public class DataController {
 		StringBuilder finalQueryStringBuilder = new StringBuilder();
 		StringBuilder joinStringBuilder = new StringBuilder();
 		StringBuilder finalJoinStringBuilder = new StringBuilder();
+		StringBuilder strCountBuilder = new StringBuilder();
 		String tableOne = null;
 		HashMap<String, String> tableMap = new HashMap<>();
 		int alphaCode = 65;
 		tableMap = getTables(groupList, tableMap, alphaCode);
 		finalQueryStringBuilder.append("SELECT DISTINCT " + String.valueOf((char) alphaCode) + ".MSISDN FROM ");
+		strCountBuilder.append("SELECT COUNT(*) FROM ");
 //		HashMap<String, String> revTableMap = new HashMap<>();
 		Map<String, String> revTableMap = new HashMap<String, String>();
 		for (Map.Entry m : tableMap.entrySet()) {
@@ -1126,23 +1128,37 @@ public class DataController {
 //				tableOne = revTableMap.get;
 			} else {
 				finalQueryStringBuilder.append(", ");
+				strCountBuilder.append(", ");
 				joinStringBuilder.append("(" + tableOne + " , "
 						+ (revTableMap.get(String.valueOf((char) alphaCode)) + " " + String.valueOf((char) alphaCode))
 						+ ")");
-				finalJoinStringBuilder.append("(" + "A" + ".MSISDN" + " =  "
-						+ (String.valueOf((char) alphaCode)) + ".MSISDN" + ")");
+				finalJoinStringBuilder
+						.append("(" + "A" + ".MSISDN" + " =  " + (String.valueOf((char) alphaCode)) + ".MSISDN" + ")");
 			}
 			finalQueryStringBuilder
+					.append(revTableMap.get(String.valueOf((char) alphaCode)) + " " + String.valueOf((char) alphaCode));
+			strCountBuilder
 					.append(revTableMap.get(String.valueOf((char) alphaCode)) + " " + String.valueOf((char) alphaCode));
 		}
 		System.out.println(finalQueryStringBuilder);
 		String queryText = getQuery(groupList, tableMap, "");
 		finalQueryStringBuilder.append(" WHERE ");
+		strCountBuilder.append(" WHERE ");
 		if (joinStringBuilder.toString() != null) {
 			finalQueryStringBuilder.append(finalJoinStringBuilder.toString());
+			strCountBuilder.append(finalJoinStringBuilder.toString());
 //			finalQueryStringBuilder.append(revTableMap.get(String.valueOf((char) alphaCode)) + " = " + String.valueOf((char) alphaCode));
 		}
 		finalQueryStringBuilder.append(queryText);
+		strCountBuilder.append(queryText);
+		String countQuery = strCountBuilder.toString();
+		String numberQuery = strCountBuilder.toString();
+		BigDecimal recordCount = advFilterRecordCountServices.getAdvFilterRecordCount(countQuery);
+		BigDecimal numberQueryRecord = advFilterRecordCountServices.getAdvFilterRecordCount(numberQuery);
+		result.put("status", "success");
+		result.put("recordCount", recordCount);
+		result.put("numberQuery", numberQueryRecord);
+		result.put("countQuery", countQuery);
 		result.put("status", "success");
 		result.put("queryText", finalQueryStringBuilder.toString());
 		return new ResponseEntity<>(result, HttpStatus.OK);
@@ -1276,7 +1292,7 @@ public class DataController {
 							.append(" GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
 					groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
 							+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
-					groupByStrBuilder.append(" "  + dataListBean.getSelectedValue());
+					groupByStrBuilder.append(" " + dataListBean.getSelectedValue());
 					String date = "";
 					if (dataListBean.getSelectedDateType().equalsIgnoreCase("DAYS")) {
 						date = "SYSDATE";
