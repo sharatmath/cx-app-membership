@@ -803,7 +803,7 @@
                                                                         <template x-if="offer.offerName != null">
                                                                             <b><span x-text="offer.offerName"></span></b>
                                                                         </template>
-                                                                        <template x-if="offer.offerName == null">
+                                                                        <template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
                                                                             <b><span x-text="offer.productName"></span></b>
                                                                         </template>
                                                                     </a>
@@ -816,7 +816,7 @@
                                                                                         <label :for="'campaignOfferName' + index">Campaign Offer Name</label>
                                                                                         <input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
                                                                                     </template>
-                                                                                    <template x-if="offer.offerName == null">
+                                                                                    <template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
                                                                                         <label :for="'campaignProductName' + index">Campaign Product Name</label>
                                                                                         <input type="text" class="form-control" :id="'campaignProductName' + index" x-model="offer.productName" disabled>
                                                                                     </template>
@@ -826,8 +826,8 @@
                                                                                         <label :for="'daName' + index">Bucket Name</label>
                                                                                         <input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
                                                                                     </template>
-                                                                                    <template x-if="offer.offerName == null">
-                                                                                        <label :for="'description' + index">Description</label>
+                                                                                    <template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
+                                                                                        <label :for="'description' + index">MA Offer Description</label>
                                                                                         <input type="text" class="form-control" :id="'description' + index" x-model="offer.description" disabled>
                                                                                     </template>
                                                                                 </div>
@@ -856,7 +856,7 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div x-show="offer.offerBucketType == null">
+                                                                            <div x-show="offer.offerBucketType == null"> <!-- Used for showing MA Offer -->
                                                                                 <div class="form-row">
                                                                                     <div class="col-md-6 mb-3">
                                                                                         <label :for="'value' + index">Value</label>
