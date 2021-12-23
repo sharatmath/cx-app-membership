@@ -799,18 +799,37 @@
                                                         <div class="card">
                                                             <div class="row">
                                                                 <div class="col-sm-11">
-                                                                    <div class="card-header" id="offerSelection1">	<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" :data-target="'#faq1' + index" aria-expanded="true" aria-controls="faq1"><b><span x-text="offer.offerName"></span></b></a>
+                                                                    <div class="card-header" id="offerSelection1">	<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" :data-target="'#faq1' + index" aria-expanded="true" aria-controls="faq1">
+                                                                        <template x-if="offer.offerName != null">
+                                                                            <b><span x-text="offer.offerName"></span></b>
+                                                                        </template>
+                                                                        <template x-if="offer.offerName == null">
+                                                                            <b><span x-text="offer.productName"></span></b>
+                                                                        </template>
+                                                                    </a>
                                                                     </div>
                                                                     <div :id="'faq1' + index" class="panel-collapse collapse" aria-labelledby="offerSelection1" data-parent="#faq">
                                                                         <div class="card-body">
                                                                             <div class="form-row">
                                                                                 <div class="col-md-6 mb-3">
-                                                                                    <label :for="'campaignOfferName' + index">Campaign Offer Name</label>
-                                                                                    <input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
+                                                                                    <template x-if="offer.offerName != null">
+                                                                                        <label :for="'campaignOfferName' + index">Campaign Offer Name</label>
+                                                                                        <input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
+                                                                                    </template>
+                                                                                    <template x-if="offer.offerName == null">
+                                                                                        <label :for="'campaignProductName' + index">Campaign Product Name</label>
+                                                                                        <input type="text" class="form-control" :id="'campaignProductName' + index" x-model="offer.productName" disabled>
+                                                                                    </template>
                                                                                 </div>
                                                                                 <div class="col-md-6 mb-3">
-                                                                                    <label :for="'daName' + index">Bucket Name</label>
-                                                                                    <input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+                                                                                    <template x-if="offer.offerName != null">
+                                                                                        <label :for="'daName' + index">Bucket Name</label>
+                                                                                        <input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+                                                                                    </template>
+                                                                                    <template x-if="offer.offerName == null">
+                                                                                        <label :for="'description' + index">Description</label>
+                                                                                        <input type="text" class="form-control" :id="'description' + index" x-model="offer.description" disabled>
+                                                                                    </template>
                                                                                 </div>
                                                                             </div>
                                                                             <div x-show="offer.offerBucketType == 'DA'">
@@ -834,6 +853,18 @@
                                                                                     <div class="col-md-6 mb-3">
                                                                                         <label :for="'validity' + index">Validity (Day/Hour/Minutes)</label>
                                                                                         <input type="text" class="form-control" :id="'validity' + index" x-model="offer.dayHourMinute" disabled>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div x-show="offer.offerBucketType == null">
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'value' + index">Value</label>
+                                                                                        <input type="text" class="form-control" :id="'value' + index" x-model="offer.value" disabled>
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'validity' + index">Validity</label>
+                                                                                        <input type="text" class="form-control" :id="'validity' + index" x-model="offer.validity" disabled>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -917,8 +948,10 @@
                                                                                     <input type="text" class="form-control" :id="'action' + index" x-model="offer.action" disabled>
                                                                                 </div>
                                                                                 <div class="col-md-6 mb-3">
-                                                                                    <label :for="'validity' + index">Offer Type</label>
-                                                                                    <input type="text" class="form-control" :id="'bucketType' + index" x-model="offer.offerBucketType" disabled>
+                                                                                    <template x-if="offer.offerBucketType != null">
+                                                                                        <label :for="'validity' + index">Offer Type</label>
+                                                                                        <input type="text" class="form-control" :id="'bucketType' + index" x-model="offer.offerBucketType" disabled>
+                                                                                    </template>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
