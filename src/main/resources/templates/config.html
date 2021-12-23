@@ -2351,6 +2351,14 @@
                         })
                         .catch(error => console.log(error))
                         .finally()
+                } else if (this.selectedBucket == null && this.selectedCampaign != 'Choose...' && this.offerTypeDropdown == 'MA') {
+                    fetch(PROD_URL + `maOfferDetail?&id=${this.selectedCampaign}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            this.offers.push(data)
+                        })
+                        .catch(error => console.log(error))
+                        .finally()
                 } else {
                     swal("Error!", "No Data", "error");
                 }
