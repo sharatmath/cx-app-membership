@@ -2065,7 +2065,8 @@
         $(document).ready(function() {
             $('#select2multiple').select2();
             $('#promoCodeMultiple').select2({
-                maximumSelectionLength: 2
+                maximumSelectionLength: 2,
+                tags: true
             });
             // $('#promoCodeMultiple').select2();
             $('#promoCodeMultiple').on("select2:select", function (evt) {
@@ -2453,7 +2454,7 @@
             },
 
             getPromoCodeList() {
-                fetch(PROD_URL + `offerPromoCode?instanceId=${INSTANCE_ID}`)
+                let promise = fetch(PROD_URL + `offerPromoCode?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
                     .then(data => {
                         this.overallOfferName                   = data.overallOfferName
@@ -2464,11 +2465,17 @@
                         this.offerSelectionDynamic4             = data.messageText4
 
                         if (data.promoCodeList != null) {
-                            $('#promoCodeMultiple').val(data.promoCodeList.split(',')).trigger('change');
+                            // $('#promoCodeMultiple').val(data.promoCodeList.split(',')).trigger('change');
+
+                            let element = data.promoCodeList.split(',');
+
+                            element.forEach(item => {
+                                $('#promoCodeMultiple').append(new Option(item, item, true, true));
+                            });
                         }
                     })
                     .catch(error => console.log(error))
-                    .finally()
+                    .finally();
             },
 
             eligibilityPolicy() {
@@ -2518,7 +2525,7 @@
                         }
 
                         // for Da Expiry Date
-                        this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : moment().format("yyyy-MM-DD") + "T00:00";
+                        this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : null;
 
                     })
                     .catch(error => console.log(error))
@@ -2545,7 +2552,7 @@
                         this.campaignEndDate = data.campaignEndDate != null ? data.campaignEndDate : moment().format("yyyy-MM-DD") + "T00:00";
 
                         // for Da Expiry Date
-                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : moment().format("yyyy-MM-DD") + "T00:00";
+                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : null;
 
                     })
                     .catch(error => console.log(error))
