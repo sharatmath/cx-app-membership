@@ -279,7 +279,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="input-group date" data-provider="datepicker">
-                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate" x-model="campaignEndDate">
+                                                        <input type="datetime-local" @keyup="eventEndDateValidate()" class="form-control" id="eventConditionDataCampaignEndDate" x-model="campaignEndDate">
                                                         <div class="input-group-addon">
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
@@ -3024,6 +3024,8 @@
                 // console.log(this.type);
                 if (!this.overallOfferName && this.type != 'eventCondition') {
                     swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
+                } else if (!this.campaignStartDate || !this.campaignEndDate) {
+                    swal("Error!", "Event Campaign Period Can Not be Null", "error");
                 } else {
                     window.parent.postMessage(request,'*');
                 }
