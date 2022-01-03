@@ -1394,9 +1394,9 @@ public class DataController {
 
 //	 List of PREPAID_CX_OFFER_ADVANCE_FILTER
 	@GetMapping(value = "listCXOffer")
-	public List<PrepaidCxOfferAdvanceFilter> listCXOffer() {
-
-		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOffers();
+	public List<PrepaidCxOfferAdvanceFilter> listCXOffer(
+			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOffers(instanceId);
 	}
 
 }
