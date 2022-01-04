@@ -1,0 +1,50 @@
+//POST http://localhost:8090/saveconfiguration HTTP/1.1
+POST http://130.61.15.242/saveconfiguration HTTP/1.1
+content-type: application/json
+
+{
+  "payload": {
+    "offerSelection": [],
+    "prepaidCxAdvanceFilter":{
+      
+    },
+    "offerPromoCode": {
+      "offerType": "PROMO",
+      "promoCodeList": "",
+      "overallOfferName": "KOKA013"
+    },
+    "offerEligibility": {
+      "excludeProgramId": ""
+    },
+    "offerMonitoring": {
+      "offerMonitoringType": "Top-Up",
+      "topupType": "All",
+      "topupCurBalanceOp": "AllTopUp",
+      "topupAccBalanceBeforeOp": "AllTopUp",
+      "topupOp": "lessThan",
+      "topupDaBalanceOp": "lessThan"
+    },
+    "offerEventCondition": {
+      "campaignStartDate": "2021-12-22T00:00",
+      "campaignEndDate": "2021-12-22T00:00",
+      "eventConditionName": "Test_UC7_16Nov_1asas",
+      "eventType": "Top-Up",
+      "topupType": "All",
+      "topupCurBalanceOp": "AllTopUp",
+      "topupAccBalanceBeforeOp": "AllTopUp",
+      "topUpDaBalanceOp": "equalTo",
+      "topUpTempServiceClass": "te",
+      "topupOp": "lessThan",
+      "daExpiryDate": "",
+      "permanentServiceClass": "aa"
+    },
+    "offerRedemption": {
+      "isRecurringProvisioning": false,
+      "isDateRange": false,
+      "isPeriod": false
+    },
+   // "uuid": "63483226-49f3-48a2-8720-4f4c47021e32",
+    "uuid": "57f7706b-6e17-4d73-8d26-d60836a73378",
+    "type": "eventConditionDirectProvisioning"
+  }
+}

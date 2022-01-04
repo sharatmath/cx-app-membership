@@ -19,7 +19,7 @@ public class PrepaidCampaignOfferDetailDTO {
 	
 	@SerializedName("bucketName") private String bucketName;
 	@SerializedName("offerName") private String offerName;
-	@SerializedName("offerId") private Long offerId;
+	@SerializedName("offerId") private String offerId;
 	@SerializedName("offerType") private String offerType;
 	@SerializedName("description") private String description;
 	@SerializedName("value") private Double value;
