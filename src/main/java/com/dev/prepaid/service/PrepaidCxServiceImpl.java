@@ -240,7 +240,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
         }
         // PROMO
         if (saveConfigRequest.getPayload().getOfferPromoCode() != null) {
-            if (saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList() != null) {
+            if (saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList() != null || saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList().equals("")) {
                 if (OfferType.PROMO.toString()
                         .equals(saveConfigRequest.getPayload().getOfferPromoCode().getOfferType())) {
                     OfferPromoCode promoCode = saveConfigRequest.getPayload().getOfferPromoCode();
@@ -276,7 +276,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                 Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
                         .findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(offerConfigId,
                                 OfferType.NONE.toString(), "0", String.valueOf(0));
-                log.info("offerSelection PROMO {} {}", opsFind, noneType);
+                log.info("offerSelection NONE {} {}", opsFind, noneType);
                 PrepaidCxOfferSelection prepaidCxOfferSelection;
                 if (opsFind.isPresent()) {
                     prepaidCxOfferSelection = opsFind.get();
