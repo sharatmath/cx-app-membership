@@ -15,9 +15,10 @@ import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
  */
 public interface IPrepaidCxOfferAdvanceFilterService {
 	
-	List<PrepaidCxOfferAdvanceFilter> getAllPrepaidCxOffers();
+	List<PrepaidCxOfferAdvanceFilter> getAllPrepaidCxOffers(String instanceId);
     Optional<PrepaidCxOfferAdvanceFilter> findPrepaidCxOfferById(long id);
     PrepaidCxOfferAdvanceFilter save(PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter);
     void deleteById(int id);
+	List<PrepaidCxOfferAdvanceFilter> listCXOffer();
 
 }

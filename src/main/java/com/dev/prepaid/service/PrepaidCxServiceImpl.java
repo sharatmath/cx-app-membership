@@ -1,29 +1,39 @@
 package com.dev.prepaid.service;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.dev.prepaid.domain.*;
-import com.dev.prepaid.model.configuration.OfferEligibility;
-import com.dev.prepaid.model.configuration.OfferPromoCode;
-import com.dev.prepaid.model.configuration.OfferSelection;
-import com.dev.prepaid.repository.*;
-import com.dev.prepaid.type.OfferType;
-import com.dev.prepaid.type.ProvisionType;
-import com.dev.prepaid.util.DateUtil;
-import lombok.extern.slf4j.Slf4j;
-import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dev.prepaid.InitData;
+import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
+import com.dev.prepaid.domain.PrepaidCxOfferConfig;
+import com.dev.prepaid.domain.PrepaidCxOfferEligibility;
+import com.dev.prepaid.domain.PrepaidCxOfferEventCondition;
+import com.dev.prepaid.domain.PrepaidCxOfferMonitoring;
+import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
+import com.dev.prepaid.domain.PrepaidCxOfferSelection;
+import com.dev.prepaid.domain.PrepaidCxProvApplication;
+import com.dev.prepaid.model.configuration.OfferEligibility;
+import com.dev.prepaid.model.configuration.OfferPromoCode;
+import com.dev.prepaid.model.configuration.OfferSelection;
 import com.dev.prepaid.model.configuration.SaveConfigRequest;
 import com.dev.prepaid.model.create.ServiceInstance;
 import com.dev.prepaid.model.install.AppInstall;
+import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
+import com.dev.prepaid.repository.PrepaidCxOfferEligibilityRepository;
+import com.dev.prepaid.repository.PrepaidCxOfferEventConditionRepository;
+import com.dev.prepaid.repository.PrepaidCxOfferMonitoringRepository;
+import com.dev.prepaid.repository.PrepaidCxOfferRedemptionRepository;
+import com.dev.prepaid.repository.PrepaidCxOfferSelectionRepository;
+import com.dev.prepaid.repository.PrepaidCxProvApplicationRepository;
+import com.dev.prepaid.type.OfferType;
+import com.dev.prepaid.type.ProvisionType;
+import com.dev.prepaid.util.DateUtil;
 import com.dev.prepaid.util.GUIDUtil;
-import com.dev.prepaid.util.GsonUtils;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -610,19 +620,6 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             prepaidCxOfferEventCondition.setCampaignEndDate(DateUtil.stringToLocalDateTime(
                     saveConfigRequest.getPayload().getOfferEventCondition().getCampaignEndDate()));
         }
-
-		log.info("expiryDate|{}|", saveConfigRequest.getPayload().getOfferEventCondition().getDaExpiryDate());
-		if (saveConfigRequest.getPayload().getOfferEventCondition().getDaExpiryDate() == "") {
-			log.info("expiryDate|{}|", 1);
-			prepaidCxOfferEventCondition.setDaExpiryDate(null);
-		} else if (saveConfigRequest.getPayload().getOfferEventCondition().getDaExpiryDate() != null) {
-			log.info("expiryDate|{}|", 2);
-			prepaidCxOfferEventCondition.setDaExpiryDate(DateUtil.stringToLocalDateTime(saveConfigRequest.getPayload().getOfferEventCondition().getDaExpiryDate()));
-		} else {
-			log.info("expiryDate|{}|", 3);
-			prepaidCxOfferEventCondition.setDaExpiryDate(null);
-		}
-
         log.info("saveOfferEventCondition type {}", prepaidCxOfferEventCondition.getEventConditionType());
         if ("Top-Up".equals(prepaidCxOfferEventCondition.getEventConditionType())) {
             prepaidCxOfferEventCondition
@@ -657,16 +654,13 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaBalanceValue());
             prepaidCxOfferEventCondition.setTempServiceClass(
                     saveConfigRequest.getPayload().getOfferEventCondition().getTopUpTempServiceClass());
-            prepaidCxOfferEventCondition.setPermanentServiceClass(
-                    saveConfigRequest.getPayload().getOfferEventCondition().getPermanentServiceClass());
 
         } else if ("ARPU".equals(prepaidCxOfferEventCondition.getEventConditionType())) {
             prepaidCxOfferEventCondition
                     .setOperatorId(saveConfigRequest.getPayload().getOfferEventCondition().getOperatorId());
             prepaidCxOfferEventCondition
                     .setArpuType(saveConfigRequest.getPayload().getOfferEventCondition().getArpuType());
-            prepaidCxOfferEventCondition
-                    .setArpuOp(saveConfigRequest.getPayload().getOfferEventCondition().getArpuOp());
+            prepaidCxOfferEventCondition.setArpuOp(saveConfigRequest.getPayload().getOfferEventCondition().getArpuOp());
             prepaidCxOfferEventCondition
                     .setArpuValue(saveConfigRequest.getPayload().getOfferEventCondition().getArpuValue());
             prepaidCxOfferEventCondition.setAggregationPeriodDays(
@@ -675,16 +669,16 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferEventCondition().getArpuSelectedTopUpCode());
 
         } else if ("Usage".equals(prepaidCxOfferEventCondition.getEventConditionType())) {
-            prepaidCxOfferEventCondition.setUsageServiceType(
-                    saveConfigRequest.getPayload().getOfferEventCondition().getUsageServiceType());
-            prepaidCxOfferEventCondition.setEventTypeUsages(
-                    saveConfigRequest.getPayload().getOfferEventCondition().getEventTypeUsages());
+            prepaidCxOfferEventCondition
+                    .setUsageServiceType(saveConfigRequest.getPayload().getOfferEventCondition().getUsageServiceType());
+            prepaidCxOfferEventCondition
+                    .setEventTypeUsages(saveConfigRequest.getPayload().getOfferEventCondition().getEventTypeUsages());
             prepaidCxOfferEventCondition
                     .setEventUsagesOp(saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesOp());
-            prepaidCxOfferEventCondition.setEventUsagesValue(
-                    saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesValue());
-            prepaidCxOfferEventCondition.setEventUsagesUnit(
-                    saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesUnit());
+            prepaidCxOfferEventCondition
+                    .setEventUsagesValue(saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesValue());
+            prepaidCxOfferEventCondition
+                    .setEventUsagesUnit(saveConfigRequest.getPayload().getOfferEventCondition().getEventUsagesUnit());
 
             prepaidCxOfferEventCondition
                     .setCountryCode(saveConfigRequest.getPayload().getOfferEventCondition().getCountryCode());
@@ -696,8 +690,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     .setDaBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getDaBalanceOp());
             prepaidCxOfferEventCondition
                     .setDaBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getDaBalanceValue());
-            prepaidCxOfferEventCondition.setTempServiceClass(
-                    saveConfigRequest.getPayload().getOfferEventCondition().getTempServiceClass());
+            prepaidCxOfferEventCondition
+                    .setTempServiceClass(saveConfigRequest.getPayload().getOfferEventCondition().getTempServiceClass());
 
             prepaidCxOfferEventCondition.setImei(saveConfigRequest.getPayload().getOfferEventCondition().getImei());
             prepaidCxOfferEventCondition
@@ -711,19 +705,21 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
         }
 
         prepaidCxOfferEventConditionRepository.save(prepaidCxOfferEventCondition);
-        log.info("saved Config OfferEventCondition {}", prepaidCxOfferEventCondition);
     }
 
     private void savePrepaidCxOfferAdvanceFilter(String offerConfigId, SaveConfigRequest saveConfigRequest) {
-        PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter = PrepaidCxOfferAdvanceFilter.builder()
-                .isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
-                .payload(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getPayload())
-                .isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery()).build();
 
-        prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
-//		log.error("Error", e);
-//		log.error("[Prepaid Membership][DataController][doInsertCXOffer] failed!", e);
+        try {
+            PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter = PrepaidCxOfferAdvanceFilter.builder()
+                    .isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
+                    .payload(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getPayload())
+                    .isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
+                    .build();
 
+            prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
+        } catch (Exception ex) {
+            log.error("", ex);
+            log.error("[Prepaid Membership][PrepaidCxServiceImpl][savePrepaidCxOfferAdvanceFilter] failed!", ex);
+        }
     }
-
 }
