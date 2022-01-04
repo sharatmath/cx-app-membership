@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dev.prepaid.domain.*;
-import com.dev.prepaid.model.configuration.OfferEligibility;
-import com.dev.prepaid.model.configuration.OfferPromoCode;
-import com.dev.prepaid.model.configuration.OfferSelection;
+import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
+import com.dev.prepaid.model.configuration.*;
 import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferType;
 import com.dev.prepaid.type.ProvisionType;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dev.prepaid.InitData;
-import com.dev.prepaid.model.configuration.SaveConfigRequest;
 import com.dev.prepaid.model.create.ServiceInstance;
 import com.dev.prepaid.model.install.AppInstall;
 import com.dev.prepaid.util.GUIDUtil;
@@ -271,6 +269,25 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                 }
             }
         }
+
+        if(saveConfigRequest.getPayload().getOfferNoneType() != null){
+            if(OfferType.NONE.toString().equals(saveConfigRequest.getPayload().getOfferNoneType().getOfferType())) {
+                OfferNoneType noneType = saveConfigRequest.getPayload().getOfferNoneType();
+                Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
+                        .findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(offerConfigId,
+                                OfferType.NONE.toString(), "0", String.valueOf(0));
+                log.info("offerSelection PROMO {} {}", opsFind, noneType);
+                PrepaidCxOfferSelection prepaidCxOfferSelection;
+                if (opsFind.isPresent()) {
+                    prepaidCxOfferSelection = opsFind.get();
+                } else {
+                    prepaidCxOfferSelection = PrepaidCxOfferSelection.builder().offerConfigId(offerConfigId)
+                            .offerBucketType(OfferType.NONE.toString()).offerBucketId("0").offerId("0").build();
+                }
+                prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
+            }
+        }
+
         // OMS & DA
         for (OfferSelection offerSelection : saveConfigRequest.getPayload().getOfferSelection()) {
             Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
