@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dev.prepaid.domain.*;
-import com.dev.prepaid.model.configuration.OfferEligibility;
-import com.dev.prepaid.model.configuration.OfferPromoCode;
-import com.dev.prepaid.model.configuration.OfferSelection;
+import com.dev.prepaid.model.configuration.*;
 import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferType;
 import com.dev.prepaid.type.ProvisionType;
@@ -28,7 +26,6 @@ import com.dev.prepaid.domain.PrepaidCxProvApplication;
 import com.dev.prepaid.model.configuration.OfferEligibility;
 import com.dev.prepaid.model.configuration.OfferPromoCode;
 import com.dev.prepaid.model.configuration.OfferSelection;
-import com.dev.prepaid.model.configuration.SaveConfigRequest;
 import com.dev.prepaid.model.create.ServiceInstance;
 import com.dev.prepaid.model.install.AppInstall;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
