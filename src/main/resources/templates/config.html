@@ -12,7 +12,6 @@
     <link rel="shortcut icon" href="https://oracle.kakatoa.net/image/favicon.ico" type="image/vnd.microsoft.icon"/>
 
     <style>
-
         .fa-asterisk {
             color:red !important;
             width:8px !important;
@@ -806,7 +805,7 @@
                                                                                 </div>
                                                                                 <div class="col-md-6 mb-3">
                                                                                     <label :for="'daName' + index">Bucket Name</label>
-                                                                                    <input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+                                                                                    <input type="text" class="form-control" :id="'daName' + index" x-model="offer.offerId" disabled>
                                                                                 </div>
                                                                             </div>
                                                                             <div x-show="offer.offerBucketType == 'DA'">
@@ -2042,12 +2041,13 @@
             $('#select2multiple').select2();
             $('#promoCodeMultiple').select2({
                 maximumSelectionLength: 2,
+                minimumResultsForSearch: -1,
                 tags: true
             });
             // $('#promoCodeMultiple').select2();
             $('#promoCodeMultiple').on("select2:select", function (evt) {
-                var element = evt.params.data.element;
-                var $element = $(element);
+                let element = evt.params.data.element;
+                let $element = $(element);
 
                 $element.detach();
                 $(this).append($element);
@@ -2172,7 +2172,8 @@
     // const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
 
-    function configureMembership() {
+    function configureMembership()
+    {
         return {
             offers                          : [],
             offerBucketList                 : [],
@@ -2229,14 +2230,14 @@
 
             init() {
                 this.eventTypeDropdown(),
-                this.offerBucketDropdown(),
-                this.campaignOfferDropdown(),
-                this.getOfferSelection(),
-                this.monitoringPolicy(),
-                this.redemptionPolicy(),
-                this.eventConditionPolicy(),
-                this.getCountryList(),
-                this.provisionType()
+                    this.offerBucketDropdown(),
+                    this.campaignOfferDropdown(),
+                    this.getOfferSelection(),
+                    this.monitoringPolicy(),
+                    this.redemptionPolicy(),
+                    this.eventConditionPolicy(),
+                    this.getCountryList(),
+                    this.provisionType()
             },
 
             initPage(){
@@ -2428,15 +2429,15 @@
             },
 
             getPromoCodeList() {
-                let promise = fetch(PROD_URL + `offerPromoCode?instanceId=${INSTANCE_ID}`)
+                fetch(PROD_URL + `offerPromoCode?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
                     .then(data => {
-                        this.overallOfferName                   = data.overallOfferName
-                        this.offerSelectionSmsCampaignName      = data.smsCampaignName
-                        this.offerSelectionDynamic1             = data.messageText1
-                        this.offerSelectionDynamic2             = data.messageText2
-                        this.offerSelectionDynamic3             = data.messageText3
-                        this.offerSelectionDynamic4             = data.messageText4
+                        this.overallOfferName = data.overallOfferName
+                        this.offerSelectionSmsCampaignName = data.smsCampaignName
+                        this.offerSelectionDynamic1 = data.messageText1
+                        this.offerSelectionDynamic2 = data.messageText2
+                        this.offerSelectionDynamic3 = data.messageText3
+                        this.offerSelectionDynamic4 = data.messageText4
 
                         if (data.promoCodeList != null) {
                             // $('#promoCodeMultiple').val(data.promoCodeList.split(',')).trigger('change');
@@ -2966,6 +2967,7 @@
             },
         };
     }
+
 
 </script>
 <!--AlpineJS END-->
