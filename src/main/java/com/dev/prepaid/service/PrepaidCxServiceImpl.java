@@ -259,7 +259,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
         }
         // PROMO
         if (saveConfigRequest.getPayload().getOfferPromoCode() != null) {
-            if (saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList() != null || saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList().equals("")) {
+            if (saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList() != null && !saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList().equals("")) {
                 if (OfferType.PROMO.toString()
                         .equals(saveConfigRequest.getPayload().getOfferPromoCode().getOfferType())) {
                     OfferPromoCode promoCode = saveConfigRequest.getPayload().getOfferPromoCode();
@@ -289,7 +289,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             }
         }
 
-        if(saveConfigRequest.getPayload().getOfferNoneType() != null){
+        //NONE Type
+        if(saveConfigRequest.getPayload().getOfferNoneType() != null && saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList() == null && saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList().equals("")){
             if(OfferType.NONE.toString().equals(saveConfigRequest.getPayload().getOfferNoneType().getOfferType())) {
                 OfferNoneType noneType = saveConfigRequest.getPayload().getOfferNoneType();
                 Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
