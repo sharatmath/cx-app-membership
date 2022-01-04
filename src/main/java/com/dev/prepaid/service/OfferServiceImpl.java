@@ -246,6 +246,27 @@ public class OfferServiceImpl implements OfferService {
 				.build();
 	}
 
+	public OfferNoneType getOfferNoneType(String instanceId){
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			List<PrepaidCxOfferSelection> prepaidCxOfferSelection = prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
+			for(PrepaidCxOfferSelection p : prepaidCxOfferSelection){
+				if(p.getOfferBucketType().equals(OfferType.NONE.toString())) {
+					return OfferNoneType.builder()
+							.offerType(p.getOfferBucketType())
+							.overallOfferName(p.getOverallOfferName())
+							.overallOfferName(offerConfig.get().getOverallOfferName())
+							.build();
+				}
+			}
+			return OfferNoneType.builder()
+					.overallOfferName(offerConfig.get().getOverallOfferName())
+					.build();
+		}
+		return OfferNoneType.builder()
+				.build();
+	}
+
 	public PrepaidCxOfferEventCondition getOfferEventCondition(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){

@@ -2305,6 +2305,7 @@
                     .then(data => {
                         this.eligibilityPolicy()
                         this.getPromoCodeList()
+                        this.getNoneOfferList()
                     })
             },
 
@@ -2518,6 +2519,15 @@
                     })
                     .catch(error => console.log(error))
                     .finally();
+            },
+
+            getNoneOfferList() {
+                fetch(PROD_URL + `offerNoneType?instanceId=${INSTANCE_ID}`)
+                .then(res => res.json())
+                .then(data => {
+                    this.overallOfferName = data.overallOfferName
+                }).catch(error => console.log(error))
+                .finally();
             },
 
             eligibilityPolicy() {
@@ -3017,7 +3027,7 @@
                             },
                         "offerNoneType":
                             {
-                                "offerType"         : this.offerTypeDropdown,
+                                "offerType"         : 'NONE',
                                 "overallOfferName"  : this.overallOfferName
                             },
                         offerEventCondition,

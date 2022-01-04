@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
+import com.dev.prepaid.model.configuration.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,12 +31,6 @@ import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.model.DataOffer;
 import com.dev.prepaid.model.PrepaidBucketDetailDTO;
 import com.dev.prepaid.model.PrepaidCampaignOfferDetailDTO;
-import com.dev.prepaid.model.configuration.EventCondition;
-import com.dev.prepaid.model.configuration.OfferFulfilment;
-import com.dev.prepaid.model.configuration.OfferPromoCode;
-import com.dev.prepaid.model.configuration.OfferRedemption;
-import com.dev.prepaid.model.configuration.OfferSelection;
-import com.dev.prepaid.model.configuration.ResponSysProgram;
 import com.dev.prepaid.model.request.DataControllRequest;
 import com.dev.prepaid.model.request.GetAccumulatedTopups;
 import com.dev.prepaid.model.request.GetPackageFrequency;
@@ -308,6 +304,12 @@ public class DataController {
 	public OfferPromoCode getOfferPromoCode(@RequestParam(value = "instanceId", required = false) String instanceId)
 			throws Exception {
 		return offerService.getOfferPromoCode(instanceId);
+	}
+
+	@GetMapping(value = "offerNoneType")
+	public OfferNoneType getNoneType(@RequestParam(value = "instanceId", required = false) String instanceId)
+			throws Exception {
+		return offerService.getOfferNoneType(instanceId);
 	}
 
 	@GetMapping(value = "provisionType")

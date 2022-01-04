@@ -30,6 +30,7 @@ public interface OfferService {
 
 	public void evictAllCaches();
 	public OfferPromoCode getOfferPromoCode(String instanceId);
+	public OfferNoneType getOfferNoneType(String instanceId);
 	public List<OfferSelection> getOfferSelection(String instanceId);
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId);
 	public OfferFulfilment getOfferMonitoring(String instanceId);
