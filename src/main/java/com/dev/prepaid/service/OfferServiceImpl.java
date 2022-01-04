@@ -199,7 +199,7 @@ public class OfferServiceImpl implements OfferService {
 		if(offerConfig.isPresent()){
 			List<PrepaidCxOfferSelection> prepaidCxOfferSelection= prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
 			for(PrepaidCxOfferSelection p : prepaidCxOfferSelection){
-				if(p.getOfferBucketType().equals(OfferType.PROMO.toString())){
+				if(p.getOfferBucketType().equals(OfferType.PROMO.toString()) || p.getOfferBucketType().equals(OfferType.NONE.toString())){
 					// do nothing
 				}else{
 					OfferSelection s = OfferSelection.builder()
