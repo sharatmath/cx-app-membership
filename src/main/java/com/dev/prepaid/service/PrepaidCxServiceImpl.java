@@ -290,7 +290,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
         }
 
         //NONE Type
-        if(saveConfigRequest.getPayload().getOfferNoneType() != null && saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList() == null && saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList().equals("")){
+        if(saveConfigRequest.getPayload().getOfferNoneType() != null){
             if(OfferType.NONE.toString().equals(saveConfigRequest.getPayload().getOfferNoneType().getOfferType())) {
                 OfferNoneType noneType = saveConfigRequest.getPayload().getOfferNoneType();
                 Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
