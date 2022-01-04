@@ -91,9 +91,8 @@ public class DataController {
 					.getOmsOfferBucket(prepaidOmsOfferCampaign.getOfferId());
 			return PrepaidCampaignOfferDetailDTO.builder().offerBucketType(offerBucketType) // OMS
 					.offerName(prepaidOmsOfferCampaign.getName())
-					.offerId(Long.parseLong(prepaidOmsOfferBucket.getCode())).offerType(prepaidOmsOfferBucket.getType()) // timebased
-																															// or
-																															// accountbased
+					.offerId(prepaidOmsOfferBucket.getCode())
+					.offerType(prepaidOmsOfferBucket.getType()) // timebased or accountbased
 					.description(prepaidOmsOfferCampaign.getDescription()).value(prepaidOmsOfferCampaign.getValue())
 					.valueUnit(prepaidOmsOfferCampaign.getValueUnit())
 					.valueToDeductFromMa(prepaidOmsOfferCampaign.getValueToDeductFromMa())
@@ -119,6 +118,7 @@ public class DataController {
 					.getDaOfferCampaign(Long.parseLong(campaignOfferId));
 			return PrepaidCampaignOfferDetailDTO.builder().offerName(prepaidDaOfferCampaign.getName())
 					.bucketName(prepaidDaOfferBucket.getDescription())
+					.offerId(prepaidDaOfferBucket.getCode())
 					.description(prepaidDaOfferCampaign.getDescription()).value(prepaidDaOfferCampaign.getValue())
 					.valueUnit(prepaidDaOfferCampaign.getValueUnit()).valueCap(prepaidDaOfferCampaign.getValueCap())
 					.valueToDeductFromMa(prepaidDaOfferCampaign.getValueToDeductFromMa())
