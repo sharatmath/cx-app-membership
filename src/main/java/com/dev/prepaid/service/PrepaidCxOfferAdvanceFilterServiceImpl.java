@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
 import com.dev.prepaid.domain.PrepaidCxOfferConfig;
+import com.dev.prepaid.domain.PrepaidCxOfferEligibility;
 import com.dev.prepaid.repository.PrepaidCxOfferAdvanceFilterRepository;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
 
@@ -31,7 +32,7 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 	PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
 
 	@Override
-	public List<PrepaidCxOfferAdvanceFilter> getAllPrepaidCxOffers(String instanceId) {
+	public List<PrepaidCxOfferAdvanceFilter> getAllPrepaidCxOfferList(String instanceId) {
 		Optional<PrepaidCxOfferConfig> opsFindConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		List<PrepaidCxOfferAdvanceFilter> arrayList = new ArrayList<>();
 		if (opsFindConfig.isPresent()) {
@@ -45,12 +46,25 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		}
 		return arrayList;
 	}
-
+	
+	
 	@Override
-	public List<PrepaidCxOfferAdvanceFilter> listCXOffer() {
-		// TODO Auto-generated method stub
-		return null;
+	public PrepaidCxOfferAdvanceFilter listCXOffer(String instanceId){
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository.findByOfferConfigId(offerConfig.get().getId());
+			if(opsFind.isPresent())
+				return opsFind.get();
+		}
+		return new PrepaidCxOfferAdvanceFilter();
 	}
+	
+	
+	
+	
+	
+	
+
 
 	@Override
 	public Optional<PrepaidCxOfferAdvanceFilter> findPrepaidCxOfferById(long id) {
@@ -68,6 +82,21 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 	public void deleteById(int id) {
 		// TODO Auto-generated method stub
 
+	}
+
+
+
+	@Override
+	public List<PrepaidCxOfferAdvanceFilter> listCXOffer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Optional<PrepaidCxOfferAdvanceFilter> findByOfferConfigId(String offerConfigId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
