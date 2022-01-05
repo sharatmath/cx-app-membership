@@ -12,7 +12,6 @@
     <link rel="shortcut icon" href="https://oracle.kakatoa.net/image/favicon.ico" type="image/vnd.microsoft.icon"/>
 
     <style>
-
         .fa-asterisk {
             color:red !important;
             width:8px !important;
@@ -279,7 +278,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="input-group date" data-provider="datepicker">
-                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate" x-model="campaignEndDate">
+                                                        <input type="datetime-local" @keyup="eventEndDateValidate()" class="form-control" id="eventConditionDataCampaignEndDate" x-model="campaignEndDate">
                                                         <div class="input-group-addon">
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
@@ -799,18 +798,37 @@
                                                         <div class="card">
                                                             <div class="row">
                                                                 <div class="col-sm-11">
-                                                                    <div class="card-header" id="offerSelection1">	<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" :data-target="'#faq1' + index" aria-expanded="true" aria-controls="faq1"><b><span x-text="offer.offerName"></span></b></a>
+                                                                    <div class="card-header" id="offerSelection1">	<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" :data-target="'#faq1' + index" aria-expanded="true" aria-controls="faq1">
+                                                                        <template x-if="offer.offerName != null">
+                                                                            <b><span x-text="offer.offerName"></span></b>
+                                                                        </template>
+                                                                        <template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
+                                                                            <b><span x-text="offer.productName"></span></b>
+                                                                        </template>
+                                                                    </a>
                                                                     </div>
                                                                     <div :id="'faq1' + index" class="panel-collapse collapse" aria-labelledby="offerSelection1" data-parent="#faq">
                                                                         <div class="card-body">
                                                                             <div class="form-row">
                                                                                 <div class="col-md-6 mb-3">
-                                                                                    <label :for="'campaignOfferName' + index">Campaign Offer Name</label>
-                                                                                    <input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
+                                                                                    <template x-if="offer.offerName != null">
+                                                                                        <label :for="'campaignOfferName' + index">Campaign Offer Name</label>
+                                                                                        <input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
+                                                                                    </template>
+                                                                                    <template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
+                                                                                        <label :for="'campaignProductName' + index">Campaign Product Name</label>
+                                                                                        <input type="text" class="form-control" :id="'campaignProductName' + index" x-model="offer.productName" disabled>
+                                                                                    </template>
                                                                                 </div>
                                                                                 <div class="col-md-6 mb-3">
-                                                                                    <label :for="'daName' + index">Bucket Name</label>
-                                                                                    <input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+                                                                                    <template x-if="offer.offerName != null">
+                                                                                        <label :for="'daName' + index">Bucket Name</label>
+                                                                                        <input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+                                                                                    </template>
+                                                                                    <template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
+                                                                                        <label :for="'description' + index">MA Offer Description</label>
+                                                                                        <input type="text" class="form-control" :id="'description' + index" x-model="offer.description" disabled>
+                                                                                    </template>
                                                                                 </div>
                                                                             </div>
                                                                             <div x-show="offer.offerBucketType == 'DA'">
@@ -834,6 +852,18 @@
                                                                                     <div class="col-md-6 mb-3">
                                                                                         <label :for="'validity' + index">Validity (Day/Hour/Minutes)</label>
                                                                                         <input type="text" class="form-control" :id="'validity' + index" x-model="offer.dayHourMinute" disabled>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div x-show="offer.offerBucketType == null"> <!-- Used for showing MA Offer -->
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'value' + index">Value</label>
+                                                                                        <input type="text" class="form-control" :id="'value' + index" x-model="offer.value" disabled>
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label :for="'validity' + index">Validity</label>
+                                                                                        <input type="text" class="form-control" :id="'validity' + index" x-model="offer.validity" disabled>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -917,8 +947,10 @@
                                                                                     <input type="text" class="form-control" :id="'action' + index" x-model="offer.action" disabled>
                                                                                 </div>
                                                                                 <div class="col-md-6 mb-3">
-                                                                                    <label :for="'validity' + index">Offer Type</label>
-                                                                                    <input type="text" class="form-control" :id="'bucketType' + index" x-model="offer.offerBucketType" disabled>
+                                                                                    <template x-if="offer.offerBucketType != null">
+                                                                                        <label :for="'validity' + index">Offer Type</label>
+                                                                                        <input type="text" class="form-control" :id="'bucketType' + index" x-model="offer.offerBucketType" disabled>
+                                                                                    </template>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1014,7 +1046,7 @@
                                         <!--PROMO ACCORDION END-->
                                     </div>
                                     <div class="container">
-                                        <div class="noneOfferSelection" x-show="offerTypeDropdown === 'NONE'">
+                                        <div class="noneOfferSelection" x-show="offerTypeDropdown === 'NONE' || offerType === 'NONE'">
                                             <div class="accordion" id="none">
                                                 <div class="noneTemplate">
                                                     <div class="row-flex">
@@ -1022,7 +1054,7 @@
                                                             <div class="row">
                                                                 <div class="col-sm-12">
                                                                     <div class="card-header" id="none1" style="background-color: #da7200 !important; background-image: none !important;">
-                                                                        <b>NO Offer</b>
+                                                                        <b>No Offer</b>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1031,7 +1063,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--PROMO ACCORDION END-->
                                     </div>
                                 </div>
                             </div>
@@ -2065,12 +2096,14 @@
         $(document).ready(function() {
             $('#select2multiple').select2();
             $('#promoCodeMultiple').select2({
-                maximumSelectionLength: 2
+                maximumSelectionLength: 2,
+                minimumResultsForSearch: -1,
+                tags: true
             });
             // $('#promoCodeMultiple').select2();
             $('#promoCodeMultiple').on("select2:select", function (evt) {
-                var element = evt.params.data.element;
-                var $element = $(element);
+                let element = evt.params.data.element;
+                let $element = $(element);
 
                 $element.detach();
                 $(this).append($element);
@@ -2192,10 +2225,11 @@
 <!--AlpineJS BEGIN-->
 <script>
     const INSTANCE_ID = $("#instanceId").text();
-    // const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
+    // const INSTANCE_ID = 'f5360f42-e15f-4ca1-b36f-1815d87ed57a';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
 
-    function configureMembership() {
+    function configureMembership()
+    {
         return {
             offers                          : [],
             offerBucketList                 : [],
@@ -2234,6 +2268,7 @@
             offerSelectionDynamic3          : null,
             offerSelectionDynamic4          : null,
             offerSelectionPromoCode         : [],
+            offerSelectionNoneType          : [],
             // Offer Selection END
 
             // Check Duplicate Offer Name BEGIN
@@ -2252,14 +2287,14 @@
 
             init() {
                 this.eventTypeDropdown(),
-                this.offerBucketDropdown(),
-                this.campaignOfferDropdown(),
-                this.getOfferSelection(),
-                this.monitoringPolicy(),
-                this.redemptionPolicy(),
-                this.eventConditionPolicy(),
-                this.getCountryList(),
-                this.provisionType()
+                    this.offerBucketDropdown(),
+                    this.campaignOfferDropdown(),
+                    this.getOfferSelection(),
+                    this.monitoringPolicy(),
+                    this.redemptionPolicy(),
+                    this.eventConditionPolicy(),
+                    this.getCountryList(),
+                    this.provisionType()
             },
 
             initPage(){
@@ -2270,6 +2305,7 @@
                     .then(data => {
                         this.eligibilityPolicy()
                         this.getPromoCodeList()
+                        this.getNoneOfferList()
                     })
             },
 
@@ -2344,6 +2380,14 @@
 
                 if ((this.selectedBucket && this.selectedCampaign != null) && this.selectedCampaign != 'Choose...' && !duplicateData) {
                     fetch(PROD_URL + `offerDetail?bucketOfferId=${this.selectedBucket}&campaignOfferId=${this.selectedCampaign}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            this.offers.push(data)
+                        })
+                        .catch(error => console.log(error))
+                        .finally()
+                } else if (this.selectedBucket == null && this.selectedCampaign != 'Choose...' && this.offerTypeDropdown == 'MA') {
+                    fetch(PROD_URL + `maOfferDetail?id=${this.selectedCampaign}`)
                         .then(res => res.json())
                         .then(data => {
                             this.offers.push(data)
@@ -2456,19 +2500,35 @@
                 fetch(PROD_URL + `offerPromoCode?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
                     .then(data => {
-                        this.overallOfferName                   = data.overallOfferName
-                        this.offerSelectionSmsCampaignName      = data.smsCampaignName
-                        this.offerSelectionDynamic1             = data.messageText1
-                        this.offerSelectionDynamic2             = data.messageText2
-                        this.offerSelectionDynamic3             = data.messageText3
-                        this.offerSelectionDynamic4             = data.messageText4
+                        this.overallOfferName = data.overallOfferName
+                        this.offerSelectionSmsCampaignName = data.smsCampaignName
+                        this.offerSelectionDynamic1 = data.messageText1
+                        this.offerSelectionDynamic2 = data.messageText2
+                        this.offerSelectionDynamic3 = data.messageText3
+                        this.offerSelectionDynamic4 = data.messageText4
 
                         if (data.promoCodeList != null) {
-                            $('#promoCodeMultiple').val(data.promoCodeList.split(',')).trigger('change');
+                            // $('#promoCodeMultiple').val(data.promoCodeList.split(',')).trigger('change');
+
+                            let element = data.promoCodeList.split(',');
+
+                            element.forEach(item => {
+                                $('#promoCodeMultiple').append(new Option(item, item, true, true));
+                            });
                         }
                     })
                     .catch(error => console.log(error))
-                    .finally()
+                    .finally();
+            },
+
+            getNoneOfferList() {
+                fetch(PROD_URL + `offerNoneType?instanceId=${INSTANCE_ID}`)
+                .then(res => res.json())
+                .then(data => {
+                    this.offerType = data.offerType
+                    this.overallOfferName = data.overallOfferName
+                }).catch(error => console.log(error))
+                .finally();
             },
 
             eligibilityPolicy() {
@@ -2518,7 +2578,7 @@
                         }
 
                         // for Da Expiry Date
-                        this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : moment().format("yyyy-MM-DD") + "T00:00";
+                        this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : null;
 
                     })
                     .catch(error => console.log(error))
@@ -2545,7 +2605,7 @@
                         this.campaignEndDate = data.campaignEndDate != null ? data.campaignEndDate : moment().format("yyyy-MM-DD") + "T00:00";
 
                         // for Da Expiry Date
-                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : moment().format("yyyy-MM-DD") + "T00:00";
+                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : null;
 
                     })
                     .catch(error => console.log(error))
@@ -2966,6 +3026,11 @@
                                 "overallOfferName"  : this.overallOfferName,
                                 "smsCampaignName"   : this.offerSelectionSmsCampaignName
                             },
+                        "offerNoneType":
+                            {
+                                "offerType"         : this.offerTypeDropdown,
+                                "overallOfferName"  : this.overallOfferName
+                            },
                         offerEventCondition,
                         offerEligibility,
                         offerMonitoring,
@@ -2976,6 +3041,8 @@
                 // console.log(this.type);
                 if (!this.overallOfferName && this.type != 'eventCondition') {
                     swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
+                } else if (!this.campaignStartDate || !this.campaignEndDate) {
+                    swal("Error!", "Event Campaign Period Can Not be Null", "error");
                 } else {
                     window.parent.postMessage(request,'*');
                 }
@@ -2983,6 +3050,7 @@
             },
         };
     }
+
 
 </script>
 <!--AlpineJS END-->

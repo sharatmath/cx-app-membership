@@ -37,6 +37,9 @@ public class Config {
 	@SerializedName("offerRedemption")
 	private OfferRedemption offerRedemption;
 
+	@SerializedName("offerNonetype")
+	private OfferNoneType offerNoneType;
+
 	@SerializedName("notification")
 	private Boolean notification;
 
@@ -53,5 +56,4 @@ public class Config {
 
 	@SerializedName("advancedFilter")
 	private PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter;
-
 }
