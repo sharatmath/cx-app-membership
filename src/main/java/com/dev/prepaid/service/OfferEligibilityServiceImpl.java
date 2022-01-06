@@ -251,10 +251,28 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
         log.info("process#2|IS_FREQUENCY_ONLY|{}|VALUE|{}", e.getIsFrequencyOnly(), e.getFrequency());
         log.info("process#2|IS_FREQUENCY_AND_TIME|{}|VALUE|{} IN {} Days", e.getIsFrequencyAndTime(), e.getNumberOfFrequency(), e.getNumberOfDays());
-        for (List<String> row : rows) {
-            if (subscriberLevel(row.get(1), e, isFrequencyOnly, isFrequencyAndTime)) {
-                log.info("process#2|SUBSCRIBER_LEVEL|msisdn|{}|PASS", row.get(1));
-                eligibleRows.add(row);
+       
+        Map<String, Integer> currentCap = new HashMap<String, Integer>();
+        for (List<String> row : rows) {  
+            if (subscriberLevel(currentCap, row.get(1), e, isFrequencyOnly, isFrequencyAndTime)) {
+                if(isFrequencyOnly){
+                    if(currentCap.get(row.get(1) + "countFrequencyPerMsisdn") != null) {
+                        Integer cap = currentCap.get(row.get(1) + "countFrequencyPerMsisdn");
+                        currentCap.put(row.get(1) + "countFrequencyPerMsisdn", cap + 1);
+                    }else{
+                        currentCap.put(row.get(1) + "countFrequencyPerMsisdn", 1);
+                    }
+                }
+                if(isFrequencyAndTime){
+                    if(currentCap.get(row.get(1) + "currentFrequencyInRangeTime") != null){
+                        Integer cap = currentCap.get(row.get(1) + "currentFrequencyInRangeTime");
+                        currentCap.put(row.get(1) + "currentFrequencyInRangeTime", cap + 1);
+                    }else{
+                        currentCap.put(row.get(1) + "currentFrequencyInRangeTime",  1);
+                    }
+
+                }
+                eligibleRows.add(row);            
             } else {
                 log.info("process#2|SUBSCRIBER_LEVEL|msisdn|{}|NOT_PASS", row.get(1));
                 notEligibleRows.add(row);
@@ -482,10 +500,13 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 rows.size());
     }
 
-    private Boolean subscriberLevel(String msisdn, PrepaidCxOfferEligibility prepaidCxOfferEligibility, boolean isFrequencyOnly, boolean isFrequencyAndTime) {
+    private Boolean subscriberLevel(Map<String, Integer> mapCurrentCap, String msisdn, PrepaidCxOfferEligibility prepaidCxOfferEligibility, boolean isFrequencyOnly, boolean isFrequencyAndTime) {
         log.info("process#2|subscriberLevel|{}|VALUE|{}", msisdn, prepaidCxOfferEligibility);
         if (isFrequencyOnly) {
             int currentFrequency = countFrequencyPerMsisdn(msisdn, prepaidCxOfferEligibility.getOfferConfigId());
+            if(mapCurrentCap.get(msisdn + "countFrequencyPerMsisdn") != null) {
+                currentFrequency = currentFrequency + mapCurrentCap.get(msisdn + "countFrequencyPerMsisdn");
+            }
             log.info("process#2|IsFrequencyOnly|{}|VS|{}", currentFrequency, prepaidCxOfferEligibility.getFrequency() );
             if (currentFrequency >= prepaidCxOfferEligibility.getFrequency()) {
                 log.info("process#2|IsFrequencyOnly|{}|Result|{}", msisdn, false);
@@ -493,6 +514,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             } else {
                 if (isFrequencyAndTime) {
                     int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+                    if(mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime") != null) {
+                        currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
+                    }
                     log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
                     if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
                         log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
@@ -502,6 +526,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             }
         } else if (isFrequencyAndTime) {
             int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+            if(mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime") != null) {
+                currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
+            }
             log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
             if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
                 log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
