@@ -1680,7 +1680,7 @@
                                                         </div>
                                                         <div class="col-sm-1">On</div>
                                                         <div class="col-sm-2">
-                                                           <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" class="form-control mb-2 mr-sm-2" id="dayRecFreqX" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                           <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="dayRecFreqX" x-model="redemptionData.recurringFrequencyDayOfMonth">
 <!--                                                       <input type="number" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
                                                         </div>
                                                         <label class="col-sm-2 col-form-label col-form-label">day of each month</label>
