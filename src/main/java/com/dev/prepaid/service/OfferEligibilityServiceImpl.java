@@ -468,22 +468,29 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 rows.size());
     }
 
-    private Boolean subscriberLevel(String msisdn, PrepaidCxOfferEligibility prepaidCxOfferEligibility) {
-        if (prepaidCxOfferEligibility.getIsFrequencyOnly()) {
+    private Boolean subscriberLevel(String msisdn, PrepaidCxOfferEligibility prepaidCxOfferEligibility, boolean isFrequencyOnly, boolean isFrequencyAndTime) {
+        log.info("process#2|subscriberLevel|{}|VALUE|{}", msisdn, prepaidCxOfferEligibility);
+        if (isFrequencyOnly) {
             int currentFrequency = countFrequencyPerMsisdn(msisdn, prepaidCxOfferEligibility.getOfferConfigId());
+            log.info("process#2|IsFrequencyOnly|{}|VS|{}", currentFrequency, prepaidCxOfferEligibility.getFrequency() );
             if (currentFrequency >= prepaidCxOfferEligibility.getFrequency()) {
+                log.info("process#2|IsFrequencyOnly|{}|Result|{}", msisdn, false);
                 return false;
             } else {
-                if (prepaidCxOfferEligibility.getIsFrequencyAndTime()) {
+                if (isFrequencyAndTime) {
                     int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+                    log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
                     if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
+                        log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
                         return false;
                     }
                 }
             }
-        } else if (prepaidCxOfferEligibility.getIsFrequencyAndTime()) {
+        } else if (isFrequencyAndTime) {
             int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+            log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
             if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
+                log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
                 return false;
             }
         }
