@@ -235,10 +235,24 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             return rows;
         }
 
+        boolean isFrequencyOnly = false;
+        if(e.getIsFrequencyOnly() == null){
+            
+        }else{
+            isFrequencyOnly = e.getIsFrequencyOnly();
+        }
+
+        boolean isFrequencyAndTime = false;
+        if(e.getIsFrequencyAndTime() == null){
+
+        }else{
+            isFrequencyAndTime = e.getIsFrequencyAndTime();
+        }
+
         log.info("process#2|IS_FREQUENCY_ONLY|{}|VALUE|{}", e.getIsFrequencyOnly(), e.getFrequency());
         log.info("process#2|IS_FREQUENCY_AND_TIME|{}|VALUE|{} IN {} Days", e.getIsFrequencyAndTime(), e.getNumberOfFrequency(), e.getNumberOfDays());
         for (List<String> row : rows) {
-            if (subscriberLevel(row.get(1), e)) {
+            if (subscriberLevel(row.get(1), e, isFrequencyOnly, isFrequencyAndTime)) {
                 log.info("process#2|SUBSCRIBER_LEVEL|msisdn|{}|PASS", row.get(1));
                 eligibleRows.add(row);
             } else {
