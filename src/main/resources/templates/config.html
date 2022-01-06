@@ -1642,7 +1642,7 @@
                                         </div>
                                         <template x-if="redemptionMethod === 'Auto'">
                                             <div>
-                                                <span>Is there recurring provisioning? </span>
+                                                <span>Is this recurring? </span>
                                                 <input type="radio" value="yes" x-model="recurringProvisioning"> Yes
                                                 <input type="radio" value="no" x-model="recurringProvisioning"> No
                                                 <br><br>
@@ -1658,16 +1658,11 @@
                                                         <label class="col-sm-2 col-form-label col-form-label">Recurring Frequency</label>
                                                         <div class="col-sm-1">
                                                             <div class="custom-control custom-radio">
-                                                                <input type="radio" name="radioRecurringRedemption" class="custom-control-input" value="req-day" x-model="recurringRedemptionRadio">
-                                                                <label class="custom-control-label" for="radioRecurringRedemptionID"></label>
+                                                                <input type="radio" id="radioRecurringRedemptionIDX" name="radioRecurringRedemption" class="custom-control-input" value="req-day" x-model="recurringRedemptionRadio">
+                                                                <label class="custom-control-label" for="radioRecurringRedemptionIDX"></label>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-2">
-                                                            <label class="sr-only" for="inputRecFreqDP">Name</label>
-                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">-->
-                                                            <input disabled type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyValue">
-                                                        </div>
-                                                        <label class="col-sm-1 col-form-label col-form-label">in Every</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">Once in Every</label>
                                                         <div class="col-sm-2">
                                                             <label class="sr-only" for="inputRecFreqDPIn">Name</label>
                                                             <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyPeriodValue">
@@ -1679,14 +1674,13 @@
                                                         <label class="col-sm-2 col-form-label col-form-label"></label>
                                                         <div class="col-sm-1">
                                                             <div class="custom-control custom-radio">
-                                                                <input type="radio" name="radioRecurringRedemption" class="custom-control-input" value="req-month" x-model="recurringRedemptionRadio">
-                                                                <label class="custom-control-label" for="isRecurringFrequencyEachMonthID"></label>
+                                                                <input type="radio" id="isRecurringFrequencyEachMonthIDX" name="radioRecurringRedemption" class="custom-control-input" value="req-month" x-model="recurringRedemptionRadio">
+                                                                <label class="custom-control-label" for="isRecurringFrequencyEachMonthIDX"></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-2">
-                                                            <label class="sr-only" for="dayRecFreq">Day</label>
-                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
-                                                            <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                           <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" class="form-control mb-2 mr-sm-2" id="dayRecFreqX" x-model="redemptionData.recurringFrequencyDayOfMonth">
+<!--                                                       <input type="number" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
                                                         </div>
                                                         <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
                                                     </div>
