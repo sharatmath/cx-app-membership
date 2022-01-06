@@ -1,4 +1,5 @@
-FROM sgrio/java:jdk_11_ubuntu
+# FROM sgrio/java:jdk_11_ubuntu
+FROM fra.ocir.io/singteloracloud/singtelomc/oracle:jdk11-oraclelinux7
 VOLUME /tmp
 ADD oci /oci
 ADD wallet-dev /wallet-dev
