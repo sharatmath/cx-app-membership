@@ -4,10 +4,9 @@ VOLUME /tmp
 ADD oci /home/opc/oci
 ADD wallet /home/opc/wallet
 ARG jar=target/prepaid-membership-0.0.1-SNAPSHOT.jar
-ADD $jar /home/opc/app.jar
+ADD $jar /home/opc/prepaid-membership-0.0.1-SNAPSHOT.jar
 ENV JAVA_OPTS $JAVA_OPTS "-Xms2048m -Xmx4096m"
 ENV JAVA_OPTS $JAVA_OPTS "-Dserver.port=8080"
 ENV JAVA_OPTS $JAVA_OPTS "-Dspring.profiles.active=sit"
 ENV JAVA_OPTS $JAVA_OPTS "-Djava.security.egd=file:/dev/./urandom"
-ENTRYPOINT exec java $JAVA_OPTS -jar /home/opc/app.jar
-
+ENTRYPOINT exec java $JAVA_OPTS -jar /home/opc/prepaid-membership-0.0.1-SNAPSHOT.jar
