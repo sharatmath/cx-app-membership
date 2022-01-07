@@ -3,6 +3,7 @@ package com.dev.prepaid.service;
 import java.util.List;
 
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
 import com.dev.prepaid.model.configuration.*;
 import com.dev.prepaid.repository.PrepaidMaOfferBucketRepository;
 
