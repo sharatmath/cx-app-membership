@@ -94,7 +94,7 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if (offerConfig.isPresent()) {
 			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository
-					.findByOfferConfigId(offerConfig.get().getId());
+					.findByOfferConfigId(offerConfig.get().getInstanceId());
 			if (opsFind.isPresent())
 				return opsFind.get();
 		}
