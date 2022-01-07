@@ -48,3 +48,127 @@ content-type: application/json
     "type": "eventConditionDirectProvisioning"
   }
 }
+
+
+
+###
+POST http://localhost:8090/saveconfiguration HTTP/
+content-type: application/json
+
+{
+	"amsAction": "save",
+	"requestId": "save",
+	"payload": {
+		"type": "directProvisioning",
+		"uuid": "63483226-49f3-48a2-8720-4f4c47021e321",
+		"offerSelection": [
+			{
+				"offerBucketId": "OMS|262",
+				"offerBucketType": "OMS",
+				"offerCampaignId": 462,
+				"offerCampaignName": "20210524_FREE10GB_OMS_OFFER",
+				"offerType": "empty"
+			}
+		],
+		"offerPromoCode": {
+			"promoCodeList": "",
+			"messageText1": null,
+			"messageText2": null,
+			"messageText3": null,
+			"messageText4": null,
+			"offerType": "PROMO",
+			"overallOfferName": "Test_Recurring_Provisioning_6Jan",
+			"smsCampaignName": null
+		},
+		"offerNoneType": {
+			"offerType": "empty",
+			"overallOfferName": "Test_Recurring_Provisioning_6Jan"
+		},
+		"offerEventCondition": {
+			"eventType": "Top-Up",
+			"campaignStartDate": "2022-01-07T00:00",
+			"campaignEndDate": "2022-01-07T00:00",
+			"eventConditionName": null,
+			"topUpType": "All",
+			"creditMethod": null,
+			"usageServiceType": null,
+			"operatorId": null,
+			"topUpCode": null,
+			"topUpCurBalanceOp": "AllTopUp",
+			"topUpCurBalanceValue": null,
+			"topUpAccBalanceBeforeOp": "AllTopUp",
+			"topUpAccBalanceBeforeValue": null,
+			"topUpOp": "lessThan",
+			"topUpTransactionValue": null,
+			"topUpDaId": null,
+			"topUpDaBalanceOp": "lessThan",
+			"topUpDaBalanceValue": null,
+			"topUpTempServiceClass": null,
+			"daExpiryDate": null,
+			"permanentServiceClass": null
+		},
+		"offerEligibility": {
+			"excludeProgramId": "",
+			"isOfferLevelCapOnly": null,
+			"isOfferLevelCapAndPeriod": null,
+			"offerLevelCapValue": null,
+			"offerLevelCapPeriodValue": null,
+			"offerLevelCapPeriodDays": null,
+			"isFrequencyOnly": null,
+			"isFrequencyAndTime": null,
+			"frequency": null,
+			"numberOfFrequency": null,
+			"numberOfDays": null
+		},
+		"offerMonitoring": {
+			"eventType": "Top-Up",
+			"topUpType": "All",
+			"operatorId": null,
+			"topUpCreditMethod": null,
+			"topUpUsageServiceType": null,
+			"topUpOperator": null,
+			"topUpCode": null,
+			"topUpCurBalanceOp": "AllTopUp",
+			"topUpCurBalanceValue": null,
+			"topUpAccBalanceBeforeOp": "AllTopUp",
+			"topUpAccBalanceBeforeValue": null,
+			"topUpOp": "lessThan",
+			"topUpTransactionValue": null,
+			"topUpDaId": null,
+			"topUpDaBalanceOp": "lessThan",
+			"topUpDaBalanceValue": null,
+			"topUpTempServiceClass": null,
+			"daExpiryDateMonitor": null,
+			"permanentServiceClass": null
+		},
+		"offerRedemption": {
+			"redemptionMethod": "Auto",
+			"isRedemptionCapOnly": false,
+			"isRedemptionCapAndPeriod": false,
+			"redemptionCapValue": null,
+			"totalRedemptionPeriodValue": null,
+			"totalRedemptionPeriodEvery": null,
+			"totalRedemptionPeriodType": null,
+			"isFrequencyOnly": false,
+			"isFrequencyAndTime": false,
+			"frequencyValue": null,
+			"timePeriodValue": null,
+			"timePeriodEvery": null,
+			"timePeriodType": null,
+			"postSmsCampaignName": "Test_Recurring_Provisioning",
+			"dynamicVariable1": null,
+			"dynamicVariable2": null,
+			"dynamicVariable3": null,
+			"dynamicVariable4": null,
+			"dynamicVariable5": null,
+			"recurringProvisioning": true,
+			"totalRecurringFrequency": 4,
+			"isRecurringFrequencyAndPeriod": true,
+			"isRecurringFrequencyEachMonth": false,
+			"recurringFrequencyValue": "1",
+			"recurringFrequencyPeriodValue": 1,
+			"recurringFrequencyDayOfMonth": null
+		}
+	},
+	"notification": "true"
+}
