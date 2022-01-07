@@ -38,7 +38,7 @@ git pull
 
 ## RUNNING
 ```sh
-mvn clean package spring-boot:run -DskipTests=true
+mvn clean package spring-boot:run -DskipTests=true -Dspring.profiles.active=
 ```
 
 ##  Changelog

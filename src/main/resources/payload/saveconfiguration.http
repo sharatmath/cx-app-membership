@@ -52,6 +52,7 @@ content-type: application/json
 
 
 ###
+#  local 63483226-49f3-48a2-8720-4f4c47021e321
 POST http://localhost:8090/saveconfiguration HTTP/
 content-type: application/json
 
@@ -166,7 +167,7 @@ content-type: application/json
 			"isRecurringFrequencyAndPeriod": true,
 			"isRecurringFrequencyEachMonth": false,
 			"recurringFrequencyValue": "1",
-			"recurringFrequencyPeriodValue": 1,
+			"recurringFrequencyPeriodValue": 44,
 			"recurringFrequencyDayOfMonth": null
 		}
 	},
