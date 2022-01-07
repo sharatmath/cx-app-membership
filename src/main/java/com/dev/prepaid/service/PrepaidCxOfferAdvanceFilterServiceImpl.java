@@ -37,7 +37,7 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		List<PrepaidCxOfferAdvanceFilter> arrayList = new ArrayList<>();
 		if (opsFindConfig.isPresent()) {
 			Optional<PrepaidCxOfferAdvanceFilter> advFilter = prepaidCxOfferAdvanceFilterRepository
-					.findByOfferConfigId(opsFindConfig.get().getId());
+					.findByOfferConfigId(opsFindConfig.get().getInstanceId());
 			if (advFilter.isPresent()) {
 				arrayList.add(advFilter.get());
 			}
@@ -53,6 +53,18 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		if (offerConfig.isPresent()) {
 			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository
 					.findByOfferConfigId(offerConfig.get().getId());
+			if (opsFind.isPresent())
+				return opsFind.get();
+		}
+		return new PrepaidCxOfferAdvanceFilter();
+	}
+
+	@Override
+	public PrepaidCxOfferAdvanceFilter getCXOfferList(String instanceId) {
+		Optional<PrepaidCxOfferConfig> opsFindConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if (opsFindConfig.isPresent()) {
+			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository
+					.findByOfferConfigId(opsFindConfig.get().getInstanceId());
 			if (opsFind.isPresent())
 				return opsFind.get();
 		}
@@ -87,18 +99,6 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 	public Optional<PrepaidCxOfferAdvanceFilter> findByOfferConfigId(String offerConfigId) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public PrepaidCxOfferAdvanceFilter getCXOfferList(String instanceId) {
-		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
-		if (offerConfig.isPresent()) {
-			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository
-					.findByOfferConfigId(offerConfig.get().getInstanceId());
-			if (opsFind.isPresent())
-				return opsFind.get();
-		}
-		return new PrepaidCxOfferAdvanceFilter();
 	}
 
 }
