@@ -12,7 +12,6 @@
     <link rel="shortcut icon" href="https://oracle.kakatoa.net/image/favicon.ico" type="image/vnd.microsoft.icon"/>
 
     <style>
-
         .fa-asterisk {
             color:red !important;
             width:8px !important;
@@ -452,7 +451,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="input-group date" data-provider="datepicker">
-                                                        <input type="datetime-local" class="form-control" id="eventConditionDataCampaignEndDate" x-model="campaignEndDate">
+                                                        <input type="datetime-local" @keyup="eventEndDateValidate()" class="form-control" id="eventConditionDataCampaignEndDate" x-model="campaignEndDate">
                                                         <div class="input-group-addon">
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
@@ -982,7 +981,7 @@
                                                                                 </div>
                                                                                 <div class="col-md-6 mb-3">
                                                                                     <label :for="'daName' + index">Bucket Name</label>
-                                                                                    <input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+                                                                                    <input type="text" class="form-control" :id="'daName' + index" x-model="offer.offerId" disabled>
                                                                                 </div>
                                                                             </div>
                                                                             <div x-show="offer.offerBucketType == 'DA'">
@@ -1900,7 +1899,7 @@
                                         </div>
                                         <template x-if="redemptionMethod === 'Auto'">
                                             <div>
-                                                <span>Is there recurring provisioning? </span>
+                                                <span>Is this recurring? </span>
                                                 <input type="radio" value="yes" x-model="recurringProvisioning"> Yes
                                                 <input type="radio" value="no" x-model="recurringProvisioning"> No
                                                 <br><br>
@@ -1916,37 +1915,32 @@
                                                         <label class="col-sm-2 col-form-label col-form-label">Recurring Frequency</label>
                                                         <div class="col-sm-1">
                                                             <div class="custom-control custom-radio">
-                                                                <input type="radio" name="radioRecurringRedemption" class="custom-control-input" value="req-day" x-model="recurringRedemptionRadio">
-                                                                <label class="custom-control-label" for="radioRecurringRedemptionID"></label>
+                                                                <input type="radio" id="radioRecurringRedemptionIDX" name="radioRecurringRedemption" class="custom-control-input" value="req-day" x-model="recurringRedemptionRadio">
+                                                                <label class="custom-control-label" for="radioRecurringRedemptionIDX"></label>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-2">
-                                                            <label class="sr-only" for="inputRecFreqDP">Name</label>
-                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">-->
-                                                            <input disabled type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyValue">
-                                                        </div>
-                                                        <label class="col-sm-1 col-form-label col-form-label">in Every</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">Once in Every</label>
                                                         <div class="col-sm-2">
                                                             <label class="sr-only" for="inputRecFreqDPIn">Name</label>
                                                             <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyPeriodValue">
                                                         </div>
-                                                        <div class="col-sm-2"> Day
+                                                        <div class="col-sm-2"> Days
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label class="col-sm-2 col-form-label col-form-label"></label>
                                                         <div class="col-sm-1">
                                                             <div class="custom-control custom-radio">
-                                                                <input type="radio" name="radioRecurringRedemption" class="custom-control-input" value="req-month" x-model="recurringRedemptionRadio">
-                                                                <label class="custom-control-label" for="isRecurringFrequencyEachMonthID"></label>
+                                                                <input type="radio" id="isRecurringFrequencyEachMonthIDX" name="radioRecurringRedemption" class="custom-control-input" value="req-month" x-model="recurringRedemptionRadio">
+                                                                <label class="custom-control-label" for="isRecurringFrequencyEachMonthIDX"></label>
                                                             </div>
                                                         </div>
+                                                        <div class="col-sm-1">On</div>
                                                         <div class="col-sm-2">
-                                                            <label class="sr-only" for="dayRecFreq">Day</label>
-                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
-                                                            <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                           <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="dayRecFreqX" x-model="redemptionData.recurringFrequencyDayOfMonth">
+<!--                                                       <input type="number" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
                                                         </div>
-                                                        <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">day of each month</label>
                                                     </div>
                                                 </div>
                                                 <hr>
@@ -2105,17 +2099,12 @@
                                                                 <label class="custom-control-label" for="radioRecurringRedemptionID"></label>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-2">
-                                                            <label class="sr-only" for="inputRecFreqDP">Name</label>
-                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">-->
-                                                            <input disabled type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
-                                                        </div>
-                                                        <label class="col-sm-1 col-form-label col-form-label">in Every</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">Once in Every</label>
                                                         <div class="col-sm-2">
                                                             <label class="sr-only" for="inputRecFreqDPIn">Name</label>
                                                             <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
                                                         </div>
-                                                        <div class="col-sm-2"> Day
+                                                        <div class="col-sm-2"> Days
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
@@ -2128,10 +2117,10 @@
                                                         </div>
                                                         <div class="col-sm-2">
                                                             <label class="sr-only" for="dayRecFreq">Day</label>
-                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
-                                                            <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
+<!--                                                            <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
                                                         </div>
-                                                        <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">day of each month</label>
                                                     </div>
                                                 </div><hr>
                                                 <div class="form-group row">
@@ -2302,12 +2291,14 @@
         $(document).ready(function() {
             $('#select2multiple').select2();
             $('#promoCodeMultiple').select2({
-                maximumSelectionLength: 2
+                maximumSelectionLength: 2,
+                minimumResultsForSearch: -1,
+                tags: true
             });
             // $('#promoCodeMultiple').select2();
             $('#promoCodeMultiple').on("select2:select", function (evt) {
-                var element = evt.params.data.element;
-                var $element = $(element);
+                let element = evt.params.data.element;
+                let $element = $(element);
 
                 $element.detach();
                 $(this).append($element);
@@ -3367,7 +3358,8 @@ console.log(advanceFilter.mainData,'xxxx')
 <script>
 
 
-    function configureMembership() {
+    function configureMembership()
+    {
         return {
             offers                          : [],
             offerBucketList                 : [],
@@ -3424,14 +3416,14 @@ console.log(advanceFilter.mainData,'xxxx')
 
             init() {
                 this.eventTypeDropdown(),
-                this.offerBucketDropdown(),
-                this.campaignOfferDropdown(),
-                this.getOfferSelection(),
-                this.monitoringPolicy(),
-                this.redemptionPolicy(),
-                this.eventConditionPolicy(),
-                this.getCountryList(),
-                this.provisionType()
+                    this.offerBucketDropdown(),
+                    this.campaignOfferDropdown(),
+                    this.getOfferSelection(),
+                    this.monitoringPolicy(),
+                    this.redemptionPolicy(),
+                    this.eventConditionPolicy(),
+                    this.getCountryList(),
+                    this.provisionType()
             },
 
             initPage(){
@@ -3628,19 +3620,26 @@ console.log(advanceFilter.mainData,'xxxx')
                 fetch(PROD_URL + `offerPromoCode?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
                     .then(data => {
-                        this.overallOfferName                   = data.overallOfferName
-                        this.offerSelectionSmsCampaignName      = data.smsCampaignName
-                        this.offerSelectionDynamic1             = data.messageText1
-                        this.offerSelectionDynamic2             = data.messageText2
-                        this.offerSelectionDynamic3             = data.messageText3
-                        this.offerSelectionDynamic4             = data.messageText4
+                        this.overallOfferName = data.overallOfferName
+                        this.offerSelectionSmsCampaignName = data.smsCampaignName
+                        this.offerSelectionDynamic1 = data.messageText1
+                        this.offerSelectionDynamic2 = data.messageText2
+                        this.offerSelectionDynamic3 = data.messageText3
+                        this.offerSelectionDynamic4 = data.messageText4
 
                         if (data.promoCodeList != null) {
-                            $('#promoCodeMultiple').val(data.promoCodeList.split(',')).trigger('change');
+                            // $('#promoCodeMultiple').val(data.promoCodeList.split(',')).trigger('change');
+
+                            let element = data.promoCodeList.split(',');
+
+                            element.forEach(item => {
+                                $('#promoCodeMultiple option[value='+item+']').remove();
+                                $('#promoCodeMultiple').append(new Option(item, item, true, true));
+                            });
                         }
                     })
                     .catch(error => console.log(error))
-                    .finally()
+                    .finally();
             },
 
             eligibilityPolicy() {
@@ -3690,7 +3689,7 @@ console.log(advanceFilter.mainData,'xxxx')
                         }
 
                         // for Da Expiry Date
-                        this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : moment().format("yyyy-MM-DD") + "T00:00";
+                        this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : null;
 
                     })
                     .catch(error => console.log(error))
@@ -3717,7 +3716,7 @@ console.log(advanceFilter.mainData,'xxxx')
                         this.campaignEndDate = data.campaignEndDate != null ? data.campaignEndDate : moment().format("yyyy-MM-DD") + "T00:00";
 
                         // for Da Expiry Date
-                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : moment().format("yyyy-MM-DD") + "T00:00";
+                        this.daExpiryDate = data.daExpiryDate != null ? data.daExpiryDate : null;
 
                     })
                     .catch(error => console.log(error))
@@ -3778,6 +3777,12 @@ console.log(advanceFilter.mainData,'xxxx')
                         } else if (data.period == true) {
                             this.redemptionOptKeywordRadio = 'period-only'
                         }
+
+                        //for Recurring Frequency Radio
+                        if (data.isRecurringFrequencyAndPeriod == true) {
+                            this.recurringRedemptionRadio   = 'req-day'
+                        } else if (data.isRecurringFrequencyEachMonth == true)
+                            this.recurringRedemptionRadio   = 'req-month'
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -4109,8 +4114,7 @@ console.log(advanceFilter.mainData,'xxxx')
                     offerRedemption.isRecurringFrequencyEachMonth   = true;
                     offerRedemption.recurringFrequencyValue         = null;
                     offerRedemption.recurringFrequencyPeriodValue   = null;
-                    // offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
-                    offerRedemption.recurringFrequencyDayOfMonth    = '1';
+                    offerRedemption.recurringFrequencyDayOfMonth    = this.redemptionData.recurringFrequencyDayOfMonth;
                     offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
                 }
                 const prepaidCxOfferAdvanceFilter = {
@@ -4156,6 +4160,8 @@ console.log(advanceFilter.mainData,'xxxx')
                 // console.log(this.type);
                 if (!this.overallOfferName && this.type != 'eventCondition') {
                     swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
+                } else if (!this.campaignStartDate || !this.campaignEndDate) {
+                    swal("Error!", "Event Campaign Period Can Not be Null", "error");
                 } else {
                     window.parent.postMessage(request,'*');
                 }
@@ -4163,6 +4169,7 @@ console.log(advanceFilter.mainData,'xxxx')
             },
         };
     }
+
 
 </script>
 <!--AlpineJS END-->
