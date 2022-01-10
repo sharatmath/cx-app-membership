@@ -1198,32 +1198,85 @@
                         <div class="card-body">
                             <!-- Advance Filter UI Main Entrance -->
                             <div id="advanceFilterComponent" class="advance-filter-container">
-                                
-                                <query-component 
 
-                                    v-bind:maindata="mainData" 
-                                    v-bind:modaltrigger="showModal" 
-                                    v-bind:fetchedtablelist = "fetchedTableList"
-                                    v-bind:modaltriggerfn="showModalfn"
-                                    v-bind:deletegroupfn="deleteGroupfn"
-                                    v-bind:deletedatafn="deleteDatafn"
-                                    v-bind:getadddatagroupidfn="getAddDataGroupIdfn"
-                                    v-bind:savedatafn="saveDatafn"
-                                    v-bind:creategroupfn ="createGroupfn"
+                                <a class="tab-selected"
+                                    href="#"
+                                    v-show="advanceFilterTab === 'customUI'"
+                                >Custom UI</a>
+                                <a class="tab-unselected"
+                                    href="#"
                                     
+                                    v-show="advanceFilterTab === 'customQuery'"
+                                >Custom UI</a>
+                                <a class="tab-selected"
+                                    href="#"
+                                    v-show="advanceFilterTab === 'customQuery'"
+                                >Custom Query</a>
+                                <a class="tab-unselected"
+                                    href="#"
+                                    
+                                    v-show="advanceFilterTab ==='customUI'"
+                                >Custom Query</a>
+                                <hr>
+                                <div  v-show="advanceFilterTab === 'customUI'">
+                                    <query-component 
+                                        v-bind:maindata="mainData" 
+                                        v-bind:modaltrigger="showModal" 
+                                        v-bind:fetchedtablelist = "fetchedTableList"
+                                        v-bind:modaltriggerfn="showModalfn"
+                                        v-bind:deletegroupfn="deleteGroupfn"
+                                        v-bind:deletedatafn="deleteDatafn"
+                                        v-bind:getadddatagroupidfn="getAddDataGroupIdfn"
+                                        v-bind:savedatafn="saveDatafn"
+                                        v-bind:creategroupfn ="createGroupfn"
                                     ></query-component>
+    
+                                    <button  class="btn btn-singtel" style="float:right; margin:10px; margin-top: 5%;" v-on:click="generateSQL" v-bind:disabled="mainData[0].groups.length === 0 && mainData[0].dataList.length === 0">Generate SQL</button>
+                                    <textarea 
+                                        placeholder="View SQL"
+                                         v-model="generatedQuery"
+                                        :readonly="true" 
+                                        :rows="4" 
+                                        style="width:100%;resize: none;" 
+                                        class="form-control form-control-sm input-custom"
+                                    ></textarea>
+                                        
+                                </div>
 
-                                <button  class="btn btn-singtel" style="float:right; margin:10px; margin-top: 5%;" v-on:click="generateSQL" v-bind:disabled="advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0">Generate SQL</button>
-                                <textarea 
-                                    placeholder="View SQL"
-                                     v-model="generatedQuery"
-                                    :readonly="true" 
-                                    :rows="4" 
-                                    style="width:100%;resize: none;" 
-                                    class="form-control form-control-sm input-custom"></textarea>
+                                <div  v-show="advanceFilterTab === 'customQuery'">
                                     
+                                </div>
                             </div>
                              <!-- Advance Filter UI Main Entrance END -->
+
+                             <!-- <div  v-show="false">
+                                <div name="modal">
+                                  <div class="modal-mask">
+                                    <div class="modal-wrapper">
+                                      <div class="modal-container">
+                                        <div class="modal-header">
+                                          <slot name="header">
+                                            Switch Tab
+                                          </slot>
+                                        </div>
+                                        <div class="modal-body">
+                                          <slot name="body">
+                                            <div>Switching tab will erase all of configuration done in present tab, Should we proceed? </div>
+                                            <div class="modal-footer">
+                                                <button class="btn" @click.prevent="showModal=false">
+                                                    No
+                                                </button>
+                                                <button class="btn btn-singtel" @click.prevent="showModal=false" @click="emptyComponentList">  
+                                                    proceed
+                                                </button>
+                                            </div>
+                                          </slot>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div> -->
 
                         </div>
                     </div>
@@ -2378,11 +2431,20 @@
 
 <!--VueJS START-->
 <script>
+
+    // const INSTANCE_ID = $("#instanceId").text();
+    const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
+    const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
+    const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
+
+
     // handle the state management of data
     var store = {  
         debug: true,
         state: {},
     }
+
+
 
     const formatDate = date => date.toISOString().slice(0, 10);
     var dateToday = formatDate(new Date());
@@ -2677,7 +2739,7 @@
             setSelectedFetchTable () {
 
                 fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/${this.selectedFetchTable.af_tables_id}`)
-                //fetch(TEST_URL + `AdvFilters/${this.selectedFetchTable.af_tables_id}`)
+                //fetch(OFFERMGMT_URL + `AdvFilters/${this.selectedFetchTable.af_tables_id}`)
 				.then(res => res.json())
 				.then(data => {
                     this.fetchedColumnList = data.items;
@@ -3083,11 +3145,31 @@
             }],
             fetchedTableList:[],
             generatedQuery:null,
+            customQuery:null,
+            fetchedData:null,
+            advanceFilterTab:'customUI'
         },
         methods: {
+
+            clearMainDatafn() { // to be ready
+                advanceFilter.mainData = [];
+
+                var  tempMainData ={
+                    groupId:uuidv4(),
+                    rootGroup:true,
+                    groupCondition:'AND',
+                    groups:[],   
+                    dataList:[]
+                };
+
+                advanceFilter.mainData.push(tempMainData);
+                console.log(advanceFilter.mainData);
+            },
+
             showModalfn() {
                 advanceFilter.showModal = !advanceFilter.showModal;
             },
+
             deleteViaGroupId (selectedGroupId, data) {
 
                 if(data){
@@ -3108,6 +3190,7 @@
             deleteGroupfn (selectedGroupId) {
                 this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
                 this.generatedQuery = null;
+                this.generateSQL();
             },
 
             deleteViaGroupIdAndDataId (selectedGroupId, selectedDataId, data) {
@@ -3146,6 +3229,7 @@
             deleteDatafn (selectedGroupId, selectedDataId ) {
                 this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, advanceFilter.mainData)
                 this.generatedQuery = null;
+                this.generateSQL();
             },
             addDataViaGroupId (selectedGroupId , data, savedData) {
 
@@ -3170,6 +3254,7 @@
                 this.addDataViaGroupId(advanceFilter.selectedGroupId, advanceFilter.mainData, savedData)
                 advanceFilter.selectedGroupId = null;
                 this.generatedQuery = null;
+                this.generateSQL();
             },
 
             addGroupViaGroupId (selectedGroupId , data) {
@@ -3200,9 +3285,12 @@
             createGroupfn(selectedGroupId) { 
                 this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
                 this.generatedQuery = null;
+                this.generateSQL();
             },
             generateSQL () {
-                fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/getSQLQuery`, {
+                console.log(advanceFilter.mainData,'dvanceFilter.mainData')
+                console.log(JSON.stringify(advanceFilter.mainData))
+                fetch(PROD_URL+`getSQLQuery`, {
                     method: 'POST',
                     headers: {
                        "Content-Type": "application/json",
@@ -3217,7 +3305,10 @@
 				.then(res => res.json())
 				.then(data => {
                     console.log(data.queryText)
-                    this.generatedQuery = data.queryText;
+
+                    if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
+                    this.generatedQuery = null;
+                } else this.generatedQuery = data.queryText;
                     return this.generatedQuery;
 				})
 				.catch(error => console.log(error))
@@ -3225,12 +3316,11 @@
             }
 
         },
-        watch: {},
 
         mounted:function () {
             //  this call the table list
-              fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
-                //fetch(TEST_URL + `AdvFilters/`)
+            //fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
+                fetch(OFFERMGMT_URL + `AdvFilters/`)
 				.then(res => res.json())
 				.then(data => {
                     this.fetchedTableList = data.items;
@@ -3238,8 +3328,28 @@
 				})
 				.catch(error => console.log(error))
 				.finally()
+    
 
-        }
+                const INSTANCE_ID_SAMPLE = '63483226-49f3-48a2-8720-4f4c47021e32';
+            fetch(PROD_URL+`listCXOffer?instanceId=${INSTANCE_ID}`)
+			    .then(res => res.json())
+			    .then(data => {
+                    console.log(data,'listCXOffers')
+
+                    // this.mainData = data.payload;
+                    // this.generatedQuery = data.queryText;
+                    // this.customQuery = data.customQuery;
+
+                    return 
+			    })
+
+			    .catch(error => console.log(error))
+			    .finally()
+                
+                var dummy = [{"groupId":"61d4030e-36657f-3d0b-202323","rootGroup":true,"groupCondition":"AND","groups":[{"groupId":"61d40331-36657f-3d0b-209606","rootGroup":false,"groupCondition":"AND","groups":[],"dataList":[{"dataId":"61d40338-36657f-3d0b-259d8b","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}],"dataList":[{"dataId":"61d4031c-36657f-3d0b-5b393f","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}]
+                this.mainData = dummy;
+                console.log('dummy')
+            }
        
     })
 console.log(advanceFilter.mainData,'xxxx')
@@ -3255,11 +3365,7 @@ console.log(advanceFilter.mainData,'xxxx')
 
 <!--AlpineJS BEGIN-->
 <script>
-    const INSTANCE_ID = $("#instanceId").text();
-    // const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
-    const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
-    const TEST_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
-    const testImport = 'value test'
+
 
     function configureMembership() {
         return {
@@ -3317,7 +3423,6 @@ console.log(advanceFilter.mainData,'xxxx')
             daExpiryDateMonitor             : null,
 
             init() {
-                console.log(advanceFilter.mainData,'advance filter data')
                 this.eventTypeDropdown(),
                 this.offerBucketDropdown(),
                 this.campaignOfferDropdown(),
@@ -4008,6 +4113,13 @@ console.log(advanceFilter.mainData,'xxxx')
                     offerRedemption.recurringFrequencyDayOfMonth    = '1';
                     offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
                 }
+                const prepaidCxOfferAdvanceFilter = {
+                    "offerConfigId":INSTANCE_ID,
+                    "payload": advanceFilter.mainData,  
+                    "queryText": advanceFilter.generatedQuery,    
+                    "customQuery": false,
+                    "id": null,
+                }
 
                 var request = { "amsAction" : "save", "requestId" : "save",
                     "payload": {
@@ -4037,6 +4149,7 @@ console.log(advanceFilter.mainData,'xxxx')
                         offerEligibility,
                         offerMonitoring,
                         offerRedemption,
+                        prepaidCxOfferAdvanceFilter,
                     },
                     "notification": "true"
                 };
