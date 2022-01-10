@@ -276,6 +276,26 @@ public class OfferServiceImpl implements OfferService {
 		}
 		return new PrepaidCxOfferEventCondition();
 	}
+
+	public EventConditionName checkEventConditionName(String eventConditionName){
+		Optional<PrepaidCxOfferEventCondition> opsFind = prepaidCxOfferEventConditionRepository.findByEventConditionName(eventConditionName);
+		if(opsFind.isPresent()){
+			return EventConditionName.builder()
+					.name(eventConditionName)
+					.isUnique(false)
+					.status("SUCCESS")
+					.message("Event Condition "+eventConditionName+" already exists. Please choose a different Promo Name.")
+					.build();
+		}else{
+			return EventConditionName.builder()
+					.name(eventConditionName)
+					.isUnique(true)
+					.status("SUCCESS")
+					.message("Event Condition "+eventConditionName+" can be used")
+					.build();
+		}
+	}
+
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){

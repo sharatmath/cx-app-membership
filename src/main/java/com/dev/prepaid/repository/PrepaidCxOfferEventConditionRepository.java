@@ -1,5 +1,6 @@
 package com.dev.prepaid.repository;
 
+import com.dev.prepaid.domain.PrepaidCxOfferConfig;
 import com.dev.prepaid.domain.PrepaidCxOfferEventCondition;
 import com.dev.prepaid.domain.PrepaidCxOfferMonitoring;
 import org.springframework.data.repository.CrudRepository;
@@ -10,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface PrepaidCxOfferEventConditionRepository extends CrudRepository<PrepaidCxOfferEventCondition,Long> {
     Optional<PrepaidCxOfferEventCondition> findByOfferConfigId(@Param("offerConfigId") String offerConfigId);
+    Optional<PrepaidCxOfferEventCondition> findByEventConditionName(@Param("eventConditionName") String eventConditionName);
 }

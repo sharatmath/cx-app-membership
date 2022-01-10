@@ -550,6 +550,12 @@ public class DataController {
 		return offerService.checkOverallOfferName(overallOfferName);
 	}
 
+	@GetMapping(value = "checkUniqueEventConditionName")
+	public EventConditionName checkUniqueEventConditionName(
+			@RequestParam(value = "eventConditionName", required = true) String eventConditionName) throws ParseException {
+		return offerService.checkEventConditionName(eventConditionName);
+	}
+
 //	Saket
 
 	/*
