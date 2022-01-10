@@ -1842,17 +1842,12 @@
                                                                 <label class="custom-control-label" for="radioRecurringRedemptionID"></label>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-2">
-                                                            <label class="sr-only" for="inputRecFreqDP">Name</label>
-                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">-->
-                                                            <input disabled type="number" placeholder="1" min="1" max="1" class="form-control mb-2 mr-sm-2" id="inputRecFreqDP" x-model="redemptionData.recurringFrequencyValue">
-                                                        </div>
-                                                        <label class="col-sm-1 col-form-label col-form-label">in Every</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">Once in Every</label>
                                                         <div class="col-sm-2">
                                                             <label class="sr-only" for="inputRecFreqDPIn">Name</label>
                                                             <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-month'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="inputRecFreqDPIn" x-model="redemptionData.recurringFrequencyPeriodValue">
                                                         </div>
-                                                        <div class="col-sm-2"> Day
+                                                        <div class="col-sm-2"> Days
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
@@ -1865,10 +1860,10 @@
                                                         </div>
                                                         <div class="col-sm-2">
                                                             <label class="sr-only" for="dayRecFreq">Day</label>
-                                                            <!--                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
-                                                            <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
+                                                                <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
+<!--                                                            <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
                                                         </div>
-                                                        <label class="col-sm-2 col-form-label col-form-label">of Each Month</label>
+                                                        <label class="col-sm-2 col-form-label col-form-label">day of each month</label>
                                                     </div>
                                                 </div><hr>
                                                 <div class="form-group row">
@@ -2440,6 +2435,7 @@
                             let element = data.promoCodeList.split(',');
 
                             element.forEach(item => {
+                                $('#promoCodeMultiple option[value='+item+']').remove();
                                 $('#promoCodeMultiple').append(new Option(item, item, true, true));
                             });
                         }
@@ -2583,6 +2579,12 @@
                         } else if (data.period == true) {
                             this.redemptionOptKeywordRadio = 'period-only'
                         }
+
+                        //for Recurring Frequency Radio
+                        if (data.isRecurringFrequencyAndPeriod == true) {
+                            this.recurringRedemptionRadio   = 'req-day'
+                        } else if (data.isRecurringFrequencyEachMonth == true)
+                            this.recurringRedemptionRadio   = 'req-month'
                     })
                     .catch(error => console.log(error))
                     .finally()
