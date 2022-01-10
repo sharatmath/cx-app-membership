@@ -387,6 +387,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
             prepaidCxOfferMonitoring
                     .setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
+            log.info("topuptrans= {}",saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue());
             if (saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue() != null || saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue() != "" || !saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue().equals("")) {
                 prepaidCxOfferMonitoring.setTopUpCurBalanceValue(
                         Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue()));
