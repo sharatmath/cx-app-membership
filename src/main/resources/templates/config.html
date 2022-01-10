@@ -2730,7 +2730,7 @@
                     offerEventCondition.topUpAccBalanceBeforeOp     = this.eventConditionData.topUpAccBalanceBeforeOp || 'AllTopUp';
                     offerEventCondition.topUpAccBalanceBeforeValue  = this.eventConditionData.topUpAccBalanceBeforeValue;
                     offerEventCondition.topUpOp                     = this.eventConditionData.topUpOp || 'lessThan';
-                    offerEventCondition.topUpTransactionValue       = this.eventConditionData.topUpTransactionValue;
+                    offerEventCondition.topUpTransactionValue       = this.eventConditionData.topUpTransactionValue || null;
                     offerEventCondition.topUpDaId                   = this.eventConditionData.topUpDaId;
                     offerEventCondition.topUpDaBalanceOp            = this.eventConditionData.topUpDaBalanceOp || 'lessThan';
                     offerEventCondition.topUpDaBalanceValue         = this.eventConditionData.topUpDaBalanceValue;
@@ -2800,7 +2800,7 @@
                     offerMonitoring.topUpAccBalanceBeforeOp     = this.monitoringData.topUpAccBalanceBeforeOp || 'AllTopUp';
                     offerMonitoring.topUpAccBalanceBeforeValue  = this.monitoringData.topUpAccBalanceBeforeValue;
                     offerMonitoring.topUpOp                     = this.monitoringData.topUpOp || 'lessThan';
-                    offerMonitoring.topUpTransactionValue       = this.monitoringData.topUpTransactionValue;
+                    offerMonitoring.topUpTransactionValue       = this.monitoringData.topUpTransactionValue || null;
                     offerMonitoring.topUpDaId                   = this.monitoringData.topUpDaId;
                     offerMonitoring.topUpDaBalanceOp            = this.monitoringData.topUpDaBalanceOp || 'lessThan';
                     offerMonitoring.topUpDaBalanceValue         = this.monitoringData.topUpDaBalanceValue;
