@@ -41,4 +41,5 @@ public interface OfferService {
 	public List<PromoCode> listOfferType();
 	public OverallOfferName checkOverallOfferName(String overallOfferName);
 	public String getProvisionType(String instanceId);
+	public EventConditionName checkEventConditionName(String eventConditionName);
 }

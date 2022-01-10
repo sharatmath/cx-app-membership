@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/auths",
 						"/generateTokenExportProduct",
 						"/invoke",
+						"/actuator",
 //						Saket
 						"/saveFunction",
 						"/doInsertCXOffer",

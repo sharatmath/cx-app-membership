@@ -1,0 +1,88 @@
+POST http://130.61.15.242/invoke HTTP/1.1
+content-type: application/json
+
+
+{
+  "instanceContext": {
+    "appId": "97d16835-90a8-43a6-9a96-dddeacfa9362",
+    "installId": "eb2121ee-7675-4c87-9b0a-a2502892cf8f",
+    "instanceId": "91ee60d7-844e-4022-9f23-3dcf7a7b0a98",
+    "serviceId": "aec078a8-1a61-43bd-ad5e-01043ebb6454",
+    "tenantId": "80578",
+    "productId": "6798e522-deb5-488f-bf22-c29e13254b8f",
+    "maxPushBatchSize": 0,
+    "secret": "16620479-5822-4403-a53e-ac42d1a1abbe-16d5232a-0e6b-4fa1-b800-3208be76c0f3",
+    "recordDefinition": {
+      "inputParameters": [
+        {
+          "name": "appcloud_row_correlation_id",
+          "dataType": "Text",
+          "width": 40,
+          "unique": true,
+          "required": true
+        },
+        {
+          "name": "CUSTOMER_ID_",
+          "dataType": "Text",
+          "width": 40,
+          "required": true,
+          "readOnly": true
+        }
+      ],
+      "outputParameters": [
+        {
+          "name": "appcloud_row_correlation_id",
+          "dataType": "Text",
+          "width": 40,
+          "readOnly": false
+        },
+        {
+          "name": "appcloud_row_status",
+          "dataType": "Text",
+          "width": 40,
+          "readOnly": false
+        },
+        {
+          "name": "appcloud_row_errormessage",
+          "dataType": "Text",
+          "width": 255,
+          "readOnly": false
+        },
+        {
+          "name": "OVERALL_OFFER_NAME",
+          "dataType": "Text",
+          "width": 200,
+          "readOnly": false
+        },
+        {
+          "name": "STATUS",
+          "dataType": "Text",
+          "width": 40,
+          "readOnly": false
+        }
+      ]
+    },
+    "maxBatchSize": 0
+  },
+  "dataSet": {
+    "id": "169257eb-6b1f-47fe-bbf9-6e97e6336d59",
+    "size": 2
+  },
+  "productExportEndpoint": {
+    "url": "https://rest002.rsys8.net/rest/appcloud/v1/tenants/80578/datasets/169257eb-6b1f-47fe-bbf9-6e97e6336d59-20220108-4928468",
+    "method": "GET",
+    "headers": {}
+  },
+  "productImportEndpoint": {
+    "url": "https://rest002.rsys8.net/rest/appcloud/v1/tenants/80578/datasets/169257eb-6b1f-47fe-bbf9-6e97e6336d59-20220108-4928468",
+    "method": "POST",
+    "headers": {}
+  },
+  "onCompletionCallbackEndpoint": {
+    "url": "https://rest002.rsys8.net/rest/appcloud/v1/tenants/80578/executions/169257eb-6b1f-47fe-bbf9-6e97e6336d59-20220108-4928468",
+    "method": "PATCH",
+    "headers": {}
+  },
+  "maxPullPageSize": 10000,
+  "maxPushBatchSize": 10000
+}

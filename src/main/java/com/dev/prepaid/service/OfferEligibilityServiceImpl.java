@@ -235,12 +235,44 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             return rows;
         }
 
+        boolean isFrequencyOnly = false;
+        if(e.getIsFrequencyOnly() == null){
+            
+        }else{
+            isFrequencyOnly = e.getIsFrequencyOnly();
+        }
+
+        boolean isFrequencyAndTime = false;
+        if(e.getIsFrequencyAndTime() == null){
+
+        }else{
+            isFrequencyAndTime = e.getIsFrequencyAndTime();
+        }
+
         log.info("process#2|IS_FREQUENCY_ONLY|{}|VALUE|{}", e.getIsFrequencyOnly(), e.getFrequency());
         log.info("process#2|IS_FREQUENCY_AND_TIME|{}|VALUE|{} IN {} Days", e.getIsFrequencyAndTime(), e.getNumberOfFrequency(), e.getNumberOfDays());
-        for (List<String> row : rows) {
-            if (subscriberLevel(row.get(1), e)) {
-                log.info("process#2|SUBSCRIBER_LEVEL|msisdn|{}|PASS", row.get(1));
-                eligibleRows.add(row);
+       
+        Map<String, Integer> currentCap = new HashMap<String, Integer>();
+        for (List<String> row : rows) {  
+            if (subscriberLevel(currentCap, row.get(1), e, isFrequencyOnly, isFrequencyAndTime)) {
+                if(isFrequencyOnly){
+                    if(currentCap.get(row.get(1) + "countFrequencyPerMsisdn") != null) {
+                        Integer cap = currentCap.get(row.get(1) + "countFrequencyPerMsisdn");
+                        currentCap.put(row.get(1) + "countFrequencyPerMsisdn", cap + 1);
+                    }else{
+                        currentCap.put(row.get(1) + "countFrequencyPerMsisdn", 1);
+                    }
+                }
+                if(isFrequencyAndTime){
+                    if(currentCap.get(row.get(1) + "currentFrequencyInRangeTime") != null){
+                        Integer cap = currentCap.get(row.get(1) + "currentFrequencyInRangeTime");
+                        currentCap.put(row.get(1) + "currentFrequencyInRangeTime", cap + 1);
+                    }else{
+                        currentCap.put(row.get(1) + "currentFrequencyInRangeTime",  1);
+                    }
+
+                }
+                eligibleRows.add(row);            
             } else {
                 log.info("process#2|SUBSCRIBER_LEVEL|msisdn|{}|NOT_PASS", row.get(1));
                 notEligibleRows.add(row);
@@ -468,22 +500,38 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 rows.size());
     }
 
-    private Boolean subscriberLevel(String msisdn, PrepaidCxOfferEligibility prepaidCxOfferEligibility) {
-        if (prepaidCxOfferEligibility.getIsFrequencyOnly()) {
+    private Boolean subscriberLevel(Map<String, Integer> mapCurrentCap, String msisdn, PrepaidCxOfferEligibility prepaidCxOfferEligibility, boolean isFrequencyOnly, boolean isFrequencyAndTime) {
+        log.info("process#2|subscriberLevel|{}|VALUE|{}", msisdn, prepaidCxOfferEligibility);
+        if (isFrequencyOnly) {
             int currentFrequency = countFrequencyPerMsisdn(msisdn, prepaidCxOfferEligibility.getOfferConfigId());
+            if(mapCurrentCap.get(msisdn + "countFrequencyPerMsisdn") != null) {
+                currentFrequency = currentFrequency + mapCurrentCap.get(msisdn + "countFrequencyPerMsisdn");
+            }
+            log.info("process#2|IsFrequencyOnly|{}|VS|{}", currentFrequency, prepaidCxOfferEligibility.getFrequency() );
             if (currentFrequency >= prepaidCxOfferEligibility.getFrequency()) {
+                log.info("process#2|IsFrequencyOnly|{}|Result|{}", msisdn, false);
                 return false;
             } else {
-                if (prepaidCxOfferEligibility.getIsFrequencyAndTime()) {
+                if (isFrequencyAndTime) {
                     int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+                    if(mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime") != null) {
+                        currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
+                    }
+                    log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
                     if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
+                        log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
                         return false;
                     }
                 }
             }
-        } else if (prepaidCxOfferEligibility.getIsFrequencyAndTime()) {
+        } else if (isFrequencyAndTime) {
             int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+            if(mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime") != null) {
+                currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
+            }
+            log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
             if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
+                log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
                 return false;
             }
         }

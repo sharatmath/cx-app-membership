@@ -415,7 +415,9 @@ public class DataController {
 					.recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
 					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
 					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
-					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod()).build();
+					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod())
+					.isRecurringProvisioning(prepaidCxOfferRedemption.isRecurringProvisioning())
+					.build();
 			try {
 				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
 				if (prepaidCxOfferRedemption.getOptEndDate() != null)
@@ -546,6 +548,12 @@ public class DataController {
 	public OverallOfferName checkUniqueOverallOfferName(
 			@RequestParam(value = "overallOfferName", required = true) String overallOfferName) throws ParseException {
 		return offerService.checkOverallOfferName(overallOfferName);
+	}
+
+	@GetMapping(value = "checkUniqueEventConditionName")
+	public EventConditionName checkUniqueEventConditionName(
+			@RequestParam(value = "eventConditionName", required = true) String eventConditionName) throws ParseException {
+		return offerService.checkEventConditionName(eventConditionName);
 	}
 
 //	Saket
