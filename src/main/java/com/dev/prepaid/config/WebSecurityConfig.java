@@ -57,13 +57,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// dont authenticate this particular request
 				.authorizeRequests()
 				.antMatchers("/data/**",
+						"/redemption/**",
+						"/config/**",
 						"/configureDummy",
+						"/test",
 						"/auths",
+						"/generateTokenExportProduct",
 						"/invoke",
+//						Saket
+						"/saveFunction",
+						"/doInsertCXOffer",
+						"listCXOffer",
+						"/getSQLQuery",
 						
 //						"/**",
-//						"/saveconfiguration",
-//						"/configure",
+						"/saveconfiguration",
+						"/create",
+						"/delete",
+						"/configure",
 						
 						"/assets/**",
 						"/h2-console/**",

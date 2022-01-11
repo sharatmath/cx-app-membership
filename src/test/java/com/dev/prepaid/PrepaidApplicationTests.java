@@ -1,40 +1,19 @@
 package com.dev.prepaid;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 
 import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
-import com.dev.prepaid.domain.nosql.PrepaidCxProvInvocations;
-import com.dev.prepaid.model.imports.DataImportDTO;
-import com.dev.prepaid.model.invocation.DataExportDTO;
-import com.dev.prepaid.model.invocation.DataSet;
-import com.dev.prepaid.model.invocation.InstanceContext;
-import com.dev.prepaid.model.invocation.InvocationRequest;
-import com.dev.prepaid.model.invocation.ProductExpImpEndpoint;
 import com.dev.prepaid.repository.PrepaidOmsOfferBucketRepository;
-import com.dev.prepaid.repository.nosql.PrepaidCxProvInvocationsRepository;
+import com.dev.prepaid.repository.PrepaidCxProvInvocationsRepository;
 import com.dev.prepaid.service.OfferService;
-import com.dev.prepaid.util.AppUtil;
-import com.dev.prepaid.util.GUIDUtil;
-import com.dev.prepaid.util.GsonUtils;
 import com.dev.prepaid.util.JwtTokenUtil;
-import com.dev.prepaid.util.RESTUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.reflect.TypeToken;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@SpringBootTest
+//@Slf4j
+//@SpringBootTest
 class PrepaidApplicationTests {
 	
 	@Autowired

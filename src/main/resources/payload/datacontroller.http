@@ -1,0 +1,7 @@
+GET http://localhost:8090/data/offerEventCondition?instanceId=63483226-49f3-48a2-8720-4f4c47021e32
+
+###
+GET http://130.61.15.242/data/offerEventCondition?instanceId=57f7706b-6e17-4d73-8d26-d60836a73378 HTTP/1.1
+
+###
+GET http://130.61.15.242/data/offerSelection?instanceId=63483226-49f3-48a2-8720-4f4c47021e32 HTTP/1.1

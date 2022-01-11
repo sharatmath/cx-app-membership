@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dev.prepaid.repository.PrepaidOfferMembershipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,13 @@ import com.dev.prepaid.domain.PrepaidDaOfferBucket;
 import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
 import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
 import com.dev.prepaid.domain.PrepaidOmsOfferCampaign;
-import com.dev.prepaid.domain.nosql.PrepaidCxProvInvocations;
+import com.dev.prepaid.domain.PrepaidCxProvInvocations;
 import com.dev.prepaid.model.CxAppsInfo;
 import com.dev.prepaid.model.DataRowDTO;
 import com.dev.prepaid.model.DataSetDTO;
 import com.dev.prepaid.model.invocation.InstanceContext;
 import com.dev.prepaid.model.invocation.InvocationRequest;
-import com.dev.prepaid.repository.nosql.PrepaidCxProvInvocationsRepository;
+import com.dev.prepaid.repository.PrepaidCxProvInvocationsRepository;
 import com.dev.prepaid.util.BaseRabbitTemplate;
 import com.dev.prepaid.util.DateUtil;
 import com.dev.prepaid.util.GsonUtils;
@@ -38,6 +39,8 @@ public class PrepaidAppServiceImpl extends BaseRabbitTemplate implements Prepaid
 	@Autowired
 	private OfferService offerService;
 
+	@Autowired
+	PrepaidOfferMembershipRepository prepaidOfferMembershipRepository;
 	@Autowired
 	private PrepaidCxProvInvocationsRepository prepaidCxProvInvocationsRepository;
 	
@@ -167,11 +170,11 @@ public class PrepaidAppServiceImpl extends BaseRabbitTemplate implements Prepaid
 					requestPGS.put("notification", notification);
 
 					
-					//send to PGS Queue
-					rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_SINGTEL,
-							Constant.QUEUE_NAME_SINGTEL_PGS,
-							requestPGS,
-							0);
+//					//send to PGS Queue
+//					rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_SINGTEL,
+//							Constant.QUEUE_NAME_SINGTEL_PGS,
+//							requestPGS,
+//							0);
 					
 //					processedRow.setRows(List.of(msisdn));
 					
@@ -204,10 +207,10 @@ public class PrepaidAppServiceImpl extends BaseRabbitTemplate implements Prepaid
 					requestPGS.put("notification", notification);
 					
 					//send to PGS Queue		
-					rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_SINGTEL,
-							Constant.QUEUE_NAME_SINGTEL_PGS,
-							requestPGS,
-							0);
+//					rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_SINGTEL,
+//							Constant.QUEUE_NAME_SINGTEL_PGS,
+//							requestPGS,
+//							0);
 					
 //					processedRow.setRows(List.of(msisdn));
 				}
@@ -246,10 +249,10 @@ public class PrepaidAppServiceImpl extends BaseRabbitTemplate implements Prepaid
 				requestPVAS.put("notification", notification);
 				
 				//send to PVAS Queue
-				rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_SINGTEL,
-						Constant.QUEUE_NAME_SINGTEL_PVAS,
-						requestPVAS,
-						0);
+//				rabbitTemplateConvertAndSendWithPriority(Constant.TOPIC_EXCHANGE_NAME_SINGTEL,
+//						Constant.QUEUE_NAME_SINGTEL_PVAS,
+//						requestPVAS,
+//						0);
 				
 //				processedRow.setRows((ArrayList<String>) List.of(msisdn));
 			}

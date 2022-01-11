@@ -15,14 +15,14 @@ spec:
       containers:
       - name: prepaid-cx-membership-api
     # enter the path to your image, be sure to include the correct region prefix
-        image: fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit
+        image: fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-0.4.2
         resources:
           requests:
-            memory: "1024Mi"
-            cpu: "750m"
+            memory: "2048Mi"
+            cpu: "0.5"
           limits:
             memory: "5000Mi"
-            cpu: "1500m"
+            cpu: "0.6"
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
@@ -36,7 +36,7 @@ kind: Service
 metadata:
   name: prepaid-cx-membership-api-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 80
     protocol: TCP

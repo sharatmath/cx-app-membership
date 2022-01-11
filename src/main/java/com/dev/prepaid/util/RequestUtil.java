@@ -55,7 +55,7 @@ public class RequestUtil {
         return interceptors;
     }
     
-    public static ArrayList<ClientHttpRequestInterceptor> getClientImportProductJWTHttpInterceptor(InvocationRequest invocation, String contentType, String token) {
+    public static ArrayList<ClientHttpRequestInterceptor> getClientOnCompletionCallbackJWTHttpInterceptor(InvocationRequest invocation, String contentType, String token) {
         ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
 	    interceptors.add(new HeaderRequestInterceptor("Authorization", "Bearer " + token));
 	    interceptors.add(new HeaderRequestInterceptor("Content-Type", contentType));
@@ -77,5 +77,14 @@ public class RequestUtil {
         httpHeaders.add(HEADER_KEY,HEADER_VALUE+SPACE+base64passwordString);
         
         return new HttpEntity<>(httpHeaders);
+    }
+
+    public static ArrayList<ClientHttpRequestInterceptor> getClientHttpInterceptorBasic2(String token,String contentType) {
+        ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+        interceptors.add(new HeaderRequestInterceptor(HEADER_KEY, token));
+        interceptors.add(new HeaderRequestInterceptor("Content-Type", contentType));
+        interceptors.add(new LoggingRequestInterceptor());
+
+        return interceptors;
     }
 }
