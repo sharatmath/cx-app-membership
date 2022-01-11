@@ -287,8 +287,11 @@
                                     <div class="form-group">
                                         <div class="mb-3 row">
                                             <label for="eventConditionDataEventConditionName" class="col-sm-2 col-form-label">Event Condition Name<sup><i class="fas fa-asterisk"></i></sup></label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="eventConditionDataEventConditionName" x-model="eventConditionData.eventConditionName">
+                                            <div class="col-sm-8">
+                                                <input type="text" @keyup="reValidateEvent()"  class="form-control" id="eventConditionDataEventConditionName" x-model="eventConditionName">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button @click="checkUniqueEventCondition" class="btn btn-singtel" id="validateEventCondition"><i class="fas fa-check-double"></i> Validate</button>
                                             </div>
                                         </div>
                                     </div>
@@ -749,7 +752,6 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <button @click="checkUniqueOfferName" class="btn btn-singtel" id="validateOffer"><i class="fas fa-check-double"></i> Validate</button>
-<!--                                        <button @click="reValidate" class="btn btn-singtel" id="reValidate"><i class="fas fa-redo"></i></button>-->
                                     </div>
                                 </div><br>
                                 <div class="form-inline col-sm-12">
@@ -1681,7 +1683,6 @@
                                                         <div class="col-sm-1">On</div>
                                                         <div class="col-sm-2">
                                                            <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="dayRecFreqX" x-model="redemptionData.recurringFrequencyDayOfMonth">
-<!--                                                       <input type="number" class="form-control mb-2 mr-sm-2" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
                                                         </div>
                                                         <label class="col-sm-2 col-form-label col-form-label">day of each month</label>
                                                     </div>
@@ -1861,7 +1862,6 @@
                                                         <div class="col-sm-2">
                                                             <label class="sr-only" for="dayRecFreq">Day</label>
                                                                 <input :disabled="!recurringRedemptionRadio || recurringRedemptionRadio === 'req-day'" type="number" min="1" max="28" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">
-<!--                                                            <input disabled placeholder="1" type="number" min="1" max="1" class="form-control mb-2 mr-sm-2" id="dayRecFreq" x-model="redemptionData.recurringFrequencyDayOfMonth">-->
                                                         </div>
                                                         <label class="col-sm-2 col-form-label col-form-label">day of each month</label>
                                                     </div>
@@ -2217,6 +2217,7 @@
             campaignEndDate                 : null,
             daExpiryDate                    : null,
             daExpiryDateMonitor             : null,
+            eventConditionName              : null,
 
             init() {
                 this.eventTypeDropdown(),
@@ -2286,7 +2287,6 @@
                             } else if (this.uniqueData == true) {
                                 swal("Success!", "Data Eligible to Use", "success");
                                 $("#validateOffer").attr('class', 'btn btn-green').attr("disabled", true);
-                                // $("#overallOfferName").attr("disabled", true);
                             }
 
                         })
@@ -2299,10 +2299,38 @@
                 }
             },
 
+            checkUniqueEventCondition() {
+                if(!!this.eventConditionName) {
+                    fetch(PROD_URL + `checkUniqueEventConditionName?eventConditionName=${this.eventConditionName}`)
+                        .then(res => res.json())
+                        .then(data => {
+
+                            this.uniqueData = data.unique
+                            this.uniqueMessage = data.message
+
+                            if (this.uniqueData == false) {
+                                swal("Error!", this.uniqueMessage, "error");
+                            } else if (this.uniqueData == true) {
+                                swal("Success!", this.uniqueMessage, "success");
+                                $("#validateEventCondition").attr('class', 'btn btn-green').attr("disabled", true);
+                            }
+
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                        .finally()
+                } else {
+                    swal("Error!", "You have to fill in Event Condition Name", "error");
+                }
+            },
+
             reValidate() {
-                // swal("Re-Validate", "You need to Re-Validate Overall Offer Name", "success");
                 $("#validateOffer").attr('class', 'btn btn-singtel').attr("disabled", false);
-                // $("#overallOfferName").prop("disabled", false);
+            },
+
+            reValidateEvent() {
+                $("#validateEventCondition").attr('class', 'btn btn-singtel').attr("disabled", false);
             },
 
             addNewData() {
@@ -2448,7 +2476,7 @@
                 fetch(PROD_URL + `offerEligibility?instanceId=${INSTANCE_ID}`)
                     .then(res => res.json())
                     .then(data => {
-                        // console.log('retrieve eligibility policy')
+
                         this.eligibilityData = data
 
                         if (data.excludeProgramId != null) {
@@ -2503,6 +2531,7 @@
                     .then(res => res.json())
                     .then(data => {
                         this.eventConditionData = data
+                        this.eventConditionName = data.eventConditionName
 
                         // For Event Condition Type Dropdown
                         if (data.eventType != null) {
@@ -2529,13 +2558,10 @@
                 fetch(PROD_URL + `provisionType?instanceId=${INSTANCE_ID}`)
                     .then(res => res.text())
                     .then(data => {
-                        // console.log(data)
                         if (data == '') {
                             this.type = 'directProvisioning'
-                            // console.log('TYPE IS NULL')
                         } else {
                             this.type = data
-                            // console.log('TYPE IS NOT NULL')
                         }
                     })
                     .catch(error => console.log(error))
@@ -2638,7 +2664,7 @@
                     "eventType"             : this.eventConditionTypeData,
                     "campaignStartDate"     : this.campaignStartDate,
                     "campaignEndDate"       : this.campaignEndDate,
-                    "eventConditionName"    : this.eventConditionData.eventConditionName,
+                    "eventConditionName"    : this.eventConditionName,
                 };
 
                 if (this.eventConditionTypeData === 'Top-Up') {
@@ -2951,15 +2977,17 @@
                     },
                     "notification": "true"
                 };
-                // console.log(this.type);
+
                 if (!this.overallOfferName && this.type != 'eventCondition') {
                     swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
                 } else if (!this.campaignStartDate || !this.campaignEndDate) {
                     swal("Error!", "Event Campaign Period Can Not be Null", "error");
+                } else if(!this.eventConditionName && this.type == 'eventConditionDirectProvisioning' || !this.eventConditionName && this.type == 'eventCondition') {
+                    swal("Error!", "Event Condition Name Can Not be Null", "error");
                 } else {
                     window.parent.postMessage(request,'*');
                 }
-                // window.parent.postMessage(request,'*');
+
             },
         };
     }
