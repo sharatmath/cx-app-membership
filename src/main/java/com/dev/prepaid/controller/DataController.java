@@ -17,6 +17,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -1052,7 +1053,7 @@ public class DataController {
 	 */
 //	Adv Filter With UI
 
-	@RequestMapping(value = { "/getSQLQuery" }, method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = { "/getSQLQuery" }, method = { RequestMethod.POST })
 	public ResponseEntity<Map<String, Object>> getSQLQuery(@RequestBody List<Group> groupList) {
 		Map<String, Object> result = new HashMap<>();
 		StringBuilder finalQueryStringBuilder = new StringBuilder();
