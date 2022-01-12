@@ -764,7 +764,7 @@
                                             <option value="OMS">OMS Offer</option>
                                             <option value="MA">MA Offer</option>
                                             <option value="PROMO">Unique Promo Code</option>
-                                            <option value="NONE">None Type</option>
+                                            <option value="NONE">No Offer</option>
                                         </select>
                                     </div>
                                     <div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS' || offerTypeDropdown == 'MA'" class="col-sm-7 row" style="margin-right: 75px">
@@ -2828,7 +2828,7 @@
                     offerMonitoring.usageUnit                   = this.monitoringData.usageUnit;
                     offerMonitoring.roamingFlag                 = this.monitoringData.roamingFlag;
                     offerMonitoring.ratePlanId                  = this.monitoringData.ratePlanId;
-                } else if (this.eventTypeData === 'ARPU') {
+                } else if (this.eventTypeData === 'AqRPU') {
                     offerMonitoring.arpuOp                      = this.monitoringData.arpuOp;
                     offerMonitoring.arpuType                    = this.monitoringData.arpuType;
                     offerMonitoring.arpuSelectedTopUpCode       = this.monitoringData.arpuSelectedTopUpCode;
