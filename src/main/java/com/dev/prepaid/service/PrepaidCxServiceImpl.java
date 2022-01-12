@@ -507,6 +507,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodType());
             prepaidCxOfferRedemption.setTotalRecurringFrequency(
                     saveConfigRequest.getPayload().getOfferRedemption().getTotalRecurringFrequency());
+            // radio button 1
             prepaidCxOfferRedemption.setIsRecurringFrequencyAndPeriod(
                     saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod());
             prepaidCxOfferRedemption.setRecurringFrequencyValue(
@@ -515,7 +516,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodType());
             prepaidCxOfferRedemption.setRecurringFrequencyPeriodValue(
                     saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodValue());
-
+            // radio button 2
             prepaidCxOfferRedemption.setIsRecurringFrequencyEachMonth(
                     saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyEachMonth());
             prepaidCxOfferRedemption.setRecurringFrequencyDayOfMonth(
@@ -579,8 +580,6 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                             saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod())
                     .recurringFrequencyValue(
                             saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyValue())
-                    .recurringFrequencyPeriodType(
-                            saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodType())
                     .recurringFrequencyPeriodValue(
                             saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodValue())
                     .isRecurringFrequencyEachMonth(
@@ -601,7 +600,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     .isRecurringProvisioning(
                             saveConfigRequest.getPayload().getOfferRedemption().isRecurringProvisioning())
                     .build();
-
+    
             prepaidCxOfferRedemption.setOptKeyword(saveConfigRequest.getPayload().getOfferRedemption().getOptKeyword());
             prepaidCxOfferRedemption.setDateRange(saveConfigRequest.getPayload().getOfferRedemption().isDateRange());
             if (saveConfigRequest.getPayload().getOfferRedemption().getOptStartDate() != null) {
@@ -615,6 +614,23 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             prepaidCxOfferRedemption.setPeriod(saveConfigRequest.getPayload().getOfferRedemption().isPeriod());
             prepaidCxOfferRedemption.setOptPeriod(saveConfigRequest.getPayload().getOfferRedemption().getOptPeriod());
         }
+
+        boolean isRecurringFrequencyAndPeriod = false;
+        if(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod() != null){
+                isRecurringFrequencyAndPeriod = saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod();
+        }
+        boolean isRecurringFrequencyEachMonth = false;
+        if(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyEachMonth() != null){
+                isRecurringFrequencyEachMonth = saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyEachMonth();
+        }
+
+        if(isRecurringFrequencyAndPeriod){
+                prepaidCxOfferRedemption.setRecurringFrequencyPeriodType("days");
+        }
+        if(isRecurringFrequencyEachMonth){
+                prepaidCxOfferRedemption.setRecurringFrequencyPeriodType("months");
+        }
+
         prepaidCxOfferRedemptionRepository.save(prepaidCxOfferRedemption);
     }
 
