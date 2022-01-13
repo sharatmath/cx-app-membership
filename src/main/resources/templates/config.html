@@ -2998,52 +2998,94 @@
                     offerRedemption.totalRecurringFrequency         = this.redemptionData.totalRecurringFrequency;
                 }
 
-                var request = { "amsAction" : "save", "requestId" : "save",
-                    "payload": {
-                        "type": this.type,
-                        "uuid": INSTANCE_ID,
-                        "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
-                            if('MA' != this.offerTypeDropdown) {
-                                return {
-                                    offerBucketId       : item.offerBucketId,
-                                    offerBucketType     : item.offerBucketType,
-                                    offerCampaignId     : item.offerCampaignId,
-                                    offerCampaignName   : item.offerCampaignName,
-                                    offerType           : this.offerTypeDropdown,
+                if(this.offerTypeDropdown !== 'MA'){
+                    var request = { "amsAction" : "save", "requestId" : "save",
+                        "payload": {
+                            "type": this.type,
+                            "uuid": INSTANCE_ID,
+                            "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
+                                if('MA' !== this.offerTypeDropdown) {
+                                    return {
+                                        offerBucketId       : item.offerBucketId,
+                                        offerBucketType     : item.offerBucketType,
+                                        offerCampaignId     : item.offerCampaignId,
+                                        offerCampaignName   : item.offerCampaignName,
+                                        offerType           : this.offerTypeDropdown,
+                                    }
+                                }else {
+                                    return {}
                                 }
-                            }
-                        }),
-                        "offerPromoCode":
-                            {
-                                "promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
-                                "messageText1"      : this.offerSelectionDynamic1,
-                                "messageText2"      : this.offerSelectionDynamic2,
-                                "messageText3"      : this.offerSelectionDynamic3,
-                                "messageText4"      : this.offerSelectionDynamic4,
-                                "offerType"         : 'PROMO',
-                                "overallOfferName"  : this.overallOfferName,
-                                "smsCampaignName"   : this.offerSelectionSmsCampaignName
-                            },
-                        "offerNoneType":
-                            {
-                                "offerType"         : this.offerTypeDropdown,
-                                "overallOfferName"  : this.overallOfferName
-                            },
-                        "offerMaType": JSON.parse(JSON.stringify(this.offers)).map(item => {
-                            return {
-                                offerCampaignId     : item.id,
-                                offerCampaignName   : item.productName,
-                                offerType           : this.offerTypeDropdown,
-                                "overallOfferName"  : this.overallOfferName,
-                            }
-                        }),
-                        offerEventCondition,
-                        offerEligibility,
-                        offerMonitoring,
-                        offerRedemption,
-                    },
-                    "notification": "true"
-                };
+                            }),
+                            "offerPromoCode":
+                                {
+                                    "promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
+                                    "messageText1"      : this.offerSelectionDynamic1,
+                                    "messageText2"      : this.offerSelectionDynamic2,
+                                    "messageText3"      : this.offerSelectionDynamic3,
+                                    "messageText4"      : this.offerSelectionDynamic4,
+                                    "offerType"         : 'PROMO',
+                                    "overallOfferName"  : this.overallOfferName,
+                                    "smsCampaignName"   : this.offerSelectionSmsCampaignName
+                                },
+                            "offerNoneType":
+                                {
+                                    "offerType"         : this.offerTypeDropdown,
+                                    "overallOfferName"  : this.overallOfferName
+                                },
+                            "offerMaType": JSON.parse(JSON.stringify(this.offers)).map(item => {
+                                return {
+                                    offerCampaignId     : item.id,
+                                    offerCampaignName   : item.productName,
+                                    offerType           : this.offerTypeDropdown,
+                                    "overallOfferName"  : this.overallOfferName,
+                                }
+                            }),
+                            offerEventCondition,
+                            offerEligibility,
+                            offerMonitoring,
+                            offerRedemption,
+                        },
+                        "notification": "true"
+                    };
+                }else {
+                    var request = { "amsAction" : "save", "requestId" : "save",
+                        "payload": {
+                            "type": this.type,
+                            "uuid": INSTANCE_ID,
+                            "offerSelection": [],
+                            "offerPromoCode":
+                                {
+                                    "promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
+                                    "messageText1"      : this.offerSelectionDynamic1,
+                                    "messageText2"      : this.offerSelectionDynamic2,
+                                    "messageText3"      : this.offerSelectionDynamic3,
+                                    "messageText4"      : this.offerSelectionDynamic4,
+                                    "offerType"         : 'PROMO',
+                                    "overallOfferName"  : this.overallOfferName,
+                                    "smsCampaignName"   : this.offerSelectionSmsCampaignName
+                                },
+                            "offerNoneType":
+                                {
+                                    "offerType"         : this.offerTypeDropdown,
+                                    "overallOfferName"  : this.overallOfferName
+                                },
+                            "offerMaType": JSON.parse(JSON.stringify(this.offers)).map(item => {
+                                return {
+                                    offerCampaignId     : item.id,
+                                    offerCampaignName   : item.productName,
+                                    offerType           : this.offerTypeDropdown,
+                                    "overallOfferName"  : this.overallOfferName,
+                                }
+                            }),
+                            offerEventCondition,
+                            offerEligibility,
+                            offerMonitoring,
+                            offerRedemption,
+                        },
+                        "notification": "true"
+                    };
+                }
+
                 // console.log(this.type);
                 if (!this.overallOfferName && this.type != 'eventCondition') {
                     swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
