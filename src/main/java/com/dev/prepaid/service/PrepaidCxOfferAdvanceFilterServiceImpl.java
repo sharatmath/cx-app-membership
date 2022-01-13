@@ -37,7 +37,7 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		List<PrepaidCxOfferAdvanceFilter> arrayList = new ArrayList<>();
 		if (opsFindConfig.isPresent()) {
 			Optional<PrepaidCxOfferAdvanceFilter> advFilter = prepaidCxOfferAdvanceFilterRepository
-					.findByOfferConfigId(opsFindConfig.get().getId());
+					.findByOfferConfigId(opsFindConfig.get().getInstanceId());
 			if (advFilter.isPresent()) {
 				arrayList.add(advFilter.get());
 			}
