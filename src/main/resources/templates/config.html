@@ -1420,8 +1420,7 @@ span.select2-selection.select2-selection--single {
 																	aria-labelledby="promoAccordion" data-parent="#prom">
 																	<div class="card-body">
 																		<div class="form-row">
-																			<b>Unique Promo Code Message</b><br>
-																			<br>
+																			<b>Unique Promo Code Message</b><br> <br>
 																			<div class="form-group row">
 																				<label
 																					class="col-sm-2 col-form-label col-form-label">SMS
@@ -1559,14 +1558,13 @@ span.select2-selection.select2-selection--single {
 									class="advance-filter-container">
 
 									<a class="tab-selected" href="#"
-										v-show="advanceFilterTab === 'customUI'">Custom
-										UI</a> <a class="tab-unselected" href="#"
-										v-show="advanceFilterTab === 'customQuery'">Custom
-										UI</a> <a class="tab-selected" href="#"
-										v-show="advanceFilterTab === 'customQuery'">Custom
-										Query</a> <a class="tab-unselected" href="#"
-										v-show="advanceFilterTab ==='customUI'">Custom
-										Query</a>
+										v-show="advanceFilterTab === 'customUI'">Custom UI</a> <a
+										class="tab-unselected" href="#"
+										v-show="advanceFilterTab === 'customQuery'">Custom UI</a> <a
+										class="tab-selected" href="#"
+										v-show="advanceFilterTab === 'customQuery'">Custom Query</a> <a
+										class="tab-unselected" href="#"
+										v-show="advanceFilterTab ==='customUI'">Custom Query</a>
 									<hr>
 									<div v-show="advanceFilterTab === 'customUI'">
 										<query-component v-bind:maindata="mainData"
@@ -1705,8 +1703,7 @@ span.select2-selection.select2-selection--single {
 											</div>
 										</div>
 										<br> <b>Subscriber Offer Eligibility - For Configured
-											Offer</b><br>
-										<br>
+											Offer</b><br> <br>
 										<div class="form-group row">
 											<button @click="uncheckSubscriber" class="btn btn-singtel">
 												<i class="far fa-times-circle"></i> Uncheck Subscriber Offer
@@ -1764,8 +1761,8 @@ span.select2-selection.select2-selection--single {
 										<br>
 										<div id="excludeSubsForm">
 											<b>Exclude Subscriber from this if they are in the
-												following Program</b><br>
-											<br> <select multiple id="select2multiple" class="w-100">
+												following Program</b><br> <br> <select multiple
+												id="select2multiple" class="w-100">
 												<option>Choose...</option>
 												<template x-for="list in programList">
 													<option :key="list.programName" x-text="list.programName"></option>
@@ -2477,11 +2474,9 @@ span.select2-selection.select2-selection--single {
 													<span>Is this recurring? </span> <input type="radio"
 														value="yes" x-model="recurringProvisioning"> Yes <input
 														type="radio" value="no" x-model="recurringProvisioning">
-													No <br>
-													<br>
+													No <br> <br>
 													<div x-show="recurringProvisioning =='yes'">
-														<b>Recurring Provisioning</b><br>
-														<br>
+														<b>Recurring Provisioning</b><br> <br>
 														<div class="form-group row">
 															<label for="totalRecurringFrequency"
 																class="col-sm-2 col-form-label col-form-label">Total
@@ -2544,8 +2539,7 @@ span.select2-selection.select2-selection--single {
 														</div>
 													</div>
 													<hr>
-													<b>Post Provision Message</b><br>
-													<br>
+													<b>Post Provision Message</b><br> <br>
 													<div class="form-group row">
 														<label class="col-sm-2 col-form-label col-form-label">SMS
 															Campaign Name</label>
@@ -2601,8 +2595,7 @@ span.select2-selection.select2-selection--single {
 											<template x-if="redemptionMethod === 'Manual'">
 												<div class="manualRedemptionSelection">
 													<div id="subscriberRedemptionCapForm">
-														<b>Subscriber Redemption Cap</b><br>
-														<br>
+														<b>Subscriber Redemption Cap</b><br> <br>
 														<div class="form-group row">
 															<button @click="uncheckSubscriberRedemption"
 																class="btn btn-singtel">
@@ -2679,8 +2672,7 @@ span.select2-selection.select2-selection--single {
 													</div>
 													<br>
 													<div id="redemptionCapForm">
-														<b>Total Redemption Cap</b><br>
-														<br>
+														<b>Total Redemption Cap</b><br> <br>
 														<div class="form-group row">
 															<button @click="uncheckTotalRedemption"
 																class="btn btn-singtel">
@@ -2763,12 +2755,10 @@ span.select2-selection.select2-selection--single {
 													<span>Is there recurring provisioning? </span> <input
 														type="radio" value="yes" x-model="recurringProvisioning">
 													Yes <input type="radio" value="no"
-														x-model="recurringProvisioning"> No <br>
-													<br>
+														x-model="recurringProvisioning"> No <br> <br>
 													<div id="recurringRedemptionCapForm"
 														x-show="recurringProvisioning =='yes'">
-														<b>Recurring Provisioning</b><br>
-														<br>
+														<b>Recurring Provisioning</b><br> <br>
 														<div class="form-group row">
 															<label for="totalRecurringFrequency"
 																class="col-sm-2 col-form-label col-form-label">Total
@@ -2922,8 +2912,7 @@ span.select2-selection.select2-selection--single {
 															</div>
 														</div>
 													</div>
-													<b>Post Provision Message</b><br>
-													<br>
+													<b>Post Provision Message</b><br> <br>
 													<div class="form-group row">
 														<label class="col-sm-2 col-form-label col-form-label">SMS
 															Campaign Name</label>
@@ -2996,8 +2985,7 @@ span.select2-selection.select2-selection--single {
 
 			</div>
 		</div>
-		<br>
-		<br>
+		<br> <br>
 		<div class="form-group" style="visibility: hidden">
 			<label>Message : <span id="instanceId"
 				th:text="${instanceId}" /></label>
@@ -3178,12 +3166,13 @@ span.select2-selection.select2-selection--single {
 
 
 
-	<!--VueJS START-->
+	<!-- VueJS START -->
 	<script>
 
     // const INSTANCE_ID = $("#instanceId").text();
     const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
+    const PROD_URLs = 'http://localhost:8090/data/';
     const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
 
 
@@ -4040,10 +4029,9 @@ span.select2-selection.select2-selection--single {
                 console.log(advanceFilter.mainData,'dvanceFilter.mainData')
                 console.log(JSON.stringify(advanceFilter.mainData))
                 
-
-                
                 fetch(PROD_URL+`getSQLQuery`, {
                     method: 'POST',
+                    	mode:"cors",
                     headers: {
                         "Content-Type": "application/json",
                         "Accept": "application/json",
