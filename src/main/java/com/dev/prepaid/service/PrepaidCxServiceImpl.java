@@ -330,6 +330,29 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             }
             prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
         }
+
+         // MA Offer
+         for (OfferMaType offerMA : saveConfigRequest.getPayload().getOfferMaType()) {
+                Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
+                        .findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(offerConfigId,
+                        offerMA.getOfferType(),  // MA
+                        offerMA.getOfferCampaignName(), // NAME 12321 1GB
+                        String.valueOf(offerMA.getOfferCampaignId()));  // 1
+                log.info("offerMA {} {}", opsFind, offerMA);
+                PrepaidCxOfferSelection prepaidCxOfferSelection;
+                if (opsFind.isPresent()) {
+                    prepaidCxOfferSelection = opsFind.get();
+                    prepaidCxOfferSelection.setOfferBucketId(offerMA.getOfferCampaignName());  //  ma product name
+                    prepaidCxOfferSelection.setOfferId(String.valueOf(offerMA.getOfferCampaignId())); // ma id
+                } else {
+                    prepaidCxOfferSelection = PrepaidCxOfferSelection.builder().offerConfigId(offerConfigId)
+                            .offerBucketType(offerMA.getOfferType()) // MA
+                            .offerBucketId(offerMA.getOfferCampaignName()) // ma product name
+                            .offerType(offerMA.getOfferType()) // MA
+                            .offerId(String.valueOf(offerMA.getOfferCampaignId())).build(); // ma prouduct id
+                }
+                prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
+            }
     }
 
     private void saveOfferMonitoring(String offerConfigId, SaveConfigRequest saveConfigRequest) {

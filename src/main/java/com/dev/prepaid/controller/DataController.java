@@ -46,7 +46,6 @@ import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
 import com.dev.prepaid.service.OfferService;
 import com.dev.prepaid.util.AppUtil;
 import com.dev.prepaid.util.DateUtil;
-import com.dev.prepaid.util.OperationUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -316,6 +315,22 @@ public class DataController {
 	public String getProvisionType(@RequestParam(value = "instanceId", required = false) String instanceId)
 			throws Exception {
 		return offerService.getProvisionType(instanceId);
+	}
+
+	@GetMapping(value = "offerMA")
+	public List<OfferMaType> getOfferMA(
+			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+		List<OfferMaType> list = new ArrayList<>();
+		List<OfferSelection> data = offerService.getOfferSelection(instanceId);
+		for (OfferSelection prepaidCxOfferSelection : data) {
+			log.info("{}", prepaidCxOfferSelection);
+			OfferMaType ma = new OfferMaType();
+			ma.setOfferCampaignId(prepaidCxOfferSelection.getOfferCampaignId());
+			ma.setOfferType(prepaidCxOfferSelection.getOfferBucketType());
+			ma.setOfferCampaignName(prepaidCxOfferSelection.getOfferBucketId());
+			list.add(ma);
+		}
+		return list;
 	}
 
 	@GetMapping(value = "offerSelection")

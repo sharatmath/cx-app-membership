@@ -41,7 +41,7 @@ public class Config {
 	private OfferNoneType offerNoneType;
 
 	@SerializedName("offerMaType")
-	private OfferMaType offerMaType;
+	private List<OfferMaType> offerMaType;
 
 	@SerializedName("notification")
 	private Boolean notification;
