@@ -3003,12 +3003,14 @@
                         "type": this.type,
                         "uuid": INSTANCE_ID,
                         "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
-                            return {
-                                offerBucketId       : item.offerBucketId,
-                                offerBucketType     : item.offerBucketType,
-                                offerCampaignId     : item.offerCampaignId,
-                                offerCampaignName   : item.offerCampaignName,
-                                offerType           : this.offerTypeDropdown,
+                            if('MA' != this.offerTypeDropdown) {
+                                return {
+                                    offerBucketId       : item.offerBucketId,
+                                    offerBucketType     : item.offerBucketType,
+                                    offerCampaignId     : item.offerCampaignId,
+                                    offerCampaignName   : item.offerCampaignName,
+                                    offerType           : this.offerTypeDropdown,
+                                }
                             }
                         }),
                         "offerPromoCode":
