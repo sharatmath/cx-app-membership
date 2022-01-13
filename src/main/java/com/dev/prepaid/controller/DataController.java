@@ -332,6 +332,11 @@ public class DataController {
 				offerDetailDTO.setOfferId(prepaidCxOfferSelection.getOfferId());
 				offerDetailDTO.setOfferCampaignId(prepaidCxOfferSelection.getOfferCampaignId());
 				offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferCampaignName());
+
+				offerDetailDTO.setDescription(prepaidCxOfferSelection.getOfferBucketId());
+				offerDetailDTO.setId(prepaidCxOfferSelection.getOfferId());
+				offerDetailDTO.setProductName(prepaidCxOfferSelection.getOfferBucketId());
+
 			}else {
 				offerDetailDTO = offerDetail(
 						prepaidCxOfferSelection.getOfferBucketType().concat("|")
