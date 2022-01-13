@@ -40,6 +40,9 @@ public class Config {
 	@SerializedName("offerNonetype")
 	private OfferNoneType offerNoneType;
 
+	@SerializedName("offerMaType")
+	private OfferMaType offerMaType;
+
 	@SerializedName("notification")
 	private Boolean notification;
 
