@@ -204,6 +204,7 @@ public class OfferServiceImpl implements OfferService {
 							.offerBucketType(p.getOfferBucketType())
 							.offerBucketId(p.getOfferBucketId())
 							.offerCampaignName(p.getSmsCampaignName())
+							.offerCampaignId(Long.valueOf(p.getOfferId()))
 							.offerId(p.getOfferId())
 							.build();
 
