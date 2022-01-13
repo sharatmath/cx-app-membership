@@ -21,10 +21,10 @@ public class PrepaidCxOfferSelection extends Auditable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String offerConfigId;
-    private String offerBucketType;
-    private String offerId;
-    private String offerBucketId;
-    private String offerType;
+    private String offerBucketType; // MA | OMS | DA
+    private String offerId; // ma campaign name | OMS campaign Id | DA campaign Id
+    private String offerBucketId; 
+    private String offerType; // MA | OMS | DA 
 
     private String smsCampaignName;
     private String promoCodeList;
