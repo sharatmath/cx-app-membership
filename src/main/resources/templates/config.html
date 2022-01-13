@@ -3027,13 +3027,12 @@
                                 "offerType"         : this.offerTypeDropdown,
                                 "overallOfferName"  : this.overallOfferName
                             },
-                        "offerMaType": JSON.parse(JSON.stringify(this.offers)).map(item => {
-                            return {
-                                offerCampaignId     : item.offerCampaignId,
-                                offerCampaignName   : item.offerCampaignName,
-                                offerType           : this.offerTypeDropdown,
-                            }
-                        }),
+                        "offerMaType":
+                            {
+                                "offerType"         : this.offerTypeDropdown,
+                                "overallOfferName"  : this.overallOfferName,
+                                "offerCampaignId" : this.offerCampaignId
+                            },
                         offerEventCondition,
                         offerEligibility,
                         offerMonitoring,
