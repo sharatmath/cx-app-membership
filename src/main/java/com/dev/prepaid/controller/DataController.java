@@ -317,22 +317,6 @@ public class DataController {
 		return offerService.getProvisionType(instanceId);
 	}
 
-	@GetMapping(value = "offerMA")
-	public List<OfferMaType> getOfferMA(
-			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
-		List<OfferMaType> list = new ArrayList<>();
-		List<OfferSelection> data = offerService.getOfferMa(instanceId);
-		for (OfferSelection prepaidCxOfferSelection : data) {
-			log.info("{}", prepaidCxOfferSelection);
-			OfferMaType ma = new OfferMaType();
-			ma.setOfferCampaignId(prepaidCxOfferSelection.getOfferCampaignId());
-			ma.setOfferType(prepaidCxOfferSelection.getOfferBucketType());
-			ma.setOfferCampaignName(prepaidCxOfferSelection.getOfferBucketId());
-			list.add(ma);
-		}
-		return list;
-	}
-
 	@GetMapping(value = "offerSelection")
 	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
@@ -341,10 +325,19 @@ public class DataController {
 		for (OfferSelection prepaidCxOfferSelection : data) {
 			log.info("{}", prepaidCxOfferSelection);
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
-			offerDetailDTO = offerDetail(
-					prepaidCxOfferSelection.getOfferBucketType().concat("|")
-							.concat(prepaidCxOfferSelection.getOfferBucketId()),
-					String.valueOf(prepaidCxOfferSelection.getOfferId()));
+			log.info("found offerBucketType {}", prepaidCxOfferSelection.getOfferBucketType());
+			if(prepaidCxOfferSelection.getOfferBucketType().equals("MA")){
+				offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketId());
+				offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
+				offerDetailDTO.setOfferId(prepaidCxOfferSelection.getOfferId());
+				offerDetailDTO.setOfferCampaignId(prepaidCxOfferSelection.getOfferCampaignId());
+				offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferCampaignName());
+			}else {
+				offerDetailDTO = offerDetail(
+						prepaidCxOfferSelection.getOfferBucketType().concat("|")
+								.concat(prepaidCxOfferSelection.getOfferBucketId()),
+						String.valueOf(prepaidCxOfferSelection.getOfferId()));
+			}
 //			offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()));
 //			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
 //			offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferType());
@@ -357,6 +350,7 @@ public class DataController {
 //			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
 //			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
 //			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
+
 			log.info("{}", offerDetailDTO);
 			list.add(offerDetailDTO);
 		}

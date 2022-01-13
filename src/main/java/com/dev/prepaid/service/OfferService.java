@@ -32,7 +32,6 @@ public interface OfferService {
 	public OfferPromoCode getOfferPromoCode(String instanceId);
 	public OfferNoneType getOfferNoneType(String instanceId);
 	public List<OfferSelection> getOfferSelection(String instanceId);
-	public List<OfferSelection> getOfferMa(String instanceId);
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId);
 	public OfferFulfilment getOfferMonitoring(String instanceId);
 	public PrepaidCxOfferRedemption getOfferRedemption(String instanceId);
