@@ -255,7 +255,7 @@
                                 <div>
                                     <div class="form-group row">
                                         <label for="isOfferLevelCapOnly" class="col-sm-2 col-form-label col-form-label">
-                                            Event Campaign Period<sup><i class="fas fa-asterisk"></i></sup>
+                                            Event Fulfillment Date<sup><i class="fas fa-asterisk"></i></sup>
                                         </label>
                                         <div class="col-sm-10">
                                             <div class="row">
@@ -452,6 +452,7 @@
                                                 <div class="col-sm-10">
                                                     <select id="eventConditionDataUsageServiceTypeDropdown" class="form-control" x-model="eventConditionData.usageServiceType">
                                                         <option>Choose...</option>
+                                                        <option value="all">All ($)</option>
                                                         <option value="voice">Voice</option>
                                                         <option value="data">Data</option>
                                                         <option value="SMS">SMS</option>
@@ -459,6 +460,61 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <template x-if="eventConditionData.usageServiceType === 'all'">
+                                                <div class="mb-3 row">
+                                                    <label for="eventConditionDataUsageTypeVoice" class="col-sm-2 col-form-label">Usage Type</label>
+                                                    <div class="col-sm-10">
+                                                        <select id="eventConditionDataUsageTypeAll" class="form-control" x-model="eventConditionData.eventTypeUsages">
+                                                            <option>Choose...</option>
+                                                            <option value="VOICE_COUNT">VOICE_COUNT</option>
+                                                            <option value="VOICE_MINS">VOICE_MINS</option>
+                                                            <option value="VOICE_AMOUNT">VOICE_AMOUNT</option>
+                                                            <option value="VOICE_OFFNET_COUNT">VOICE_OFFNET_COUNT</option>
+                                                            <option value="VOICE_OFFNET_MINS">VOICE_OFFNET_MINS</option>
+                                                            <option value="VOICE_OFFNET_AMOUNT">VOICE_OFFNET_AMOUNT</option>
+                                                            <option value="VOICE_ONNET_COUNT">VOICE_ONNET_COUNT</option>
+                                                            <option value="VOICE_ONNET_MINS">VOICE_ONNET_MINS</option>
+                                                            <option value="VOICE_ONNET_AMOUNT">VOICE_ONNET_AMOUNT</option>
+                                                            <option value="VOICE_INCOMING_COUNT">VOICE_INCOMING_COUNT</option>
+                                                            <option value="VOICE_INCOMING_MINS">VOICE_INCOMING_MINS</option>
+                                                            <option value="VOICE_INCOMING_AMOUNT">VOICE_INCOMING_AMOUNT</option>
+                                                            <option value="VOICE_LOCAL_USAGE">VOICE_LOCAL_USAGE</option>
+                                                            <option value="VOICE_LOCAL_DURATION">VOICE_LOCAL_DURATION</option>
+                                                            <option value="VOICE_IDD_USAGE">VOICE_IDD_USAGE</option>
+                                                            <option value="VOICE_IDD_DURATION">VOICE_IDD_DURATION</option>
+                                                            <option value="DATA_VOLUME">DATA_VOLUME</option>
+                                                            <option value="DATA_AMOUNT">DATA_AMOUNT</option>
+                                                            <option value="DATA_LOCAL_USAGE">DATA_LOCAL_USAGE</option>
+                                                            <option value="DATA_LOCAL_DURATION">DATA_LOCAL_DURATION</option>
+                                                            <option value="DATA_ROAMING_USAGE">DATA_ROAMING_USAGE</option>
+                                                            <option value="DATA_ROAMING">DATA_ROAMING_DURATION</option>
+                                                            <option value="SMS_ALL_COUNT">SMS_ALL_COUNT</option>
+                                                            <option value="SMS_ALL_AMOUNT">SMS_ALL_AMOUNT</option>
+                                                            <option value="SMS_OFFNET_COUNT">SMS_OFFNET_COUNT</option>
+                                                            <option value="SMS_OFFNET_AMOUNT">SMS_OFFNET_AMOUNT</option>
+                                                            <option value="SMS_ONNET_COUNT">SMS_ONNET_COUNT</option>
+                                                            <option value="SMS_ONNET_AMOUNT">SMS_ONNET_AMOUNT</option>
+                                                            <option value="MA_AMOUNT">MA_AMOUNT</option>
+                                                            <option value="DA_AMOUNT">DA_AMOUNT</option>
+                                                            <option value="SMS_COUNT">SMS_COUNT</option>
+                                                            <option value="MA_CHARGED_SMS">MA_CHARGED_SMS</option>
+                                                            <option value="DA_CHARGED_SMS">DA_CHARGED_SMS</option>
+                                                            <option value="019_8_8_COUNT">019_8_8_COUNT</option>
+                                                            <option value="019_8_8_DURATION">019_8_8_DURATION</option>
+                                                            <option value="001_8_8_COUNT">001_8_8_COUNT</option>
+                                                            <option value="001_8_8_DURATION">001_8_8_DURATION</option>
+                                                            <option value="019_NON_PEAK_COUNT">019_NON_PEAK_COUNT</option>
+                                                            <option value="019_NON_PEAK_DURATION">019_NON_PEAK_DURATION</option>
+                                                            <option value="001_NON_PEAK_COUNT">001_NON_PEAK_COUNT</option>
+                                                            <option value="001_NON_PEAK_DURATION">001_NON_PEAK_DURATION</option>
+                                                            <option value="NO_PREFIX_8_8_COUNT">NO_PREFIX_8_8_COUNT</option>
+                                                            <option value="NO_PREFIX_8_8_DURATION">NO_PREFIX_8_8_DURATION</option>
+                                                            <option value="NO_PREFIX_NON_PEAK_COUNT">NO_PREFIX_NON_PEAK_COUNT</option>
+                                                            <option value="NO_PREFIX_NON_PEAK_DURATION">NO_PREFIX_NON_PEAK_DURATION</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </template>
                                             <template x-if="eventConditionData.usageServiceType === 'voice'">
                                                 <div class="mb-3 row">
                                                     <label for="eventConditionDataUsageTypeVoice" class="col-sm-2 col-form-label">Usage Type<sup><i class="fas fa-asterisk"></i></sup></label>
@@ -518,6 +574,17 @@
                                             <template x-if="eventConditionData.usageServiceType === 'IDD'">
                                                 <div>
                                                     <div class="mb-3 row">
+                                                        <label for="countryCodeIDD" class="col-sm-2 col-form-label">Country Code<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                        <div class="col-sm-10">
+                                                            <select id="countryCodeIDD" class="form-control" x-model="eventConditionData.countryCode">
+                                                                <option>Choose...</option>
+                                                                <template x-for="list in countryList">
+                                                                    <option x-model="list.countryCode"><span x-text="list.countryName"></span></option>
+                                                                </template>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeIDD" class="col-sm-2 col-form-label">Usage Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                                         <div class="col-sm-10">
                                                             <select id="eventConditionDataUsageTypeIDD" class="form-control" x-model="eventConditionData.eventTypeUsages">
@@ -544,21 +611,11 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="mb-3 row">
-                                                        <label for="countryCodeIDD" class="col-sm-2 col-form-label">Country Code<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                        <div class="col-sm-10">
-                                                            <select id="countryCodeIDD" class="form-control" x-model="eventConditionData.countryCode">
-                                                                <option>Choose...</option>
-                                                                <template x-for="list in countryList">
-                                                                    <option x-model="list.countryCode"><span x-text="list.countryName"></span></option>
-                                                                </template>
-                                                            </select>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </template>
                                             <div class="mb-3 row">
-                                                <label for="topUpValue" class="col-sm-2 col-form-label">Usage<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <label x-show="eventConditionData.usageServiceType != 'all'" for="topUpValue" class="col-sm-2 col-form-label">Usage<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <label x-show="eventConditionData.usageServiceType == 'all'" for="topUpValue" class="col-sm-2 col-form-label">Usage</label>
                                                 <div class="col-sm-4">
                                                     <select id="eventConditionDataUsageOperatorsDropdown" class="form-control" x-model="eventConditionData.eventUsagesOp">
                                                         <option>Choose...</option>
@@ -642,6 +699,17 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
+                                                <label class="col-sm-2 col-form-label">DA Expiry Date</label>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group date" data-provider="datepicker">
+                                                        <input type="datetime-local" class="form-control" x-model="daExpiryDate">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
                                                 <label class="col-sm-2 col-form-label">Service Class</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="usageTemporaryServiceClass" x-model="eventConditionData.tempServiceClass">
@@ -694,7 +762,7 @@
                                                         <option>Choose...</option>
                                                         <option value="allTopUp">ALL TOP UP</option>
                                                         <option value="paidTopUp">PAID TOP UP</option>
-                                                        <option value="selfService">SELF SERVICE</option>
+                                                        <option value="selfServe">SELF SERVE</option>
                                                         <option value="data">DATA</option>
                                                         <option value="others">OTHERS</option>
                                                     </select>
@@ -1289,6 +1357,7 @@
                                                 <div class="col-sm-10">
                                                     <select id="usageServiceTypeDropdown" class="form-control" x-model="monitoringData.usageServiceType">
                                                         <option>Choose...</option>
+                                                        <option value="all">All ($)</option>
                                                         <option value="voice">Voice</option>
                                                         <option value="data">Data</option>
                                                         <option value="SMS">SMS</option>
@@ -1296,6 +1365,61 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <template x-if="monitoringData.usageServiceType === 'all'">
+                                                <div class="mb-3 row">
+                                                    <label for="usageTypeVoice" class="col-sm-2 col-form-label">Usage Type<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                    <div class="col-sm-10">
+                                                        <select id="usageTypeAll" class="form-control" x-model="monitoringData.usageType">
+                                                            <option>Choose...</option>
+                                                            <option value="VOICE_COUNT">VOICE_COUNT</option>
+                                                            <option value="VOICE_MINS">VOICE_MINS</option>
+                                                            <option value="VOICE_AMOUNT">VOICE_AMOUNT</option>
+                                                            <option value="VOICE_OFFNET_COUNT">VOICE_OFFNET_COUNT</option>
+                                                            <option value="VOICE_OFFNET_MINS">VOICE_OFFNET_MINS</option>
+                                                            <option value="VOICE_OFFNET_AMOUNT">VOICE_OFFNET_AMOUNT</option>
+                                                            <option value="VOICE_ONNET_COUNT">VOICE_ONNET_COUNT</option>
+                                                            <option value="VOICE_ONNET_MINS">VOICE_ONNET_MINS</option>
+                                                            <option value="VOICE_ONNET_AMOUNT">VOICE_ONNET_AMOUNT</option>
+                                                            <option value="VOICE_INCOMING_COUNT">VOICE_INCOMING_COUNT</option>
+                                                            <option value="VOICE_INCOMING_MINS">VOICE_INCOMING_MINS</option>
+                                                            <option value="VOICE_INCOMING_AMOUNT">VOICE_INCOMING_AMOUNT</option>
+                                                            <option value="VOICE_LOCAL_USAGE">VOICE_LOCAL_USAGE</option>
+                                                            <option value="VOICE_LOCAL_DURATION">VOICE_LOCAL_DURATION</option>
+                                                            <option value="VOICE_IDD_USAGE">VOICE_IDD_USAGE</option>
+                                                            <option value="VOICE_IDD_DURATION">VOICE_IDD_DURATION</option>
+                                                            <option value="DATA_VOLUME">DATA_VOLUME</option>
+                                                            <option value="DATA_AMOUNT">DATA_AMOUNT</option>
+                                                            <option value="DATA_LOCAL_USAGE">DATA_LOCAL_USAGE</option>
+                                                            <option value="DATA_LOCAL_DURATION">DATA_LOCAL_DURATION</option>
+                                                            <option value="DATA_ROAMING_USAGE">DATA_ROAMING_USAGE</option>
+                                                            <option value="DATA_ROAMING">DATA_ROAMING_DURATION</option>
+                                                            <option value="SMS_ALL_COUNT">SMS_ALL_COUNT</option>
+                                                            <option value="SMS_ALL_AMOUNT">SMS_ALL_AMOUNT</option>
+                                                            <option value="SMS_OFFNET_COUNT">SMS_OFFNET_COUNT</option>
+                                                            <option value="SMS_OFFNET_AMOUNT">SMS_OFFNET_AMOUNT</option>
+                                                            <option value="SMS_ONNET_COUNT">SMS_ONNET_COUNT</option>
+                                                            <option value="SMS_ONNET_AMOUNT">SMS_ONNET_AMOUNT</option>
+                                                            <option value="MA_AMOUNT">MA_AMOUNT</option>
+                                                            <option value="DA_AMOUNT">DA_AMOUNT</option>
+                                                            <option value="SMS_COUNT">SMS_COUNT</option>
+                                                            <option value="MA_CHARGED_SMS">MA_CHARGED_SMS</option>
+                                                            <option value="DA_CHARGED_SMS">DA_CHARGED_SMS</option>
+                                                            <option value="019_8_8_COUNT">019_8_8_COUNT</option>
+                                                            <option value="019_8_8_DURATION">019_8_8_DURATION</option>
+                                                            <option value="001_8_8_COUNT">001_8_8_COUNT</option>
+                                                            <option value="001_8_8_DURATION">001_8_8_DURATION</option>
+                                                            <option value="019_NON_PEAK_COUNT">019_NON_PEAK_COUNT</option>
+                                                            <option value="019_NON_PEAK_DURATION">019_NON_PEAK_DURATION</option>
+                                                            <option value="001_NON_PEAK_COUNT">001_NON_PEAK_COUNT</option>
+                                                            <option value="001_NON_PEAK_DURATION">001_NON_PEAK_DURATION</option>
+                                                            <option value="NO_PREFIX_8_8_COUNT">NO_PREFIX_8_8_COUNT</option>
+                                                            <option value="NO_PREFIX_8_8_DURATION">NO_PREFIX_8_8_DURATION</option>
+                                                            <option value="NO_PREFIX_NON_PEAK_COUNT">NO_PREFIX_NON_PEAK_COUNT</option>
+                                                            <option value="NO_PREFIX_NON_PEAK_DURATION">NO_PREFIX_NON_PEAK_DURATION</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </template>
                                             <template x-if="monitoringData.usageServiceType === 'voice'">
                                                 <div class="mb-3 row">
                                                     <label for="usageTypeVoice" class="col-sm-2 col-form-label">Usage Type<sup><i class="fas fa-asterisk"></i></sup></label>
@@ -1395,7 +1519,8 @@
                                                 </div>
                                             </template>
                                             <div class="mb-3 row">
-                                                <label for="topUpValue" class="col-sm-2 col-form-label">Usage<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <label x-show="monitoringData.usageServiceType != 'all'"  for="topUpValue" class="col-sm-2 col-form-label">Usage<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <label x-show="monitoringData.usageServiceType == 'all'" for="topUpValue" class="col-sm-2 col-form-label">Usage</label>
                                                 <div class="col-sm-4">
                                                     <select id="usageOperatorsDropdown" class="form-control" x-model="monitoringData.usageOperator">
                                                         <option>Choose...</option>
@@ -1479,6 +1604,17 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
+                                                <label class="col-sm-2 col-form-label">DA Expiry Date</label>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group date" data-provider="datepicker">
+                                                        <input type="datetime-local" class="form-control" x-model="daExpiryDateMonitor">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
                                                 <label class="col-sm-2 col-form-label">Service Class</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="monitoringDataUTopUpTemporaryServiceClass" x-model="monitoringData.topUpTempServiceClass">
@@ -1531,7 +1667,7 @@
                                                         <option>Choose...</option>
                                                         <option value="allTopUp">ALL TOP UP</option>
                                                         <option value="paidTopUp">PAID TOP UP</option>
-                                                        <option value="selfService">SELF SERVICE</option>
+                                                        <option value="selfServe">SELF SERVE</option>
                                                         <option value="ma">MA</option>
                                                         <option value="others">OTHERS</option>
                                                     </select>
@@ -1866,6 +2002,9 @@
                                                         <label class="col-sm-2 col-form-label col-form-label">day of each month</label>
                                                     </div>
                                                 </div><hr>
+                                                <b>Redemption Channel:</b>
+                                                <br>
+                                                <br>
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 col-form-label col-form-label">SMS Campaign Name<sup><i class="fas fa-asterisk"></i></sup></label>
                                                     <div class="col-sm-4">
@@ -2043,6 +2182,7 @@
                 $(this).append($element);
                 $(this).trigger("change");
             });
+            // $('#eventConditionDataUsageTypeAll').select2();
         });
 
         // Plus Minus Icon for Accordion BEGIN
@@ -2699,6 +2839,7 @@
                     offerEventCondition.daId                        = this.eventConditionData.daId;
                     offerEventCondition.daBalanceOp                 = this.eventConditionData.daBalanceOp;
                     offerEventCondition.daBalanceValue              = this.eventConditionData.daBalanceValue;
+                    offerEventCondition.daExpiryDate                = this.daExpiryDate;
                     offerEventCondition.tempServiceClass            = this.eventConditionData.tempServiceClass;
                     offerEventCondition.imei                        = this.eventConditionData.imei;
                     offerEventCondition.daChange                    = this.eventConditionData.daChange;
@@ -2769,6 +2910,7 @@
                     offerMonitoring.imei                        = this.monitoringData.imei;
                     offerMonitoring.daChange                    = this.monitoringData.daChange;
                     offerMonitoring.chargedAmount               = this.monitoringData.chargedAmount;
+                    offerMonitoring.daExpiryDateMonitor         = this.daExpiryDateMonitor;
                     offerMonitoring.countryCode                 = this.monitoringData.countryCode;
                     offerMonitoring.usageOperator               = this.monitoringData.usageOperator;
                     offerMonitoring.usageValue                  = this.monitoringData.usageValue;
@@ -2981,7 +3123,7 @@
                 if (!this.overallOfferName && this.type != 'eventCondition') {
                     swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
                 } else if (!this.campaignStartDate || !this.campaignEndDate) {
-                    swal("Error!", "Event Campaign Period Can Not be Null", "error");
+                    swal("Error!", "Event Fulfillment Date Can Not be Null", "error");
                 } else if(!this.eventConditionName && this.type == 'eventConditionDirectProvisioning' || !this.eventConditionName && this.type == 'eventCondition') {
                     swal("Error!", "Event Condition Name Can Not be Null", "error");
                 } else {
