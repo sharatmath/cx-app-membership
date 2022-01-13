@@ -204,6 +204,7 @@ public class OfferServiceImpl implements OfferService {
 							.offerBucketType(p.getOfferBucketType())
 							.offerBucketId(p.getOfferBucketId())
 							.offerCampaignName(p.getSmsCampaignName())
+							.offerCampaignId(Long.valueOf(p.getOfferId()))
 							.offerId(p.getOfferId())
 							.build();
 
@@ -221,9 +222,7 @@ public class OfferServiceImpl implements OfferService {
 		if(offerConfig.isPresent()){
 			List<PrepaidCxOfferSelection> prepaidCxOfferSelection= prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
 			for(PrepaidCxOfferSelection p : prepaidCxOfferSelection){
-				if(p.getOfferBucketType().equals(OfferType.PROMO.toString()) || p.getOfferBucketType().equals(OfferType.NONE.toString())){
-					// do nothing
-				}else{
+				if(p.getOfferBucketType().equals(OfferType.OMS.toString()) || p.getOfferBucketType().equals(OfferType.DA.toString())){
 					OfferSelection s = OfferSelection.builder()
 							.offerBucketType(p.getOfferBucketType())
 							.offerBucketId(p.getOfferBucketId())

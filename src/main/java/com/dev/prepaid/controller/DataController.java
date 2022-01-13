@@ -321,7 +321,7 @@ public class DataController {
 	public List<OfferMaType> getOfferMA(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		List<OfferMaType> list = new ArrayList<>();
-		List<OfferSelection> data = offerService.getOfferSelection(instanceId);
+		List<OfferSelection> data = offerService.getOfferMa(instanceId);
 		for (OfferSelection prepaidCxOfferSelection : data) {
 			log.info("{}", prepaidCxOfferSelection);
 			OfferMaType ma = new OfferMaType();
