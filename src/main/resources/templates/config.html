@@ -3029,8 +3029,8 @@
                             },
                         "offerMaType": JSON.parse(JSON.stringify(this.offers)).map(item => {
                             return {
-                                offerCampaignId     : item.offerCampaignId,
-                                offerCampaignName   : item.offerCampaignName,
+                                offerCampaignId     : item.id,
+                                offerCampaignName   : item.productName,
                                 offerType           : this.offerTypeDropdown,
                                 "overallOfferName"  : this.overallOfferName,
                             }
