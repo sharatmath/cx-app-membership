@@ -445,20 +445,10 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
             prepaidCxOfferMonitoring.setPermanentServiceClass(
                     saveConfigRequest.getPayload().getOfferMonitoring().getPermanentServiceClass());
-
-        } else if ("ARPU".equals(prepaidCxOfferMonitoring.getEventType())) {
-            prepaidCxOfferMonitoring
-                    .setTopUpDaBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceOp());
-            prepaidCxOfferMonitoring.setTopUpDaBalanceValue(
-                    saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceValue());
-            prepaidCxOfferMonitoring.setTopUpTempServiceClass(
-                    saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
             prepaidCxOfferMonitoring
                     .setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
             prepaidCxOfferMonitoring.setTopUpCurBalanceValue(
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceValue());
-            prepaidCxOfferMonitoring.setPermanentServiceClass(
-                    saveConfigRequest.getPayload().getOfferMonitoring().getPermanentServiceClass());
 
             if (saveConfigRequest.getPayload().getOfferMonitoring().getDaExpiryDate() != null) {
                 prepaidCxOfferMonitoring.setDaExpiryDate(DateUtil
@@ -496,6 +486,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             prepaidCxOfferMonitoring
                     .setRoamingFlag(saveConfigRequest.getPayload().getOfferMonitoring().getRoamingFlag());
             prepaidCxOfferMonitoring.setRatePlanId(saveConfigRequest.getPayload().getOfferMonitoring().getRatePlanId());
+            prepaidCxOfferMonitoring.setCountryCode(saveConfigRequest.getPayload().getOfferMonitoring().getCountryCode());
 
             if (saveConfigRequest.getPayload().getOfferMonitoring().getDaExpiryDate() != null) {
                 prepaidCxOfferMonitoring.setDaExpiryDate(DateUtil

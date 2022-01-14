@@ -488,6 +488,7 @@ public class DataController {
 					.topUpTempServiceClass(prepaidCxOfferEventCondition.getTempServiceClass())
 					.permanentServiceClass(prepaidCxOfferEventCondition.getPermanentServiceClass())
 					.roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
+					.countryCode(prepaidCxOfferEventCondition.getCountryCode())
 					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId()).build();
 			try {
 				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
