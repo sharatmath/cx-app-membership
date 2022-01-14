@@ -339,7 +339,13 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                 if(!"MA".equals(offerMA.getOfferType())){
                     log.info("skip data offerMA {}", offerMA);
                     continue;
+                }else{
+                    if(offerMA.getOfferCampaignName() == null || offerMA.getOfferCampaignName().equals("")){
+                        log.info("skip data offerMA {} product name null ", offerMA);
+                        continue;
+                    }
                 }
+
                 Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
                         .findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(offerConfigId,
                         offerMA.getOfferType(),  // MA
