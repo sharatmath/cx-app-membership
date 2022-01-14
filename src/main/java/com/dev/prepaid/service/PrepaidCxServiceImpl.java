@@ -443,6 +443,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceValue());
             prepaidCxOfferMonitoring.setTopUpTempServiceClass(
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
+            prepaidCxOfferMonitoring.setPermanentServiceClass(
+                    saveConfigRequest.getPayload().getOfferMonitoring().getPermanentServiceClass());
 
         } else if ("ARPU".equals(prepaidCxOfferMonitoring.getEventType())) {
             prepaidCxOfferMonitoring

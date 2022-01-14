@@ -47,7 +47,7 @@ public class EventCondition {
     @SerializedName("daChange") private  Long daChange;
     @SerializedName("chargedAmount") private  Long chargedAmount;
 
-    @SerializedName("eventTypeUsages") private  Long eventTypeUsages;
+    @SerializedName("eventTypeUsages") private  String eventTypeUsages;
     @SerializedName("eventUsagesOp") private  String eventUsagesOp;
     @SerializedName("eventUsagesValue") private  Long eventUsagesValue;
     @SerializedName("eventUsagesUnit") private  String eventUsagesUnit;
