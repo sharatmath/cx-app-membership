@@ -124,7 +124,7 @@ public class PrepaidController {
                 if("OMS".equals(o.getOfferBucketType())
                     || "DA".equals(o.getOfferBucketType())){
                     o.setOfferBucketType(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(0));
-                    o.setOfferBucketId(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(1))
+                    o.setOfferBucketId(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(1));
                 }
             }
 
