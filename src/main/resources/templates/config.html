@@ -3763,7 +3763,7 @@ span.select2-selection.select2-selection--single {
                             <button @click="deletedatafn(groupid, data.dataId)" 
                                 type="button"class="btn btn-outline-danger btn-sm"
                                 style="float:right; border-radius: 50%;
-                                border: 1px solid #ff000061; margin-top: 5px; margin-right:5px"><i class="fas fa fa-trash"></i> 
+                                border: 1px solid #ff000061; margin-top: 5px; margin-right:5px"><i class="fas fa fa-trash"></i> </button>
                         </div>
                     </div>
             </div>`
@@ -3817,7 +3817,7 @@ span.select2-selection.select2-selection--single {
                             <button @click="modaltriggerfn" @click="getadddatagroupidfn(y.groupId)" class="btn btn-create-group btn-sm" style="margin-right:2%" > Add Data</button>
                             <button @click="creategroupfn(y.groupId)" class="btn btn-create-group btn-sm" style="margin-right:5%"> Create Group</button>
                             <button @click="deletegroupfn(y.groupId)" type="button"class="btn btn-danger btn-sm" style="max-width: 35px !important;" 
-                                v-show="!y.rootGroup"><i class="fas fa fa-trash"></i>
+									v-show="!y.rootGroup"><i class="fas fa fa-trash"></i></button>
                         </div>
                     </div>
                     
