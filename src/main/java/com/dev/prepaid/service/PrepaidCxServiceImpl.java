@@ -284,6 +284,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                                 .messageText2(promoCode.getMessageText2()).messageText3(promoCode.getMessageText3())
                                 .messageText4(promoCode.getMessageText4()).build();
                     }
+                    log.info("saving offer PROMO {} ", prepaidCxOfferSelection);
                     prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
                 }
             }
@@ -304,6 +305,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     prepaidCxOfferSelection = PrepaidCxOfferSelection.builder().offerConfigId(offerConfigId)
                             .offerBucketType(OfferType.NONE.toString()).offerBucketId("0").offerId("0").build();
                 }
+                log.info("saving offer NONE {} ", prepaidCxOfferSelection);
                 prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
             }
         }
@@ -328,11 +330,16 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                         .offerType(offerSelection.getOfferCampaignName())
                         .offerId(String.valueOf(offerSelection.getOfferCampaignId())).build();
             }
+            log.info("saving offer OMS DA {} ", prepaidCxOfferSelection);
             prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
         }
 
          // MA Offer
          for (OfferMaType offerMA : saveConfigRequest.getPayload().getOfferMaType()) {
+                if(!"MA".equals(offerMA.getOfferType())){
+                    log.info("skip data offerMA {}", offerMA);
+                    continue;
+                }
                 Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
                         .findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(offerConfigId,
                         offerMA.getOfferType(),  // MA
@@ -351,6 +358,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                             .offerType(offerMA.getOfferType()) // MA
                             .offerId(String.valueOf(offerMA.getOfferCampaignId())).build(); // ma prouduct id
                 }
+                log.info("saving offer MA {} ", prepaidCxOfferSelection);
                 prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
             }
     }
