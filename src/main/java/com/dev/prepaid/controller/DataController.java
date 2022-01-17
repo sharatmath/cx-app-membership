@@ -19,6 +19,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -85,8 +86,7 @@ public class DataController {
 			PrepaidOmsOfferBucket prepaidOmsOfferBucket = offerService
 					.getOmsOfferBucket(prepaidOmsOfferCampaign.getOfferId());
 			return PrepaidCampaignOfferDetailDTO.builder().offerBucketType(offerBucketType) // OMS
-					.offerName(prepaidOmsOfferCampaign.getName())
-					.offerId(prepaidOmsOfferBucket.getCode())
+					.offerName(prepaidOmsOfferCampaign.getName()).offerId(prepaidOmsOfferBucket.getCode())
 					.offerType(prepaidOmsOfferBucket.getType()) // timebased or accountbased
 					.description(prepaidOmsOfferCampaign.getDescription()).value(prepaidOmsOfferCampaign.getValue())
 					.valueUnit(prepaidOmsOfferCampaign.getValueUnit())
@@ -112,8 +112,7 @@ public class DataController {
 			PrepaidDaOfferCampaign prepaidDaOfferCampaign = offerService
 					.getDaOfferCampaign(Long.parseLong(campaignOfferId));
 			return PrepaidCampaignOfferDetailDTO.builder().offerName(prepaidDaOfferCampaign.getName())
-					.bucketName(prepaidDaOfferBucket.getDescription())
-					.offerId(prepaidDaOfferBucket.getCode())
+					.bucketName(prepaidDaOfferBucket.getDescription()).offerId(prepaidDaOfferBucket.getCode())
 					.description(prepaidDaOfferCampaign.getDescription()).value(prepaidDaOfferCampaign.getValue())
 					.valueUnit(prepaidDaOfferCampaign.getValueUnit()).valueCap(prepaidDaOfferCampaign.getValueCap())
 					.valueToDeductFromMa(prepaidDaOfferCampaign.getValueToDeductFromMa())
@@ -264,7 +263,6 @@ public class DataController {
 //					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
 //		}
 
-
 		return null;
 	}
 
@@ -286,12 +284,13 @@ public class DataController {
 		return DataOffer.builder().id(da.getId().toString()).text(da.getName()).slug(da.getName()).build();
 	}
 
-	private DataOffer mapMaCreditBucketToOffer(PrepaidMaCreditOffer ma){
-		return DataOffer.builder().id("MA|"+ma.getId()).text(ma.getProductName()).slug(ma.getProductName()).build();
+	private DataOffer mapMaCreditBucketToOffer(PrepaidMaCreditOffer ma) {
+		return DataOffer.builder().id("MA|" + ma.getId()).text(ma.getProductName()).slug(ma.getProductName()).build();
 	}
 
 	private DataOffer mapMaCreditToOffer(PrepaidMaCreditOffer ma) {
-		return DataOffer.builder().id(ma.getId().toString()).text(ma.getProductName()).slug(ma.getProductName()).build();
+		return DataOffer.builder().id(ma.getId().toString()).text(ma.getProductName()).slug(ma.getProductName())
+				.build();
 	}
 
 	@GetMapping(value = "evictCache")
@@ -363,13 +362,12 @@ public class DataController {
 	}
 
 	@GetMapping(value = "maOfferList")
-	public List<DataOffer> getMaOfferList(@RequestParam(value = "search", required = false) String query){
-		if(query == null || query.isEmpty()){
-			return offerService.listMaOfferBucket().stream()
-					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+	public List<DataOffer> getMaOfferList(@RequestParam(value = "search", required = false) String query) {
+		if (query == null || query.isEmpty()) {
+			return offerService.listMaOfferBucket().stream().map(this::mapMaCreditToOffer).collect(Collectors.toList());
 		} else {
-			return offerService.listMaByOffer(query).stream()
-					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+			return offerService.listMaByOffer(query).stream().map(this::mapMaCreditToOffer)
+					.collect(Collectors.toList());
 		}
 	}
 
@@ -688,30 +686,30 @@ public class DataController {
 //				result.put("queryText", queryText);
 //			}
 //		}
-		/*
-		 *
-		 * --- Response
-		 *
-		 * {
-		 *
-		 * "queryText" :
-		 * "SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND CREATEDATE < '15/11/2021'"
-		 * ,
-		 *
-		 * "recordCount" : "12"
-		 *
-		 * }
-		 *
-		 *
-		 *
-		 * SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
-		 * CREATEDATE < '15/11/2021';
-		 *
-		 *
-		 *
-		 * SELECT count(*) FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
-		 * CREATEDATE < '15/11/2021'; -- execute and send the count in recordCount Tag
-		 */
+	/*
+	 *
+	 * --- Response
+	 *
+	 * {
+	 *
+	 * "queryText" :
+	 * "SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND CREATEDATE < '15/11/2021'"
+	 * ,
+	 *
+	 * "recordCount" : "12"
+	 *
+	 * }
+	 *
+	 *
+	 *
+	 * SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
+	 * CREATEDATE < '15/11/2021';
+	 *
+	 *
+	 *
+	 * SELECT count(*) FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
+	 * CREATEDATE < '15/11/2021'; -- execute and send the count in recordCount Tag
+	 */
 //		return new ResponseEntity<>(result, HttpStatus.OK);
 //
 //	}
@@ -1081,8 +1079,8 @@ public class DataController {
 	 * }
 	 */
 //	Adv Filter With UI
-
-	@RequestMapping(value = { "/getSQLQuery" }, method = { RequestMethod.GET, RequestMethod.POST })
+	@CrossOrigin
+	@RequestMapping(value = { "/getSQLQuery" }, method = { RequestMethod.POST })
 	public ResponseEntity<Map<String, Object>> getSQLQuery(@RequestBody List<Group> groupList) {
 		Map<String, Object> result = new HashMap<>();
 		StringBuilder finalQueryStringBuilder = new StringBuilder();
@@ -1380,7 +1378,7 @@ public class DataController {
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOfferList(instanceId);
 	}
-	
+
 //	@GetMapping(value = "listCXOffer")
 //	public PrepaidCxOfferAdvanceFilter listCXOffer(
 //			@RequestParam(value = "instanceId", required = false) String instanceId) {
