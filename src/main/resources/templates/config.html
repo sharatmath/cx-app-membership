@@ -2145,7 +2145,7 @@
         <div class="modal-body">
             <div id="ajax_loader_danger">
                 <div class="alert alert-danger" role="alert">
-                    This is a danger alert with
+                    ERROR. Configuration not saved.
                 </div>
             </div>
         </div>
@@ -2283,13 +2283,20 @@
         eventer(messageEvent,function(e) {
             console.log('parent received message!:  ',e.data);
             var payload = JSON.parse(e.data.payload);
+            console.log(e.data.httpStatusCode)
 
             $('#offerCodeId').text(payload.offerBucketCode);
             $('#offerNameId').text(payload.offerCampaignName);
 
             $('#statusId').text(e.data.configurationStatus);
 
-            $('#successDialog').modal();
+            if(e.data.httpStatusCode != 200){
+                $('#failedDialog').modal();
+            } else {
+                $('#successDialog').modal();
+            }
+
+            // $('#successDialog').modal();
             setTimeout(closeAlertDialog, 1000);
         },false);
     }
