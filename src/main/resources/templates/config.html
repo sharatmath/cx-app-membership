@@ -2290,10 +2290,10 @@
 
             $('#statusId').text(e.data.configurationStatus);
 
-            if(e.data.httpStatusCode != 200){
-                $('#failedDialog').modal();
-            } else {
+            if(e.data.httpStatusCode == 200){
                 $('#successDialog').modal();
+            } else {
+                $('#failedDialog').modal();
             }
 
             // $('#successDialog').modal();
