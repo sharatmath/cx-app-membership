@@ -518,6 +518,17 @@
                                             <template x-if="eventConditionData.usageServiceType === 'IDD'">
                                                 <div>
                                                     <div class="mb-3 row">
+                                                        <label for="countryCodeIDD" class="col-sm-2 col-form-label">Country Code<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                        <div class="col-sm-10">
+                                                            <select id="countryCodeIDD" class="form-control" x-model="eventConditionData.countryCode">
+                                                                <option>Choose...</option>
+                                                                <template x-for="list in countryList">
+                                                                    <option x-model="list.countryCode"><span x-text="list.countryName"></span></option>
+                                                                </template>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3 row">
                                                         <label for="eventConditionDataUsageTypeIDD" class="col-sm-2 col-form-label">Usage Type<sup><i class="fas fa-asterisk"></i></sup></label>
                                                         <div class="col-sm-10">
                                                             <select id="eventConditionDataUsageTypeIDD" class="form-control" x-model="eventConditionData.eventTypeUsages">
@@ -544,21 +555,11 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="mb-3 row">
-                                                        <label for="countryCodeIDD" class="col-sm-2 col-form-label">Country Code<sup><i class="fas fa-asterisk"></i></sup></label>
-                                                        <div class="col-sm-10">
-                                                            <select id="countryCodeIDD" class="form-control" x-model="eventConditionData.countryCode">
-                                                                <option>Choose...</option>
-                                                                <template x-for="list in countryList">
-                                                                    <option x-model="list.countryCode"><span x-text="list.countryName"></span></option>
-                                                                </template>
-                                                            </select>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </template>
                                             <div class="mb-3 row">
-                                                <label for="topUpValue" class="col-sm-2 col-form-label">Usage<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <label x-show="eventConditionData.usageServiceType != 'all'" for="topUpValue" class="col-sm-2 col-form-label">Usage<sup><i class="fas fa-asterisk"></i></sup></label>
+                                                <label x-show="eventConditionData.usageServiceType == 'all'" for="topUpValue" class="col-sm-2 col-form-label">Usage</label>
                                                 <div class="col-sm-4">
                                                     <select id="eventConditionDataUsageOperatorsDropdown" class="form-control" x-model="eventConditionData.eventUsagesOp">
                                                         <option>Choose...</option>
@@ -2214,8 +2215,9 @@
 
 <!--AlpineJS BEGIN-->
 <script>
-    const INSTANCE_ID = $("#instanceId").text();
+    // const INSTANCE_ID = $("#instanceId").text();
     // const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
+    const INSTANCE_ID = '59189510-d0d2-4e42-8b0d-3db41ab37403';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
 
     function configureMembership()
@@ -2581,6 +2583,7 @@
                     .then(res => res.json())
                     .then(data => {
                         this.eventConditionData = data
+                        this.eventConditionName = data.eventConditionName
 
                         // For Event Condition Type Dropdown
                         if (data.eventType != null) {
@@ -2751,12 +2754,14 @@
                     offerEventCondition.daId                        = this.eventConditionData.daId;
                     offerEventCondition.daBalanceOp                 = this.eventConditionData.daBalanceOp;
                     offerEventCondition.daBalanceValue              = this.eventConditionData.daBalanceValue;
+                    offerEventCondition.daExpiryDate                = this.daExpiryDate;
                     offerEventCondition.tempServiceClass            = this.eventConditionData.tempServiceClass;
                     offerEventCondition.imei                        = this.eventConditionData.imei;
                     offerEventCondition.daChange                    = this.eventConditionData.daChange;
                     offerEventCondition.chargedAmount               = this.eventConditionData.chargedAmount;
                     offerEventCondition.roamingFlag                 = this.eventConditionData.roamingFlag;
                     offerEventCondition.ratePlanId                  = this.eventConditionData.ratePlanId;
+                    offerEventCondition.countryCode                 = this.eventConditionData.countryCode;
                 } else if (this.eventConditionTypeData === 'ARPU') {
                     offerEventCondition.operatorId                  = this.eventConditionData.operatorId;
                     offerEventCondition.arpuType                    = this.eventConditionData.arpuType;
@@ -2821,6 +2826,7 @@
                     offerMonitoring.imei                        = this.monitoringData.imei;
                     offerMonitoring.daChange                    = this.monitoringData.daChange;
                     offerMonitoring.chargedAmount               = this.monitoringData.chargedAmount;
+                    offerMonitoring.daExpiryDateMonitor         = this.daExpiryDateMonitor;
                     offerMonitoring.countryCode                 = this.monitoringData.countryCode;
                     offerMonitoring.usageOperator               = this.monitoringData.usageOperator;
                     offerMonitoring.usageValue                  = this.monitoringData.usageValue;
