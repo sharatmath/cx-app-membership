@@ -487,6 +487,7 @@ public class DataController {
 					.topUpDaBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
 					.topUpTempServiceClass(prepaidCxOfferEventCondition.getTempServiceClass())
 					.permanentServiceClass(prepaidCxOfferEventCondition.getPermanentServiceClass())
+					.tempServiceClass(prepaidCxOfferEventCondition.getTempServiceClass())
 					.roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
 					.countryCode(prepaidCxOfferEventCondition.getCountryCode())
 					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId()).build();

@@ -728,6 +728,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaBalanceValue());
             prepaidCxOfferEventCondition.setTempServiceClass(
                     saveConfigRequest.getPayload().getOfferEventCondition().getTopUpTempServiceClass());
+            prepaidCxOfferEventCondition.setPermanentServiceClass(saveConfigRequest.getPayload().getOfferEventCondition().getPermanentServiceClass());     
 
         } else if ("ARPU".equals(prepaidCxOfferEventCondition.getEventConditionType())) {
             prepaidCxOfferEventCondition
@@ -775,7 +776,16 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             prepaidCxOfferEventCondition
                     .setRoamingFlag(saveConfigRequest.getPayload().getOfferEventCondition().getRoamingFlag());
             prepaidCxOfferEventCondition
-                    .setRatePlanId(saveConfigRequest.getPayload().getOfferEventCondition().getRatePlanId());
+                    .setRatePlanId(saveConfigRequest.getPayload().getOfferEventCondition().getRatePlanId());       
+            prepaidCxOfferEventCondition
+                    .setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCurBalanceOp());
+            prepaidCxOfferEventCondition
+                    .setTopUpCurBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCurBalanceValue());                   
+            prepaidCxOfferEventCondition
+                    .setTopUpAccBalanceBeforeOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpAccBalanceBeforeOp());
+            prepaidCxOfferEventCondition
+                    .setTopUpAccBalanceBeforeValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpAccBalanceBeforeValue());
+
         }
 
         prepaidCxOfferEventConditionRepository.save(prepaidCxOfferEventCondition);
