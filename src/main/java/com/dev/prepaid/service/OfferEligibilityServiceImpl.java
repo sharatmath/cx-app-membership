@@ -174,8 +174,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 resultRows.add(row);
             } else {
                 excludeOverallOfferName = opsFind.get().getExcludeProgramId().split(",");
-                boolean checkIsExist = false;
+
                 for (String overallOfferName : excludeOverallOfferName) {
+                    boolean checkIsExist = false;
                     Optional<PrepaidCxOfferConfig> excludeConfig = prepaidCxOfferConfigRepository.findByOverallOfferName(overallOfferName);
                     if (excludeConfig.isPresent()) {
                         List<PrepaidOfferMembership> data = prepaidOfferMembershipRepository.findByMsisdnAndOfferConfigId(
@@ -190,15 +191,18 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                         log.info("process#1|2|EXCLUSION|{}|PASS", row.get(1));
                         resultRows.add(row);
                     }
+
+                    if (!checkIsExist) {
+                        log.info("process#1|1|EXCLUSION|{}|PASS", row.get(1));
+                        resultRows.add(row);
+                    } else {
+                        log.info("process#1|1|EXCLUSION|{}|NOT_PASS", row.get(1));
+                        excluseRows.add(row);
+                    }
+
                 }
 
-                if (!checkIsExist) {
-                    log.info("process#1|1|EXCLUSION|{}|PASS", row.get(1));
-                    resultRows.add(row);
-                } else {
-                    log.info("process#1|1|EXCLUSION|{}|NOT_PASS", row.get(1));
-                    excluseRows.add(row);
-                }
+
 
             }
         }
@@ -369,7 +373,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             isOfferLevelCapAndPeriod = prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod();
         }
 
-        log.info("process#4|IS_OFFER_LEVEL_CAP_ONLY|{}|VALUE|{}",
+        log.info("process#4|IS_OFFER_LEVEL_CAP|{}|VALUE|{}",
                 isOfferLevelCapOnly,
                 isOfferLevelCapAndPeriod
         );
@@ -403,7 +407,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                         prepaidCxOfferEligibility.getOfferLevelCapPeriodDays()
                 );
                 if (currentCap >= prepaidCxOfferEligibility.getOfferLevelCapPeriodValue()) {
-                    offerMembershipRows = rows;
+                    offerMembershipExcluseRows = rows;
                 } else {
                     int capacityCap = prepaidCxOfferEligibility.getOfferLevelCapPeriodValue().intValue() - currentCap;
                     offerMembershipRows = rows.subList(0, capacityCap);
