@@ -1017,6 +1017,7 @@
 												<option value="OMS">OMS Offer</option>
 												<option value="MA">MA Offer</option>
 												<option value="PROMO">Unique Promo Code</option>
+												<option value="NONE">No Offer</option>
 											</select>
 										</div>
 										<div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS' || offerTypeDropdown == 'MA'" class="col-sm-7 row" style="margin-right: 75px">
@@ -1037,7 +1038,7 @@
 												</select>
 											</div>
 										</div>
-										<button :disabled="uniqueData == false || offerTypeDropdown == 'none'" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+										<button :disabled="uniqueData == false || offerTypeDropdown == 'NONE'" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
 										</button>
 									</div>
 									<hr>
@@ -1050,18 +1051,36 @@
 															<div class="card">
 																<div class="row">
 																	<div class="col-sm-11">
-																		<div class="card-header" id="offerSelection1">	<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" :data-target="'#faq1' + index" aria-expanded="true" aria-controls="faq1"><b><span x-text="offer.offerName"></span></b></a>
+																		<div class="card-header" id="offerSelection1">	<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" :data-target="'#faq1' + index" aria-expanded="true" aria-controls="faq1">
+																			<template x-if="offer.offerName != null">
+																				<b><span x-text="offer.offerName"></span></b>
+																			</template>
+																			<template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
+																				<b><span x-text="offer.productName"></span></b>
+																			</template></a>
 																		</div>
 																		<div :id="'faq1' + index" class="panel-collapse collapse" aria-labelledby="offerSelection1" data-parent="#faq">
 																			<div class="card-body">
 																				<div class="form-row">
 																					<div class="col-md-6 mb-3">
-																						<label :for="'campaignOfferName' + index">Campaign Offer Name</label>
-																						<input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
+																						<template x-if="offer.offerName != null">
+																							<label :for="'campaignOfferName' + index">Campaign Offer Name</label>
+																							<input type="text" class="form-control" :id="'campaignOfferName' + index" x-model="offer.offerName" disabled>
+																						</template>
+																						<template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
+																							<label :for="'campaignProductName' + index">Campaign Product Name</label>
+																							<input type="text" class="form-control" :id="'campaignProductName' + index" x-model="offer.productName" disabled>
+																						</template>
 																					</div>
 																					<div class="col-md-6 mb-3">
-																						<label :for="'daName' + index">Bucket Name</label>
-																						<input type="text" class="form-control" :id="'daName' + index" x-model="offer.offerId" disabled>
+																						<template x-if="offer.offerName != null">
+																							<label :for="'daName' + index">Bucket Name</label>
+																							<input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+																						</template>
+																						<template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
+																							<label :for="'description' + index">MA Offer Description</label>
+																							<input type="text" class="form-control" :id="'description' + index" x-model="offer.description" disabled>
+																						</template>
 																					</div>
 																				</div>
 																				<div x-show="offer.offerBucketType == 'DA'">
@@ -1085,6 +1104,18 @@
 																						<div class="col-md-6 mb-3">
 																							<label :for="'validity' + index">Validity (Day/Hour/Minutes)</label>
 																							<input type="text" class="form-control" :id="'validity' + index" x-model="offer.dayHourMinute" disabled>
+																						</div>
+																					</div>
+																				</div>
+																				<div x-show="offer.offerBucketType == null"> <!-- Used for showing MA Offer -->
+																					<div class="form-row">
+																						<div class="col-md-6 mb-3">
+																							<label :for="'value' + index">Value</label>
+																							<input type="text" class="form-control" :id="'value' + index" x-model="offer.value" disabled>
+																						</div>
+																						<div class="col-md-6 mb-3">
+																							<label :for="'validity' + index">Validity</label>
+																							<input type="text" class="form-control" :id="'validity' + index" x-model="offer.validity" disabled>
 																						</div>
 																					</div>
 																				</div>
@@ -1168,8 +1199,10 @@
 																						<input type="text" class="form-control" :id="'action' + index" x-model="offer.action" disabled>
 																					</div>
 																					<div class="col-md-6 mb-3">
-																						<label :for="'validity' + index">Offer Type</label>
-																						<input type="text" class="form-control" :id="'bucketType' + index" x-model="offer.offerBucketType" disabled>
+																						<template x-if="offer.offerBucketType != null">
+																							<label :for="'validity' + index">Offer Type</label>
+																							<input type="text" class="form-control" :id="'bucketType' + index" x-model="offer.offerBucketType" disabled>
+																						</template>
 																					</div>
 																				</div>
 																			</div>
@@ -1264,6 +1297,25 @@
 											</div>
 											<!--PROMO ACCORDION END-->
 										</div>
+										<div class="container">
+										<div class="noneOfferSelection" x-show="offerTypeDropdown === 'NONE' || offerType === 'NONE'">
+											<div class="accordion" id="none">
+												<div class="noneTemplate">
+													<div class="row-flex">
+														<div class="card">
+															<div class="row">
+																<div class="col-sm-12">
+																	<div class="card-header" id="none1" style="background-color: #da7200 !important; background-image: none !important;">
+																		<b>No Offer</b>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 									</div>
 								</div>
 							</div>
@@ -3584,6 +3636,7 @@ console.log(advanceFilter.mainData,'xxxx')
 					.then(data => {
 						this.eligibilityPolicy()
 						this.getPromoCodeList()
+						this.getNoneOfferList()
 					})
 				},
 
@@ -3691,6 +3744,14 @@ console.log(advanceFilter.mainData,'xxxx')
 								})
 								.catch(error => console.log(error))
 								.finally()
+					} else if (this.selectedBucket == null && this.selectedCampaign != 'Choose...' && this.offerTypeDropdown == 'MA') {
+						fetch(PROD_URL + `maOfferDetail?id=${this.selectedCampaign}`)
+								.then(res => res.json())
+								.then(data => {
+									this.offers.push(data)
+								})
+								.catch(error => console.log(error))
+								.finally()
 					} else {
 						swal("Error!", "No Data", "error");
 					}
@@ -3748,7 +3809,8 @@ console.log(advanceFilter.mainData,'xxxx')
 									.catch(error => console.log(error))
 									.finally()
 						} else {
-							fetch(PROD_URL + `offerCampaign?offerId=MA`)
+							//fetch(PROD_URL + `offerCampaign?offerId=MA`)
+							fetch(PROD_URL + `maOfferList`)
 									.then(res => res.json())
 									.then(data => {
 										this.campaignOfferList = data
@@ -3757,7 +3819,8 @@ console.log(advanceFilter.mainData,'xxxx')
 									.finally()
 						}
 					} else if (this.offerTypeDropdown == 'MA') {
-						fetch(PROD_URL + `offerCampaign?offerId=MA`)
+						//fetch(PROD_URL + `offerCampaign?offerId=MA`)
+						fetch(PROD_URL + `maOfferList`)
 								.then(res => res.json())
 								.then(data => {
 									this.campaignOfferList = data
@@ -3814,6 +3877,16 @@ console.log(advanceFilter.mainData,'xxxx')
 								}
 							})
 							.catch(error => console.log(error))
+							.finally();
+				},
+
+				getNoneOfferList() {
+					fetch(PROD_URL + `offerNoneType?instanceId=${INSTANCE_ID}`)
+							.then(res => res.json())
+							.then(data => {
+								this.offerType = data.offerType
+								this.overallOfferName = data.overallOfferName
+							}).catch(error => console.log(error))
 							.finally();
 				},
 
@@ -4302,38 +4375,93 @@ console.log(advanceFilter.mainData,'xxxx')
                     "id": null,
                 }
 
-                var request = { "amsAction" : "save", "requestId" : "save",
-                    "payload": {
-                        "type": this.type,
-                        "uuid": INSTANCE_ID,
-                        "offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
-                            return {
-                                offerBucketId       : item.offerBucketId,
-                                offerBucketType     : item.offerBucketType,
-                                offerCampaignId     : item.offerCampaignId,
-                                offerCampaignName   : item.offerCampaignName,
-                                offerType           : this.offerTypeDropdown,
-                            }
-                        }),
-                        "offerPromoCode":
-                            {
-                                "promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
-                                "messageText1"      : this.offerSelectionDynamic1,
-                                "messageText2"      : this.offerSelectionDynamic2,
-                                "messageText3"      : this.offerSelectionDynamic3,
-                                "messageText4"      : this.offerSelectionDynamic4,
-                                "offerType"         : 'PROMO',
-                                "overallOfferName"  : this.overallOfferName,
-                                "smsCampaignName"   : this.offerSelectionSmsCampaignName
-                            },
-                        offerEventCondition,
-                        offerEligibility,
-                        offerMonitoring,
-                        offerRedemption,
-                        prepaidCxOfferAdvanceFilter,
-                    },
-                    "notification": "true"
-                };
+					if(this.offerTypeDropdown !== 'MA'){
+						var request = { "amsAction" : "save", "requestId" : "save",
+							"payload": {
+								"type": this.type,
+								"uuid": INSTANCE_ID,
+								"offerSelection": JSON.parse(JSON.stringify(this.offers)).map(item => {
+									if('MA' !== this.offerTypeDropdown) {
+										return {
+											offerBucketId       : item.offerBucketId,
+											offerBucketType     : item.offerBucketType,
+											offerCampaignId     : item.offerCampaignId,
+											offerCampaignName   : item.offerCampaignName,
+											offerType           : item.offerBucketType,
+										}
+									}else {
+										return {}
+									}
+								}),
+								"offerPromoCode":
+										{
+											"promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
+											"messageText1"      : this.offerSelectionDynamic1,
+											"messageText2"      : this.offerSelectionDynamic2,
+											"messageText3"      : this.offerSelectionDynamic3,
+											"messageText4"      : this.offerSelectionDynamic4,
+											"offerType"         : 'PROMO',
+											"overallOfferName"  : this.overallOfferName,
+											"smsCampaignName"   : this.offerSelectionSmsCampaignName
+										},
+								"offerNoneType":
+										{
+											"offerType"         : this.offerTypeDropdown,
+											"overallOfferName"  : this.overallOfferName
+										},
+								"offerMaType": JSON.parse(JSON.stringify(this.offers)).map(item => {
+									return {
+										offerCampaignId     : item.id,
+										offerCampaignName   : item.productName,
+										offerType           : this.offerTypeDropdown,
+										"overallOfferName"  : this.overallOfferName,
+									}
+								}),
+								offerEventCondition,
+								offerEligibility,
+								offerMonitoring,
+								offerRedemption,
+							},
+							"notification": "true"
+						};
+					}else {
+						var request = { "amsAction" : "save", "requestId" : "save",
+							"payload": {
+								"type": this.type,
+								"uuid": INSTANCE_ID,
+								"offerSelection": [],
+								"offerPromoCode":
+										{
+											"promoCodeList"     : $('#promoCodeMultiple').select2("val").toString(),
+											"messageText1"      : this.offerSelectionDynamic1,
+											"messageText2"      : this.offerSelectionDynamic2,
+											"messageText3"      : this.offerSelectionDynamic3,
+											"messageText4"      : this.offerSelectionDynamic4,
+											"offerType"         : 'PROMO',
+											"overallOfferName"  : this.overallOfferName,
+											"smsCampaignName"   : this.offerSelectionSmsCampaignName
+										},
+								"offerNoneType":
+										{
+											"offerType"         : this.offerTypeDropdown,
+											"overallOfferName"  : this.overallOfferName
+										},
+								"offerMaType": JSON.parse(JSON.stringify(this.offers)).map(item => {
+									return {
+										offerCampaignId     : item.id,
+										offerCampaignName   : item.productName,
+										offerType           : this.offerTypeDropdown,
+										"overallOfferName"  : this.overallOfferName,
+									}
+								}),
+								offerEventCondition,
+								offerEligibility,
+								offerMonitoring,
+								offerRedemption,
+							},
+							"notification": "true"
+						};
+					}
 
 				if (!this.overallOfferName && this.type != 'eventCondition') {
 					swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
