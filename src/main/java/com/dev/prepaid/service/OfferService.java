@@ -31,6 +31,7 @@ public interface OfferService {
 
 	public void evictAllCaches();
 	public OfferPromoCode getOfferPromoCode(String instanceId);
+	public OfferNoneType getOfferNoneType(String instanceId);
 	public List<OfferSelection> getOfferSelection(String instanceId);
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId);
 	public OfferFulfilment getOfferMonitoring(String instanceId);
@@ -41,4 +42,5 @@ public interface OfferService {
 	public List<PromoCode> listOfferType();
 	public OverallOfferName checkOverallOfferName(String overallOfferName);
 	public String getProvisionType(String instanceId);
+	public EventConditionName checkEventConditionName(String eventConditionName);
 }

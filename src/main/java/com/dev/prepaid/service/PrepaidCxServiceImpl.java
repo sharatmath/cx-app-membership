@@ -4,6 +4,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.dev.prepaid.domain.*;
+import com.dev.prepaid.model.configuration.*;
+import com.dev.prepaid.repository.*;
+import com.dev.prepaid.type.OfferType;
+import com.dev.prepaid.type.ProvisionType;
+import com.dev.prepaid.util.DateUtil;
+import lombok.extern.slf4j.Slf4j;
+import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +26,6 @@ import com.dev.prepaid.domain.PrepaidCxProvApplication;
 import com.dev.prepaid.model.configuration.OfferEligibility;
 import com.dev.prepaid.model.configuration.OfferPromoCode;
 import com.dev.prepaid.model.configuration.OfferSelection;
-import com.dev.prepaid.model.configuration.SaveConfigRequest;
 import com.dev.prepaid.model.create.ServiceInstance;
 import com.dev.prepaid.model.install.AppInstall;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
@@ -252,7 +259,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
         }
         // PROMO
         if (saveConfigRequest.getPayload().getOfferPromoCode() != null) {
-            if (saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList() != null) {
+            if (saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList() != null && !saveConfigRequest.getPayload().getOfferPromoCode().getPromoCodeList().equals("")) {
                 if (OfferType.PROMO.toString()
                         .equals(saveConfigRequest.getPayload().getOfferPromoCode().getOfferType())) {
                     OfferPromoCode promoCode = saveConfigRequest.getPayload().getOfferPromoCode();
@@ -281,6 +288,26 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                 }
             }
         }
+
+        //NONE Type
+        if(saveConfigRequest.getPayload().getOfferNoneType() != null){
+            if(OfferType.NONE.toString().equals(saveConfigRequest.getPayload().getOfferNoneType().getOfferType())) {
+                OfferNoneType noneType = saveConfigRequest.getPayload().getOfferNoneType();
+                Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
+                        .findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(offerConfigId,
+                                OfferType.NONE.toString(), "0", String.valueOf(0));
+                log.info("offerSelection NONE {} {}", opsFind, noneType);
+                PrepaidCxOfferSelection prepaidCxOfferSelection;
+                if (opsFind.isPresent()) {
+                    prepaidCxOfferSelection = opsFind.get();
+                } else {
+                    prepaidCxOfferSelection = PrepaidCxOfferSelection.builder().offerConfigId(offerConfigId)
+                            .offerBucketType(OfferType.NONE.toString()).offerBucketId("0").offerId("0").build();
+                }
+                prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
+            }
+        }
+
         // OMS & DA
         for (OfferSelection offerSelection : saveConfigRequest.getPayload().getOfferSelection()) {
             Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
@@ -303,6 +330,29 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             }
             prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
         }
+
+         // MA Offer
+         for (OfferMaType offerMA : saveConfigRequest.getPayload().getOfferMaType()) {
+                Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
+                        .findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(offerConfigId,
+                        offerMA.getOfferType(),  // MA
+                        offerMA.getOfferCampaignName(), // NAME 12321 1GB
+                        String.valueOf(offerMA.getOfferCampaignId()));  // 1
+                log.info("offerMA {} {}", opsFind, offerMA);
+                PrepaidCxOfferSelection prepaidCxOfferSelection;
+                if (opsFind.isPresent()) {
+                    prepaidCxOfferSelection = opsFind.get();
+                    prepaidCxOfferSelection.setOfferBucketId(offerMA.getOfferCampaignName());  //  ma product name
+                    prepaidCxOfferSelection.setOfferId(String.valueOf(offerMA.getOfferCampaignId())); // ma id
+                } else {
+                    prepaidCxOfferSelection = PrepaidCxOfferSelection.builder().offerConfigId(offerConfigId)
+                            .offerBucketType(offerMA.getOfferType()) // MA
+                            .offerBucketId(offerMA.getOfferCampaignName()) // ma product name
+                            .offerType(offerMA.getOfferType()) // MA
+                            .offerId(String.valueOf(offerMA.getOfferCampaignId())).build(); // ma prouduct id
+                }
+                prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
+            }
     }
 
     private void saveOfferMonitoring(String offerConfigId, SaveConfigRequest saveConfigRequest) {
@@ -360,9 +410,10 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
             prepaidCxOfferMonitoring
                     .setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
-            if (saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue() != null) {
+            log.info("topuptrans= {}",saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue());
+            if (saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceValue() != null) {
                 prepaidCxOfferMonitoring.setTopUpCurBalanceValue(
-                        Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTransactionValue()));
+                        Long.valueOf(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceValue()));
             }
             prepaidCxOfferMonitoring.setTopUpAccBalanceBeforeOp(
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpAccBalanceBeforeOp());
@@ -479,6 +530,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferRedemption().getTotalRedemptionPeriodType());
             prepaidCxOfferRedemption.setTotalRecurringFrequency(
                     saveConfigRequest.getPayload().getOfferRedemption().getTotalRecurringFrequency());
+            // radio button 1
             prepaidCxOfferRedemption.setIsRecurringFrequencyAndPeriod(
                     saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod());
             prepaidCxOfferRedemption.setRecurringFrequencyValue(
@@ -487,7 +539,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodType());
             prepaidCxOfferRedemption.setRecurringFrequencyPeriodValue(
                     saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodValue());
-
+            // radio button 2
             prepaidCxOfferRedemption.setIsRecurringFrequencyEachMonth(
                     saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyEachMonth());
             prepaidCxOfferRedemption.setRecurringFrequencyDayOfMonth(
@@ -551,8 +603,6 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                             saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod())
                     .recurringFrequencyValue(
                             saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyValue())
-                    .recurringFrequencyPeriodType(
-                            saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodType())
                     .recurringFrequencyPeriodValue(
                             saveConfigRequest.getPayload().getOfferRedemption().getRecurringFrequencyPeriodValue())
                     .isRecurringFrequencyEachMonth(
@@ -573,7 +623,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     .isRecurringProvisioning(
                             saveConfigRequest.getPayload().getOfferRedemption().isRecurringProvisioning())
                     .build();
-
+    
             prepaidCxOfferRedemption.setOptKeyword(saveConfigRequest.getPayload().getOfferRedemption().getOptKeyword());
             prepaidCxOfferRedemption.setDateRange(saveConfigRequest.getPayload().getOfferRedemption().isDateRange());
             if (saveConfigRequest.getPayload().getOfferRedemption().getOptStartDate() != null) {
@@ -587,6 +637,23 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             prepaidCxOfferRedemption.setPeriod(saveConfigRequest.getPayload().getOfferRedemption().isPeriod());
             prepaidCxOfferRedemption.setOptPeriod(saveConfigRequest.getPayload().getOfferRedemption().getOptPeriod());
         }
+
+        boolean isRecurringFrequencyAndPeriod = false;
+        if(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod() != null){
+                isRecurringFrequencyAndPeriod = saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyAndPeriod();
+        }
+        boolean isRecurringFrequencyEachMonth = false;
+        if(saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyEachMonth() != null){
+                isRecurringFrequencyEachMonth = saveConfigRequest.getPayload().getOfferRedemption().getIsRecurringFrequencyEachMonth();
+        }
+
+        if(isRecurringFrequencyAndPeriod){
+                prepaidCxOfferRedemption.setRecurringFrequencyPeriodType("days");
+        }
+        if(isRecurringFrequencyEachMonth){
+                prepaidCxOfferRedemption.setRecurringFrequencyPeriodType("months");
+        }
+
         prepaidCxOfferRedemptionRepository.save(prepaidCxOfferRedemption);
     }
 

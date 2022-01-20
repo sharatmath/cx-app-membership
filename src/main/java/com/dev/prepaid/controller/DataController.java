@@ -13,10 +13,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
+import com.dev.prepaid.model.configuration.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,12 +32,6 @@ import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.model.DataOffer;
 import com.dev.prepaid.model.PrepaidBucketDetailDTO;
 import com.dev.prepaid.model.PrepaidCampaignOfferDetailDTO;
-import com.dev.prepaid.model.configuration.EventCondition;
-import com.dev.prepaid.model.configuration.OfferFulfilment;
-import com.dev.prepaid.model.configuration.OfferPromoCode;
-import com.dev.prepaid.model.configuration.OfferRedemption;
-import com.dev.prepaid.model.configuration.OfferSelection;
-import com.dev.prepaid.model.configuration.ResponSysProgram;
 import com.dev.prepaid.model.request.DataControllRequest;
 import com.dev.prepaid.model.request.GetAccumulatedTopups;
 import com.dev.prepaid.model.request.GetPackageFrequency;
@@ -50,7 +47,6 @@ import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
 import com.dev.prepaid.service.OfferService;
 import com.dev.prepaid.util.AppUtil;
 import com.dev.prepaid.util.DateUtil;
-import com.dev.prepaid.util.OperationUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,8 +86,7 @@ public class DataController {
 			PrepaidOmsOfferBucket prepaidOmsOfferBucket = offerService
 					.getOmsOfferBucket(prepaidOmsOfferCampaign.getOfferId());
 			return PrepaidCampaignOfferDetailDTO.builder().offerBucketType(offerBucketType) // OMS
-					.offerName(prepaidOmsOfferCampaign.getName())
-					.offerId(prepaidOmsOfferBucket.getCode())
+					.offerName(prepaidOmsOfferCampaign.getName()).offerId(prepaidOmsOfferBucket.getCode())
 					.offerType(prepaidOmsOfferBucket.getType()) // timebased or accountbased
 					.description(prepaidOmsOfferCampaign.getDescription()).value(prepaidOmsOfferCampaign.getValue())
 					.valueUnit(prepaidOmsOfferCampaign.getValueUnit())
@@ -117,8 +112,7 @@ public class DataController {
 			PrepaidDaOfferCampaign prepaidDaOfferCampaign = offerService
 					.getDaOfferCampaign(Long.parseLong(campaignOfferId));
 			return PrepaidCampaignOfferDetailDTO.builder().offerName(prepaidDaOfferCampaign.getName())
-					.bucketName(prepaidDaOfferBucket.getDescription())
-					.offerId(prepaidDaOfferBucket.getCode())
+					.bucketName(prepaidDaOfferBucket.getDescription()).offerId(prepaidDaOfferBucket.getCode())
 					.description(prepaidDaOfferCampaign.getDescription()).value(prepaidDaOfferCampaign.getValue())
 					.valueUnit(prepaidDaOfferCampaign.getValueUnit()).valueCap(prepaidDaOfferCampaign.getValueCap())
 					.valueToDeductFromMa(prepaidDaOfferCampaign.getValueToDeductFromMa())
@@ -269,7 +263,6 @@ public class DataController {
 //					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
 //		}
 
-
 		return null;
 	}
 
@@ -291,12 +284,13 @@ public class DataController {
 		return DataOffer.builder().id(da.getId().toString()).text(da.getName()).slug(da.getName()).build();
 	}
 
-	private DataOffer mapMaCreditBucketToOffer(PrepaidMaCreditOffer ma){
-		return DataOffer.builder().id("MA|"+ma.getId()).text(ma.getProductName()).slug(ma.getProductName()).build();
+	private DataOffer mapMaCreditBucketToOffer(PrepaidMaCreditOffer ma) {
+		return DataOffer.builder().id("MA|" + ma.getId()).text(ma.getProductName()).slug(ma.getProductName()).build();
 	}
 
 	private DataOffer mapMaCreditToOffer(PrepaidMaCreditOffer ma) {
-		return DataOffer.builder().id(ma.getId().toString()).text(ma.getProductName()).slug(ma.getProductName()).build();
+		return DataOffer.builder().id(ma.getId().toString()).text(ma.getProductName()).slug(ma.getProductName())
+				.build();
 	}
 
 	@GetMapping(value = "evictCache")
@@ -310,10 +304,32 @@ public class DataController {
 		return offerService.getOfferPromoCode(instanceId);
 	}
 
+	@GetMapping(value = "offerNoneType")
+	public OfferNoneType getNoneType(@RequestParam(value = "instanceId", required = false) String instanceId)
+			throws Exception {
+		return offerService.getOfferNoneType(instanceId);
+	}
+
 	@GetMapping(value = "provisionType")
 	public String getProvisionType(@RequestParam(value = "instanceId", required = false) String instanceId)
 			throws Exception {
 		return offerService.getProvisionType(instanceId);
+	}
+
+	@GetMapping(value = "offerMA")
+	public List<OfferMaType> getOfferMA(
+			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+		List<OfferMaType> list = new ArrayList<>();
+		List<OfferSelection> data = offerService.getOfferSelection(instanceId);
+		for (OfferSelection prepaidCxOfferSelection : data) {
+			log.info("{}", prepaidCxOfferSelection);
+			OfferMaType ma = new OfferMaType();
+			ma.setOfferCampaignId(prepaidCxOfferSelection.getOfferCampaignId());
+			ma.setOfferType(prepaidCxOfferSelection.getOfferBucketType());
+			ma.setOfferCampaignName(prepaidCxOfferSelection.getOfferBucketId());
+			list.add(ma);
+		}
+		return list;
 	}
 
 	@GetMapping(value = "offerSelection")
@@ -347,14 +363,18 @@ public class DataController {
 	}
 
 	@GetMapping(value = "maOfferList")
-	public List<DataOffer> getMaOfferList(@RequestParam(value = "search", required = false) String query){
-		if(query == null || query.isEmpty()){
-			return offerService.listMaOfferBucket().stream()
-					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+	public List<DataOffer> getMaOfferList(@RequestParam(value = "search", required = false) String query) {
+		if (query == null || query.isEmpty()) {
+			return offerService.listMaOfferBucket().stream().map(this::mapMaCreditToOffer).collect(Collectors.toList());
 		} else {
-			return offerService.listMaByOffer(query).stream()
-					.map(this::mapMaCreditToOffer).collect(Collectors.toList());
+			return offerService.listMaByOffer(query).stream().map(this::mapMaCreditToOffer)
+					.collect(Collectors.toList());
 		}
+	}
+
+	@GetMapping(value = "maOfferDetail")
+	public PrepaidMaCreditOffer getMaOffer(@RequestParam(value = "id", required = true) Long id){
+		return offerService.getMaCreditOfferById(id);
 	}
 
 	@GetMapping(value = "offerEligibility")
@@ -408,7 +428,9 @@ public class DataController {
 					.recurringFrequencyPeriodValue(prepaidCxOfferRedemption.getRecurringFrequencyPeriodValue())
 					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
 					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
-					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod()).build();
+					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod())
+					.isRecurringProvisioning(prepaidCxOfferRedemption.isRecurringProvisioning())
+					.build();
 			try {
 				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
 				if (prepaidCxOfferRedemption.getOptEndDate() != null)
@@ -541,6 +563,12 @@ public class DataController {
 		return offerService.checkOverallOfferName(overallOfferName);
 	}
 
+	@GetMapping(value = "checkUniqueEventConditionName")
+	public EventConditionName checkUniqueEventConditionName(
+			@RequestParam(value = "eventConditionName", required = true) String eventConditionName) throws ParseException {
+		return offerService.checkEventConditionName(eventConditionName);
+	}
+
 //	Saket
 
 	/*
@@ -658,30 +686,30 @@ public class DataController {
 //				result.put("queryText", queryText);
 //			}
 //		}
-		/*
-		 *
-		 * --- Response
-		 *
-		 * {
-		 *
-		 * "queryText" :
-		 * "SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND CREATEDATE < '15/11/2021'"
-		 * ,
-		 *
-		 * "recordCount" : "12"
-		 *
-		 * }
-		 *
-		 *
-		 *
-		 * SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
-		 * CREATEDATE < '15/11/2021';
-		 *
-		 *
-		 *
-		 * SELECT count(*) FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
-		 * CREATEDATE < '15/11/2021'; -- execute and send the count in recordCount Tag
-		 */
+	/*
+	 *
+	 * --- Response
+	 *
+	 * {
+	 *
+	 * "queryText" :
+	 * "SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND CREATEDATE < '15/11/2021'"
+	 * ,
+	 *
+	 * "recordCount" : "12"
+	 *
+	 * }
+	 *
+	 *
+	 *
+	 * SELECT MSISDN FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
+	 * CREATEDATE < '15/11/2021';
+	 *
+	 *
+	 *
+	 * SELECT count(*) FROM TOPUP_IDD WHERE PRODUCT_NAME LIKE '%TOPUP30%' AND
+	 * CREATEDATE < '15/11/2021'; -- execute and send the count in recordCount Tag
+	 */
 //		return new ResponseEntity<>(result, HttpStatus.OK);
 //
 //	}
@@ -1051,8 +1079,8 @@ public class DataController {
 	 * }
 	 */
 //	Adv Filter With UI
-
-	@RequestMapping(value = { "/getSQLQuery" }, method = { RequestMethod.GET, RequestMethod.POST })
+	@CrossOrigin
+	@RequestMapping(value = { "/getSQLQuery" }, method = { RequestMethod.POST })
 	public ResponseEntity<Map<String, Object>> getSQLQuery(@RequestBody List<Group> groupList) {
 		Map<String, Object> result = new HashMap<>();
 		StringBuilder finalQueryStringBuilder = new StringBuilder();
@@ -1345,19 +1373,12 @@ public class DataController {
 	}
 
 //	 List of PREPAID_CX_OFFER_ADVANCE_FILTER
-	@GetMapping(value = "listCXOffer1")
+	@GetMapping(value = "listCXOffer")
 	public List<PrepaidCxOfferAdvanceFilter> listCXOffer(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOfferList(instanceId);
 	}
-	
-	
-	@GetMapping(value = "listCXOffer")
-	public PrepaidCxOfferAdvanceFilter getCXOfferList(
-			@RequestParam(value = "instanceId", required = false) String instanceId) {
-		return prepaidCxOfferAdvanceFilterService.getCXOfferList(instanceId);
-	}
-	
+
 //	@GetMapping(value = "listCXOffer")
 //	public PrepaidCxOfferAdvanceFilter listCXOffer(
 //			@RequestParam(value = "instanceId", required = false) String instanceId) {
