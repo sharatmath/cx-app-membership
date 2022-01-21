@@ -3871,8 +3871,11 @@ console.log(advanceFilter.mainData,'xxxx')
 									let element = data.promoCodeList.split(',');
 
 									element.forEach(item => {
-										$('#promoCodeMultiple option[value='+item+']').remove();
-										$('#promoCodeMultiple').append(new Option(item, item, true, true));
+										// Remove current item from DOM BEGIN
+										const foundIndex = this.promoList.findIndex(promo => promo.name === item )
+										if (foundIndex >= 0) this.promoList.splice(foundIndex, 1)
+										// Remove current item from DOM END
+										$('#promoCodeMultiple').append(new Option(item, item, true, true)); // Append data to Dropdown
 									});
 								}
 							})
