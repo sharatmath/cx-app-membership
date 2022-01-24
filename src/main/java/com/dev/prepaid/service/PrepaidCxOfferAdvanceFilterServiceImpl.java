@@ -46,25 +46,30 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		}
 		return arrayList;
 	}
-	
-	
+
 	@Override
-	public PrepaidCxOfferAdvanceFilter listCXOffer(String instanceId){
+	public PrepaidCxOfferAdvanceFilter listCXOffer(String instanceId) {
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
-		if(offerConfig.isPresent()){
-			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository.findByOfferConfigId(offerConfig.get().getId());
-			if(opsFind.isPresent())
+		if (offerConfig.isPresent()) {
+			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository
+					.findByOfferConfigId(offerConfig.get().getId());
+			if (opsFind.isPresent())
 				return opsFind.get();
 		}
 		return new PrepaidCxOfferAdvanceFilter();
 	}
-	
-	
-	
-	
-	
-	
 
+	@Override
+	public PrepaidCxOfferAdvanceFilter getCXOfferList(String instanceId) {
+		Optional<PrepaidCxOfferConfig> opsFindConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if (opsFindConfig.isPresent()) {
+			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository
+					.findByOfferConfigId(opsFindConfig.get().getInstanceId());
+			if (opsFind.isPresent())
+				return opsFind.get();
+		}
+		return new PrepaidCxOfferAdvanceFilter();
+	}
 
 	@Override
 	public Optional<PrepaidCxOfferAdvanceFilter> findPrepaidCxOfferById(long id) {
@@ -84,14 +89,11 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 
 	}
 
-
-
 	@Override
 	public List<PrepaidCxOfferAdvanceFilter> listCXOffer() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	public Optional<PrepaidCxOfferAdvanceFilter> findByOfferConfigId(String offerConfigId) {

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dev.prepaid.domain.*;
+import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
 import com.dev.prepaid.model.configuration.*;
 import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferType;

@@ -25,5 +25,5 @@ public interface IPrepaidCxOfferAdvanceFilterService {
 	List<PrepaidCxOfferAdvanceFilter> listCXOffer();
 	Optional<PrepaidCxOfferAdvanceFilter> findByOfferConfigId(@Param("offerConfigId") String offerConfigId);
 //	PrepaidCxOfferAdvanceFilter listCXOffer(String instanceId);
-
+	public PrepaidCxOfferAdvanceFilter getCXOfferList(String instanceId);
 }
