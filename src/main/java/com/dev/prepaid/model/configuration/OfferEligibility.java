@@ -34,4 +34,7 @@ public class OfferEligibility {
 
     @SerializedName("excludeProgramId")
     private String excludeProgramId;
+    
+    @SerializedName("excludeLastDay")
+    private Integer excludeLastDay;
 }
