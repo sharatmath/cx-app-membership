@@ -1560,11 +1560,11 @@ span.select2-selection.select2-selection--single {
 									<a class="tab-selected" href="#"
 										v-show="advanceFilterTab === 'customUI'">Custom UI</a> <a
 										class="tab-unselected" href="#"
-										v-show="advanceFilterTab === 'customQuery'">Custom UI</a> <a
+										v-show="advanceFilterTab === 'customQueryUI'">Custom UI</a> <a
 										class="tab-selected" href="#"
-										v-show="advanceFilterTab === 'customQuery'">Custom Query</a> <a
+										v-show="customQueryTab === 'customQueryUI'">Custom Query</a> <a
 										class="tab-unselected" href="#"
-										v-show="advanceFilterTab ==='customUI'">Custom Query</a>
+										v-show="customQueryTab ==='customUI'">Custom Query</a>
 									<hr>
 									<div v-show="advanceFilterTab === 'customUI'">
 										<query-component v-bind:maindata="mainData"
@@ -1588,7 +1588,10 @@ span.select2-selection.select2-selection--single {
 
 									</div>
 
-									<div v-show="advanceFilterTab === 'customQuery'"></div>
+									<div v-show="customQueryTab === 'customQueryUI'">
+									<textarea placeholder="Custom Query SQL" v-model="generatedQuery"
+											:readonly="true" :rows="4" style="width: 100%; resize: none;"
+											class="form-control form-control-sm input-custom"></textarea></div>
 								</div>
 								<!-- Advance Filter UI Main Entrance END -->
 
@@ -3885,7 +3888,8 @@ span.select2-selection.select2-selection--single {
             generatedQuery:null,
             customQuery:null,
             fetchedData:null,
-            advanceFilterTab:'customUI'
+            advanceFilterTab:'customUI',
+            customQueryTab:'customQueryUI'
         },
         methods: {
 
