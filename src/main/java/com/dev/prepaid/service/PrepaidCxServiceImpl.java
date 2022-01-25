@@ -473,10 +473,18 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             prepaidCxOfferMonitoring
                     .setCountryCode(saveConfigRequest.getPayload().getOfferMonitoring().getCountryCode());
             prepaidCxOfferMonitoring.setTopUpDaId(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaId());
+
             prepaidCxOfferMonitoring
                     .setTopUpDaBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceOp());
             prepaidCxOfferMonitoring.setTopUpDaBalanceValue(
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceValue());
+
+            prepaidCxOfferMonitoring.setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
+            prepaidCxOfferMonitoring.setTopUpCurBalanceValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceValue());
+            prepaidCxOfferMonitoring.setTopUpAccBalanceBeforeOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpAccBalanceBeforeOp());
+            prepaidCxOfferMonitoring.setTopUpAccBalanceBeforeValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpAccBalanceBeforeValue());
+
+
             prepaidCxOfferMonitoring.setTopUpTempServiceClass(
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
             prepaidCxOfferMonitoring.setImei(saveConfigRequest.getPayload().getOfferMonitoring().getImei());

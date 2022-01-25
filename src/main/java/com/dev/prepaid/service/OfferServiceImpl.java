@@ -387,8 +387,10 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setUsageUnit(prepaidCxOfferMonitoring.getUsageUnit());
 					offerFulfilment.setTopUpCurBalanceOp(prepaidCxOfferMonitoring.getTopUpCurBalanceOp());
 					offerFulfilment.setTopUpCurBalanceValue(prepaidCxOfferMonitoring.getTopUpCurBalanceValue());
+
 					offerFulfilment.setTopUpDaBalanceOp(prepaidCxOfferMonitoring.getTopUpDaBalanceOp());
-					offerFulfilment.setTopUpDaBalanceValue(prepaidCxOfferMonitoring.getTopUpCurBalanceValue());
+					offerFulfilment.setTopUpDaBalanceValue(prepaidCxOfferMonitoring.getTopUpDaBalanceValue());
+
 					offerFulfilment.setTopUpAccBalanceBeforeOp(prepaidCxOfferMonitoring.getTopUpAccBalanceBeforeOp());
 					offerFulfilment.setTopUpAccBalanceBeforeValue(prepaidCxOfferMonitoring.getTopUpAccBalanceBeforeValue());
 
@@ -398,6 +400,7 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setChargedAmount(prepaidCxOfferMonitoring.getChargedAmount());
 					offerFulfilment.setRoamingFlag(prepaidCxOfferMonitoring.getRoamingFlag());
 					offerFulfilment.setRatePlanId(prepaidCxOfferMonitoring.getRatePlanId());
+					offerFulfilment.setAggregationPeriodDays(prepaidCxOfferMonitoring.getAggregationPeriodDays());
 					return  offerFulfilment;
 				}
 			}
