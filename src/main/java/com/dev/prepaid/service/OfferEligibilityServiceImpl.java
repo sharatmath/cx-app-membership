@@ -99,10 +99,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         eligibleRows = evaluationSubscriberLevel(exclusionRows, invocation, instanceConfiguration);
         //3
         List<List<String>> advanceFilterRows = new ArrayList<>();
-        advanceFilterRows = evaluationAdvanceFilter(eligibleRows, invocation, instanceConfiguration);
+        //skip
+//        advanceFilterRows = evaluationAdvanceFilter(eligibleRows, invocation, instanceConfiguration);
+
         //4
         List<List<String>> offerLevelRows = new ArrayList<>();
-        offerLevelRows = evaluationOfferLevelCondition(advanceFilterRows, invocation, instanceConfiguration);
+        offerLevelRows = evaluationOfferLevelCondition(eligibleRows, invocation, instanceConfiguration);
         //5&6
         Optional<PrepaidOfferEligibilityTrx> opsFind = prepaidOfferEligibilityTrxRepository.findByInvocationIdAndBatchId(
                 invocation.getUuid(),
@@ -300,6 +302,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#3|DATA|{}", rows);
         // getConfigAdvanceFilterQuery with parameter offerConfigId
         Optional<PrepaidCxOfferAdvanceFilter> opsAdv = prepaidCxOfferAdvanceFilterRepository.findByOfferConfigId(instanceConfiguration.getId());
+
+
         if (!opsAdv.isPresent()) {
             log.info("process#3|SKIP|{}", rows);
             return rows;
