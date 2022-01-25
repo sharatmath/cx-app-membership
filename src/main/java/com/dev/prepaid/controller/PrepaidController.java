@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dev.prepaid.model.configuration.OfferSelection;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,18 +108,26 @@ public class PrepaidController {
     public SaveConfigResponse saveConfiguration(@RequestBody SaveConfigRequest request) throws Exception { //Config config
         log.info("saveconfiguration call");
         log.info(GsonUtils.deserializeObjectToJSON(request));
-
 //			String offerBucketType = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(0);
 //			String bucketOfferId = AppUtil.stringTokenizer(request.getPayload().getOfferBucketId(), "|").get(1);
 
         if (request.getPayload().getOfferSelection() != null) {
-            request.getPayload().getOfferSelection().stream().forEach(o ->
-                    o.setOfferBucketType(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(0))
-            );
+//            request.getPayload().getOfferSelection().stream().forEach(o ->
+//                    o.setOfferBucketType(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(0))
+//            );
+//
+//            request.getPayload().getOfferSelection().stream().forEach(o ->
+//                    o.setOfferBucketId(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(1))
+//            );
 
-            request.getPayload().getOfferSelection().stream().forEach(o ->
-                    o.setOfferBucketId(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(1))
-            );
+            for(OfferSelection o :  request.getPayload().getOfferSelection()){
+                if("OMS".equals(o.getOfferBucketType())
+                    || "DA".equals(o.getOfferBucketType())){
+                    o.setOfferBucketType(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(0));
+                    o.setOfferBucketId(AppUtil.stringTokenizer(o.getOfferBucketId(), "|").get(1));
+                }
+            }
+
         }
 
         log.debug(request.getPayload().toString());

@@ -10,6 +10,7 @@ import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferType;
 import com.dev.prepaid.type.ProvisionType;
 import com.dev.prepaid.util.DateUtil;
+import com.dev.prepaid.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
     @Autowired
     private IPrepaidCxOfferAdvanceFilterService prepaidCxOfferAdvanceFilterService;
+
+    @Autowired
+    private PrepaidCxOfferAdvanceFilterRepository prepaidCxOfferAdvanceFilterRepository;
 
     @Override
     public void appInstallAddEntity(AppInstall appInstall) {
@@ -158,6 +162,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                         saveOfferEventCondition(prepaidCxOfferConfig.getId(), saveConfigRequest);
                     }
                     if (saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter() != null) {
+                        log.info("listPayload : {} ", saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getPayloadList()
+                        );
                         savePrepaidCxOfferAdvanceFilter(prepaidCxOfferConfig.getId(), saveConfigRequest); // PrepaidCxOfferAdvanceFilter
                     }
 
@@ -242,7 +248,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                 saveConfigRequest.getPayload().getOfferEligibility().getOfferLevelCapPeriodDays());
         prepaidCxOfferEligibility
                 .setExcludeProgramId(saveConfigRequest.getPayload().getOfferEligibility().getExcludeProgramId());
-
+        prepaidCxOfferEligibility.setExcludeLastDay(saveConfigRequest.getPayload().getOfferEligibility().getExcludeLastDay());
         prepaidCxOfferEligibilityRepository.save(prepaidCxOfferEligibility);
     }
 
@@ -284,6 +290,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                                 .messageText2(promoCode.getMessageText2()).messageText3(promoCode.getMessageText3())
                                 .messageText4(promoCode.getMessageText4()).build();
                     }
+                    log.info("saving offer PROMO {} ", prepaidCxOfferSelection);
                     prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
                 }
             }
@@ -304,6 +311,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     prepaidCxOfferSelection = PrepaidCxOfferSelection.builder().offerConfigId(offerConfigId)
                             .offerBucketType(OfferType.NONE.toString()).offerBucketId("0").offerId("0").build();
                 }
+                log.info("saving offer NONE {} ", prepaidCxOfferSelection);
                 prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
             }
         }
@@ -328,11 +336,22 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                         .offerType(offerSelection.getOfferCampaignName())
                         .offerId(String.valueOf(offerSelection.getOfferCampaignId())).build();
             }
+            log.info("saving offer OMS DA {} ", prepaidCxOfferSelection);
             prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
         }
 
          // MA Offer
          for (OfferMaType offerMA : saveConfigRequest.getPayload().getOfferMaType()) {
+                if(!"MA".equals(offerMA.getOfferType())){
+                    log.info("skip data offerMA {}", offerMA);
+                    continue;
+                }else{
+                    if(offerMA.getOfferCampaignName() == null || offerMA.getOfferCampaignName().equals("")){
+                        log.info("skip data offerMA {} product name null ", offerMA);
+                        continue;
+                    }
+                }
+
                 Optional<PrepaidCxOfferSelection> opsFind = prepaidCxOfferSelectionRepository
                         .findByOfferConfigIdAndOfferBucketTypeAndOfferBucketIdAndOfferId(offerConfigId,
                         offerMA.getOfferType(),  // MA
@@ -351,6 +370,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                             .offerType(offerMA.getOfferType()) // MA
                             .offerId(String.valueOf(offerMA.getOfferCampaignId())).build(); // ma prouduct id
                 }
+                log.info("saving offer MA {} ", prepaidCxOfferSelection);
                 prepaidCxOfferSelectionRepository.save(prepaidCxOfferSelection);
             }
     }
@@ -429,20 +449,12 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceValue());
             prepaidCxOfferMonitoring.setTopUpTempServiceClass(
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
-
-        } else if ("ARPU".equals(prepaidCxOfferMonitoring.getEventType())) {
-            prepaidCxOfferMonitoring
-                    .setTopUpDaBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceOp());
-            prepaidCxOfferMonitoring.setTopUpDaBalanceValue(
-                    saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceValue());
-            prepaidCxOfferMonitoring.setTopUpTempServiceClass(
-                    saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
+            prepaidCxOfferMonitoring.setPermanentServiceClass(
+                    saveConfigRequest.getPayload().getOfferMonitoring().getPermanentServiceClass());
             prepaidCxOfferMonitoring
                     .setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
             prepaidCxOfferMonitoring.setTopUpCurBalanceValue(
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceValue());
-            prepaidCxOfferMonitoring.setPermanentServiceClass(
-                    saveConfigRequest.getPayload().getOfferMonitoring().getPermanentServiceClass());
 
             if (saveConfigRequest.getPayload().getOfferMonitoring().getDaExpiryDate() != null) {
                 prepaidCxOfferMonitoring.setDaExpiryDate(DateUtil
@@ -467,10 +479,18 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             prepaidCxOfferMonitoring
                     .setCountryCode(saveConfigRequest.getPayload().getOfferMonitoring().getCountryCode());
             prepaidCxOfferMonitoring.setTopUpDaId(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaId());
+
             prepaidCxOfferMonitoring
                     .setTopUpDaBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceOp());
             prepaidCxOfferMonitoring.setTopUpDaBalanceValue(
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpDaBalanceValue());
+
+            prepaidCxOfferMonitoring.setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceOp());
+            prepaidCxOfferMonitoring.setTopUpCurBalanceValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpCurBalanceValue());
+            prepaidCxOfferMonitoring.setTopUpAccBalanceBeforeOp(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpAccBalanceBeforeOp());
+            prepaidCxOfferMonitoring.setTopUpAccBalanceBeforeValue(saveConfigRequest.getPayload().getOfferMonitoring().getTopUpAccBalanceBeforeValue());
+
+
             prepaidCxOfferMonitoring.setTopUpTempServiceClass(
                     saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
             prepaidCxOfferMonitoring.setImei(saveConfigRequest.getPayload().getOfferMonitoring().getImei());
@@ -480,7 +500,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             prepaidCxOfferMonitoring
                     .setRoamingFlag(saveConfigRequest.getPayload().getOfferMonitoring().getRoamingFlag());
             prepaidCxOfferMonitoring.setRatePlanId(saveConfigRequest.getPayload().getOfferMonitoring().getRatePlanId());
-
+            prepaidCxOfferMonitoring.setCountryCode(saveConfigRequest.getPayload().getOfferMonitoring().getCountryCode());
+            prepaidCxOfferMonitoring.setAggregationPeriodDays(saveConfigRequest.getPayload().getOfferMonitoring().getAggregationPeriodDays());
             if (saveConfigRequest.getPayload().getOfferMonitoring().getDaExpiryDate() != null) {
                 prepaidCxOfferMonitoring.setDaExpiryDate(DateUtil
                         .stringToLocalDateTime(saveConfigRequest.getPayload().getOfferMonitoring().getDaExpiryDate()));
@@ -721,6 +742,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     saveConfigRequest.getPayload().getOfferEventCondition().getTopUpDaBalanceValue());
             prepaidCxOfferEventCondition.setTempServiceClass(
                     saveConfigRequest.getPayload().getOfferEventCondition().getTopUpTempServiceClass());
+            prepaidCxOfferEventCondition.setPermanentServiceClass(saveConfigRequest.getPayload().getOfferEventCondition().getPermanentServiceClass());     
 
         } else if ("ARPU".equals(prepaidCxOfferEventCondition.getEventConditionType())) {
             prepaidCxOfferEventCondition
@@ -768,22 +790,35 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
             prepaidCxOfferEventCondition
                     .setRoamingFlag(saveConfigRequest.getPayload().getOfferEventCondition().getRoamingFlag());
             prepaidCxOfferEventCondition
-                    .setRatePlanId(saveConfigRequest.getPayload().getOfferEventCondition().getRatePlanId());
+                    .setRatePlanId(saveConfigRequest.getPayload().getOfferEventCondition().getRatePlanId());       
+            prepaidCxOfferEventCondition
+                    .setTopUpCurBalanceOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCurBalanceOp());
+            prepaidCxOfferEventCondition
+                    .setTopUpCurBalanceValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpCurBalanceValue());                   
+            prepaidCxOfferEventCondition
+                    .setTopUpAccBalanceBeforeOp(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpAccBalanceBeforeOp());
+            prepaidCxOfferEventCondition
+                    .setTopUpAccBalanceBeforeValue(saveConfigRequest.getPayload().getOfferEventCondition().getTopUpAccBalanceBeforeValue());
+
         }
 
         prepaidCxOfferEventConditionRepository.save(prepaidCxOfferEventCondition);
     }
 
     private void savePrepaidCxOfferAdvanceFilter(String offerConfigId, SaveConfigRequest saveConfigRequest) {
-
+        String payload  = GsonUtils.deserializeObjectToJSON(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getPayloadList());
+        log.info("convert to String {}", payload);
         try {
             PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter = PrepaidCxOfferAdvanceFilter.builder()
                     .isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
-                    .payload(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getPayload())
+                    .payload(payload)
+                    .queryText(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getQueryText())
+                    .offerConfigId(offerConfigId)
                     .isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
                     .build();
-
-            prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
+            log.info("saving data", prepaidCxOfferAdvanceFilter);
+            prepaidCxOfferAdvanceFilterRepository.save(prepaidCxOfferAdvanceFilter);
+            log.info("saved {}", prepaidCxOfferAdvanceFilter);
         } catch (Exception ex) {
             log.error("", ex);
             log.error("[Prepaid Membership][PrepaidCxServiceImpl][savePrepaidCxOfferAdvanceFilter] failed!", ex);

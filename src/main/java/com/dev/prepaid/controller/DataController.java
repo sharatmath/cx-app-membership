@@ -19,14 +19,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.model.DataOffer;
@@ -316,22 +309,6 @@ public class DataController {
 		return offerService.getProvisionType(instanceId);
 	}
 
-	@GetMapping(value = "offerMA")
-	public List<OfferMaType> getOfferMA(
-			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
-		List<OfferMaType> list = new ArrayList<>();
-		List<OfferSelection> data = offerService.getOfferMa(instanceId);
-		for (OfferSelection prepaidCxOfferSelection : data) {
-			log.info("{}", prepaidCxOfferSelection);
-			OfferMaType ma = new OfferMaType();
-			ma.setOfferCampaignId(prepaidCxOfferSelection.getOfferCampaignId());
-			ma.setOfferType(prepaidCxOfferSelection.getOfferBucketType());
-			ma.setOfferCampaignName(prepaidCxOfferSelection.getOfferBucketId());
-			list.add(ma);
-		}
-		return list;
-	}
-
 	@GetMapping(value = "offerSelection")
 	public List<PrepaidCampaignOfferDetailDTO> getOfferSelection(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
@@ -340,10 +317,24 @@ public class DataController {
 		for (OfferSelection prepaidCxOfferSelection : data) {
 			log.info("{}", prepaidCxOfferSelection);
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
-			offerDetailDTO = offerDetail(
-					prepaidCxOfferSelection.getOfferBucketType().concat("|")
-							.concat(prepaidCxOfferSelection.getOfferBucketId()),
-					String.valueOf(prepaidCxOfferSelection.getOfferId()));
+			log.info("found offerBucketType {}", prepaidCxOfferSelection.getOfferBucketType());
+			if(prepaidCxOfferSelection.getOfferBucketType().equals("MA")){
+				offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketId());
+				offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
+				offerDetailDTO.setOfferId(prepaidCxOfferSelection.getOfferId());
+				offerDetailDTO.setOfferCampaignId(prepaidCxOfferSelection.getOfferCampaignId());
+				offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferCampaignName());
+
+				offerDetailDTO.setDescription(prepaidCxOfferSelection.getOfferBucketId());
+				offerDetailDTO.setId(prepaidCxOfferSelection.getOfferId());
+				offerDetailDTO.setProductName(prepaidCxOfferSelection.getOfferBucketId());
+
+			}else {
+				offerDetailDTO = offerDetail(
+						prepaidCxOfferSelection.getOfferBucketType().concat("|")
+								.concat(prepaidCxOfferSelection.getOfferBucketId()),
+						String.valueOf(prepaidCxOfferSelection.getOfferId()));
+			}
 //			offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketType().concat("|").concat(prepaidCxOfferSelection.getOfferBucketId()));
 //			offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
 //			offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferType());
@@ -356,6 +347,7 @@ public class DataController {
 //			offerDetailDTO.setMessageText3(prepaidCxOfferSelection.getMessageText3());
 //			offerDetailDTO.setMessageText4(prepaidCxOfferSelection.getMessageText4());
 //			offerDetailDTO.setOverallOfferName(prepaidCxOfferSelection.getOverallOfferName());
+
 			log.info("{}", offerDetailDTO);
 			list.add(offerDetailDTO);
 		}
@@ -486,7 +478,9 @@ public class DataController {
 					.topUpDaBalanceValue(prepaidCxOfferEventCondition.getDaBalanceValue())
 					.topUpTempServiceClass(prepaidCxOfferEventCondition.getTempServiceClass())
 					.permanentServiceClass(prepaidCxOfferEventCondition.getPermanentServiceClass())
+					.tempServiceClass(prepaidCxOfferEventCondition.getTempServiceClass())
 					.roamingFlag(prepaidCxOfferEventCondition.getRoamingFlag())
+					.countryCode(prepaidCxOfferEventCondition.getCountryCode())
 					.ratePlanId(prepaidCxOfferEventCondition.getRatePlanId()).build();
 			try {
 				log.info("getOfferEventCondition DateUtil.fromDate( {}", prepaidCxOfferEventCondition);
@@ -1376,7 +1370,9 @@ public class DataController {
 	@GetMapping(value = "listCXOffer")
 	public List<PrepaidCxOfferAdvanceFilter> listCXOffer(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+
 		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOfferList(instanceId);
+//		return offerService.findAdvanceFilterByInstanceId(instanceId);
 	}
 
 //	@GetMapping(value = "listCXOffer")

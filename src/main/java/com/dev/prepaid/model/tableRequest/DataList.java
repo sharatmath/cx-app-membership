@@ -26,6 +26,8 @@ public class DataList {
 
 	private String selectedColumnName;
 
+	private SelectedColumn selectedColumn;
+
 	private String selectedDataType;
 
 	private String selectedOption;
