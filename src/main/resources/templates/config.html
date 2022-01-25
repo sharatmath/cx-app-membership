@@ -3575,7 +3575,7 @@ span.select2-selection.select2-selection--single {
                 mergedData['daysBefore'] = this.daysBefore;
                 mergedData['duration'] = this.duration;
                 mergedData['selectedVarCharOption'] = this.selectedVarCharOption;
-                mergedData['varCharValue'] = this.varCharValue;
+                mergedData['selectedValue'] = this.varCharValue;
                 
 
                 if(this.selectedColumn.column_type === 'NUMBER') {
@@ -4029,7 +4029,7 @@ span.select2-selection.select2-selection--single {
                 console.log(advanceFilter.mainData,'dvanceFilter.mainData')
                 console.log(JSON.stringify(advanceFilter.mainData))
                 
-                fetch(PROD_URL+`getSQLQuery`, {
+                fetch(PROD_URLs+`getSQLQuery`, {
                     method: 'POST',
                     	mode:"cors",
                     headers: {
@@ -4091,7 +4091,7 @@ span.select2-selection.select2-selection--single {
 			    .catch(error => console.log(error))
 			    .finally()
                 
-                var dummy = [{"groupId":"61d4030e-36657f-3d0b-202323","rootGroup":true,"groupCondition":"AND","groups":[{"groupId":"61d40331-36657f-3d0b-209606","rootGroup":false,"groupCondition":"AND","groups":[],"dataList":[{"dataId":"61d40338-36657f-3d0b-259d8b","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}],"dataList":[{"dataId":"61d4031c-36657f-3d0b-5b393f","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}]
+                //var dummy = [{"groupId":"61d4030e-36657f-3d0b-202323","rootGroup":true,"groupCondition":"AND","groups":[{"groupId":"61d40331-36657f-3d0b-209606","rootGroup":false,"groupCondition":"AND","groups":[],"dataList":[{"dataId":"61d40338-36657f-3d0b-259d8b","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}],"dataList":[{"dataId":"61d4031c-36657f-3d0b-5b393f","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}]
                 this.mainData = dummy;
                 console.log('dummy')
             }
