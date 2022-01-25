@@ -1,13 +1,17 @@
 
 package com.dev.prepaid.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.dev.prepaid.model.tableRequest.Group;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +32,7 @@ public class PrepaidCxOfferAdvanceFilter extends Auditable {
 	private String payload;
 	private String queryText;
 	private boolean isCustomQuery;
+
+	@Transient
+	private List<Group> payloadList;
 }

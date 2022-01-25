@@ -10,6 +10,7 @@ import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferType;
 import com.dev.prepaid.type.ProvisionType;
 import com.dev.prepaid.util.DateUtil;
+import com.dev.prepaid.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
     @Autowired
     private IPrepaidCxOfferAdvanceFilterService prepaidCxOfferAdvanceFilterService;
+
+    @Autowired
+    private PrepaidCxOfferAdvanceFilterRepository prepaidCxOfferAdvanceFilterRepository;
 
     @Override
     public void appInstallAddEntity(AppInstall appInstall) {
@@ -158,6 +162,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                         saveOfferEventCondition(prepaidCxOfferConfig.getId(), saveConfigRequest);
                     }
                     if (saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter() != null) {
+                        log.info("listPayload : {} ", saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getPayloadList()
+                        );
                         savePrepaidCxOfferAdvanceFilter(prepaidCxOfferConfig.getId(), saveConfigRequest); // PrepaidCxOfferAdvanceFilter
                     }
 
@@ -800,15 +806,19 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
     }
 
     private void savePrepaidCxOfferAdvanceFilter(String offerConfigId, SaveConfigRequest saveConfigRequest) {
-
+        String payload  = GsonUtils.deserializeObjectToJSON(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getPayloadList());
+        log.info("convert to String {}", payload);
         try {
             PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter = PrepaidCxOfferAdvanceFilter.builder()
                     .isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
-                    .payload(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getPayload())
+                    .payload(payload)
+                    .queryText(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getQueryText())
+                    .offerConfigId(offerConfigId)
                     .isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
                     .build();
-
-            prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
+            log.info("saving data", prepaidCxOfferAdvanceFilter);
+            prepaidCxOfferAdvanceFilterRepository.save(prepaidCxOfferAdvanceFilter);
+            log.info("saved {}", prepaidCxOfferAdvanceFilter);
         } catch (Exception ex) {
             log.error("", ex);
             log.error("[Prepaid Membership][PrepaidCxServiceImpl][savePrepaidCxOfferAdvanceFilter] failed!", ex);
