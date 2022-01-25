@@ -549,10 +549,11 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     private int countOfferCapPerOfferConfigIdAndRangePeriod(String offerConfigId, PrepaidCxOfferEligibility prepaidCxOfferEligibility) {
         Calendar now = Calendar.getInstance();
         Calendar start = Calendar.getInstance();
-        start.set(Calendar.HOUR, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
-        start.add(Calendar.DATE, -prepaidCxOfferEligibility.getOfferLevelCapPeriodDays().intValue());
+        start.set(Calendar.HOUR, -(24*prepaidCxOfferEligibility.getOfferLevelCapPeriodDays().intValue()));
+        //start.set(Calendar.MINUTE, 0);
+        //start.set(Calendar.SECOND, 0);
+        //start.add(Calendar.DATE, -prepaidCxOfferEligibility.getOfferLevelCapPeriodDays().intValue());
+        log.info("process#4|countOfferCapPerOfferConfigIdAndRangePeriod|configId|{}|startDate|{}|endDate|{}", offerConfigId, start.getTime(), now.getTime());
         return prepaidOfferMembershipRepository.countByOfferConfigIdAndCreatedDateBetween(offerConfigId, start.getTime(), now.getTime());
     }
 
