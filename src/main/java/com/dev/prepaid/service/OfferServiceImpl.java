@@ -385,6 +385,19 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setUsageOperator(prepaidCxOfferMonitoring.getUsageOp());
 					offerFulfilment.setUsageValue(prepaidCxOfferMonitoring.getUsageValue());
 					offerFulfilment.setUsageUnit(prepaidCxOfferMonitoring.getUsageUnit());
+					offerFulfilment.setTopUpCurBalanceOp(prepaidCxOfferMonitoring.getTopUpCurBalanceOp());
+					offerFulfilment.setTopUpCurBalanceValue(prepaidCxOfferMonitoring.getTopUpCurBalanceValue());
+					offerFulfilment.setTopUpDaBalanceOp(prepaidCxOfferMonitoring.getTopUpDaBalanceOp());
+					offerFulfilment.setTopUpDaBalanceValue(prepaidCxOfferMonitoring.getTopUpCurBalanceValue());
+					offerFulfilment.setTopUpAccBalanceBeforeOp(prepaidCxOfferMonitoring.getTopUpAccBalanceBeforeOp());
+					offerFulfilment.setTopUpAccBalanceBeforeValue(prepaidCxOfferMonitoring.getTopUpAccBalanceBeforeValue());
+
+					offerFulfilment.setTopUpTempServiceClass(prepaidCxOfferMonitoring.getTopUpTempServiceClass());
+					offerFulfilment.setImei(prepaidCxOfferMonitoring.getImei());
+					offerFulfilment.setDaChange(prepaidCxOfferMonitoring.getDaChange());
+					offerFulfilment.setChargedAmount(prepaidCxOfferMonitoring.getChargedAmount());
+					offerFulfilment.setRoamingFlag(prepaidCxOfferMonitoring.getRoamingFlag());
+					offerFulfilment.setRatePlanId(prepaidCxOfferMonitoring.getRatePlanId());
 					return  offerFulfilment;
 				}
 			}

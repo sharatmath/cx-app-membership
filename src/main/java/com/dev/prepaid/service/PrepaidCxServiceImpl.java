@@ -487,7 +487,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
                     .setRoamingFlag(saveConfigRequest.getPayload().getOfferMonitoring().getRoamingFlag());
             prepaidCxOfferMonitoring.setRatePlanId(saveConfigRequest.getPayload().getOfferMonitoring().getRatePlanId());
             prepaidCxOfferMonitoring.setCountryCode(saveConfigRequest.getPayload().getOfferMonitoring().getCountryCode());
-
+            prepaidCxOfferMonitoring.setAggregationPeriodDays(saveConfigRequest.getPayload().getOfferMonitoring().getAggregationPeriodDays());
             if (saveConfigRequest.getPayload().getOfferMonitoring().getDaExpiryDate() != null) {
                 prepaidCxOfferMonitoring.setDaExpiryDate(DateUtil
                         .stringToLocalDateTime(saveConfigRequest.getPayload().getOfferMonitoring().getDaExpiryDate()));
