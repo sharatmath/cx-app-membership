@@ -1496,14 +1496,13 @@
 												</template>
 											</select>
 										</div><br>
-										<div class="mb-3 row">
-											<label for="topUpValue" class="col-sm-2 col-form-label">In the last</label>
-<!--											<span>In the last</span>-->
-											<div class="col-sm-2">
-												<input type="number" class="form-control" x-model="eligibilityData.excludeLastDay" min="0" max="180">
-											</div>
-											<span>Days</span>
-										</div>
+<!--										<div class="mb-3 row">-->
+<!--											<label for="topUpValue" class="col-sm-2 col-form-label">In the last</label>-->
+<!--											<div class="col-sm-2">-->
+<!--												<input type="number" class="form-control" x-model="eligibilityData.excludeLastDay" min="0" max="180">-->
+<!--											</div>-->
+<!--											<span>Days</span>-->
+<!--										</div>-->
 									</div>
 								</template>
 							</div>
@@ -4231,8 +4230,8 @@ console.log(advanceFilter.mainData,'xxxx')
 					};
 
 					const offerEligibility = {
-						"excludeProgramId"  : $('#select2multiple').select2("val").toString(),
-						"excludeLastDay"	: this.eligibilityData.excludeLastDay
+						"excludeProgramId"  : $('#select2multiple').select2("val").toString()
+						// "excludeLastDay"	: this.eligibilityData.excludeLastDay
 					};
 
 					if (this.offerLevelType === 'cap-only') {
