@@ -1075,7 +1075,7 @@
 																					<div class="col-md-6 mb-3">
 																						<template x-if="offer.offerName != null">
 																							<label :for="'daName' + index">Bucket Name</label>
-																							<input type="text" class="form-control" :id="'daName' + index" x-model="offer.bucketName" disabled>
+																							<input type="text" class="form-control" :id="'daName' + index" x-model="offer.offerId" disabled>
 																						</template>
 																						<template x-if="offer.offerName == null"> <!-- Used for showing MA Offer -->
 																							<label :for="'description' + index">MA Offer Description</label>
