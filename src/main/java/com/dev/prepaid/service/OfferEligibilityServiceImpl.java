@@ -414,6 +414,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     offerMembershipExcluseRows = rows;
                 } else {
                     int capacityCap = prepaidCxOfferEligibility.getOfferLevelCapPeriodValue().intValue() - currentCap;
+                    int total_row = rows.size();
+                    if(total_row>capacityCap) {
+                       // do noting
+                    }else{
+                        capacityCap = total_row;
+                    }
                     offerMembershipRows = rows.subList(0, capacityCap);
                     offerMembershipExcluseRows = rows.subList(capacityCap, rows.size());
                 }
