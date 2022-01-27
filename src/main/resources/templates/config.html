@@ -975,14 +975,14 @@
 														<input type="text" class="form-control" id="eventConditionDataPaidARPUValue" x-model="eventConditionData.arpuValue">
 													</div>
 												</div>
-												<div class="mb-3 row">
-													<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>
-													<span>Last</span>
-													<div class="col-sm-2">
-														<input type="number" class="form-control" x-model="eventConditionData.aggregationPeriodDays" min="0" max="180">
-													</div>
-													<span>Days</span>
-												</div>
+<!--												<div class="mb-3 row">-->
+<!--													<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>-->
+<!--													<span>Last</span>-->
+<!--													<div class="col-sm-2">-->
+<!--														<input type="number" class="form-control" x-model="eventConditionData.aggregationPeriodDays" min="0" max="180">-->
+<!--													</div>-->
+<!--													<span>Days</span>-->
+<!--												</div>-->
 											</div>
 										</template>
 									</div>
@@ -4158,7 +4158,7 @@ console.log(advanceFilter.mainData,'xxxx')
 						}
 						offerEventCondition.arpuOp                      = this.eventConditionData.arpuOp;
 						offerEventCondition.arpuValue                   = this.eventConditionData.arpuValue;
-						offerEventCondition.aggregationPeriodDays       = this.eventConditionData.aggregationPeriodDays;
+						// offerEventCondition.aggregationPeriodDays       = this.eventConditionData.aggregationPeriodDays;
 					};
 
 					const offerMonitoring = {
