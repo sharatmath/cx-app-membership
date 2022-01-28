@@ -35,4 +35,6 @@ public class PrepaidMaCreditOffer implements Serializable {
     private String deletedBy;
     private Date deletedDate;
     private String action;
+    private Long valueCap;
+    private String valueUnit;
 }

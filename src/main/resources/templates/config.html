@@ -1203,6 +1203,11 @@
 																							<label :for="'validity' + index">Offer Type</label>
 																							<input type="text" class="form-control" :id="'bucketType' + index" x-model="offer.offerBucketType" disabled>
 																						</template>
+																						<template x-if="offer.valueCap != null">
+																							<label :for="'valueCap' + index">Value Cap</label>
+																							<input type="text" class="form-control" :id="'valueCap' + index" x-model="offer.valueCap" disabled>
+																						</template>
+
 																					</div>
 																				</div>
 																			</div>
