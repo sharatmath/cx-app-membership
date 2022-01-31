@@ -783,6 +783,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             String msisdn = m.get(1);
             msisdnList.add(msisdn);
         }
+        List<String> listLb = new ArrayList<>();
+        listLb.add("1");
 
         payload.put("responsysCustomEvent", responsysCustomEventUrl);
         payload.put("token", "null");
@@ -794,8 +796,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         payload.put("customerId", msisdnList);
 //        request.put("status", "MULTIPLE RECIPIENTS FOUND");
 
-        payload.put("list", msisdnList);
-        payload.put("listLbsTargetedId", msisdnList);
+        payload.put("list", listLb);
+        payload.put("listLbsTargetedId", listLb);
 
         log.info("process#6|START|{}",Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT);
         log.info("process#6|id|{}|payload|{}",
