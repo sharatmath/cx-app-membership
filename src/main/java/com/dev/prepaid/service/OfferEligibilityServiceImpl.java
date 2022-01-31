@@ -505,6 +505,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 .dataSet(dataSet)
                 .build();
         try {
+            log.debug("process#7|productImportPost data output : {}", data);
             response = RESTUtil.productImportPost(invocationOri, token, url, data, null, "application/json");
             log.debug("process#7|productImportPost response : {}", response.getStatusCode());
         } catch (Exception ex) {
