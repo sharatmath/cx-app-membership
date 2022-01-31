@@ -714,6 +714,16 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 //        prepaidOfferMembershipRepository.saveAll(memberships);
     }
 
+    private String parseTrnLogId(String appRowId){
+        if(appRowId.contains("|")){
+            String[] data  = appRowId.split("|");
+            if(data[2] != null){
+                return data[2];
+            }
+        }
+        return appRowId;
+    }
+
     @Async
     private void saveToPrepaidOfferMembershipExclus(List<List<String>> membershipExclusRows, String invId, Long offerEligibilityTxId, PrepaidCxOfferConfig prepaidCxOfferConfig, String evaluationType, String evaluationStatus) throws Exception {
         int totalObjects = membershipExclusRows.size();
@@ -729,6 +739,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                 .evaluationType(evaluationType)
                                 .evaluationStatus(evaluationStatus)
                                 .msisdn(Long.valueOf(dataRowDTO.get(1)))
+                                .offerConfigId(prepaidCxOfferConfig.getId())
                                 .build())
                 .collect(Collectors.toList());
         //optimize

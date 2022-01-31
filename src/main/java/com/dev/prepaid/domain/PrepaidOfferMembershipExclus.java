@@ -28,4 +28,6 @@ public class PrepaidOfferMembershipExclus extends Auditable{
     private String holdoutGroupId;
     private String evaluationType;
     private String evaluationStatus;
+    private String offerConfigId;
+    private String trnLogId;
 }
