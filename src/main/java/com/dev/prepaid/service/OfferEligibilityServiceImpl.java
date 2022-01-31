@@ -446,23 +446,19 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 instanceConfiguration.getProvisionType(),
                 invocation.getUuid(),
                 rows.size());
+        List<List<String>> newRowOuput = new ArrayList<>();
 
-        DataSet dataSet = DataSet.builder()
-                .rows(rows)
-                .id(invocation.getDataSet().getId())
-                .size(Long.valueOf(rows.size()))
-                .build();
-
-        InvocationRequest newInvocationRequest = InvocationRequest.builder()
-                .uuid(invocation.getUuid())
-                .instanceContext(invocation.getInstanceContext())
-                .onCompletionCallbackEndpoint(invocation.getOnCompletionCallbackEndpoint())
-                .productExportEndpoint(invocation.getProductExportEndpoint())
-                .productImportEndpoint(invocation.getProductImportEndpoint())
-                .maxPushBatchSize(invocation.getMaxPushBatchSize())
-                .maxPullPageSize(invocation.getMaxPullPageSize())
-                .dataSet(dataSet)
-                .build();
+//
+//        InvocationRequest newInvocationRequest = InvocationRequest.builder()
+//                .uuid(invocation.getUuid())
+//                .instanceContext(invocation.getInstanceContext())
+//                .onCompletionCallbackEndpoint(invocation.getOnCompletionCallbackEndpoint())
+//                .productExportEndpoint(invocation.getProductExportEndpoint())
+//                .productImportEndpoint(invocation.getProductImportEndpoint())
+//                .maxPushBatchSize(invocation.getMaxPushBatchSize())
+//                .maxPullPageSize(invocation.getMaxPullPageSize())
+//                .dataSet(dataSet)
+//                .build();
 
 
         ResponseEntity response = null;
@@ -493,8 +489,16 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 //                    "", //appcloud_row_errormessage
 //                    instanceConfiguration.getOverallOfferName(),
 //                    "success"); //STATUS
-            rows.add(listOutput);
+//            rows.add(listOutput);
+            newRowOuput.add(listOutput);
         }
+
+        DataSet dataSet = DataSet.builder()
+//                .rows(rows)
+                .rows(newRowOuput)
+                .id(invocation.getDataSet().getId())
+                .size(Long.valueOf(rows.size()))
+                .build();
 
         DataImportDTO data = DataImportDTO.builder()
                 .fieldDefinitions(InitData.recordDefinition.getOutputParameters())
