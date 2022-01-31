@@ -497,7 +497,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 //                .rows(rows)
                 .rows(newRowOuput)
                 .id(invocation.getDataSet().getId())
-                .size(Long.valueOf(rows.size()))
+                .size(Long.valueOf(newRowOuput.size()))
                 .build();
 
         DataImportDTO data = DataImportDTO.builder()
