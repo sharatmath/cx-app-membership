@@ -20,4 +20,5 @@ public class InvocationRequest {
 	private OnCompletionCallbackEndpoint onCompletionCallbackEndpoint;
 	private Integer maxPullPageSize;
 	private Integer maxPushBatchSize;
+	private String trnLogId; // row from ODI unique record
 }

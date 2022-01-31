@@ -214,7 +214,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         if (excluseRows.size() > 0) {
             saveToPrepaidOfferMembershipExclus(excluseRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                     "evaluationSubscriberExclusion",
-                    "FAILED"
+                    "FAILED",
+                    invocation.getTrnLogId()
             );
         }
         log.info("process#1|evaluationSubscriberExclusion|END");
@@ -290,7 +291,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         if (notEligibleRows.size() > 0) {
             saveToPrepaidOfferMembershipExclus(notEligibleRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                     "evaluationSubscriberLevel",
-                    "FAILED");
+                    "FAILED",
+                    invocation.getTrnLogId()
+            );
         }
         log.info("process#2|evaluationSubscriberLevel|END");
         return eligibleRows;
@@ -335,7 +338,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         if (advanceExcluseRows.size() > 0) {
             saveToPrepaidOfferMembershipExclus(advanceExcluseRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                     "evaluationAdvanceFilter",
-                    "FAILED");
+                    "FAILED",
+                    invocation.getTrnLogId()
+            );
         }
         log.info("process#3|evaluationAdvanceFilter|END");
         // match msisdn put in queue redemption
@@ -430,7 +435,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             if (offerMembershipExcluseRows.size() > 0)
                 saveToPrepaidOfferMembershipExclus(offerMembershipExcluseRows, invocation.getUuid(), invocation.getOfferEligibilityTxId(), instanceConfiguration,
                         "evaluationOfferLevelCondition",
-                        "FAILED"
+                        "FAILED",
+                        invocation.getTrnLogId()
                 );
         }
         log.info("process#4|SUMMARY_IN|{}|", rows.size());
@@ -711,7 +717,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
     @Async
-    private void saveToPrepaidOfferMembershipExclus(List<List<String>> membershipExclusRows, String invId, Long offerEligibilityTxId, PrepaidCxOfferConfig prepaidCxOfferConfig, String evaluationType, String evaluationStatus) throws Exception {
+    private void saveToPrepaidOfferMembershipExclus(List<List<String>> membershipExclusRows, String invId, Long offerEligibilityTxId, PrepaidCxOfferConfig prepaidCxOfferConfig, String evaluationType, String evaluationStatus, String trnLogId) throws Exception {
         int totalObjects = membershipExclusRows.size();
         Date offerDate = new Date();
         List<PrepaidOfferMembershipExclus> memberships = membershipExclusRows
@@ -725,6 +731,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                 .evaluationType(evaluationType)
                                 .evaluationStatus(evaluationStatus)
                                 .msisdn(Long.valueOf(dataRowDTO.get(1)))
+                                .offerConfigid(prepaidCxOfferConfig.getId())
+                                .trnLogId(trnLogId)
                                 .build())
                 .collect(Collectors.toList());
         //optimize
