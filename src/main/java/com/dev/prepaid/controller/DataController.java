@@ -1179,17 +1179,17 @@ public class DataController {
 				if (dataListBean.getSelectedDataType().equalsIgnoreCase("VARCHAR")
 						&& dataListBean.getSelectedDataType() != null
 						&& !dataListBean.getSelectedDataType().isEmpty()) {
-					if (dataListBean.getSelectedOperand().equalsIgnoreCase("MATCHES")) {
+					if (dataListBean.getSelectedOption().equalsIgnoreCase("MATCHES")) {
+						queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ("
+								+ tableMap.get(dataListBean.getSelectedTable()) + "."
+								+ dataListBean.getSelectedColumnName());
+						queryStringBuilder.append(" LIKE' " + "%" + dataListBean.getSelectedValue() + "%" + "') ");
+					} else if (dataListBean.getSelectedOption().equalsIgnoreCase("STARTS WITH")) {
 						queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ("
 								+ tableMap.get(dataListBean.getSelectedTable()) + "."
 								+ dataListBean.getSelectedColumnName());
 						queryStringBuilder.append(" LIKE '" + "% " + dataListBean.getSelectedValue() + " %" + "') ");
-					} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("STARTSWITH")) {
-						queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ("
-								+ tableMap.get(dataListBean.getSelectedTable()) + "."
-								+ dataListBean.getSelectedColumnName());
-						queryStringBuilder.append(" LIKE '" + "% " + dataListBean.getSelectedValue() + " %" + "') ");
-					} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("EQUALS")) {
+					} else if (dataListBean.getSelectedOption().equalsIgnoreCase("EQUALS")) {
 						queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ("
 								+ tableMap.get(dataListBean.getSelectedTable()) + "."
 								+ dataListBean.getSelectedColumnName());
