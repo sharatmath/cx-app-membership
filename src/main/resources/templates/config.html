@@ -259,7 +259,7 @@
 	}
 
 	.modal-container {
-		width: 50%;
+		width: 54%;
 		height: 40% !important;
 		margin: 3% auto;
 		padding: 10px 15px;
@@ -2692,7 +2692,7 @@
                 selectedOperand:'>',
                 numberValue:0,
                 selectedDateType:'exactDate',
-                exactDate:dateToday,
+                exactDate:'',
                 daysBefore:0,
                 duration:0,
                 selectedVarCharOption: 'MATCHES',
@@ -2948,7 +2948,7 @@
                 this.selectedOperand = '>';
                 this.numberValue = 0;
                 this.selectedDateType = 'exactDate';
-                this.exactDate = dateToday;
+                this.exactDate = '';
                 this.daysBefore = 0;
                 this.duration = 0;
                 this.selectedVarCharOption = 'MATCHES';
@@ -2984,7 +2984,7 @@
                 this.selectedOperand = '>';
                 this.numberValue = 0;
                 this.selectedDateType = 'exactDate';
-                this.exactDate = dateToday;
+                this.exactDate = '';
                 this.daysBefore = 0;
                 this.duration = 0;
                 this.selectedVarCharOption = 'MATCHES';
@@ -3006,7 +3006,7 @@
                 this.selectedOperand = '>';
                 this.numberValue = 0;
                 this.selectedDateType = 'exactDate';
-                this.exactDate = dateToday;
+                this.exactDate = '';
                 this.daysBefore = 0;
                 this.duration = 0;
                 this.selectedVarCharOption = 'MATCHES';
@@ -3248,8 +3248,8 @@
             data: function () {
             return {
                 groupId:null,
-                condition:['AND', 'OR'],
-                selectedCondition:'AND'
+                condition:[' ','AND', 'OR'],
+                selectedCondition:' '
             }
         },
             template:
@@ -3325,7 +3325,7 @@
             tempGroupData:{
                 groupId:uuidv4(),
                 rootGroup:false,
-                groupCondition:'AND',
+                groupCondition:' ',
                 groups:[],
                 dataList:[]
             },
@@ -3333,7 +3333,7 @@
             mainData:[{
                 groupId:uuidv4(),
                 rootGroup:true,
-                groupCondition:'AND',
+                groupCondition:' ',
                 groups:[],
                 dataList:[]
             }],
@@ -3351,7 +3351,7 @@
                 var  tempMainData ={
                     groupId:uuidv4(),
                     rootGroup:true,
-                    groupCondition:'AND',
+                    groupCondition:' ',
                     groups:[],
                     dataList:[]
                 };
@@ -3460,7 +3460,7 @@
                             var  tempGroupData ={
                                     groupId:uuidv4(),
                                     rootGroup:false,
-                                    groupCondition:'AND',
+                                    groupCondition:' ',
                                     groups:[],
                                     dataList:[]
                                 };
