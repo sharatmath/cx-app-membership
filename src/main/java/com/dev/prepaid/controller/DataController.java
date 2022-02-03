@@ -1180,14 +1180,14 @@ public class DataController {
 				if (dataListBean.getSelectedDataType().equalsIgnoreCase("VARCHAR")
 						&& dataListBean.getSelectedDataType() != null
 						&& !dataListBean.getSelectedDataType().isEmpty()) {
+					if (!groupBean.getGroupCondition().isEmpty() && groupBean.getGroupCondition() != null
+							&& !groupBean.getGroupCondition().isBlank()) {
+						
+						appendCondition = " " + groupBean.getGroupCondition() + " ";
+					} else {
+						appendCondition = "";
+					}
 					if (dataListBean.getSelectedOption().equalsIgnoreCase("MATCHES")) {
-						if (!groupBean.getGroupCondition().isEmpty() && groupBean.getGroupCondition() != null
-								&& !groupBean.getGroupCondition().isBlank()) {
-
-							appendCondition = " " + groupBean.getGroupCondition() + " ";
-						} else {
-							appendCondition = "";
-						}
 						queryStringBuilder
 								.append(" "+ appendCondition + " (" + tableMap.get(dataListBean.getSelectedTable())
 										+ "." + dataListBean.getSelectedColumnName());
