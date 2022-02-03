@@ -1189,9 +1189,9 @@ public class DataController {
 							appendCondition = "";
 						}
 						queryStringBuilder
-								.append(" (" + tableMap.get(dataListBean.getSelectedTable())
+								.append(" "+ appendCondition + " (" + tableMap.get(dataListBean.getSelectedTable())
 										+ "." + dataListBean.getSelectedColumnName());
-						queryStringBuilder.append(" LIKE '" + "%" + dataListBean.getSelectedValue() + "%" + "')"+ appendCondition +" ");
+						queryStringBuilder.append(" LIKE '" + "%" + dataListBean.getSelectedValue() + "%" + "') ");
 					} else if (dataListBean.getSelectedOption().equalsIgnoreCase("STARTS WITH")) {
 						queryStringBuilder
 								.append(" " + appendCondition + " (" + tableMap.get(dataListBean.getSelectedTable())
