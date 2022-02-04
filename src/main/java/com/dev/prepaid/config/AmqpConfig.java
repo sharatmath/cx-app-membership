@@ -61,48 +61,48 @@ public class AmqpConfig {
 	//REDEMPTION
 	// ============================================================================= //
 	//queue
-	@Bean
-	public Queue queueSingtelRedemption() {
-			Map<String, Object> args = new HashMap<String, Object>();
-			args.put("x-max-priority", 1);
-			args.put("x-dead-letter-exchange", "singtel.redemption.dlx");
-			args.put("x-dead-letter-routing-key", "singtel.redemption.rk");
-			Queue queue = new Queue(Constant.QUEUE_NAME_SINGTEL_REDEMPTION, true, false, false, args);
-			return queue;
-		}
-	//binding
-	@Bean
-	public Binding bindingSingtelRedemptionAll(Queue queueSingtelRedemption, TopicExchange exchangeSingtel) {
-		return BindingBuilder.bind(queueSingtelRedemption).to(exchangeSingtel)
-				.with(Constant.QUEUE_NAME_SINGTEL_REDEMPTION); //route.key.name=queue.name
-	}
-	//container factory
-	@Bean
-	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
-	rabbitListenerContainerFactoryForRedemption(
-			ConnectionFactory rabbitConnectionFactory) {
-		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-		factory.setConnectionFactory(rabbitConnectionFactory);
-		factory.setPrefetchCount(redemptionQueuePrefetch);
-		factory.setConcurrentConsumers(redemptionQueueConcurrent);
-		factory.setMessageConverter(jackson2MessageConverter());
-		return factory;
-	}
-	//redemption DLQ
-	@Bean
-	public Queue dlqSingtelRedemption() {
-		return new Queue(Constant.QUEUE_NAME_DLQ_SINGTEL_REDEMPTION);
-	}
-
-	@Bean
-	public DirectExchange dlxSingtelRedemption() {
-		return new DirectExchange("singtel.redemption.dlx");
-	}
-
-	@Bean
-	public Binding singtelRedemptionDlqBinding() {
-		return BindingBuilder.bind(dlqSingtelRedemption()).to(dlxSingtelRedemption()).with("singtel.redemption.rk");
-	}
+//	@Bean
+//	public Queue queueSingtelRedemption() {
+//			Map<String, Object> args = new HashMap<String, Object>();
+//			args.put("x-max-priority", 1);
+//			args.put("x-dead-letter-exchange", "singtel.redemption.dlx");
+//			args.put("x-dead-letter-routing-key", "singtel.redemption.rk");
+//			Queue queue = new Queue(Constant.QUEUE_NAME_SINGTEL_REDEMPTION, true, false, false, args);
+//			return queue;
+//		}
+//	//binding
+//	@Bean
+//	public Binding bindingSingtelRedemptionAll(Queue queueSingtelRedemption, TopicExchange exchangeSingtel) {
+//		return BindingBuilder.bind(queueSingtelRedemption).to(exchangeSingtel)
+//				.with(Constant.QUEUE_NAME_SINGTEL_REDEMPTION); //route.key.name=queue.name
+//	}
+//	//container factory
+//	@Bean
+//	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
+//	rabbitListenerContainerFactoryForRedemption(
+//			ConnectionFactory rabbitConnectionFactory) {
+//		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+//		factory.setConnectionFactory(rabbitConnectionFactory);
+//		factory.setPrefetchCount(redemptionQueuePrefetch);
+//		factory.setConcurrentConsumers(redemptionQueueConcurrent);
+//		factory.setMessageConverter(jackson2MessageConverter());
+//		return factory;
+//	}
+//	//redemption DLQ
+//	@Bean
+//	public Queue dlqSingtelRedemption() {
+//		return new Queue(Constant.QUEUE_NAME_DLQ_SINGTEL_REDEMPTION);
+//	}
+//
+//	@Bean
+//	public DirectExchange dlxSingtelRedemption() {
+//		return new DirectExchange("singtel.redemption.dlx");
+//	}
+//
+//	@Bean
+//	public Binding singtelRedemptionDlqBinding() {
+//		return BindingBuilder.bind(dlqSingtelRedemption()).to(dlxSingtelRedemption()).with("singtel.redemption.rk");
+//	}
 
 	//============================================================================= //
 	// offerMonitoring
