@@ -789,7 +789,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         payload.put("responsysCustomEvent", responsysCustomEventUrl);
         payload.put("token", "null");
         payload.put("eventName", eventName);
-//        request.put("listName", lbsLocationRequest.getListName());
+        payload.put("listName", objectName);
         payload.put("folderName", folderName);
 //        request.put("correlationId", entry2.getKey());
 
