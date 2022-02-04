@@ -488,7 +488,7 @@
 												<select class="form-control" id="eventConditionTypeData" x-model="eventConditionTypeData">
 													<option value="Top-Up">Top-Up</option>
 													<option value="Usage">Usage</option>
-													<option value="ARPU">ARPU</option>
+<!--													<option value="ARPU">ARPU</option>-->
 												</select>
 											</div>
 										</div>
@@ -932,58 +932,58 @@
 										</div>
 									</div>
 								</div>
-								<div x-show="eventConditionTypeData === 'ARPU'">
-									<div class="eventConditionFulfillmentMonitoring" id="eventConditionDataARPUForm">
-										<div class="mb-3 row">
-											<label for="operators" class="col-sm-2 col-form-label">OPID</label>
-											<div class="col-sm-10">
-												<input type="text" class="form-control" id="eventConditionDataOperatorsARPU" x-model="eventConditionData.operatorId">
-											</div>
-										</div>
-										<div class="mb-3 row">
-											<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Type<sup><i class="fas fa-asterisk"></i></sup></label>
-											<div class="col-sm-5">
-												<select id="eventConditionDataTopUpValueARPUValue" class="form-control" x-model="eventConditionData.arpuType">
-													<option>Choose...</option>
-													<option value="allTopUp">ALL TOP UP</option>
-													<option value="paidTopUp">PAID TOP UP</option>
-													<option value="selfServe">SELF SERVE</option>
-													<option value="data">DATA</option>
-													<option value="others">OTHERS</option>
-												</select>
-											</div>
-											<template x-if="eventConditionData.arpuType === 'others'">
-												<div class="col-sm-5">
-													<input type="text" class="form-control" id="eventConditionArpuSelectedTopUpCode" x-model="eventConditionData.arpuSelectedTopUpCode">
-												</div>
-											</template>
-										</div>
-										<div class="mb-3 row">
-											<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Value<sup><i class="fas fa-asterisk"></i></sup></label>
-											<div class="col-sm-5">
-												<select id="eventConditionDataPaidARPUTopUpValueOperators" class="form-control" x-model="eventConditionData.arpuOp">
-													<option>Choose...</option>
-													<option value="lessThan">Less than</option>
-													<option value="moreThan">More than</option>
-													<option value="equalTo">Equal to</option>
-													<option value="lessOrEqual">Less than or Equal to</option>
-													<option value="moreOrEqualTo">More than or Equal to</option>
-												</select>
-											</div>
-											<div class="col-sm-5">
-												<input type="text" class="form-control" id="eventConditionDataPaidARPUValue" x-model="eventConditionData.arpuValue">
-											</div>
-										</div>
-										<!--												<div class="mb-3 row">-->
-										<!--													<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>-->
-										<!--													<span>Last</span>-->
-										<!--													<div class="col-sm-2">-->
-										<!--														<input type="number" class="form-control" x-model="eventConditionData.aggregationPeriodDays" min="0" max="180">-->
-										<!--													</div>-->
-										<!--													<span>Days</span>-->
-										<!--												</div>-->
-									</div>
-								</div>
+<!--								<div x-show="eventConditionTypeData === 'ARPU'">-->
+<!--									<div class="eventConditionFulfillmentMonitoring" id="eventConditionDataARPUForm">-->
+<!--										<div class="mb-3 row">-->
+<!--											<label for="operators" class="col-sm-2 col-form-label">OPID</label>-->
+<!--											<div class="col-sm-10">-->
+<!--												<input type="text" class="form-control" id="eventConditionDataOperatorsARPU" x-model="eventConditionData.operatorId">-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<div class="mb-3 row">-->
+<!--											<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Type<sup><i class="fas fa-asterisk"></i></sup></label>-->
+<!--											<div class="col-sm-5">-->
+<!--												<select id="eventConditionDataTopUpValueARPUValue" class="form-control" x-model="eventConditionData.arpuType">-->
+<!--													<option>Choose...</option>-->
+<!--													<option value="allTopUp">ALL TOP UP</option>-->
+<!--													<option value="paidTopUp">PAID TOP UP</option>-->
+<!--													<option value="selfServe">SELF SERVE</option>-->
+<!--													<option value="data">DATA</option>-->
+<!--													<option value="others">OTHERS</option>-->
+<!--												</select>-->
+<!--											</div>-->
+<!--											<template x-if="eventConditionData.arpuType === 'others'">-->
+<!--												<div class="col-sm-5">-->
+<!--													<input type="text" class="form-control" id="eventConditionArpuSelectedTopUpCode" x-model="eventConditionData.arpuSelectedTopUpCode">-->
+<!--												</div>-->
+<!--											</template>-->
+<!--										</div>-->
+<!--										<div class="mb-3 row">-->
+<!--											<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Value<sup><i class="fas fa-asterisk"></i></sup></label>-->
+<!--											<div class="col-sm-5">-->
+<!--												<select id="eventConditionDataPaidARPUTopUpValueOperators" class="form-control" x-model="eventConditionData.arpuOp">-->
+<!--													<option>Choose...</option>-->
+<!--													<option value="lessThan">Less than</option>-->
+<!--													<option value="moreThan">More than</option>-->
+<!--													<option value="equalTo">Equal to</option>-->
+<!--													<option value="lessOrEqual">Less than or Equal to</option>-->
+<!--													<option value="moreOrEqualTo">More than or Equal to</option>-->
+<!--												</select>-->
+<!--											</div>-->
+<!--											<div class="col-sm-5">-->
+<!--												<input type="text" class="form-control" id="eventConditionDataPaidARPUValue" x-model="eventConditionData.arpuValue">-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										&lt;!&ndash;												<div class="mb-3 row">&ndash;&gt;-->
+<!--										&lt;!&ndash;													<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>&ndash;&gt;-->
+<!--										&lt;!&ndash;													<span>Last</span>&ndash;&gt;-->
+<!--										&lt;!&ndash;													<div class="col-sm-2">&ndash;&gt;-->
+<!--										&lt;!&ndash;														<input type="number" class="form-control" x-model="eventConditionData.aggregationPeriodDays" min="0" max="180">&ndash;&gt;-->
+<!--										&lt;!&ndash;													</div>&ndash;&gt;-->
+<!--										&lt;!&ndash;													<span>Days</span>&ndash;&gt;-->
+<!--										&lt;!&ndash;												</div>&ndash;&gt;-->
+<!--									</div>-->
+<!--								</div>-->
 							</div>
 						</div>
 					</div>
