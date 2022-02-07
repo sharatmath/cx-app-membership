@@ -1339,7 +1339,7 @@ public class DataController {
 						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase(">")) {
 							queryStringBuilder.append(" " + groupBean.getGroupCondition() + " (TRUNC("
 									+ tableMap.get(dataListBean.getSelectedTable()) + "."
-									+ dataListBean.getSelectedColumnName() + ")) ");
+									+ dataListBean.getSelectedDateType() + ")) ");
 							queryStringBuilder.append(dataListBean.getSelectedOperand() + " '");
 							queryStringBuilder.append(date + "'");
 						}
