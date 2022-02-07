@@ -2685,31 +2685,6 @@
 		});
 		// Event Fulfillment Monitoring Policy Dropdown END
 
-		// Event Condition Dropdown BEGIN
-		$(document).ready(function(){
-			$("#eventConditionDataTopUpForm").show();
-			$("#eventConditionDataUsageForm").hide();
-			$("#eventConditionDataARPUForm").hide();
-
-			$('#eventConditionTypeData').on('change', function() {
-				$(".eventConditionFulfillmentMonitoring").hide();
-
-				if (this.value == 'Top-Up')
-				{
-					$("#eventConditionDataTopUpForm").show();
-				}
-				if (this.value == 'Usage')
-				{
-					$("#eventConditionDataUsageForm").show();
-				}
-				if (this.value == 'ARPU')
-				{
-					$("#eventConditionDataARPUForm").show();
-				}
-			});
-		});
-		// Event Condition Dropdown END
-
 		// Redemption Policy - Redemption Method Dropdown BEGIN
 		$(document).ready(function(){
 			$(".manualRedemptionSelection").hide();
@@ -2765,8 +2740,8 @@
 <!-- VueJS START -->
 <script>
 
-	const INSTANCE_ID = $("#instanceId").text();
-	// const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
+	// const INSTANCE_ID = $("#instanceId").text();
+	const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
 	const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
 	const PROD_URLs = 'http://localhost:8090/data/';
 	const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
