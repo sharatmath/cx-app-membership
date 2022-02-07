@@ -537,7 +537,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                         currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
                     }
                     log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
-                    if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
+                    if (currentFrequencyInRangeTime >= prepaidCxOfferEligibility.getNumberOfFrequency()) {
                         log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
                         return false;
                     }
@@ -549,7 +549,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
             }
             log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
-            if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
+            if (currentFrequencyInRangeTime >= prepaidCxOfferEligibility.getNumberOfFrequency()) {
                 log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
                 return false;
             }
@@ -585,7 +585,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     private int countFrequencyInRangeTime(String msisdn, String offerConfigId, int rangeDays) {
         Calendar now = Calendar.getInstance();
         Calendar startDate = Calendar.getInstance();
-        startDate.set(Calendar.DATE, -rangeDays);
+        startDate.add(Calendar.HOUR, -1 * 24 * rangeDays);
+        log.info("process#2|countFrequencyInRangeTime|{}|to|{}", startDate, now);
 
         List<PrepaidOfferMembership> list = prepaidOfferMembershipRepository.findByMsisdnAndOfferConfigIdAndCreatedDateBetween(
                 Long.valueOf(msisdn),
