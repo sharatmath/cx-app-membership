@@ -1223,7 +1223,7 @@
 																					<input type="text" class="form-control" :id="'action' + index" x-model="offer.action" disabled>
 																				</div>
 																				<div class="col-md-6 mb-3">
-																					<template x-if="offer.offerBucketType != null">
+																					<template x-if="offer.offerBucketType != null || offer.offerBucketType != 'MA'">
 																						<label :for="'validity' + index">Offer Type</label>
 																						<input type="text" class="form-control" :id="'bucketType' + index" x-model="offer.offerBucketType" disabled>
 																					</template>
