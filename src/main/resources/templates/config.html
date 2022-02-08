@@ -1105,7 +1105,7 @@
 																					</div>
 																				</div>
 																			</div>
-																			<div x-show="offer.offerBucketType == null"> <!-- Used for showing MA Offer -->
+																			<div x-show="offer.offerBucketType == null || offer.offerBucketType == 'MA'"> <!-- Used for showing MA Offer -->
 																				<div class="form-row">
 																					<div class="col-md-6 mb-3">
 																						<label :for="'value' + index">Value</label>
@@ -1117,7 +1117,7 @@
 																					</div>
 																				</div>
 																			</div>
-																			<div x-show="offer.offerBucketType == null"> <!-- Used for showing MA Offer -->
+																			<div x-show="offer.offerBucketType == null || offer.offerBucketType == 'MA'"> <!-- Used for showing MA Offer -->
 																				<div class="form-row">
 																					<div class="col-md-6 mb-3">
 																						<label :for="'valueUnit' + index">Value Unit</label>
