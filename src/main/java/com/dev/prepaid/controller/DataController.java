@@ -325,10 +325,14 @@ public class DataController {
 				offerDetailDTO.setValue((double) ma.getValue());
 				offerDetailDTO.setValueCap(ma.getValueCap());
 				offerDetailDTO.setValueUnit(ma.getValueUnit());
-				offerDetailDTO.setValueValidityInDays(ma.getValidity());
+				offerDetailDTO.setValidity(ma.getValidity());
 				offerDetailDTO.setStartDate(ma.getStartDate().toString());
 				offerDetailDTO.setEndDate(ma.getEndDate().toString());
 				offerDetailDTO.setAction(ma.getAction());
+
+				offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketId());
+				offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
+				offerDetailDTO.setOfferId(prepaidCxOfferSelection.getOfferId());
 
 			}else {
 				offerDetailDTO = offerDetail(
