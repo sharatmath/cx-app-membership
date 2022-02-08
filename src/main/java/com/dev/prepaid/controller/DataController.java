@@ -331,7 +331,6 @@ public class DataController {
 				offerDetailDTO.setAction(ma.getAction());
 
 				offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketId());
-				offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
 				offerDetailDTO.setOfferId(prepaidCxOfferSelection.getOfferId());
 
 			}else {
