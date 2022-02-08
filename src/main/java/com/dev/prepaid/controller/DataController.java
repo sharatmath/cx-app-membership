@@ -319,7 +319,11 @@ public class DataController {
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
 			log.info("found offerBucketType {}", prepaidCxOfferSelection.getOfferBucketType());
 			if(prepaidCxOfferSelection.getOfferBucketType().equals("MA")){
-				PrepaidMaCreditOffer ma = offerService.getMaCreditOfferById(Long.parseLong(prepaidCxOfferSelection.getOfferId()));
+				PrepaidMaCreditOffer ma = new PrepaidMaCreditOffer();
+				log.info(prepaidCxOfferSelection.getOfferId());
+				if(prepaidCxOfferSelection.getOfferId()!=null){
+					 ma = offerService.getMaCreditOfferById(Long.parseLong(prepaidCxOfferSelection.getOfferId()));
+				}
 				offerDetailDTO.setProductName(ma.getProductName());
 				offerDetailDTO.setDescription(ma.getDescription());
 				offerDetailDTO.setValue((double) ma.getValue());
