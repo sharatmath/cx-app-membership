@@ -1350,31 +1350,21 @@ span.select2-selection.select2-selection--single {
 																						</div>
 																					</div>
 																				</div>
-																				<div x-show="offer.offerBucketType == 'OMS'">
-																					<div class="form-row">
-																						<div class="col-md-6 mb-3">
-																							<label :for="'campaignOfferDesc' + index">Campaign
-																								Offer Description</label> <input type="text"
-																								class="form-control"
-																								:id="'campaignOfferDesc' + index"
-																								x-model="offer.description" disabled>
-																						</div>
-																						<div class="col-md-6 mb-3">
-																							<label :for="'validity' + index">Validity
-																								(Day/Hour/Minutes)</label> <input type="text"
-																								class="form-control" :id="'validity' + index"
-																								x-model="offer.dayHourMinute" disabled>
-																						</div>
+																			</div>
+																			<div x-show="offer.offerBucketType == null || offer.offerBucketType == 'MA'"> <!-- Used for showing MA Offer -->
+																				<div class="form-row">
+																					<div class="col-md-6 mb-3">
+																						<label :for="'value' + index">Value</label>
+																						<input type="text" class="form-control" :id="'value' + index" x-model="offer.value" disabled>
 																					</div>
 																				</div>
-																				<div x-show="offer.offerBucketType == null">
-																					<!-- Used for showing MA Offer -->
-																					<div class="form-row">
-																						<div class="col-md-6 mb-3">
-																							<label :for="'value' + index">Value</label> <input
-																								type="text" class="form-control"
-																								:id="'value' + index" x-model="offer.value"
-																								disabled>
+																			</div>
+																			<div x-show="offer.offerBucketType == null || offer.offerBucketType == 'MA'"> <!-- Used for showing MA Offer -->
+																				<div class="form-row">
+																					<div class="col-md-6 mb-3">
+																						<label :for="'valueUnit' + index">Value Unit</label>
+																						<div x-show="offer.valueUnit == 'SMS'">
+																							<input type="text" class="form-control" :id="'valueUnit' + index" value="Unit Count" disabled>
 																						</div>
 																						<div class="col-md-6 mb-3">
 																							<label :for="'validity' + index">Validity</label>
