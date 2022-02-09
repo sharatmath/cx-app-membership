@@ -259,7 +259,7 @@
 		}
 
 		.modal-container {
-			width: 50%;
+			width: 54%;
 			height: 40% !important;
 			margin: 3% auto;
 			padding: 10px 15px;
@@ -433,7 +433,16 @@
 			<div class="accordion DPForm" id="directProvisioning">
 				<div class="card">
 					<div class="card-header" id="headingSix">
-						<div id="eventConditionAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseSix"><h5><i class="fa fa-plus"></i> Event Condition - <label x-show="['offerMonitoringWithAssignment', 'directProvisioning'].includes(type)">Not Applicable</label><label x-show="type == 'eventConditionDirectProvisioning'">Required</label><label x-show="type == 'eventCondition'">Required</label></h5></div>
+						<div id="eventConditionAccordion" class="toggle-title collapsed"
+							 data-toggle="collapse" data-target="#collapseSix">
+							<h5>
+								<i class="fa fa-plus"></i> Event Condition - <label
+									x-show="['offerMonitoringWithAssignment', 'directProvisioning'].includes(type)">Not
+								Applicable</label><label
+									x-show="type == 'eventConditionDirectProvisioning'">Required</label><label
+									x-show="type == 'eventCondition'">Required</label>
+							</h5>
+						</div>
 					</div>
 					<div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#directProvisioning">
 						<div class="card-body" x-show="type === 'eventConditionDirectProvisioning' || type === 'eventCondition'">
@@ -2715,7 +2724,7 @@
 		// Listen response message from child window
 		eventer(messageEvent,function(e) {
 			console.log('parent received message!:  ',e.data);
-			var payload = JSON.parse(e.data.payload);
+			var payload = JSON.parse(e.data);
 			console.log(e.data.httpStatusCode)
 
 			$('#offerCodeId').text(payload.offerBucketCode);
@@ -2801,16 +2810,16 @@
 				tableColumnList:[],
 				numberOption: ['SUM','AVERAGE','MEAN','MEDIAN'],
 				numberOperand: ['>','<', '>=', '<=', '=', '!='],
-				varCharOption:['MATCHES','EQUAL','START WITH'],
+				varCharOption:['MATCHES','EQUALS','STARTS WITH'],
 				selectedNumberOption:'SUM',
 				selectedOperand:'>',
 				numberValue:0,
 				selectedDateType:'exactDate',
-				exactDate:dateToday,
+				exactDate:'',
 				daysBefore:0,
 				duration:0,
 				selectedVarCharOption: 'MATCHES',
-				varCharValue:'',
+				selectedValue:'',
 				selectedOption: null,
 				value: null,
 
@@ -2972,7 +2981,7 @@
 																type="text"
 																class="form-control form-control-sm input-custom"
 																style="margin-left:0px !important;"
-																v-model="varCharValue"/>
+																v-model="selectedValue"/>
 													</div>
 												</div>
 											</div>
@@ -3062,11 +3071,11 @@
 				this.selectedOperand = '>';
 				this.numberValue = 0;
 				this.selectedDateType = 'exactDate';
-				this.exactDate = dateToday;
+				this.exactDate = '';
 				this.daysBefore = 0;
 				this.duration = 0;
 				this.selectedVarCharOption = 'MATCHES';
-				this.varCharValue = '';
+				this.selectedValue = '';
 
 			},
 
@@ -3098,11 +3107,11 @@
 				this.selectedOperand = '>';
 				this.numberValue = 0;
 				this.selectedDateType = 'exactDate';
-				this.exactDate = dateToday;
+				this.exactDate = '';
 				this.daysBefore = 0;
 				this.duration = 0;
 				this.selectedVarCharOption = 'MATCHES';
-				this.varCharValue = '';
+				this.selectedValue = '';
 				this.value = null;
 
 				this.selectedFetchTable = null;
@@ -3120,11 +3129,11 @@
 				this.selectedOperand = '>';
 				this.numberValue = 0;
 				this.selectedDateType = 'exactDate';
-				this.exactDate = dateToday;
+				this.exactDate = '';
 				this.daysBefore = 0;
 				this.duration = 0;
 				this.selectedVarCharOption = 'MATCHES';
-				this.varCharValue = '';
+				this.selectedValue = '';
 				this.value = null;
 
 				this.selectedFetchTable = null;
@@ -3145,7 +3154,7 @@
 				mergedData['daysBefore'] = this.daysBefore;
 				mergedData['duration'] = this.duration;
 				mergedData['selectedVarCharOption'] = this.selectedVarCharOption;
-				mergedData['varCharValue'] = this.varCharValue;
+				mergedData['selectedValue'] = this.selectedValue;
 
 
 				if(this.selectedColumn.column_type === 'NUMBER') {
@@ -3154,7 +3163,7 @@
 					// selectedOption
 				} else if (this.selectedColumn.column_type === 'VARCHAR') {
 					mergedData ['selectedOption'] = this.selectedVarCharOption;
-					mergedData ['value'] = this.varCharValue;
+					mergedData ['value'] = this.selectedValue;
 				}
 				console.log(mergedData,'merged data');
 
@@ -3173,7 +3182,7 @@
 			return {
 				numberOption: ['SUM','AVERAGE','MEAN','MEDIAN'],
 				numberOperand: ['>','<', '>=', '<=', '=', '!='],
-				varCharOption:['MATCHES','EQUAL','START WITH'],
+				varCharOption:['MATCHES','EQUALS','STARTS WITH'],
 				selectedDateType:'exactDate',
 			}
 		},
@@ -3283,7 +3292,7 @@
 										type="text"
 										class="form-control form-control-sm input-custom"
 										style="margin-left:0px; height:80%"
-										v-model="data.varCharValue"/>
+										v-model="data.selectedValue"/>
 							</div>
 						</div>
 					</div>
@@ -3362,8 +3371,8 @@
 		data: function () {
 			return {
 				groupId:null,
-				condition:['AND', 'OR'],
-				selectedCondition:'AND'
+				condition:[' ','AND', 'OR'],
+				selectedCondition:''
 			}
 		},
 		template:
@@ -3439,7 +3448,7 @@
 			tempGroupData:{
 				groupId:uuidv4(),
 				rootGroup:false,
-				groupCondition:'AND',
+				groupCondition:'',
 				groups:[],
 				dataList:[]
 			},
@@ -3447,7 +3456,7 @@
 			mainData:[{
 				groupId:uuidv4(),
 				rootGroup:true,
-				groupCondition:'AND',
+				groupCondition:'',
 				groups:[],
 				dataList:[]
 			}],
@@ -3465,7 +3474,7 @@
 				var  tempMainData ={
 					groupId:uuidv4(),
 					rootGroup:true,
-					groupCondition:'AND',
+					groupCondition:'',
 					groups:[],
 					dataList:[]
 				};
@@ -3574,7 +3583,7 @@
 							var  tempGroupData ={
 								groupId:uuidv4(),
 								rootGroup:false,
-								groupCondition:'AND',
+								groupCondition:'',
 								groups:[],
 								dataList:[]
 							};
