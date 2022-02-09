@@ -18,22 +18,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "PREPAID_CX_OFFER_ADVANCE_FILTER")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrepaidCxOfferAdvanceFilter extends Auditable {
-	@SerializedName("id")
+	@Id
+	@Column(name = "OFFER_ADVANCE_FILTER_ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@SerializedName("offerConfigId")
 	private String offerConfigId;
-	@SerializedName("payload")
 	private String payload;
-	@SerializedName("queryText")
 	private String queryText;
-	@SerializedName("isCustomQuery")
 	private boolean isCustomQuery;
 
-	@SerializedName("payloadList")
+	@Transient
 	private List<Group> payloadList;
 }
