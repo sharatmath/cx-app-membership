@@ -4245,10 +4245,10 @@ span.select2-selection.select2-selection--single {
                 this.generateSQL();
             },
             generateSQL () {
-                console.log(advanceFilter.mainData,'dvanceFilter.mainData')
+                console.log(advanceFilter.mainData,'advanceFilter.mainData')
                 console.log(JSON.stringify(advanceFilter.mainData))
 
-                fetch(PROD_URL+`getSQLQuery`, {
+                fetch(PROD_URLs+`getSQLQuery`, {
                     method: 'POST',
                     	mode:"cors",
                     headers: {

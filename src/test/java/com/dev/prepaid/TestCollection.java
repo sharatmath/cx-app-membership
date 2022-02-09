@@ -26,7 +26,7 @@ public class TestCollection {
     @Test
     public void givenList_whenParitioningIntoNSublists_thenCorrect2() {
         List<Integer> intList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
-        System.out.println(intList.subList(0, 3));
+        System.out.println(intList.subList(0, 100));
 
 //        assertThat(subSets.size(), equalTo(3));
 //        assertThat(lastPartition, equalTo(expectedLastPartition));
