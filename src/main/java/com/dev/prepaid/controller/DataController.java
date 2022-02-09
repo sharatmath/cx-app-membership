@@ -319,15 +319,23 @@ public class DataController {
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
 			log.info("found offerBucketType {}", prepaidCxOfferSelection.getOfferBucketType());
 			if(prepaidCxOfferSelection.getOfferBucketType().equals("MA")){
-				offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketId());
-				offerDetailDTO.setOfferBucketType(prepaidCxOfferSelection.getOfferBucketType());
-				offerDetailDTO.setOfferId(prepaidCxOfferSelection.getOfferId());
-				offerDetailDTO.setOfferCampaignId(prepaidCxOfferSelection.getOfferCampaignId());
-				offerDetailDTO.setOfferCampaignName(prepaidCxOfferSelection.getOfferCampaignName());
+				PrepaidMaCreditOffer ma = new PrepaidMaCreditOffer();
+				log.info(prepaidCxOfferSelection.getOfferId());
+				if(prepaidCxOfferSelection.getOfferId()!=null){
+					 ma = offerService.getMaCreditOfferById(Long.parseLong(prepaidCxOfferSelection.getOfferId()));
+				}
+				offerDetailDTO.setProductName(ma.getProductName());
+				offerDetailDTO.setDescription(ma.getDescription());
+				offerDetailDTO.setValue((double) ma.getValue());
+				offerDetailDTO.setValueCap(ma.getValueCap());
+				offerDetailDTO.setValueUnit(ma.getValueUnit());
+				offerDetailDTO.setValidity(ma.getValidity());
+				offerDetailDTO.setStartDate(ma.getStartDate().toString());
+				offerDetailDTO.setEndDate(ma.getEndDate().toString());
+				offerDetailDTO.setAction(ma.getAction());
 
-				offerDetailDTO.setDescription(prepaidCxOfferSelection.getOfferBucketId());
-				offerDetailDTO.setId(prepaidCxOfferSelection.getOfferId());
-				offerDetailDTO.setProductName(prepaidCxOfferSelection.getOfferBucketId());
+				offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketId());
+				offerDetailDTO.setOfferId(prepaidCxOfferSelection.getOfferId());
 
 			}else {
 				offerDetailDTO = offerDetail(
