@@ -4619,6 +4619,8 @@
 					swal("Error!", "Event Fulfillment Date Can Not be Null", "error");
 				} else if(!this.eventConditionName && this.type == 'eventConditionDirectProvisioning' || !this.eventConditionName && this.type == 'eventCondition') {
 					swal("Error!", "Event Condition Name Can Not be Null", "error");
+				} else if (!this.redemptionMethod && this.type != 'eventCondition') {
+					swal("Error!", "You have to Fill-in Redemption Method in the Redemption Policy", "error");
 				} else {
 					window.parent.postMessage(request,'*');
 				}
