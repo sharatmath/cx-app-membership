@@ -4615,12 +4615,14 @@
 
 				if (!this.overallOfferName && this.type != 'eventCondition') {
 					swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
+				} else if(this.offerTypeDropdown == 'empty' && this.type != 'eventCondition') {
+					swal("Error!", "Offer Type in the Offer Selection Can Not be Empty", "error");
 				} else if (!this.campaignStartDate || !this.campaignEndDate) {
 					swal("Error!", "Event Fulfillment Date Can Not be Null", "error");
 				} else if(!this.eventConditionName && this.type == 'eventConditionDirectProvisioning' || !this.eventConditionName && this.type == 'eventCondition') {
 					swal("Error!", "Event Condition Name Can Not be Null", "error");
 				} else if (!this.redemptionMethod && this.type != 'eventCondition') {
-					swal("Error!", "You have to Fill-in Redemption Method in the Redemption Policy", "error");
+					swal("Error!", "Redemption Method in the Redemption Policy Can Not be Empty", "error");
 				} else {
 					window.parent.postMessage(request,'*');
 				}
