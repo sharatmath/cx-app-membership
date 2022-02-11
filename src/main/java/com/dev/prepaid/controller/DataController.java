@@ -318,11 +318,11 @@ public class DataController {
 			log.info("{}", prepaidCxOfferSelection);
 			PrepaidCampaignOfferDetailDTO offerDetailDTO = new PrepaidCampaignOfferDetailDTO();
 			log.info("found offerBucketType {}", prepaidCxOfferSelection.getOfferBucketType());
-			if(prepaidCxOfferSelection.getOfferBucketType().equals("MA")){
+			if (prepaidCxOfferSelection.getOfferBucketType().equals("MA")) {
 				PrepaidMaCreditOffer ma = new PrepaidMaCreditOffer();
 				log.info(prepaidCxOfferSelection.getOfferId());
-				if(prepaidCxOfferSelection.getOfferId()!=null){
-					 ma = offerService.getMaCreditOfferById(Long.parseLong(prepaidCxOfferSelection.getOfferId()));
+				if (prepaidCxOfferSelection.getOfferId() != null) {
+					ma = offerService.getMaCreditOfferById(Long.parseLong(prepaidCxOfferSelection.getOfferId()));
 				}
 				offerDetailDTO.setProductName(ma.getProductName());
 				offerDetailDTO.setDescription(ma.getDescription());
@@ -337,7 +337,7 @@ public class DataController {
 				offerDetailDTO.setOfferBucketId(prepaidCxOfferSelection.getOfferBucketId());
 				offerDetailDTO.setOfferId(prepaidCxOfferSelection.getOfferId());
 
-			}else {
+			} else {
 				offerDetailDTO = offerDetail(
 						prepaidCxOfferSelection.getOfferBucketType().concat("|")
 								.concat(prepaidCxOfferSelection.getOfferBucketId()),
@@ -373,7 +373,7 @@ public class DataController {
 	}
 
 	@GetMapping(value = "maOfferDetail")
-	public PrepaidMaCreditOffer getMaOffer(@RequestParam(value = "id", required = true) Long id){
+	public PrepaidMaCreditOffer getMaOffer(@RequestParam(value = "id", required = true) Long id) {
 		return offerService.getMaCreditOfferById(id);
 	}
 
@@ -429,8 +429,7 @@ public class DataController {
 					.recurringFrequencyValue(prepaidCxOfferRedemption.getRecurringFrequencyValue())
 					.isRecurringFrequencyAndPeriod(prepaidCxOfferRedemption.getIsRecurringFrequencyAndPeriod())
 					.isRedemptionCapAndPeriod(prepaidCxOfferRedemption.getIsRedemptionCapAndPeriod())
-					.isRecurringProvisioning(prepaidCxOfferRedemption.isRecurringProvisioning())
-					.build();
+					.isRecurringProvisioning(prepaidCxOfferRedemption.isRecurringProvisioning()).build();
 			try {
 				log.info("DateUtil.fromDate {}", prepaidCxOfferRedemption);
 				if (prepaidCxOfferRedemption.getOptEndDate() != null)
@@ -567,7 +566,8 @@ public class DataController {
 
 	@GetMapping(value = "checkUniqueEventConditionName")
 	public EventConditionName checkUniqueEventConditionName(
-			@RequestParam(value = "eventConditionName", required = true) String eventConditionName) throws ParseException {
+			@RequestParam(value = "eventConditionName", required = true) String eventConditionName)
+			throws ParseException {
 		return offerService.checkEventConditionName(eventConditionName);
 	}
 
@@ -1190,14 +1190,14 @@ public class DataController {
 						&& !dataListBean.getSelectedDataType().isEmpty()) {
 					if (!groupBean.getGroupCondition().isEmpty() && groupBean.getGroupCondition() != null
 							&& !groupBean.getGroupCondition().isBlank()) {
-						
+
 						appendCondition = " " + groupBean.getGroupCondition() + " ";
 					} else {
 						appendCondition = "";
 					}
 					if (dataListBean.getSelectedOption().equalsIgnoreCase("MATCHES")) {
 						queryStringBuilder
-								.append(" "+ appendCondition + " (" + tableMap.get(dataListBean.getSelectedTable())
+								.append(" " + appendCondition + " (" + tableMap.get(dataListBean.getSelectedTable())
 										+ "." + dataListBean.getSelectedColumnName());
 						queryStringBuilder.append(" LIKE '" + "%" + dataListBean.getSelectedValue() + "%" + "') ");
 					} else if (dataListBean.getSelectedOption().equalsIgnoreCase("STARTS WITH")) {
@@ -1371,7 +1371,13 @@ public class DataController {
 		Hashtable<String, Object> returnTable = new Hashtable<String, Object>();
 		HttpJsonResult<Hashtable<String, Object>> result = new HttpJsonResult<Hashtable<String, Object>>(returnTable);
 		try {
-			if (prepaidCxOfferAdvanceFilter != null) {
+			PrepaidCxOfferAdvanceFilter cxOfferAdvanceFilter = prepaidCxOfferAdvanceFilterService
+					.findOneByInstanceId(prepaidCxOfferAdvanceFilter.getOfferConfigId());
+			if (cxOfferAdvanceFilter != null) {
+				cxOfferAdvanceFilter.setCustomQuery(prepaidCxOfferAdvanceFilter.isCustomQuery());
+				cxOfferAdvanceFilter.setPayload(prepaidCxOfferAdvanceFilter.getPayload());
+				cxOfferAdvanceFilter.setPayloadList(prepaidCxOfferAdvanceFilter.getPayloadList());
+			} else if (prepaidCxOfferAdvanceFilter != null) {
 				prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
 			}
 
