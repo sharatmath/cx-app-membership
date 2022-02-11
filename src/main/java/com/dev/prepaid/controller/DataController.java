@@ -1184,23 +1184,31 @@ public class DataController {
 				// dataListBean.getSelectedTable() + " WHERE ");
 				dataListCount = groupBean.getDataList().size();
 //                                      VARCHAR
+				String appendCondition = "";
 				if (dataListBean.getSelectedDataType().equalsIgnoreCase("VARCHAR")
 						&& dataListBean.getSelectedDataType() != null
 						&& !dataListBean.getSelectedDataType().isEmpty()) {
-					if (dataListBean.getSelectedOperand().equalsIgnoreCase("MATCHES")) {
-						queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ("
-								+ tableMap.get(dataListBean.getSelectedTable()) + "."
-								+ dataListBean.getSelectedColumnName());
+					if (!groupBean.getGroupCondition().isEmpty() && groupBean.getGroupCondition() != null
+							&& !groupBean.getGroupCondition().isBlank()) {
+						
+						appendCondition = " " + groupBean.getGroupCondition() + " ";
+					} else {
+						appendCondition = "";
+					}
+					if (dataListBean.getSelectedOption().equalsIgnoreCase("MATCHES")) {
+						queryStringBuilder
+								.append(" "+ appendCondition + " (" + tableMap.get(dataListBean.getSelectedTable())
+										+ "." + dataListBean.getSelectedColumnName());
+						queryStringBuilder.append(" LIKE '" + "%" + dataListBean.getSelectedValue() + "%" + "') ");
+					} else if (dataListBean.getSelectedOption().equalsIgnoreCase("STARTS WITH")) {
+						queryStringBuilder
+								.append(" " + appendCondition + " (" + tableMap.get(dataListBean.getSelectedTable())
+										+ "." + dataListBean.getSelectedColumnName());
 						queryStringBuilder.append(" LIKE '" + "% " + dataListBean.getSelectedValue() + " %" + "') ");
-					} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("STARTSWITH")) {
-						queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ("
-								+ tableMap.get(dataListBean.getSelectedTable()) + "."
-								+ dataListBean.getSelectedColumnName());
-						queryStringBuilder.append(" LIKE '" + "% " + dataListBean.getSelectedValue() + " %" + "') ");
-					} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("EQUALS")) {
-						queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ("
-								+ tableMap.get(dataListBean.getSelectedTable()) + "."
-								+ dataListBean.getSelectedColumnName());
+					} else if (dataListBean.getSelectedOption().equalsIgnoreCase("EQUALS")) {
+						queryStringBuilder
+								.append(" " + appendCondition + " (" + tableMap.get(dataListBean.getSelectedTable())
+										+ "." + dataListBean.getSelectedColumnName());
 						queryStringBuilder.append(" = '" + dataListBean.getSelectedValue() + "') ");
 					}
 				}
@@ -1208,9 +1216,9 @@ public class DataController {
 						&& dataListBean.getSelectedDataType() != null
 						&& !dataListBean.getSelectedDataType().isEmpty()) {
 					String date = "";
-					if (dataListBean.getSelectedDateType().equalsIgnoreCase("DAYS")) {
+					if (dataListBean.getSelectedDateType().equalsIgnoreCase("daysBefore")) {
 						date = "SYSDATE";
-						if (dataListBean.getSelectedOperand().equalsIgnoreCase("IS BEFORE")) {
+						if (dataListBean.getSelectedOperand().equalsIgnoreCase("<")) {
 							queryStringBuilder.append(" " + groupBean.getGroupCondition() + " (TRUNC("
 									+ tableMap.get(dataListBean.getSelectedTable()) + "."
 									+ dataListBean.getSelectedColumnName() + ")) ");
@@ -1223,7 +1231,7 @@ public class DataController {
 							queryStringBuilder.append(" > ");
 							queryStringBuilder.append(" (" + date + " - " + dataListBean.getDaysBefore() + " - "
 									+ dataListBean.getDuration() + ") ");
-						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("IS After")) {
+						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase(">")) {
 							queryStringBuilder.append(" " + groupBean.getGroupCondition() + " (TRUNC("
 									+ tableMap.get(dataListBean.getSelectedTable()) + "."
 									+ dataListBean.getSelectedColumnName() + ")) ");
@@ -1236,7 +1244,7 @@ public class DataController {
 							queryStringBuilder.append(" < ");
 							queryStringBuilder.append(" (" + date + " + " + dataListBean.getDaysBefore() + " + "
 									+ dataListBean.getDuration() + ") ");
-						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("EQUALS")) {
+						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase("=")) {
 							queryStringBuilder.append(" " + groupBean.getGroupCondition() + " (TRUNC("
 									+ tableMap.get(dataListBean.getSelectedTable()) + "."
 									+ dataListBean.getSelectedColumnName() + ")) ");
@@ -1274,7 +1282,8 @@ public class DataController {
 							.append(" GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
 					groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
 							+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
-					groupByStrBuilder.append(" " + dataListBean.getSelectedValue());
+//					groupByStrBuilder.append(" " + dataListBean.getSelectedValue());
+					groupByStrBuilder.append(" " + dataListBean.getNumberValue());
 					String date = "";
 					if (dataListBean.getSelectedDateType().equalsIgnoreCase("DAYS")) {
 						date = "SYSDATE";
@@ -1338,7 +1347,7 @@ public class DataController {
 						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase(">")) {
 							queryStringBuilder.append(" " + groupBean.getGroupCondition() + " (TRUNC("
 									+ tableMap.get(dataListBean.getSelectedTable()) + "."
-									+ dataListBean.getSelectedColumnName() + ")) ");
+									+ dataListBean.getSelectedDateType() + ")) ");
 							queryStringBuilder.append(dataListBean.getSelectedOperand() + " '");
 							queryStringBuilder.append(date + "'");
 						}
@@ -1354,7 +1363,6 @@ public class DataController {
 		}
 		return queryStringBuilder.toString();
 	}
-
 //	Saket(PREPAID_CX_OFFER_ADVANCE_FILTER)
 
 	@RequestMapping(value = { "/doInsertCXOffer" }, method = { RequestMethod.POST })
@@ -1379,8 +1387,8 @@ public class DataController {
 	public List<PrepaidCxOfferAdvanceFilter> listCXOffer(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 
-		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOfferList(instanceId);
-//		return offerService.findAdvanceFilterByInstanceId(instanceId);
+//		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOfferList(instanceId);
+		return offerService.findAdvanceFilterByInstanceId(instanceId);
 	}
 
 //	@GetMapping(value = "listCXOffer")
