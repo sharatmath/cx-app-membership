@@ -36,6 +36,7 @@ public class PrepaidCampaignOfferDetailDTO {
 	
 	@SerializedName("valueCap") private Long valueCap;
 	@SerializedName("valueValidityInDays") private Long valueValidityInDays;
+	@SerializedName("validity") private Long validity;
 
 
 	@SerializedName("offerBucketId") private String offerBucketId;

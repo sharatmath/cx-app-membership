@@ -173,7 +173,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         for (List<String> row : rows) {
             if (getExcludeProgramId == null || getExcludeProgramId == "" || getExcludeProgramId == "null") {
                 log.info("process#1|3|EXCLUSION|{}|PASS", row.get(1));
-                resultRows.add(row);
+//                resultRows.add(row);
             } else {
                 excludeOverallOfferName = opsFind.get().getExcludeProgramId().split(",");
 
@@ -190,24 +190,36 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                             checkIsExist = true;
                         }
                     } else {
-                        log.info("process#1|2|EXCLUSION|{}|PASS", row.get(1));
-                        resultRows.add(row);
+                        log.info("process#1|2|EXCLUSION|{}|{}|PASS", overallOfferName, row.get(1));
+//                        resultRows.add(row);
                     }
 
                     if (!checkIsExist) {
-                        log.info("process#1|1|EXCLUSION|{}|PASS", row.get(1));
-                        resultRows.add(row);
+                        log.info("process#1|1|EXCLUSION|{}|{}|PASS", overallOfferName, row.get(1));
+
                     } else {
-                        log.info("process#1|1|EXCLUSION|{}|NOT_PASS", row.get(1));
+                        log.info("process#1|1|EXCLUSION|{}|{}|NOT_PASS", overallOfferName, row.get(1));
                         excluseRows.add(row);
                     }
-
                 }
-
-
-
             }
         }
+
+        if(excluseRows.size() == 0 ){
+            resultRows.addAll(rows);
+        }else {
+            for (List<String> row : rows) {
+
+                for (List<String> exist : excluseRows) {
+                    if (row.get(1).equals(exist.get(1))) {
+                    } else {
+                        resultRows.add(row);
+                    }
+                }
+            }
+        }
+
+
         log.info("process#1|SUMMARY_IN|{}", rows.size());
         log.info("process#1|SUMMARY_OUT|{}|rows|{}", resultRows.size(), resultRows);
         log.info("process#1|SUMMARY_EXCLUSE|{}|rows|{}", excluseRows.size(), excluseRows);
@@ -268,6 +280,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     }else{
                         currentCap.put(row.get(1) + "countFrequencyPerMsisdn", 1);
                     }
+                    log.info("process#2|currentCap|{}|msisdn|{}",currentCap, row.get(1));
                 }
                 if(isFrequencyAndTime){
                     if(currentCap.get(row.get(1) + "currentFrequencyInRangeTime") != null){
@@ -276,6 +289,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     }else{
                         currentCap.put(row.get(1) + "currentFrequencyInRangeTime",  1);
                     }
+                    log.info("process#2|currentCap|{}|msisdn|{}",currentCap, row.get(1));
 
                 }
                 eligibleRows.add(row);            
@@ -520,6 +534,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
     private Boolean subscriberLevel(Map<String, Integer> mapCurrentCap, String msisdn, PrepaidCxOfferEligibility prepaidCxOfferEligibility, boolean isFrequencyOnly, boolean isFrequencyAndTime) {
+        log.info("process#2|mapCurrentCap|{}", mapCurrentCap);
         log.info("process#2|subscriberLevel|{}|VALUE|{}", msisdn, prepaidCxOfferEligibility);
         if (isFrequencyOnly) {
             int currentFrequency = countFrequencyPerMsisdn(msisdn, prepaidCxOfferEligibility.getOfferConfigId());
@@ -533,8 +548,10 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             } else {
                 if (isFrequencyAndTime) {
                     int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+                    log.info("process#2|currentFrequencyInRangeTime|Result|{}", currentFrequencyInRangeTime);
                     if(mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime") != null) {
                         currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
+                        log.info("process#2|currentFrequencyInRangeTime|Result|{}", currentFrequencyInRangeTime);
                     }
                     log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
                     if (currentFrequencyInRangeTime >= prepaidCxOfferEligibility.getNumberOfFrequency()) {
@@ -545,8 +562,11 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             }
         } else if (isFrequencyAndTime) {
             int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+            log.info("process#2|currentFrequencyInRangeTime|Result|{}", currentFrequencyInRangeTime);
             if(mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime") != null) {
                 currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
+                log.info("process#2|currentFrequencyInRangeTime|Result|{}", currentFrequencyInRangeTime);
+
             }
             log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
             if (currentFrequencyInRangeTime >= prepaidCxOfferEligibility.getNumberOfFrequency()) {
@@ -586,20 +606,23 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         Calendar now = Calendar.getInstance();
         Calendar startDate = Calendar.getInstance();
         startDate.add(Calendar.HOUR, -1 * 24 * rangeDays);
-        log.info("process#2|countFrequencyInRangeTime|{}|to|{}", startDate, now);
+        log.info("process#2|countFrequencyInRangeTime|{}|to|{}", startDate.getTime(), now.getTime());
 
-        List<PrepaidOfferMembership> list = prepaidOfferMembershipRepository.findByMsisdnAndOfferConfigIdAndCreatedDateBetween(
-                Long.valueOf(msisdn),
-                offerConfigId,
-                now.getTime(),
-                startDate.getTime()
-        );
-
-        if (!list.isEmpty()) {
-            return list.size();
-        } else {
-            return 0;
-        }
+//        List<PrepaidOfferMembership> list = prepaidOfferMembershipRepository.findByMsisdnAndOfferConfigIdAndCreatedDateBetween(
+//                Long.valueOf(msisdn),
+//                offerConfigId,
+//                startDate.getTime(),
+//                now.getTime()
+//        );
+//
+//        if (!list.isEmpty()) {
+//            return list.size();
+//        } else {
+//            return 0;
+//        }
+        int count = prepaidOfferMembershipRepository.countByMsisdnOfferConfigIdAndCreatedDateBetween(Long.valueOf(msisdn),
+                offerConfigId, startDate.getTime(), now.getTime());
+        return  count;
     }
 
     private void saveToPrepaidOfferMembership(List<List<String>> membershipRows, String invId, Long offerEligibilityTxId, PrepaidCxOfferConfig prepaidCxOfferConfig) throws Exception {

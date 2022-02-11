@@ -101,4 +101,10 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		return null;
 	}
 
+	@Override
+	public PrepaidCxOfferAdvanceFilter findOneByInstanceId(String instanceId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

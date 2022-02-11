@@ -1105,7 +1105,7 @@
 																					</div>
 																				</div>
 																			</div>
-																			<div x-show="offer.offerBucketType == null"> <!-- Used for showing MA Offer -->
+																			<div x-show="offer.offerBucketType == null || offer.offerBucketType == 'MA'"> <!-- Used for showing MA Offer -->
 																				<div class="form-row">
 																					<div class="col-md-6 mb-3">
 																						<label :for="'value' + index">Value</label>
@@ -1117,7 +1117,7 @@
 																					</div>
 																				</div>
 																			</div>
-																			<div x-show="offer.offerBucketType == null"> <!-- Used for showing MA Offer -->
+																			<div x-show="offer.offerBucketType == null || offer.offerBucketType == 'MA'"> <!-- Used for showing MA Offer -->
 																				<div class="form-row">
 																					<div class="col-md-6 mb-3">
 																						<label :for="'valueUnit' + index">Value Unit</label>
@@ -2011,6 +2011,7 @@
 														<option value="allTopUp">ALL TOP UP</option>
 														<option value="paidTopUp">PAID TOP UP</option>
 														<option value="selfServe">SELF SERVE</option>
+														<option value="dataVas">DATAVAS</option>
 														<option value="others">OTHERS</option>
 													</select>
 												</div>
@@ -2742,7 +2743,7 @@
     const INSTANCE_ID = $("#instanceId").text();
     // const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
-    const PROD_URLs = 'http://localhost:8090/data/';
+    const PROD_URLs = 'http://localhost:8091/data/';
     const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
 
 
@@ -3596,8 +3597,7 @@
             generateSQL() {
                 console.log(advanceFilter.mainData, 'dvanceFilter.mainData')
                 console.log(JSON.stringify(advanceFilter.mainData))
-
-                fetch(PROD_URL + `getSQLQuery`, {
+                fetch(PROD_URLs + `getSQLQuery`, {
                     method: 'POST',
                     mode: "cors",
                     headers: {
@@ -4613,10 +4613,14 @@
 
 				if (!this.overallOfferName && this.type != 'eventCondition') {
 					swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
+				} else if(this.offerTypeDropdown == 'empty' && this.type != 'eventCondition') {
+					swal("Error!", "Offer Type in the Offer Selection Can Not be Empty", "error");
 				} else if (!this.campaignStartDate || !this.campaignEndDate) {
 					swal("Error!", "Event Fulfillment Date Can Not be Null", "error");
 				} else if(!this.eventConditionName && this.type == 'eventConditionDirectProvisioning' || !this.eventConditionName && this.type == 'eventCondition') {
 					swal("Error!", "Event Condition Name Can Not be Null", "error");
+				} else if (!this.redemptionMethod && this.type != 'eventCondition') {
+					swal("Error!", "Redemption Method in the Redemption Policy Can Not be Empty", "error");
 				} else {
 					window.parent.postMessage(request,'*');
 				}

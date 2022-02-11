@@ -11,9 +11,12 @@ import java.util.List;
 public interface PrepaidOfferMembershipRepository extends CrudRepository<PrepaidOfferMembership, Long> {
     List<PrepaidOfferMembership> findByMsisdnAndOfferConfigId(@Param("msisdn") Long msisdn, @Param("offerConfigId") String offerConfigId);
     List<PrepaidOfferMembership> findByMsisdnAndOfferConfigIdAndCreatedDateBetween(@Param("msisdn") Long msisdn, @Param("offerConfigId") String offerConfigId,
-                                                                                   @Param("createdDate") Date endDate, @Param("createdDate") Date startDate);
+                                                                                   @Param("createdDate") Date starDate, @Param("createdDate") Date endDate);
     @Query("select count(*) from PrepaidOfferMembership ex where ex.offerConfigId = :offerConfigId")
     int countByOfferConfigId(@Param("offerConfigId") String offerConfigId);
     @Query(value = "SELECT count(*) FROM PREPAID_OFFER_MEMBERSHIP WHERE OFFER_CONFIG_ID =:offerConfigId AND CREATED_DATE >= :startDate AND CREATED_DATE <= :endDate", nativeQuery = true)
     int countByOfferConfigIdAndCreatedDateBetween(@Param("offerConfigId") String offerConfigId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Query(value = "SELECT count(*) FROM PREPAID_OFFER_MEMBERSHIP WHERE MSISDN =:msisdn AND OFFER_CONFIG_ID =:offerConfigId AND CREATED_DATE >= :startDate AND CREATED_DATE <= :endDate", nativeQuery = true)
+    int countByMsisdnOfferConfigIdAndCreatedDateBetween(@Param("msisdn") Long msisdn, @Param("offerConfigId") String offerConfigId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }
