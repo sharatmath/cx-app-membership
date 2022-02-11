@@ -15,5 +15,5 @@ public interface InvocationService {
 	public void callProductImportEndpoint(InvocationRequest invocation) throws Exception;
 
 	@Retryable(value = { Exception.class }, maxAttempts = 3, backoff = @Backoff(delay = 5000))  //5sec ,2times
-	public void onCompletionCallbackEndpoint(InvocationRequest invocation) throws Exception;
+	public void onCompletionCallbackEndpoint(InvocationRequest invocation, boolean pass) throws Exception;
 }

@@ -481,10 +481,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         String url = invocation.getProductImportEndpoint().getUrl();
         List<List<String>> dataRows = invocation.getDataSet().getRows();
         log.info("process#7|dataRows|{}", dataRows);
-        int total_row = invocation.getDataSet().getRows().size();
+//        int total_row = invocation.getDataSet().getRows().size();
+        int total_row = rows.size();
         DataSet dataSetTemp = invocation.getDataSet();
         for (int i = 0; i < total_row; i++) {
-            List<String> row = dataSetTemp.getRows().get(i);
+//            List<String> row = dataSetTemp.getRows().get(i);
+            List<String> row = rows.get(i);
             log.info("process#7|productImportEndpoint|index|{}|row|{}", i, row);
             Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
             log.info("process#7|productImportEndpoint|index|{}|input|{}", i, input);
@@ -524,7 +526,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             log.debug("process#7|productImportPost response : {}", response.getStatusCode());
         } catch (Exception ex) {
             log.error("productImportPost FAILED and INIT RETRY IN 3 times", ex);
-            retryableService.callProductImportEndpoint(invocation);
+            retryableService.callProductImportEndpoint(rows, invocation);
         }
 
         log.info("process#7|productImportEndpoint|END|type|{}|id|{}|rows_in|{}",

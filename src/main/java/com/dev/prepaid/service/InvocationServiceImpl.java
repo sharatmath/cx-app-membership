@@ -53,6 +53,14 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
         String instanceId = invocation.getInstanceContext().getInstanceId();
         PrepaidCxOfferConfig instanceConfiguration = prepaidCxOfferConfigRepository.findOneByInstanceIdAndDeletedDateIsNull(instanceId);
         log.info("{}", instanceConfiguration);
+        // check offerStatus
+        if(instanceConfiguration.getOfferStatus() != null
+                && instanceConfiguration.getOfferStatus().equalsIgnoreCase("INACTIVE")){
+            log.info("process skip {} and call onCompletionCallbackEndpoint", instanceConfiguration);
+            onCompletionCallbackEndpoint(invocation, true);
+            return;
+        }
+
         if(ProvisionType.EVENT_CONDITION.getDescription().equals(instanceConfiguration.getProvisionType()) ||
                 ProvisionType.EVENT_CONDITION_WITH_DIRECT_PROVISION.getDescription().equals(instanceConfiguration.getProvisionType())
         ){
@@ -143,7 +151,7 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
             processData(invocation, invocation);
         }
 
-        onCompletionCallbackEndpoint(invocation);
+        onCompletionCallbackEndpoint(invocation, false);
     }
 
     @Override
@@ -245,20 +253,22 @@ public class InvocationServiceImpl extends BaseRabbitTemplate implements Invocat
             response = RESTUtil.productImportPost(invocation, token, url, data, null, "application/json");
         }catch (Exception ex){
             log.error("productImportPost init Retry : {}", response.getStatusCode());
-            retryableService.callProductImportEndpoint(invocation);
+            retryableService.callProductImportEndpoint(invocation.getDataSet().getRows(), invocation);
 
         }
         log.debug("productImportPost response : {}", response.getStatusCode());
     }
 
     @Override
-    public void onCompletionCallbackEndpoint(InvocationRequest invocation) throws Exception {
+    public void onCompletionCallbackEndpoint(InvocationRequest invocation, boolean pass) throws Exception {
         BigDecimal batchCount = new BigDecimal(invocation.getDataSet().getSize()).divide(new BigDecimal(batchSize));
         batchCount = batchCount.setScale(0, RoundingMode.UP);
         int count = batchCount.intValue();
-        Thread.sleep(count * 5000);
-        log.info("{}", invocation.getInstanceContext());
-        Thread.sleep(9000);
+        if(!pass) {
+            Thread.sleep(count * 5000);
+            log.info("{}", invocation.getInstanceContext());
+            Thread.sleep(9000);
+        }
         log.debug("call onCompletionCallbackEndpoint");
 
         ResponseEntity response = null;
