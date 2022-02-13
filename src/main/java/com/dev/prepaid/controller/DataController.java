@@ -35,6 +35,7 @@ import com.dev.prepaid.model.tableRequest.CasesDTO;
 import com.dev.prepaid.model.tableRequest.ClauseDto;
 import com.dev.prepaid.model.tableRequest.DataList;
 import com.dev.prepaid.model.tableRequest.Group;
+import com.dev.prepaid.repository.PrepaidCxOfferAdvanceFilterRepository;
 import com.dev.prepaid.service.AdvFilterRecordCountServices;
 import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
 import com.dev.prepaid.service.OfferService;
@@ -53,6 +54,9 @@ public class DataController {
 
 	@Autowired
 	private IPrepaidCxOfferAdvanceFilterService prepaidCxOfferAdvanceFilterService;
+
+	@Autowired
+	private PrepaidCxOfferAdvanceFilterRepository advanceFilterRepository;
 
 	@Autowired
 	RabbitTemplate rabbitTemplate;
@@ -1364,20 +1368,23 @@ public class DataController {
 	}
 //	Saket(PREPAID_CX_OFFER_ADVANCE_FILTER)
 
-	@RequestMapping(value = { "/doInsertCXOffer" }, method = { RequestMethod.POST })
+	@RequestMapping(value = { "doInsertCXOffer" }, method = { RequestMethod.POST })
 	public HttpJsonResult<Hashtable<String, Object>> doInsertCXOffer(
 			@RequestBody PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter) {
 		Hashtable<String, Object> returnTable = new Hashtable<String, Object>();
 		HttpJsonResult<Hashtable<String, Object>> result = new HttpJsonResult<Hashtable<String, Object>>(returnTable);
 		try {
-			PrepaidCxOfferAdvanceFilter cxOfferAdvanceFilter = prepaidCxOfferAdvanceFilterService
-					.findOneByInstanceId(prepaidCxOfferAdvanceFilter.getOfferConfigId());
-			if (cxOfferAdvanceFilter != null) {
-				cxOfferAdvanceFilter.setCustomQuery(prepaidCxOfferAdvanceFilter.isCustomQuery());
-				cxOfferAdvanceFilter.setPayload(prepaidCxOfferAdvanceFilter.getPayload());
-				cxOfferAdvanceFilter.setPayloadList(prepaidCxOfferAdvanceFilter.getPayloadList());
-			} else if (prepaidCxOfferAdvanceFilter != null) {
-				prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
+			if (prepaidCxOfferAdvanceFilter != null) {
+				PrepaidCxOfferAdvanceFilter cxOfferAdvanceFilter = prepaidCxOfferAdvanceFilterService
+						.findByOfferConfigId(prepaidCxOfferAdvanceFilter.getInstanceId());
+				if (cxOfferAdvanceFilter != null && cxOfferAdvanceFilter.getInstanceId()!=null) {
+					cxOfferAdvanceFilter.setCustomQuery(prepaidCxOfferAdvanceFilter.isCustomQuery());
+					cxOfferAdvanceFilter.setPayload(prepaidCxOfferAdvanceFilter.getPayload());
+					cxOfferAdvanceFilter.setPayloadList(prepaidCxOfferAdvanceFilter.getPayloadList());
+					prepaidCxOfferAdvanceFilterService.save(cxOfferAdvanceFilter);
+				} else {
+					prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
+				}
 			}
 
 		} catch (Exception e) {
@@ -1389,11 +1396,11 @@ public class DataController {
 
 //	 List of PREPAID_CX_OFFER_ADVANCE_FILTER
 	@GetMapping(value = "listCXOffer")
-	public List<PrepaidCxOfferAdvanceFilter> listCXOffer(
+	public PrepaidCxOfferAdvanceFilter listCXOffer(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 
-//		return prepaidCxOfferAdvanceFilterService.getAllPrepaidCxOfferList(instanceId);
-		return offerService.findAdvanceFilterByInstanceId(instanceId);
+		return prepaidCxOfferAdvanceFilterService.listCXOffer(instanceId);
+//		return offerService.findAdvanceFilterByInstanceId(instanceId);
 	}
 
 //	@GetMapping(value = "listCXOffer")
