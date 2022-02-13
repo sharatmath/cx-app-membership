@@ -1377,7 +1377,7 @@ public class DataController {
 			if (prepaidCxOfferAdvanceFilter != null) {
 				PrepaidCxOfferAdvanceFilter cxOfferAdvanceFilter = prepaidCxOfferAdvanceFilterService
 						.findByOfferConfigId(prepaidCxOfferAdvanceFilter.getInstanceId());
-				if (cxOfferAdvanceFilter != null && cxOfferAdvanceFilter.getInstanceId()!=null) {
+				if (cxOfferAdvanceFilter != null && cxOfferAdvanceFilter.getInstanceId() != null) {
 					cxOfferAdvanceFilter.setCustomQuery(prepaidCxOfferAdvanceFilter.isCustomQuery());
 					cxOfferAdvanceFilter.setPayload(prepaidCxOfferAdvanceFilter.getPayload());
 					cxOfferAdvanceFilter.setPayloadList(prepaidCxOfferAdvanceFilter.getPayloadList());
@@ -1396,11 +1396,11 @@ public class DataController {
 
 //	 List of PREPAID_CX_OFFER_ADVANCE_FILTER
 	@GetMapping(value = "listCXOffer")
-	public PrepaidCxOfferAdvanceFilter listCXOffer(
+	public ResponseEntity<PrepaidCxOfferAdvanceFilter> listCXOffer(
 			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
 
-		return prepaidCxOfferAdvanceFilterService.listCXOffer(instanceId);
-//		return offerService.findAdvanceFilterByInstanceId(instanceId);
+		PrepaidCxOfferAdvanceFilter result = prepaidCxOfferAdvanceFilterService.findByOfferConfigId(instanceId);
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 
 //	@GetMapping(value = "listCXOffer")
