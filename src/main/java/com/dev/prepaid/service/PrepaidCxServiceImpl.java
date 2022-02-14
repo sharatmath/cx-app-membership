@@ -838,8 +838,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 						.isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
 						.payload(payload)
 						.queryText(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getQueryText())
-						.instanceId(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getInstanceId())
-						.offerConfigId(offerConfigId)
+						.instanceId(offerConfigId)
+//						.offerConfigId(offerConfigId)
 						.isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
 						.build();
 			}
