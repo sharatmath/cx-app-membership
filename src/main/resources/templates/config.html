@@ -2741,7 +2741,7 @@
 <script>
 
     const INSTANCE_ID = $("#instanceId").text();
-    // const INSTANCE_ID = '63483226-49f3-48a2-8720-4f4c47021e32';
+    // const INSTANCE_ID = 'd470adfa-2724-482a-8597-1e271de8dee6';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
     const PROD_URLs = 'http://localhost:8091/data/';
     const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
@@ -3649,7 +3649,7 @@
                 .then(data => {
                     console.log(data, 'listCXOffers')
 
-                    this.mainData = data.payload;
+                    this.mainData = JSON.parse(data.payload);
                      this.generatedQuery = data.queryText;
                     this.customQuery = data.customQuery;
 
