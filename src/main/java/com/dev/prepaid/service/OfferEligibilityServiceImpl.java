@@ -315,7 +315,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#3|evaluationAdvanceFilter|START|type|{}", instanceConfiguration.getProvisionType());
         log.info("process#3|DATA|{}", rows);
         // getConfigAdvanceFilterQuery with parameter offerConfigId
-        Optional<PrepaidCxOfferAdvanceFilter> opsAdv = prepaidCxOfferAdvanceFilterRepository.findByOfferConfigId(instanceConfiguration.getId());
+        Optional<PrepaidCxOfferAdvanceFilter> opsAdv = prepaidCxOfferAdvanceFilterRepository.findByInstanceId(instanceConfiguration.getId());
 
 
         if (!opsAdv.isPresent()) {
