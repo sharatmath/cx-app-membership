@@ -33,4 +33,5 @@ public class PrepaidCxOfferConfig extends Auditable{
     private String overallOfferName;
     private String deletedBy;
     private Date deletedDate;
+    private String offerStatus;
 }

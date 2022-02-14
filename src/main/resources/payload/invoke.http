@@ -6,7 +6,7 @@ content-type: application/json
   "instanceContext": {
     "appId": "97d16835-90a8-43a6-9a96-dddeacfa9362",
     "installId": "eb2121ee-7675-4c87-9b0a-a2502892cf8f",
-    "instanceId": "91ee60d7-844e-4022-9f23-3dcf7a7b0a98",
+    "instanceId": "2493daf1-1eb4-4ccb-82e0-172b1c332db1",
     "serviceId": "aec078a8-1a61-43bd-ad5e-01043ebb6454",
     "tenantId": "80578",
     "productId": "6798e522-deb5-488f-bf22-c29e13254b8f",
@@ -64,10 +64,25 @@ content-type: application/json
     },
     "maxBatchSize": 0
   },
-  "dataSet": {
-    "id": "169257eb-6b1f-47fe-bbf9-6e97e6336d59",
-    "size": 2
-  },
+  {
+  	  "dataSet": {
+  	    "id": "dataSet-id01",
+  	    "rows": [
+  	      [
+  	        "18e492fd-0c1b-4d6b-b199-62c302139380",
+  	        "168125468786"
+  	      ],
+  	      [
+  	        "28e492fd-0c1b-4d6b-b199-62c302139380",
+  	        "268125468786"
+  	      ],
+  	      [
+  	        "38e492fd-0c1b-4d6b-b199-62c302139380",
+  	        "368125468786"
+  	      ]
+  	    ],
+  	    "size": 3
+  	  },
   "productExportEndpoint": {
     "url": "https://rest002.rsys8.net/rest/appcloud/v1/tenants/80578/datasets/169257eb-6b1f-47fe-bbf9-6e97e6336d59-20220108-4928468",
     "method": "GET",

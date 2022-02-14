@@ -111,7 +111,7 @@ public class RetryableServiceImpl implements RetryableService {
 
 	@Override
 	@Async
-	public void callProductImportEndpoint(InvocationRequest invocation) throws Exception {
+	public void callProductImportEndpoint(List<List<String>> eligibleRows, InvocationRequest invocation) throws Exception {
 		log.debug("call Retry_productImportEndpoint");
 //		Thread.sleep(60000);
 		ResponseEntity response = null;
@@ -123,7 +123,9 @@ public class RetryableServiceImpl implements RetryableService {
 		PrepaidCxOfferConfig config =  prepaidCxOfferConfigRepository.findOneByInstanceIdAndDeletedDateIsNull(
 				invocation.getInstanceContext().getInstanceId()
 		);
-		invocation.getDataSet().getRows().forEach(row -> {
+
+//		invocation.getDataSet().getRows().forEach(row -> {
+		eligibleRows.forEach( row -> {
 			Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
 			Map<String, Object> output = invocation.getInstanceContext().getRecordDefinition().generateOutputRowAsNewMap(input);
 			List<String> listOutput = new ArrayList<>();
