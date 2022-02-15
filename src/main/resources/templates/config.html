@@ -3606,7 +3606,7 @@
             generateSQL() {
                 console.log(advanceFilter.mainData, 'dvanceFilter.mainData')
                 console.log(JSON.stringify(advanceFilter.mainData))
-                fetch(PROD_URLs + `getSQLQuery`, {
+                fetch(PROD_URL + `getSQLQuery`, {
                     method: 'POST',
                     mode: "cors",
                     headers: {
@@ -3652,7 +3652,7 @@
                 .finally()
 
 
-            //const INSTANCE_ID_SAMPLE = 'b78fd36a-35c6-4bde-a7c3-d44c086abe99';
+            const INSTANCE_ID_SAMPLE = 'b78fd36a-35c6-4bde-a7c3-d44c086abe99';
             fetch(PROD_URL + `listCXOffer?instanceId=${INSTANCE_ID}`)
                 .then(res => res.json())
                 .then(data => {
