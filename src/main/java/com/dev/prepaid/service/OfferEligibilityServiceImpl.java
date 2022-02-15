@@ -6,6 +6,7 @@ import com.dev.prepaid.domain.*;
 import com.dev.prepaid.model.DataRowDTO;
 import com.dev.prepaid.model.imports.DataImportDTO;
 import com.dev.prepaid.model.invocation.DataSet;
+import com.dev.prepaid.model.invocation.InstanceContext;
 import com.dev.prepaid.model.invocation.InvocationRequest;
 import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferMembershipStatus;
@@ -20,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -147,6 +150,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 log.error("ERROR : {}", e);
             }
         }
+
+        //8 callOnCompletionCallback()
+        onCompletionCallbackEndpoint(invocation);
 
         return offerLevelRows;
     }
@@ -836,6 +842,44 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         );
         log.info("process#6|END|{}|id|{}", Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT, invId);
         return ResponseEntity.ok("Success");
+    }
+
+    public void onCompletionCallbackEndpoint(InvocationRequest invocation) throws Exception {
+        //check all process is true ?
+        boolean isComplete = true;
+        List<PrepaidOfferEligibilityTrx> alldata = prepaidOfferEligibilityTrxRepository.findByInvocationId(
+                invocation.getUuid()
+        );
+
+        for(PrepaidOfferEligibilityTrx t : alldata){
+            log.info("process#8|END|BatchId{}|id|{}", t.getBatchId() , t.getIsEvaluated());
+            if(!t.getIsEvaluated()){
+                isComplete = false;
+            }
+        }
+
+        if(isComplete){
+            log.info("process#8|END|onCompletionCallbackEndpoint From Eligibility | {} ", invocation.getBatchId());
+            ResponseEntity response = null;
+            InstanceContext instanceContext = invocation.getInstanceContext();
+            String token = jwtTokenUtil.generateTokenExportProduct(null, instanceContext);
+            String url = invocation.getOnCompletionCallbackEndpoint().getUrl();
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("status", "COMPLETED"); // {"status": "COMPLETED"}
+
+            if (invocation.getOnCompletionCallbackEndpoint().getMethod().equalsIgnoreCase("PATCH")) {
+                response = RESTUtil.onCompletionCallbackPatch(invocation, token, url, body, null, "application/json");
+                log.debug("onCompletionCallbackPatch response : {}", response.getStatusCode());
+            }
+            if (invocation.getOnCompletionCallbackEndpoint().getMethod().equalsIgnoreCase("POST")) {
+                response = RESTUtil.onCompletionCallbackPost(invocation, token, url, body, null, "application/json");
+                log.debug("onCompletionCallbackPost response : {}", response.getStatusCode());
+            }
+        }else{
+            log.info("process#8|STILL PROCESSING| Eligibility | {} | Batch {}", invocation.getInstanceContext().getInstanceId(), invocation.getBatchId());
+        }
+
     }
 
 
