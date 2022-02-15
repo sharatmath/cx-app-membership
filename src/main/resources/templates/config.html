@@ -3179,9 +3179,17 @@
             `  <div class="data-card wrapper" style="margin-left: 1% !important;">
                     <div class="row justify-content-between">
                         <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
-                            <div><b>Table:</b> {{data.selectedTable}} {{data.selectedTable}}</div>
+                            <div><b>Table:</b> {{data.selectedTable}}</div>
                             <div><b>Column:</b> {{data.selectedColumnName}}</div>
-                            <div><b>Column 1:</b> {{data.selectedColumnName}}</div>
+                            </br>
+                            <div><b>Column Type:</b> {{data.selectedColumnType}}</div>
+                            <div><b>Data Type:</b> {{data.selectedDataType}}</div>
+                            </br>
+                            <div><b>selectedNumberOption:</b> {{data.selectedNumberOption}}</div>
+                            <div><b>selectedOperand:</b> {{data.selectedOperand}}</div>
+                            </br>
+                            <div><b>selectedDateType:</b> {{data.selectedDateType}}</div>
+                            <div><b>numberValue:</b> {{data.numberValue}}</div>
                         </div>
                         <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='NUMBER'">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
