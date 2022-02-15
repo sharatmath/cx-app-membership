@@ -260,7 +260,7 @@
 
 		.modal-container {
 			width: 50%;
-			height: 40% !important;
+			height: 75% !important;
 			margin: 3% auto;
 			padding: 10px 15px;
 			background-color: #fff;
@@ -288,7 +288,7 @@
 				padding: 0; */
 			border: none;
 			position: fixed;
-			bottom: 30%;
+			bottom: 23%;
 			right: 25%;
 		}
 
@@ -3179,17 +3179,21 @@
             `  <div class="data-card wrapper" style="margin-left: 1% !important;">
                     <div class="row justify-content-between">
                         <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
-                            <div><b>Table:</b> {{data.selectedTable}}</div>
+                        <div>
+                            <div ><b>Table:</b> {{data.selectedTable}}</div>
                             <div><b>Column:</b> {{data.selectedColumnName}}</div>
-                            </br>
-                            <div><b>Column Type:</b> {{data.selectedColumnType}}</div>
-                            <div><b>Data Type:</b> {{data.selectedDataType}}</div>
-                            </br>
-                            <div><p>Message is: {{ data.value }}</p>
-                            <input v-model="data.selectedValue" placeholder="edit me" /></div>
-                        /*<div><b>Selected Value:</b> {{data.selectedValue}}</div> */
-                            <div><b>selectedOperand:</b> {{data.selectedOperand}}</div>
-                            
+                            <div style = "display:flex; flex-direction:row;">
+                            <div><input v-model="data.selectedValue" placeholder="edit me" /></div>
+                            <div><v-select
+                                placeholder='-----'
+                                    class="basic-dropdown"
+                                    style="margin:5px; padding:0px !Important;"
+                                    :options="numberOption"
+                                    :clearable="false"
+                                    v-model="data.selectedOption"
+                                ></v-select></div>
+                            </div>
+                            </div>
                         </div>
                         <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='NUMBER'">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
