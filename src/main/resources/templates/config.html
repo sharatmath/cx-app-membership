@@ -2743,7 +2743,7 @@
     const INSTANCE_ID = $("#instanceId").text();
     // const INSTANCE_ID = 'd470adfa-2724-482a-8597-1e271de8dee6';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
-    const PROD_URLs = 'http://localhost:8091/data/';
+    const PROD_URLs = 'http://localhost:8090/data/';
     const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
 
 
@@ -3185,11 +3185,11 @@
                             <div><b>Column Type:</b> {{data.selectedColumnType}}</div>
                             <div><b>Data Type:</b> {{data.selectedDataType}}</div>
                             </br>
-                            <div><b>selectedNumberOption:</b> {{data.selectedNumberOption}}</div>
+                            <div><p>Message is: {{ data.value }}</p>
+                            <input v-model="data.selectedValue" placeholder="edit me" /></div>
+                        /*<div><b>Selected Value:</b> {{data.selectedValue}}</div> */
                             <div><b>selectedOperand:</b> {{data.selectedOperand}}</div>
-                            </br>
-                            <div><b>selectedDateType:</b> {{data.selectedDateType}}</div>
-                            <div><b>numberValue:</b> {{data.numberValue}}</div>
+                            
                         </div>
                         <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='NUMBER'">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
@@ -3606,7 +3606,7 @@
             generateSQL() {
                 console.log(advanceFilter.mainData, 'dvanceFilter.mainData')
                 console.log(JSON.stringify(advanceFilter.mainData))
-                fetch(PROD_URL + `getSQLQuery`, {
+                fetch(PROD_URLs + `getSQLQuery`, {
                     method: 'POST',
                     mode: "cors",
                     headers: {
@@ -3652,7 +3652,7 @@
                 .finally()
 
 
-            const INSTANCE_ID_SAMPLE = 'b78fd36a-35c6-4bde-a7c3-d44c086abe99';
+            //const INSTANCE_ID_SAMPLE = 'b78fd36a-35c6-4bde-a7c3-d44c086abe99';
             fetch(PROD_URL + `listCXOffer?instanceId=${INSTANCE_ID}`)
                 .then(res => res.json())
                 .then(data => {
