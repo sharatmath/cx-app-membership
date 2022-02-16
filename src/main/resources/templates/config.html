@@ -1390,6 +1390,9 @@
 									<textarea placeholder="View SQL" v-model="generatedQuery"
 											  :readonly="true" :rows="4" style="width: 100%; resize: none;"
 											  class="form-control form-control-sm input-custom"></textarea>
+											  <textarea placeholder="View SQL" v-model="count"
+											  :readonly="true" :rows="4" style="width: 100%; resize: none;"
+											  class="form-control form-control-sm input-custom"></textarea>
 
 								</div>
 
@@ -3442,7 +3445,7 @@
 
     Vue.component('v-select', VueSelect.VueSelect)
 
-
+	var count =0; 
     // Main Component for ADVANCE FILTER
     var advanceFilter = new Vue({
         el: '#advanceFilterComponent',
@@ -3575,6 +3578,7 @@
                 advanceFilter.selectedGroupId = null;
                 this.generatedQuery = null;
                 this.generateSQL();
+                
             },
 
             addGroupViaGroupId(selectedGroupId, data) {
@@ -3606,6 +3610,7 @@
                 this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
                 this.generatedQuery = null;
                 this.generateSQL();
+                
             },
             generateSQL() {
                 console.log(advanceFilter.mainData, 'dvanceFilter.mainData')
@@ -3630,12 +3635,19 @@
 
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data.queryText)
+                        console.log("queryText " + data.queryText);
+                        console.log(data.recordCount)
 
                         if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
                             this.generatedQuery = null;
+                            
                         } else this.generatedQuery = data.queryText;
                         return this.generatedQuery;
+                        if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
+                            this.count = null;
+                            
+                        } else this.count = data.recordCount;
+                        return this.count;
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -3664,6 +3676,7 @@
 
                     this.mainData = JSON.parse(data.payload);
                      this.generatedQuery = data.queryText;
+                     //this.count = data.recordCount;
                     this.customQuery = data.customQuery;
 
                     return
@@ -4532,8 +4545,10 @@
 					"payloadList": advanceFilter.mainData,
 					"payload":'',
 					"queryText": advanceFilter.generatedQuery,
+					"count": advanceFilter.recordCount,
 					"customQuery": false,
 					"id": null,
+					
 				}
 
 				if(this.offerTypeDropdown !== 'MA'){

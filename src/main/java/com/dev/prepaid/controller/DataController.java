@@ -1191,14 +1191,15 @@ public class DataController {
 				String appendCondition = "";
 				if (dataListBean.getSelectedDataType().equalsIgnoreCase("VARCHAR")
 						&& dataListBean.getSelectedDataType() != null
-						&& !dataListBean.getSelectedDataType().isEmpty()) {
+						&& !dataListBean.getSelectedDataType().isEmpty()&& dataListBean.getSelectedOption()!=null 
+								&& !dataListBean.getSelectedOption().isEmpty()) {
 					if (!groupBean.getGroupCondition().isEmpty() && groupBean.getGroupCondition() != null
 							&& !groupBean.getGroupCondition().isBlank()) {
 						appendCondition = " " + groupBean.getGroupCondition() + " ";
 					} else {
 						appendCondition = "";
 					}
-					if (dataListBean.getSelectedOption().equalsIgnoreCase("MATCHES")) {
+					if (dataListBean.getSelectedOption().equalsIgnoreCase("MATCHES") ) {
 						queryStringBuilder
 								.append(" " + appendCondition + " (" + tableMap.get(dataListBean.getSelectedTable())
 										+ "." + dataListBean.getSelectedColumnName());
