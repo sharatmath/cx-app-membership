@@ -1381,18 +1381,21 @@
 													 v-bind:getadddatagroupidfn="getAddDataGroupIdfn"
 													 v-bind:savedatafn="saveDatafn"
 													 v-bind:creategroupfn="createGroupfn"></query-component>
-
+													 
 									<button class="btn btn-singtel"
 											style="float: right; margin: 10px; margin-top: 5%;"
 											v-on:click="generateSQL"
 											v-bind:disabled="mainData[0].groups.length === 0 && mainData[0].dataList.length === 0">Generate
 										SQL</button>
+										<div>
+												<label>Count</label>
+												<p placeholder="Count" v-model="count"
+											  :readonly="true" style="width: 10%;"
+											  class="form-control form-control-sm input-custom"></p></div>
 									<textarea placeholder="View SQL" v-model="generatedQuery"
 											  :readonly="true" :rows="4" style="width: 100%; resize: none;"
 											  class="form-control form-control-sm input-custom"></textarea>
-											  <textarea placeholder="View SQL" v-model="count"
-											  :readonly="true" :rows="4" style="width: 25%; resize: none;"
-											  class="form-control form-control-sm input-custom"></textarea>
+											  
 
 								</div>
 
@@ -3615,7 +3618,7 @@
             generateSQL() {
                 console.log(advanceFilter.mainData, 'dvanceFilter.mainData')
                 console.log(JSON.stringify(advanceFilter.mainData))
-                fetch(PROD_URL + `getSQLQuery`, {
+                fetch(PROD_URLs + `getSQLQuery`, {
                     method: 'POST',
                     mode: "cors",
                     headers: {
