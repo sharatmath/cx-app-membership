@@ -116,10 +116,4 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		return new PrepaidCxOfferAdvanceFilter();
 	}
 
-	@Override
-	public PrepaidCxOfferAdvanceFilter findOneByInstanceId(String instanceId) {
-		return prepaidCxOfferAdvanceFilterRepository.findOneByInstanceId(instanceId);
-	}
-	
-
 }

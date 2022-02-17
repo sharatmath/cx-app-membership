@@ -4,15 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.dev.prepaid.domain.*;
-import com.dev.prepaid.model.configuration.*;
-import com.dev.prepaid.repository.*;
-import com.dev.prepaid.type.OfferType;
-import com.dev.prepaid.type.ProvisionType;
-import com.dev.prepaid.util.DateUtil;
-import com.dev.prepaid.util.GsonUtils;
-import lombok.extern.slf4j.Slf4j;
-import oracle.ucp.proxy.annotation.Pre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +16,14 @@ import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
 import com.dev.prepaid.domain.PrepaidCxOfferSelection;
 import com.dev.prepaid.domain.PrepaidCxProvApplication;
 import com.dev.prepaid.model.configuration.OfferEligibility;
+import com.dev.prepaid.model.configuration.OfferMaType;
+import com.dev.prepaid.model.configuration.OfferNoneType;
 import com.dev.prepaid.model.configuration.OfferPromoCode;
 import com.dev.prepaid.model.configuration.OfferSelection;
+import com.dev.prepaid.model.configuration.SaveConfigRequest;
 import com.dev.prepaid.model.create.ServiceInstance;
 import com.dev.prepaid.model.install.AppInstall;
+import com.dev.prepaid.repository.PrepaidCxOfferAdvanceFilterRepository;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
 import com.dev.prepaid.repository.PrepaidCxOfferEligibilityRepository;
 import com.dev.prepaid.repository.PrepaidCxOfferEventConditionRepository;
@@ -40,6 +35,7 @@ import com.dev.prepaid.type.OfferType;
 import com.dev.prepaid.type.ProvisionType;
 import com.dev.prepaid.util.DateUtil;
 import com.dev.prepaid.util.GUIDUtil;
+import com.dev.prepaid.util.GsonUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -838,8 +834,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 						.isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
 						.payload(payload)
 						.queryText(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getQueryText())
-						.instanceId(saveConfigRequest.getPayload().getUuid())
-						.offerConfigId(offerConfigId)
+						.instanceId(offerConfigId)
+//						.offerConfigId(offerConfigId)
 						.isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
 						.build();
 			}
