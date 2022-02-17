@@ -222,6 +222,29 @@ public class OfferServiceImpl implements OfferService {
 		return listOfferOnly;
 	}
 
+	@Override
+	public List<OfferSelection> getOfferMa(String instanceId){
+		List<OfferSelection> listOfferOnly = new ArrayList<>();
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			List<PrepaidCxOfferSelection> prepaidCxOfferSelection= prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
+			for(PrepaidCxOfferSelection p : prepaidCxOfferSelection){
+				if(p.getOfferBucketType().equals(OfferType.MA.toString())){
+					OfferSelection s = OfferSelection.builder()
+							.offerBucketType(p.getOfferBucketType())
+							.offerBucketId(p.getOfferBucketId())
+							.offerCampaignName(p.getSmsCampaignName())
+							.offerId(p.getOfferId())
+							.build();
+
+					listOfferOnly.add(s);
+				}
+			}
+			return  listOfferOnly;
+		}
+		return listOfferOnly;
+	}
+
 	public OfferPromoCode getOfferPromoCode(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){

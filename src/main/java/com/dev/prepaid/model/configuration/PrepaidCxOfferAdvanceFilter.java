@@ -38,6 +38,7 @@ public class PrepaidCxOfferAdvanceFilter {
 	@SerializedName("isCustomQuery")
 	private boolean isCustomQuery;
 
+	@SerializedName("payloadList")
 	private List<Group> payloadList;
 
 }

@@ -11,10 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class HttpJsonResult<T> implements Serializable {
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(HttpJsonResult.class);
-	
-	private static final long serialVersionUID = -8637111820477625638L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private Boolean success = true;
 
@@ -103,13 +108,13 @@ public class HttpJsonResult<T> implements Serializable {
 			obj = new ObjectInputStream(in);
 			return (T) obj.readObject();
 		} catch (Exception e) {
-			LOGGER.error("HttpJsonResult convertStreamToEntity Error", e);
+			log.error("HttpJsonResult convertStreamToEntity Error", e);
 		} finally {
 			if (obj != null) {
 				try {
 					obj.close();
 				} catch (IOException e) {
-					LOGGER.error("HttpJsonResult convertStreamToEntity Error", e);
+					log.error("HttpJsonResult convertStreamToEntity Error", e);
 				}
 			}
 		}
