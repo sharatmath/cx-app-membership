@@ -1120,7 +1120,7 @@ public class DataController {
 						+ (revTableMap.get(String.valueOf((char) alphaCode)) + " " + String.valueOf((char) alphaCode))
 						+ ")");
 				if(alphaCode>65) {
-					beforeCondition=	groupList.get(0).getGroupCondition();
+					beforeCondition=	"AND(";
 				}else {
 					beforeCondition="";
 				}
@@ -1141,7 +1141,13 @@ public class DataController {
 			strCountBuilder.append(finalJoinStringBuilder.toString());
 //			finalQueryStringBuilder.append(revTableMap.get(String.valueOf((char) alphaCode)) + " = " + String.valueOf((char) alphaCode));
 		}
-		finalQueryStringBuilder.append(queryText);
+		String close="";
+		if(alphaCode>65) {
+			close=	")";
+		}else {
+			close="";
+		}
+		finalQueryStringBuilder.append(queryText+close);
 		strCountBuilder.append(queryText);
 		String countQuery = strCountBuilder.toString();
 		String numberQuery = strCountBuilder.toString();

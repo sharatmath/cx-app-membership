@@ -259,8 +259,8 @@
 		}
 
 		.modal-container {
-			width: 50%;
-			height: 75% !important;
+			width: 75%;
+			height: 90% !important;
 			margin: 3% auto;
 			padding: 10px 15px;
 			background-color: #fff;
@@ -288,8 +288,8 @@
 				padding: 0; */
 			border: none;
 			position: fixed;
-			bottom: 23%;
-			right: 25%;
+			bottom: 3%;
+			right: 16%;
 		}
 
 		.modal-enter {
@@ -3186,20 +3186,23 @@
                     <div class="row justify-content-between">
                         <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
                         <div>
-                            <div ><b>Table:</b> {{data.selectedTable}}</div>
+                        <div v-show="data.selectedTable !=null" ><b>Table:</b> {{data.selectedTable}}</div>
                             <div><b>Column:</b> {{data.selectedColumnName}}</div>
                             <div style = "display:flex; flex-direction:row;">
-                            <div><input v-model="data.selectedValue" placeholder="edit me" /></div>
-                            <div><v-select
-                                placeholder='-----'
-                                    class="basic-dropdown"
-                                    style="margin:5px; padding:0px !Important;"
-                                    :options="numberOption"
-                                    :clearable="false"
-                                    v-model="data.selectedOption"
-                                ></v-select></div>
-                            </div>
-                            </div>
+							<div v-show="!data.selectedTable">
+								<div><v-select
+										placeholder='-----'
+										class="basic-dropdown"
+										style="margin:5px; padding:0px; position: absolute;"
+										:options="numberOption"
+										:clearable="false"
+										v-model="data.selectedOption"
+								></v-select>
+								</div>
+								<div><input v-model="data.selectedValue" class="form-control form-control-sm input-custom" placeholder="edit me" /></div>
+							</div>
+                        </div>
+                        </div>
                         </div>
                         <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='NUMBER'">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
@@ -3677,11 +3680,14 @@
                 .then(data => {
                     console.log(data, 'listCXOffers')
 
+                    if(!data.payload){
+                    	
+                    }else{
                     this.mainData = JSON.parse(data.payload);
                      this.generatedQuery = data.queryText;
                      //this.count = data.recordCount;
                     this.customQuery = data.customQuery;
-
+                    }
                     return
                 })
 
