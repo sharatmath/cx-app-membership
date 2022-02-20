@@ -23,9 +23,9 @@ public interface IPrepaidCxOfferAdvanceFilterService {
     PrepaidCxOfferAdvanceFilter save(PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter);
     void deleteById(int id);
 	List<PrepaidCxOfferAdvanceFilter> listCXOffer();
-	Optional<PrepaidCxOfferAdvanceFilter> findByOfferConfigId(@Param("offerConfigId") String offerConfigId);
+//	Optional<PrepaidCxOfferAdvanceFilter> findByOfferConfigId(@Param("offerConfigId") String offerConfigId);
 //	PrepaidCxOfferAdvanceFilter listCXOffer(String instanceId);
 	public PrepaidCxOfferAdvanceFilter getCXOfferList(String instanceId);
 	
-	PrepaidCxOfferAdvanceFilter findOneByInstanceId(String instanceId);
+	PrepaidCxOfferAdvanceFilter findByOfferConfigId(String offerConfigId);
 }

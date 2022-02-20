@@ -52,7 +52,7 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if (offerConfig.isPresent()) {
 			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository
-					.findByOfferConfigId(offerConfig.get().getId());
+					.findByOfferConfigId(instanceId);
 			if (opsFind.isPresent())
 				return opsFind.get();
 		}
@@ -79,8 +79,7 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 
 	@Override
 	public PrepaidCxOfferAdvanceFilter save(PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.prepaidCxOfferAdvanceFilterRepository.save(prepaidCxOfferAdvanceFilter);
 	}
 
 	@Override
@@ -95,16 +94,26 @@ public class PrepaidCxOfferAdvanceFilterServiceImpl implements IPrepaidCxOfferAd
 		return null;
 	}
 
-	@Override
-	public Optional<PrepaidCxOfferAdvanceFilter> findByOfferConfigId(String offerConfigId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Optional<PrepaidCxOfferAdvanceFilter> findByOfferConfigId(String offerConfigId) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
+//	@Override
+//	public PrepaidCxOfferAdvanceFilter findByOfferConfigId(String instanceId) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 	@Override
-	public PrepaidCxOfferAdvanceFilter findOneByInstanceId(String instanceId) {
-		// TODO Auto-generated method stub
-		return null;
+	public PrepaidCxOfferAdvanceFilter findByOfferConfigId(String instanceId){
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			Optional<PrepaidCxOfferAdvanceFilter> opsFind = prepaidCxOfferAdvanceFilterRepository.findByInstanceId(offerConfig.get().getInstanceId());
+			if(opsFind.isPresent())
+				return opsFind.get();
+		}
+		return new PrepaidCxOfferAdvanceFilter();
 	}
 
 }
