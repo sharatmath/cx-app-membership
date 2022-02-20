@@ -259,8 +259,8 @@
 		}
 
 		.modal-container {
-			width: 50%;
-			height: 40% !important;
+			width: 75%;
+			height: 90% !important;
 			margin: 3% auto;
 			padding: 10px 15px;
 			background-color: #fff;
@@ -288,8 +288,8 @@
 				padding: 0; */
 			border: none;
 			position: fixed;
-			bottom: 30%;
-			right: 25%;
+			bottom: 3%;
+			right: 16%;
 		}
 
 		.modal-enter {
@@ -1015,7 +1015,7 @@
 											<option value="OMS">OMS Offer</option>
 											<option value="MA">MA Offer</option>
 											<option value="PROMO">Unique Promo Code</option>
-											<option value="NONE" x-show="offers.length == 0">No Offer</option>
+											<option value="NONE">No Offer</option>
 										</select>
 									</div>
 									<div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS' || offerTypeDropdown == 'MA'" class="col-sm-7 row" style="margin-right: 75px">
@@ -1036,7 +1036,7 @@
 											</select>
 										</div>
 									</div>
-									<button :disabled="uniqueData == false || offerTypeDropdown == 'NONE' || offerType == 'NONE'" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+									<button :disabled="uniqueData == false || offerTypeDropdown == 'NONE'" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
 									</button>
 								</div>
 								<hr>
@@ -1381,15 +1381,21 @@
 													 v-bind:getadddatagroupidfn="getAddDataGroupIdfn"
 													 v-bind:savedatafn="saveDatafn"
 													 v-bind:creategroupfn="createGroupfn"></query-component>
-
+													 
 									<button class="btn btn-singtel"
 											style="float: right; margin: 10px; margin-top: 5%;"
 											v-on:click="generateSQL"
 											v-bind:disabled="mainData[0].groups.length === 0 && mainData[0].dataList.length === 0">Generate
 										SQL</button>
+										<div>
+												<label>Count</label>
+												<p placeholder="Count" v-model="count"
+											  :readonly="true" style="width: 10%;"
+											  class="form-control form-control-sm input-custom"></p></div>
 									<textarea placeholder="View SQL" v-model="generatedQuery"
 											  :readonly="true" :rows="4" style="width: 100%; resize: none;"
 											  class="form-control form-control-sm input-custom"></textarea>
+											  
 
 								</div>
 
@@ -2741,9 +2747,9 @@
 <script>
 
     const INSTANCE_ID = $("#instanceId").text();
-    // const INSTANCE_ID = 'af5dada7-78bc-4ed2-93be-c8f064e9f22f';
+    // const INSTANCE_ID = 'd470adfa-2724-482a-8597-1e271de8dee6';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
-    const PROD_URLs = 'http://localhost:8091/data/';
+    const PROD_URLs = 'http://localhost:8090/data/';
     const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
 
 
@@ -3179,8 +3185,10 @@
             `  <div class="data-card wrapper" style="margin-left: 1% !important;">
                     <div class="row justify-content-between">
                         <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
-                            <div><b>Table:</b> {{data.selectedTable}}</div>
-                            <div><b>Column:</b> {{data.selectedColumn.column_name}}</div>
+                        <div>
+                        <div><b>Table:</b> {{data.selectedTable}}</div>
+                            <div><b>Column:</b> {{data.selectedColumnName}}</div>
+                        </div>
                         </div>
                         <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='NUMBER'">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
@@ -3191,7 +3199,7 @@
                                                 style="margin:5px; padding:0px !Important;"
                                                 :options="numberOption"
                                                 :clearable="false"
-                                                v-model="data.selectedNumberOption"
+                                                v-model="data.selectedOption"
                                             ></v-select>
                                         </div>
 
@@ -3263,7 +3271,7 @@
 
 
                         </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='VARCHAR'">
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedValue && data.selectedValue !=null">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
                                         <div class=" col-sm-4 " style="padding:0px">
                                             <v-select
@@ -3360,7 +3368,7 @@
         data: function () {
             return {
                 groupId: null,
-                condition: [' ', 'AND', 'OR'],
+                condition: ['AND', 'OR'],
                 selectedCondition: ' '
             }
         },
@@ -3429,7 +3437,7 @@
 
     Vue.component('v-select', VueSelect.VueSelect)
 
-
+	var count =0; 
     // Main Component for ADVANCE FILTER
     var advanceFilter = new Vue({
         el: '#advanceFilterComponent',
@@ -3562,6 +3570,7 @@
                 advanceFilter.selectedGroupId = null;
                 this.generatedQuery = null;
                 this.generateSQL();
+                
             },
 
             addGroupViaGroupId(selectedGroupId, data) {
@@ -3593,6 +3602,7 @@
                 this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
                 this.generatedQuery = null;
                 this.generateSQL();
+                
             },
             generateSQL() {
                 console.log(advanceFilter.mainData, 'dvanceFilter.mainData')
@@ -3617,12 +3627,19 @@
 
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data.queryText)
+                        console.log("queryText " + data.queryText);
+                        console.log(data.recordCount)
 
                         if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
                             this.generatedQuery = null;
+                            
                         } else this.generatedQuery = data.queryText;
                         return this.generatedQuery;
+                        if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
+                            this.count = null;
+                            
+                        } else this.count = data.recordCount;
+                        return this.count;
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -3649,10 +3666,14 @@
                 .then(data => {
                     console.log(data, 'listCXOffers')
 
-                    // this.mainData = data.payload;
-                    // this.generatedQuery = data.queryText;
-                    // this.customQuery = data.customQuery;
-
+                    if(!data.payload){
+                    	
+                    }else{
+                    this.mainData = JSON.parse(data.payload);
+                     this.generatedQuery = data.queryText;
+                     //this.count = data.recordCount;
+                    this.customQuery = data.customQuery;
+                    }
                     return
                 })
 
@@ -4513,12 +4534,16 @@
 				}
 
 				const prepaidCxOfferAdvanceFilter = {
-					"offerConfigId":INSTANCE_ID,
+						"instanceId":INSTANCE_ID,
+					//"instanceId":INSTANCE_ID,
+					//"instanceId":instanceId,
 					"payloadList": advanceFilter.mainData,
 					"payload":'',
 					"queryText": advanceFilter.generatedQuery,
+					"count": advanceFilter.recordCount,
 					"customQuery": false,
 					"id": null,
+					
 				}
 
 				if(this.offerTypeDropdown !== 'MA'){
@@ -4611,10 +4636,7 @@
 					};
 				}
 
-				//alert(this.offers.length + " | " + this.offerType);
-				if(this.offers.length > 0 || this.offerType != null){
-					window.parent.postMessage(request,'*');
-				} else if (!this.overallOfferName && this.type != 'eventCondition') {
+				if (!this.overallOfferName && this.type != 'eventCondition') {
 					swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
 				} else if(this.offerTypeDropdown == 'empty' && this.type != 'eventCondition') {
 					swal("Error!", "Offer Type in the Offer Selection Can Not be Empty", "error");

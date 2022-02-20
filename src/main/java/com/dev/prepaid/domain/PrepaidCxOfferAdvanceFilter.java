@@ -29,6 +29,7 @@ public class PrepaidCxOfferAdvanceFilter extends Auditable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String offerConfigId;
+	private String instanceId;
 	private String payload;
 	private String queryText;
 	private boolean isCustomQuery;
