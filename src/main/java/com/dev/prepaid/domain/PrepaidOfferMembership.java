@@ -36,4 +36,10 @@ public class PrepaidOfferMembership extends Auditable {
     // sprint 1
     private String offerMembershipStatus;
 
+    @Transient
+    private String source;
+
+    @Transient
+    private String appRowId;
+
 }

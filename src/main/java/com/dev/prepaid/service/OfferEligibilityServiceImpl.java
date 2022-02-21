@@ -686,6 +686,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                 .optinFlag("false")
                                 .offerMembershipStatus(OfferMembershipStatus.ACTIVE.toString())
                                 .trnLogId(getTrnLogId(dataRowDTO.get(0)))
+                                .source(getSource(dataRowDTO.get(0)))
+                                .appRowId(dataRowDTO.get(0))
                                 .build())
                 .collect(Collectors.toList());
         //optimize
@@ -705,6 +707,9 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                         map.put("msisdn", p.getMsisdn());
                         map.put("smsKeyword", "");
                         map.put("instanceId", prepaidCxOfferConfig.getInstanceId());
+
+                        map.put("source", p.getSource());
+                        map.put("trnLogId", p.getTrnLogId());
 
                         sendToRedemptionQueue(invId, map);
                     }
@@ -889,6 +894,18 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             return rowId;
         }else {
             return "";
+        }
+    }
+
+    private String getSource(String rowId){
+        if(rowId != null ){
+            if(rowId.contains("eventCondition")) {
+                String[] data = rowId.split("=");
+                return data[0];
+            }
+            return "cx-app";
+        }else {
+            return "cx-app";
         }
     }
 }
