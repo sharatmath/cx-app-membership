@@ -1015,7 +1015,7 @@
 											<option value="OMS">OMS Offer</option>
 											<option value="MA">MA Offer</option>
 											<option value="PROMO">Unique Promo Code</option>
-											<option value="NONE">No Offer</option>
+											<option value="NONE" x-show="offers.length == 0">No Offer</option>
 										</select>
 									</div>
 									<div x-show="offerTypeDropdown == 'DA' || offerTypeDropdown == 'OMS' || offerTypeDropdown == 'MA'" class="col-sm-7 row" style="margin-right: 75px">
@@ -1036,7 +1036,7 @@
 											</select>
 										</div>
 									</div>
-									<button :disabled="uniqueData == false || offerTypeDropdown == 'NONE'" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
+									<button :disabled="uniqueData == false || offerTypeDropdown == 'NONE' || offerType == 'NONE'" type="button" class="btn btn-singtel my-1 col-sm-1 add-direct-prov" style="max-width: 40px !important" @click="addNewData()"><i class="fas fa-plus-circle"></i>
 									</button>
 								</div>
 								<hr>
@@ -3190,7 +3190,7 @@
                             <div><b>Column:</b> {{data.selectedColumnName}}</div>
                         </div>
                         </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedOption !=null && data.selectedOperand !=null">
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedOption !=null && data.duration !=null">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
                                 <div class="col-md-4" style="padding:0px">
                                             <v-select
