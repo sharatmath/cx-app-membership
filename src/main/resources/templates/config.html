@@ -3628,7 +3628,8 @@
                     .then(res => res.json())
                     .then(data => {
                         console.log("queryText " + data.queryText);
-                        console.log(data.recordCount)
+                        console.log("recordCount " + data.recordCount)
+                        console.log("countQuery " + data.countQuery)
 
                         if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
                             this.generatedQuery = null;
