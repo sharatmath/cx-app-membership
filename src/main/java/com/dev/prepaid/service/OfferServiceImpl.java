@@ -306,7 +306,7 @@ public class OfferServiceImpl implements OfferService {
 		ArrayList<PrepaidCxOfferAdvanceFilter> data = new ArrayList<>();
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
-			Optional<PrepaidCxOfferAdvanceFilter> opsFind= prepaidCxOfferAdvanceFilterRepository.findByOfferConfigId(offerConfig.get().getId());
+			Optional<PrepaidCxOfferAdvanceFilter> opsFind= prepaidCxOfferAdvanceFilterRepository.findByOfferConfigId(offerConfig.get().getInstanceId());
 			if(opsFind.isPresent()){
 				PrepaidCxOfferAdvanceFilter adv = opsFind.get();
 				List<Group> payloadList = GsonUtils.serializeListOfObjectsFromJSON(adv.getPayload(),Group.class);

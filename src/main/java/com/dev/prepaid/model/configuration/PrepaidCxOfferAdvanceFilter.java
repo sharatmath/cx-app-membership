@@ -29,6 +29,8 @@ public class PrepaidCxOfferAdvanceFilter {
 	private Long id;
 	@SerializedName("offerConfigId")
 	private String offerConfigId;
+	@SerializedName("instanceId")
+	private String instanceId;
 	@SerializedName("payload")
 	private String payload;
 	@SerializedName("queryText")
