@@ -1,26 +1,25 @@
 package com.dev.prepaid.listener;
 
+import com.dev.prepaid.constant.Constant;
+import com.dev.prepaid.domain.PrepaidCxOfferConfig;
+import com.dev.prepaid.model.invocation.InvocationRequest;
+import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
+import com.dev.prepaid.service.OfferEligibilityService;
+import com.dev.prepaid.util.BaseRabbitTemplate;
+import com.dev.prepaid.util.GUIDUtil;
+import com.dev.prepaid.util.GsonUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import com.dev.prepaid.constant.Constant;
-import com.dev.prepaid.domain.PrepaidCxOfferConfig;
-import com.dev.prepaid.model.invocation.InvocationRequest;
-import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
-import com.dev.prepaid.service.OfferEligibilityService;
-import com.dev.prepaid.type.EventType;
-import com.dev.prepaid.util.BaseRabbitTemplate;
-import com.dev.prepaid.util.GUIDUtil;
-import com.dev.prepaid.util.GsonUtils;
-import org.json.JSONObject;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service

@@ -2747,7 +2747,7 @@
 <script>
 
     const INSTANCE_ID = $("#instanceId").text();
-    // const INSTANCE_ID = 'd470adfa-2724-482a-8597-1e271de8dee6';
+    // const INSTANCE_ID = 'dd1590f6-1243-4194-9f3a-6aba497fedeb';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
     const PROD_URLs = 'http://localhost:8090/data/';
     const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
@@ -4636,7 +4636,11 @@
 					};
 				}
 
-				if (!this.overallOfferName && this.type != 'eventCondition') {
+				//alert(this.offers.length + " | " + this.offerType);
+				console.log(this.offers.length);
+				if(this.offers.length > 0 || this.offerType != null){
+					window.parent.postMessage(request,'*');
+				} else if (!this.overallOfferName && this.type != 'eventCondition') {
 					swal("Error!", "You have to Fill-in Overall Offer Name in the Offer Selection", "error");
 				} else if(this.offerTypeDropdown == 'empty' && this.type != 'eventCondition') {
 					swal("Error!", "Offer Type in the Offer Selection Can Not be Empty", "error");
