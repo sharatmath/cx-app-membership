@@ -883,7 +883,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     private String getTrnLogId(String rowId){
         if(rowId != null ){
             if(rowId.contains("eventCondition")) {
-                String[] data = rowId.split("|");
+                String[] data = rowId.split("=");
                 return data[2];
             }
             return rowId;
