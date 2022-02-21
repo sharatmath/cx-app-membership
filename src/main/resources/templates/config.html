@@ -3190,7 +3190,7 @@
                             <div><b>Column:</b> {{data.selectedColumnName}}</div>
                         </div>
                         </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumnType==='NUMBER'">
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedOption !=null">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
                                 <div class="col-md-4" style="padding:0px">
                                             <v-select
@@ -3293,7 +3293,7 @@
                                         </div>
                                 </div>
                         </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.duration && data.duration !=null && data.selectedDateType != null">
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.duration !=null && data.selectedDateType != null">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
                                 <span style="margin-top:7px; margin-left:5px;"> Duration (days)</span>
                                 <span>
