@@ -22,15 +22,15 @@ public class AmqpConfig {
 	@Value("${offer.monitoring.queue.concurrent:1}")
 	private Integer offerMonitoringQueueConcurrent;
 
-	@Value("${offer.event.condition.queue.prefetch:1}")
-	private Integer offerEventConditionQueuePrefetch;
-	@Value("${offer.event.condition.queue.concurrent:1}")
-	private Integer offerEventConditionQueueConcurrent;
-
-	@Value("${offer.eligibility.queue.prefetch:1}")
-	private Integer offerEligibilityQueuePrefetch;
-	@Value("${offer.monitoring.queue.concurrent:1}")
-	private Integer offerEligibilityQueueConcurrent;
+//	@Value("${offer.event.condition.queue.prefetch:1}")
+//	private Integer offerEventConditionQueuePrefetch;
+//	@Value("${offer.event.condition.queue.concurrent:1}")
+//	private Integer offerEventConditionQueueConcurrent;
+//
+//	@Value("${offer.eligibility.queue.prefetch:1}")
+//	private Integer offerEligibilityQueuePrefetch;
+//	@Value("${offer.monitoring.queue.concurrent:1}")
+//	private Integer offerEligibilityQueueConcurrent;
 	
 	@Value("${redemption.queue.prefetch:1}")
 	private Integer redemptionQueuePrefetch;
@@ -234,15 +234,15 @@ public class AmqpConfig {
 	}
 
 
-	@Bean
-	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
-	rabbitListenerContainerFactoryForOfferEligibility(ConnectionFactory rabbitConnectionFactory) {
-		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-		factory.setConnectionFactory(rabbitConnectionFactory);
-		factory.setPrefetchCount(offerEligibilityQueuePrefetch);
-		factory.setConcurrentConsumers(offerEligibilityQueueConcurrent);
-		factory.setMessageConverter(jackson2MessageConverter());
-		return factory;
-	}
+//	@Bean
+//	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
+//	rabbitListenerContainerFactoryForOfferEligibility(ConnectionFactory rabbitConnectionFactory) {
+//		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+//		factory.setConnectionFactory(rabbitConnectionFactory);
+//		factory.setPrefetchCount(offerEligibilityQueuePrefetch);
+//		factory.setConcurrentConsumers(offerEligibilityQueueConcurrent);
+//		factory.setMessageConverter(jackson2MessageConverter());
+//		return factory;
+//	}
 
 }
