@@ -32,6 +32,7 @@ public class PrepaidOfferMembership extends Auditable {
     private LocalDateTime monitoringStartDate;
     private LocalDateTime monitoringEndDate;
     private String optinFlag;
+    private String trnLogId;
     // sprint 1
     private String offerMembershipStatus;
 

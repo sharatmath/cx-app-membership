@@ -3,7 +3,6 @@ package com.dev.prepaid.service;
 import com.dev.prepaid.InitData;
 import com.dev.prepaid.constant.Constant;
 import com.dev.prepaid.domain.*;
-import com.dev.prepaid.model.DataRowDTO;
 import com.dev.prepaid.model.imports.DataImportDTO;
 import com.dev.prepaid.model.invocation.DataSet;
 import com.dev.prepaid.model.invocation.InstanceContext;
@@ -21,9 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -689,6 +685,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                 .msisdn(Long.valueOf(dataRowDTO.get(1)))
                                 .optinFlag("false")
                                 .offerMembershipStatus(OfferMembershipStatus.ACTIVE.toString())
+                                .trnLogId(getTrnLogId(dataRowDTO.get(0)))
                                 .build())
                 .collect(Collectors.toList());
         //optimize
@@ -773,6 +770,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                 .evaluationStatus(evaluationStatus)
                                 .msisdn(Long.valueOf(dataRowDTO.get(1)))
                                 .offerConfigId(prepaidCxOfferConfig.getId())
+                                .trnLogId(getTrnLogId(dataRowDTO.get(0)))
                                 .build())
                 .collect(Collectors.toList());
         //optimize
@@ -882,5 +880,15 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 
     }
 
-
+    private String getTrnLogId(String rowId){
+        if(rowId != null ){
+            if(rowId.contains("eventCondition")) {
+                String[] data = rowId.split("|");
+                return data[2];
+            }
+            return rowId;
+        }else {
+            return "";
+        }
+    }
 }
