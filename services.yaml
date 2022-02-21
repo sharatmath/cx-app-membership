@@ -15,7 +15,7 @@ spec:
       containers:
       - name: prepaid-cx-membership-api
     # enter the path to your image, be sure to include the correct region prefix
-        image: fra.ocir.io/singteloracloud/singtelomcsit/prepaid-cx-membership-api:sit-1.1.3
+        image: fra.ocir.io/singteloracloud/prepaid_app_dev/singtelomcsit/prepaid-cx-membership-api:sit-1.1.3
         resources:
           requests:
             memory: "2048Mi"
