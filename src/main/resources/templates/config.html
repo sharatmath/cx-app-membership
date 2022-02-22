@@ -1387,11 +1387,11 @@
 											v-on:click="generateSQL"
 											v-bind:disabled="mainData[0].groups.length === 0 && mainData[0].dataList.length === 0">Generate
 										SQL</button>
-										<div>
-												<label>Count</label>
-												<p placeholder="Count" v-model="count"
-											  :readonly="true" style="width: 10%;"
-											  class="form-control form-control-sm input-custom"></p></div>
+										<div style="float: left; margin-top: 23px; margin-left: 10px;">
+												<label>Count : </label></div>
+												<input  placeholder="Count" v-model="recordCounts"
+											  :readonly="true" style="width: 10%; float: left; margin-left: -53px; margin-top: 5%;"
+											  class="form-control form-control-sm input-custom"></input >
 									<textarea placeholder="View SQL" v-model="generatedQuery"
 											  :readonly="true" :rows="4" style="width: 100%; resize: none;"
 											  class="form-control form-control-sm input-custom"></textarea>
@@ -3437,7 +3437,7 @@
 
     Vue.component('v-select', VueSelect.VueSelect)
 
-	var count =0; 
+	//var count =0; 
     // Main Component for ADVANCE FILTER
     var advanceFilter = new Vue({
         el: '#advanceFilterComponent',
@@ -3456,12 +3456,14 @@
                 rootGroup: true,
                 groupCondition: ' ',
                 groups: [],
-                dataList: []
+                dataList: [],
+                recordCounts : null
             }],
             fetchedTableList: [],
             generatedQuery: null,
             customQuery: null,
             fetchedData: null,
+            recordCounts : 0,
             advanceFilterTab: 'customUI'
         },
         methods: {
@@ -3474,11 +3476,12 @@
                     rootGroup: true,
                     groupCondition: ' ',
                     groups: [],
-                    dataList: []
+                    dataList: [],
+                    recordCounts : null
                 };
 
                 advanceFilter.mainData.push(tempMainData);
-                console.log(advanceFilter.mainData);
+                console.log('advanceFilter.mainData ------ :'+advanceFilter.mainData);
             },
 
             showModalfn() {
@@ -3505,6 +3508,7 @@
             deleteGroupfn(selectedGroupId) {
                 this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
                 this.generatedQuery = null;
+                this.recordCounts = 0;
                 this.generateSQL();
             },
 
@@ -3544,6 +3548,7 @@
             deleteDatafn(selectedGroupId, selectedDataId) {
                 this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, advanceFilter.mainData)
                 this.generatedQuery = null;
+                this.recordCounts = 0;
                 this.generateSQL();
             },
             addDataViaGroupId(selectedGroupId, data, savedData) {
@@ -3569,6 +3574,7 @@
                 this.addDataViaGroupId(advanceFilter.selectedGroupId, advanceFilter.mainData, savedData)
                 advanceFilter.selectedGroupId = null;
                 this.generatedQuery = null;
+                this.recordCounts = 0;
                 this.generateSQL();
                 
             },
@@ -3601,6 +3607,7 @@
             createGroupfn(selectedGroupId) {
                 this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
                 this.generatedQuery = null;
+                this.recordCounts = 0;
                 this.generateSQL();
                 
             },
@@ -3628,19 +3635,17 @@
                     .then(res => res.json())
                     .then(data => {
                         console.log("queryText " + data.queryText);
-                        console.log("recordCount " + data.recordCount)
-                        console.log("countQuery " + data.countQuery)
+                        console.log("recordCounts " + data.resultCount);
+                        console.log("countQuery " + data.countQuery);
 
                         if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
                             this.generatedQuery = null;
+                            this.recordCounts = 0;
                             
                         } else this.generatedQuery = data.queryText;
+                        this.recordCounts = data.resultCount;
                         return this.generatedQuery;
-                        if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
-                            this.count = null;
-                            
-                        } else this.count = data.recordCount;
-                        return this.count;
+                        		this.recordCounts;
                     })
                     .catch(error => console.log(error))
                     .finally()
@@ -3672,7 +3677,7 @@
                     }else{
                     this.mainData = JSON.parse(data.payload);
                      this.generatedQuery = data.queryText;
-                     //this.count = data.recordCount;
+                     this.recordCounts = data.resultCount;
                     this.customQuery = data.customQuery;
                     }
                     return
@@ -4541,7 +4546,7 @@
 					"payloadList": advanceFilter.mainData,
 					"payload":'',
 					"queryText": advanceFilter.generatedQuery,
-					"count": advanceFilter.recordCount,
+					"resultCount": advanceFilter.recordCounts,
 					"customQuery": false,
 					"id": null,
 					

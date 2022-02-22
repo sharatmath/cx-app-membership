@@ -1154,7 +1154,7 @@ public class DataController {
 		BigDecimal recordCount = advFilterRecordCountServices.getAdvFilterRecordCount(countQuery);
 		BigDecimal numberQueryRecord = advFilterRecordCountServices.getAdvFilterRecordCount(numberQuery);
 		result.put("status", "success");
-		result.put("recordCount", recordCount);
+		result.put("resultCount", recordCount);
 		result.put("numberQuery", numberQueryRecord);
 		result.put("countQuery", countQuery);
 		result.put("status", "success");
