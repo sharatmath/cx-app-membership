@@ -1142,13 +1142,13 @@ public class DataController {
 //			finalQueryStringBuilder.append(revTableMap.get(String.valueOf((char) alphaCode)) + " = " + String.valueOf((char) alphaCode));
 		}
 		String close="";
-		if(alphaCode>65) {
-			close=	")";
+		if(!beforeCondition.isEmpty()){
+			close=	") ";
 		}else {
 			close="";
 		}
-		finalQueryStringBuilder.append(queryText);
-		strCountBuilder.append(queryText);
+		finalQueryStringBuilder.append(queryText+close);
+		strCountBuilder.append(queryText+close);
 		String countQuery = strCountBuilder.toString();
 		String numberQuery = strCountBuilder.toString();
 		BigDecimal recordCount = advFilterRecordCountServices.getAdvFilterRecordCount(countQuery);
