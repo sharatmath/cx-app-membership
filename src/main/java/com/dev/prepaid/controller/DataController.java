@@ -1147,7 +1147,7 @@ public class DataController {
 		}else {
 			close="";
 		}
-		finalQueryStringBuilder.append(queryText+close);
+		finalQueryStringBuilder.append(queryText);
 		strCountBuilder.append(queryText);
 		String countQuery = strCountBuilder.toString();
 		String numberQuery = strCountBuilder.toString();
