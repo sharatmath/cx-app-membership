@@ -385,7 +385,8 @@ public class OfferServiceImpl implements OfferService {
 
 					offerFulfilment.setTopUpTempServiceClass(prepaidCxOfferMonitoring.getTopUpTempServiceClass());
 
-					offerFulfilment.setImei(prepaidCxOfferMonitoring.getImei());
+					//offerFulfilment.setImei(prepaidCxOfferMonitoring.getImei());
+					offerFulfilment.setWhitelistType(prepaidCxOfferMonitoring.getWhitelistType());
 					offerFulfilment.setDaChange(prepaidCxOfferMonitoring.getDaChange());
 					offerFulfilment.setChargedAmount(prepaidCxOfferMonitoring.getChargedAmount());
 					offerFulfilment.setRoamingFlag(prepaidCxOfferMonitoring.getRoamingFlag());
@@ -416,7 +417,8 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setTopUpAccBalanceBeforeValue(prepaidCxOfferMonitoring.getTopUpAccBalanceBeforeValue());
 
 					offerFulfilment.setTopUpTempServiceClass(prepaidCxOfferMonitoring.getTopUpTempServiceClass());
-					offerFulfilment.setImei(prepaidCxOfferMonitoring.getImei());
+					//offerFulfilment.setImei(prepaidCxOfferMonitoring.getImei());
+					offerFulfilment.setWhitelistType(prepaidCxOfferMonitoring.getWhitelistType());
 					offerFulfilment.setDaChange(prepaidCxOfferMonitoring.getDaChange());
 					offerFulfilment.setChargedAmount(prepaidCxOfferMonitoring.getChargedAmount());
 					offerFulfilment.setRoamingFlag(prepaidCxOfferMonitoring.getRoamingFlag());
