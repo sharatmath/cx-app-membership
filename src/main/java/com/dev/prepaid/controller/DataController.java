@@ -575,6 +575,11 @@ public class DataController {
 			throws ParseException {
 		return offerService.checkEventConditionName(eventConditionName);
 	}
+	
+	@GetMapping(value = "whitelist/listType")
+	public List<ListTypeDto> checkWhitelistType(){
+		return offerService.whitelistData();
+	}
 
 //	Saket
 

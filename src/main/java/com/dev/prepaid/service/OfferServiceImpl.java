@@ -15,6 +15,7 @@ import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferType;
 import com.dev.prepaid.util.DateUtil;
 import com.dev.prepaid.util.GsonUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -75,6 +76,8 @@ public class OfferServiceImpl implements OfferService {
 	private PromoCodeRepository promoCodeRepository;
 	@Autowired
 	private PrepaidCxOfferAdvanceFilterRepository prepaidCxOfferAdvanceFilterRepository;
+	@Autowired
+	private WhitelistRepository whitelistRepository;
 
 	@Override
 	public void evictAllCaches() {
@@ -487,6 +490,20 @@ public class OfferServiceImpl implements OfferService {
 			return opsFind.get().getProvisionType();
 		}
 		return  "";
+	}
+	
+	@Override
+	public List<ListTypeDto> whitelistData() {
+		List<Whitelist> listEntity = whitelistRepository.findAll();
+		List<ListTypeDto> listDto = new ArrayList<>();
+		listEntity.stream().forEach(d -> {
+			ListTypeDto dto = ListTypeDto.builder()
+							.whitelistId(d.getWhitelistId())
+							.whitelistType(d.getWhitelistType())
+							.build();
+			listDto.add(dto);
+		});
+		return listDto;
 	}
 
 }
