@@ -901,9 +901,15 @@
 											</div>
 										</div>
 										<div class="mb-3 row">
-											<label class="col-sm-2 col-form-label">IMEI</label>
+											<label class="col-sm-2 col-form-label">WHITELIST</label>
 											<div class="col-sm-10">
-												<input type="text" class="form-control" id="usageTopUpIMEI" x-model="eventConditionData.imei">
+												<select multiple id="eventCondIMEI" class="w-100">
+													<option>Choose...</option>
+													<template x-for="list in eventWhitelist">
+														<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
+													</template>
+												</select>
+<!--												<input type="text" class="form-control" id="usageTopUpIMEI" x-model="eventConditionData.imei">-->
 											</div>
 										</div>
 										<div class="mb-3 row">
@@ -1970,9 +1976,16 @@
 												</div>
 											</div>
 											<div class="mb-3 row">
-												<label class="col-sm-2 col-form-label">IMEI</label>
+												<label class="col-sm-2 col-form-label">WHITELIST</label>
 												<div class="col-sm-10">
-													<input type="text" class="form-control" id="monitoringDataUTopUpIMEI" x-model="monitoringData.imei">
+													<select multiple id="offerIMEI" class="w-100">
+														<option>Choose...</option>
+														<template x-for="list in offerWhitelist">
+<!--															<option :key="list.whitelistId" x-text="list.whitelistType"></option>-->
+															<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
+														</template>
+													</select>
+<!--													<input type="text" class="form-control" id="monitoringDataUTopUpIMEI" x-model="monitoringData.imei">-->
 												</div>
 											</div>
 											<div class="mb-3 row">
@@ -2648,6 +2661,12 @@
 			$('#usageTypeAll').select2();
 			$('#countryCodeIDD').select2();
 			$('#countryCode').select2();
+			$('#eventCondIMEI').select2({
+				maximumSelectionLength: 5,
+			});
+			$('#offerIMEI').select2({
+				maximumSelectionLength: 5,
+			});
 		});
 
 		// Plus Minus Icon for Accordion BEGIN
@@ -3707,6 +3726,8 @@
 			programList                     : [],
 			countryList                     : [],
 			promoList                       : [],
+			eventWhitelist					: [],
+			offerWhitelist					: [],
 			excludeSubscriber               : [],
 			selectedCity                    : [],
 			selectedType                    : null,
@@ -3771,6 +3792,8 @@
 				Promise.all([
 					this.getProgramList(),
 					this.getPromoList(),
+					this.eventCondWhitelist(),
+					this.offerMonWhitelist(),
 				])
 						.then(data => {
 							this.eligibilityPolicy()
@@ -4083,6 +4106,11 @@
 								$('#usageTypeAll').val(data.usageType.split(',')).trigger('change');
 							}
 
+							// for multiple dropdown WHITELIST
+							if (data.imei != null) {
+								$('#offerIMEI').val(data.imei.split(',')).trigger('change');
+							}
+
 							// for multiple dropdown country code
 							if (data.countryCode != null) {
 								$('#countryCode').val(data.countryCode.split(',')).trigger('change');
@@ -4118,6 +4146,11 @@
 							// for multiple dropdown country code
 							if (data.countryCode != null) {
 								$('#countryCodeIDD').val(data.countryCode.split(',')).trigger('change');
+							}
+
+							// for multiple dropdown WHITELIST
+							if (data.imei != null) {
+								$('#eventCondIMEI').val(data.imei.split(',')).trigger('change');
 							}
 
 							// For Start Date
@@ -4238,6 +4271,38 @@
 				})
 			},
 
+			eventCondWhitelist() {
+				return new Promise((resolve, reject) => {
+					fetch(PROD_URL + `whitelist/listType`)
+							.then(res => res.json())
+							.then(data => {
+								this.eventWhitelist = data
+								resolve('whitelist')
+							})
+							.catch(error => {
+								console.log(error)
+								reject(error)
+							})
+							.finally()
+				})
+			},
+
+			offerMonWhitelist() {
+				return new Promise((resolve, reject) => {
+					fetch(PROD_URL + `whitelist/listType`)
+							.then(res => res.json())
+							.then(data => {
+								this.offerWhitelist = data
+								resolve('whitelist')
+							})
+							.catch(error => {
+								console.log(error)
+								reject(error)
+							})
+							.finally()
+				})
+			},
+
 			saveConfiguration() {
 				var message = { amsAction : "save", requestId : "save" };
 				const offerEventCondition = {
@@ -4285,7 +4350,8 @@
 					offerEventCondition.daBalanceValue              = this.eventConditionData.daBalanceValue;
 					offerEventCondition.daExpiryDate                = this.daExpiryDate;
 					offerEventCondition.tempServiceClass            = this.eventConditionData.tempServiceClass;
-					offerEventCondition.imei                        = this.eventConditionData.imei;
+					// offerEventCondition.imei                        = this.eventConditionData.imei;
+					offerEventCondition.imei                        = $('#eventCondIMEI').select2("val").toString();
 					offerEventCondition.daChange                    = this.eventConditionData.daChange;
 					offerEventCondition.chargedAmount               = this.eventConditionData.chargedAmount;
 					offerEventCondition.roamingFlag                 = this.eventConditionData.roamingFlag;
@@ -4356,7 +4422,8 @@
 					offerMonitoring.topUpDaBalanceOp            = this.monitoringData.topUpDaBalanceOp;
 					offerMonitoring.topUpDaBalanceValue         = this.monitoringData.topUpDaBalanceValue;
 					offerMonitoring.topUpTempServiceClass       = this.monitoringData.topUpTempServiceClass;
-					offerMonitoring.imei                        = this.monitoringData.imei;
+					// offerMonitoring.imei                        = this.monitoringData.imei;
+					offerMonitoring.imei                        = $('#offerIMEI').select2("val").toString()
 					offerMonitoring.daChange                    = this.monitoringData.daChange;
 					offerMonitoring.chargedAmount               = this.monitoringData.chargedAmount;
 					offerMonitoring.daExpiryDateMonitor         = this.daExpiryDateMonitor;
