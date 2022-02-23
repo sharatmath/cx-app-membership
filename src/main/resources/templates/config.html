@@ -904,12 +904,10 @@
 											<label class="col-sm-2 col-form-label">WHITELIST</label>
 											<div class="col-sm-10">
 												<select multiple id="eventCondIMEI" class="w-100">
-													<option>Choose...</option>
 													<template x-for="list in eventWhitelist">
 														<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
 													</template>
 												</select>
-<!--												<input type="text" class="form-control" id="usageTopUpIMEI" x-model="eventConditionData.imei">-->
 											</div>
 										</div>
 										<div class="mb-3 row">
@@ -1979,13 +1977,10 @@
 												<label class="col-sm-2 col-form-label">WHITELIST</label>
 												<div class="col-sm-10">
 													<select multiple id="offerIMEI" class="w-100">
-														<option>Choose...</option>
 														<template x-for="list in offerWhitelist">
-<!--															<option :key="list.whitelistId" x-text="list.whitelistType"></option>-->
 															<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
 														</template>
 													</select>
-<!--													<input type="text" class="form-control" id="monitoringDataUTopUpIMEI" x-model="monitoringData.imei">-->
 												</div>
 											</div>
 											<div class="mb-3 row">
@@ -4107,8 +4102,8 @@
 							}
 
 							// for multiple dropdown WHITELIST
-							if (data.imei != null) {
-								$('#offerIMEI').val(data.imei.split(',')).trigger('change');
+							if (data.whitelistType != null) {
+								$('#offerIMEI').val(data.whitelistType.split(',')).trigger('change');
 							}
 
 							// for multiple dropdown country code
@@ -4149,8 +4144,8 @@
 							}
 
 							// for multiple dropdown WHITELIST
-							if (data.imei != null) {
-								$('#eventCondIMEI').val(data.imei.split(',')).trigger('change');
+							if (data.whitelistType != null) {
+								$('#eventCondIMEI').val(data.whitelistType.split(',')).trigger('change');
 							}
 
 							// For Start Date
@@ -4351,7 +4346,7 @@
 					offerEventCondition.daExpiryDate                = this.daExpiryDate;
 					offerEventCondition.tempServiceClass            = this.eventConditionData.tempServiceClass;
 					// offerEventCondition.imei                        = this.eventConditionData.imei;
-					offerEventCondition.imei                        = $('#eventCondIMEI').select2("val").toString();
+					offerEventCondition.whitelistType                        = $('#eventCondIMEI').select2("val").toString();
 					offerEventCondition.daChange                    = this.eventConditionData.daChange;
 					offerEventCondition.chargedAmount               = this.eventConditionData.chargedAmount;
 					offerEventCondition.roamingFlag                 = this.eventConditionData.roamingFlag;
@@ -4423,7 +4418,7 @@
 					offerMonitoring.topUpDaBalanceValue         = this.monitoringData.topUpDaBalanceValue;
 					offerMonitoring.topUpTempServiceClass       = this.monitoringData.topUpTempServiceClass;
 					// offerMonitoring.imei                        = this.monitoringData.imei;
-					offerMonitoring.imei                        = $('#offerIMEI').select2("val").toString()
+					offerMonitoring.whitelistType               = $('#offerIMEI').select2("val").toString()
 					offerMonitoring.daChange                    = this.monitoringData.daChange;
 					offerMonitoring.chargedAmount               = this.monitoringData.chargedAmount;
 					offerMonitoring.daExpiryDateMonitor         = this.daExpiryDateMonitor;
