@@ -901,9 +901,9 @@
 											</div>
 										</div>
 										<div class="mb-3 row">
-											<label class="col-sm-2 col-form-label">WHITELIST</label>
+											<label for="eventCondIMEI" class="col-sm-2 col-form-label">Whitelist</label>
 											<div class="col-sm-10">
-												<select multiple id="eventCondIMEI" class="w-100">
+												<select id="eventCondIMEI" multiple>
 													<template x-for="list in eventWhitelist">
 														<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
 													</template>
@@ -1974,9 +1974,9 @@
 												</div>
 											</div>
 											<div class="mb-3 row">
-												<label class="col-sm-2 col-form-label">WHITELIST</label>
+												<label for="offerIMEI" class="col-sm-2 col-form-label">Whitelist</label>
 												<div class="col-sm-10">
-													<select multiple id="offerIMEI" class="w-100">
+													<select id="offerIMEI" multiple>
 														<template x-for="list in offerWhitelist">
 															<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
 														</template>
@@ -2761,7 +2761,7 @@
 <script>
 
     const INSTANCE_ID = $("#instanceId").text();
-    // const INSTANCE_ID = 'dd1590f6-1243-4194-9f3a-6aba497fedeb';
+    // const INSTANCE_ID = 'f3959ad1-e159-4fcf-ba53-4af400687c2d';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
     const PROD_URLs = 'http://localhost:8090/data/';
     const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
@@ -3772,23 +3772,24 @@
 			eventConditionName              : null,
 
 			init() {
+				this.eventCondWhitelist(),
+						this.offerMonWhitelist(),
 				this.eventTypeDropdown(),
-						this.offerBucketDropdown(),
-						this.campaignOfferDropdown(),
-						this.getOfferSelection(),
-						this.monitoringPolicy(),
-						this.redemptionPolicy(),
-						this.eventConditionPolicy(),
-						this.getCountryList(),
-						this.provisionType()
+				this.offerBucketDropdown(),
+				this.campaignOfferDropdown(),
+				this.getOfferSelection(),
+				this.monitoringPolicy(),
+				this.redemptionPolicy(),
+				this.eventConditionPolicy(),
+				this.getCountryList(),
+				this.provisionType()
+
 			},
 
 			initPage(){
 				Promise.all([
 					this.getProgramList(),
 					this.getPromoList(),
-					this.eventCondWhitelist(),
-					this.offerMonWhitelist(),
 				])
 						.then(data => {
 							this.eligibilityPolicy()
@@ -4101,14 +4102,14 @@
 								$('#usageTypeAll').val(data.usageType.split(',')).trigger('change');
 							}
 
-							// for multiple dropdown WHITELIST
-							if (data.whitelistType != null) {
-								$('#offerIMEI').val(data.whitelistType.split(',')).trigger('change');
-							}
-
 							// for multiple dropdown country code
 							if (data.countryCode != null) {
 								$('#countryCode').val(data.countryCode.split(',')).trigger('change');
+							}
+
+							// for multiple dropdown WHITELIST
+							if (data.whitelistType != null) {
+								$('#offerIMEI').val(data.whitelistType.split(',')).trigger('change');
 							}
 
 							// for Da Expiry Date
@@ -4272,7 +4273,7 @@
 							.then(res => res.json())
 							.then(data => {
 								this.eventWhitelist = data
-								resolve('whitelist')
+								resolve('eventWhitelist')
 							})
 							.catch(error => {
 								console.log(error)
@@ -4288,7 +4289,7 @@
 							.then(res => res.json())
 							.then(data => {
 								this.offerWhitelist = data
-								resolve('whitelist')
+								resolve('offerWhitelist')
 							})
 							.catch(error => {
 								console.log(error)
@@ -4346,7 +4347,7 @@
 					offerEventCondition.daExpiryDate                = this.daExpiryDate;
 					offerEventCondition.tempServiceClass            = this.eventConditionData.tempServiceClass;
 					// offerEventCondition.imei                        = this.eventConditionData.imei;
-					offerEventCondition.whitelistType                        = $('#eventCondIMEI').select2("val").toString();
+					offerEventCondition.whitelistType               = $('#eventCondIMEI').select2("val").toString();
 					offerEventCondition.daChange                    = this.eventConditionData.daChange;
 					offerEventCondition.chargedAmount               = this.eventConditionData.chargedAmount;
 					offerEventCondition.roamingFlag                 = this.eventConditionData.roamingFlag;
