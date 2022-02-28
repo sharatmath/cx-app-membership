@@ -1253,8 +1253,17 @@ public class DataController {
 						queryStringBuilder.append(" " + appendCondition );
 					}
 					String date = "";
+					date = "SYSDATE";
+					if (dataListBean.getSelectedDateType().equalsIgnoreCase("exactDate")) {
+						System.out.println("exactDate----------- ");	
+						queryStringBuilder.append(" (TRUNC("
+								+ tableMap.get(dataListBean.getSelectedTable()) + "."
+								+ dataListBean.getSelectedColumnName() + ")) ");
+						queryStringBuilder.append(" = ");
+						queryStringBuilder.append("'" + dataListBean.getExactDate() + "'");
+						}
 					if (dataListBean.getSelectedDateType().equalsIgnoreCase("daysBefore")) {
-						date = "SYSDATE";
+						
 						if (dataListBean.getSelectedOperand().equalsIgnoreCase("<")) {
 							queryStringBuilder.append(" (TRUNC("
 									+ tableMap.get(dataListBean.getSelectedTable()) + "."
