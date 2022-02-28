@@ -901,9 +901,13 @@
 											</div>
 										</div>
 										<div class="mb-3 row">
-											<label class="col-sm-2 col-form-label">IMEI</label>
+											<label for="eventCondIMEI" class="col-sm-2 col-form-label">Whitelist</label>
 											<div class="col-sm-10">
-												<input type="text" class="form-control" id="usageTopUpIMEI" x-model="eventConditionData.imei">
+												<select id="eventCondIMEI" multiple>
+													<template x-for="list in eventWhitelist">
+														<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
+													</template>
+												</select>
 											</div>
 										</div>
 										<div class="mb-3 row">
@@ -1970,9 +1974,13 @@
 												</div>
 											</div>
 											<div class="mb-3 row">
-												<label class="col-sm-2 col-form-label">IMEI</label>
+												<label for="offerIMEI" class="col-sm-2 col-form-label">Whitelist</label>
 												<div class="col-sm-10">
-													<input type="text" class="form-control" id="monitoringDataUTopUpIMEI" x-model="monitoringData.imei">
+													<select id="offerIMEI" multiple>
+														<template x-for="list in offerWhitelist">
+															<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
+														</template>
+													</select>
 												</div>
 											</div>
 											<div class="mb-3 row">
@@ -2649,6 +2657,12 @@
 			$('#usageTypeAll').select2();
 			$('#countryCodeIDD').select2();
 			$('#countryCode').select2();
+			$('#eventCondIMEI').select2({
+				maximumSelectionLength: 5,
+			});
+			$('#offerIMEI').select2({
+				maximumSelectionLength: 5,
+			});
 		});
 
 		// Plus Minus Icon for Accordion BEGIN
@@ -2748,7 +2762,7 @@
 <script>
 
     const INSTANCE_ID = $("#instanceId").text();
-    // const INSTANCE_ID = 'dd1590f6-1243-4194-9f3a-6aba497fedeb';
+    // const INSTANCE_ID = 'f3959ad1-e159-4fcf-ba53-4af400687c2d';
     const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
     const PROD_URLs = 'http://localhost:8090/data/';
     const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
@@ -3708,6 +3722,8 @@
 			programList                     : [],
 			countryList                     : [],
 			promoList                       : [],
+			eventWhitelist					: [],
+			offerWhitelist					: [],
 			excludeSubscriber               : [],
 			selectedCity                    : [],
 			selectedType                    : null,
@@ -3757,15 +3773,18 @@
 			eventConditionName              : null,
 
 			init() {
+				this.eventCondWhitelist(),
+						this.offerMonWhitelist(),
 				this.eventTypeDropdown(),
-						this.offerBucketDropdown(),
-						this.campaignOfferDropdown(),
-						this.getOfferSelection(),
-						this.monitoringPolicy(),
-						this.redemptionPolicy(),
-						this.eventConditionPolicy(),
-						this.getCountryList(),
-						this.provisionType()
+				this.offerBucketDropdown(),
+				this.campaignOfferDropdown(),
+				this.getOfferSelection(),
+				this.monitoringPolicy(),
+				this.redemptionPolicy(),
+				this.eventConditionPolicy(),
+				this.getCountryList(),
+				this.provisionType()
+
 			},
 
 			initPage(){
@@ -4089,6 +4108,11 @@
 								$('#countryCode').val(data.countryCode.split(',')).trigger('change');
 							}
 
+							// for multiple dropdown WHITELIST
+							if (data.whitelistType != null) {
+								$('#offerIMEI').val(data.whitelistType.split(',')).trigger('change');
+							}
+
 							// for Da Expiry Date
 							this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : null;
 
@@ -4119,6 +4143,11 @@
 							// for multiple dropdown country code
 							if (data.countryCode != null) {
 								$('#countryCodeIDD').val(data.countryCode.split(',')).trigger('change');
+							}
+
+							// for multiple dropdown WHITELIST
+							if (data.whitelistType != null) {
+								$('#eventCondIMEI').val(data.whitelistType.split(',')).trigger('change');
 							}
 
 							// For Start Date
@@ -4239,6 +4268,38 @@
 				})
 			},
 
+			eventCondWhitelist() {
+				return new Promise((resolve, reject) => {
+					fetch(PROD_URL + `whitelist/listType`)
+							.then(res => res.json())
+							.then(data => {
+								this.eventWhitelist = data
+								resolve('eventWhitelist')
+							})
+							.catch(error => {
+								console.log(error)
+								reject(error)
+							})
+							.finally()
+				})
+			},
+
+			offerMonWhitelist() {
+				return new Promise((resolve, reject) => {
+					fetch(PROD_URL + `whitelist/listType`)
+							.then(res => res.json())
+							.then(data => {
+								this.offerWhitelist = data
+								resolve('offerWhitelist')
+							})
+							.catch(error => {
+								console.log(error)
+								reject(error)
+							})
+							.finally()
+				})
+			},
+
 			saveConfiguration() {
 				var message = { amsAction : "save", requestId : "save" };
 				const offerEventCondition = {
@@ -4286,7 +4347,8 @@
 					offerEventCondition.daBalanceValue              = this.eventConditionData.daBalanceValue;
 					offerEventCondition.daExpiryDate                = this.daExpiryDate;
 					offerEventCondition.tempServiceClass            = this.eventConditionData.tempServiceClass;
-					offerEventCondition.imei                        = this.eventConditionData.imei;
+					// offerEventCondition.imei                        = this.eventConditionData.imei;
+					offerEventCondition.whitelistType               = $('#eventCondIMEI').select2("val").toString();
 					offerEventCondition.daChange                    = this.eventConditionData.daChange;
 					offerEventCondition.chargedAmount               = this.eventConditionData.chargedAmount;
 					offerEventCondition.roamingFlag                 = this.eventConditionData.roamingFlag;
@@ -4357,7 +4419,8 @@
 					offerMonitoring.topUpDaBalanceOp            = this.monitoringData.topUpDaBalanceOp;
 					offerMonitoring.topUpDaBalanceValue         = this.monitoringData.topUpDaBalanceValue;
 					offerMonitoring.topUpTempServiceClass       = this.monitoringData.topUpTempServiceClass;
-					offerMonitoring.imei                        = this.monitoringData.imei;
+					// offerMonitoring.imei                        = this.monitoringData.imei;
+					offerMonitoring.whitelistType               = $('#offerIMEI').select2("val").toString()
 					offerMonitoring.daChange                    = this.monitoringData.daChange;
 					offerMonitoring.chargedAmount               = this.monitoringData.chargedAmount;
 					offerMonitoring.daExpiryDateMonitor         = this.daExpiryDateMonitor;

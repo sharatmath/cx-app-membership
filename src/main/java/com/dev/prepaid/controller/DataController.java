@@ -476,7 +476,8 @@ public class DataController {
 					.topUpOp(prepaidCxOfferEventCondition.getTopUpOp())
 					.topUpTransactionValue(prepaidCxOfferEventCondition.getTopUpTransactionValue())
 					.chargedAmount(prepaidCxOfferEventCondition.getChargedAmount())
-					.imei(prepaidCxOfferEventCondition.getImei())
+					//.imei(prepaidCxOfferEventCondition.getImei())
+					.whitelistType(prepaidCxOfferEventCondition.getWhitelistType())
 					.aggregationPeriodDays(prepaidCxOfferEventCondition.getAggregationPeriodDays())
 					.daBalanceOp(prepaidCxOfferEventCondition.getDaBalanceOp())
 					.daChange(prepaidCxOfferEventCondition.getDaChange())
@@ -573,6 +574,11 @@ public class DataController {
 			@RequestParam(value = "eventConditionName", required = true) String eventConditionName)
 			throws ParseException {
 		return offerService.checkEventConditionName(eventConditionName);
+	}
+	
+	@GetMapping(value = "whitelist/listType")
+	public List<ListTypeDto> checkWhitelistType(){
+		return offerService.whitelistData();
 	}
 
 //	Saket

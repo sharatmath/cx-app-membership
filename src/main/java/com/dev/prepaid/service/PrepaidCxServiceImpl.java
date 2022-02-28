@@ -498,7 +498,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 			prepaidCxOfferMonitoring.setTopUpTempServiceClass(
 					saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
-			prepaidCxOfferMonitoring.setImei(saveConfigRequest.getPayload().getOfferMonitoring().getImei());
+			//prepaidCxOfferMonitoring.setImei(saveConfigRequest.getPayload().getOfferMonitoring().getImei());
+			prepaidCxOfferMonitoring.setWhitelistType(saveConfigRequest.getPayload().getOfferMonitoring().getWhitelistType());
 			prepaidCxOfferMonitoring.setDaChange(saveConfigRequest.getPayload().getOfferMonitoring().getDaChange());
 			prepaidCxOfferMonitoring
 					.setChargedAmount(saveConfigRequest.getPayload().getOfferMonitoring().getChargedAmount());
@@ -792,7 +793,8 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferEventCondition
 					.setTempServiceClass(saveConfigRequest.getPayload().getOfferEventCondition().getTempServiceClass());
 
-			prepaidCxOfferEventCondition.setImei(saveConfigRequest.getPayload().getOfferEventCondition().getImei());
+			//prepaidCxOfferEventCondition.setImei(saveConfigRequest.getPayload().getOfferEventCondition().getImei());
+			prepaidCxOfferEventCondition.setWhitelistType(saveConfigRequest.getPayload().getOfferEventCondition().getWhitelistType());
 			prepaidCxOfferEventCondition
 					.setDaChange(saveConfigRequest.getPayload().getOfferEventCondition().getDaChange());
 			prepaidCxOfferEventCondition
