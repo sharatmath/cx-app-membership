@@ -1100,13 +1100,14 @@ public class DataController {
 		StringBuilder finalJoinStringBuilder = new StringBuilder();
 		StringBuilder strCountBuilder = new StringBuilder();
 		String tableOne = null;
+		
 		HashMap<String, String> tableMap = new HashMap<>();
 		int alphaCode = 65;
 		tableMap = getTables(groupList, tableMap, alphaCode);
 		finalQueryStringBuilder.append("SELECT DISTINCT " + String.valueOf((char) alphaCode) + ".MSISDN FROM ");
 		strCountBuilder.append("SELECT COUNT(DISTINCT A.MSISDN) FROM ");
 		String beforeCondition = "";
-//		HashMap<String, String> revTableMap = new HashMap<>();
+		
 		Map<String, String> revTableMap = new HashMap<String, String>();
 		for (Map.Entry m : tableMap.entrySet()) {
 
@@ -1118,7 +1119,6 @@ public class DataController {
 		for (; alphaCode < maxIteration; alphaCode++) {
 			if (alphaCode == 65) {
 				tableOne = revTableMap.get(String.valueOf((char) alphaCode)) + " A";
-//				tableOne = revTableMap.get;
 			} else {
 				finalQueryStringBuilder.append(", ");
 				strCountBuilder.append(", ");
@@ -1143,9 +1143,9 @@ public class DataController {
 		finalQueryStringBuilder.append(" WHERE ");
 		strCountBuilder.append(" WHERE ");
 		if (joinStringBuilder.toString() != null) {
-			finalQueryStringBuilder.append(finalJoinStringBuilder.toString());
+			finalQueryStringBuilder.append(finalJoinStringBuilder.toString()+"(");
 			strCountBuilder.append(finalJoinStringBuilder.toString());
-//			finalQueryStringBuilder.append(revTableMap.get(String.valueOf((char) alphaCode)) + " = " + String.valueOf((char) alphaCode));
+
 		}
 		String close = "";
 		if (!beforeCondition.isEmpty()) {
@@ -1195,20 +1195,18 @@ public class DataController {
 		StringBuilder groupByStrBuilder = new StringBuilder();
 		int dataListCount = 0;
 		int tableCount = tableMap.size();
+		
 		for (Group groupBean : groupList) {
 			if (groupBean.getGroups() != null && !groupBean.getGroups().isEmpty() && groupBean.getGroups().size() > 0) {
+				
 				queryStringBuilder.append(getQuery(groupBean.getGroups(), tableMap,
 						(groupByStrBuilder.toString() != null ? groupByStrBuilder.toString() : "")));
 			}
 			dataListCount = tableCount;
 			int i = dataListCount;
+			queryStringBuilder.append("(");
 			for (DataList dataListBean : emptyIfNull(groupBean.getDataList())) {
-				// strCountBuilder.append("SELECT COUNT(*) FROM " +
-				// dataListBean.getSelectedTable() + " WHERE ");
-				// numberStrBuilder.append("SELECT MSISDN FROM " +
-				// dataListBean.getSelectedTable() + " WHERE ");
 
-//                                      VARCHAR
 				String appendCondition = "";
 				if (dataListBean.getSelectedDataType().equalsIgnoreCase("VARCHAR")
 						&& dataListBean.getSelectedDataType() != null && !dataListBean.getSelectedDataType().isEmpty()
@@ -1220,30 +1218,20 @@ public class DataController {
 						appendCondition = "";
 					}
 
-					if (dataListCount == i) {
 
-					} else {
-						queryStringBuilder.append(" " + appendCondition);
-					}
-					if (!groupBean.getGroups().isEmpty() && groupBean.getRootGroup() == true && dataListCount == i) {
-
-						queryStringBuilder.append("AND");
-					} else {
-
-					}
 
 					if (dataListBean.getSelectedOption().equalsIgnoreCase("MATCHES")) {
-						queryStringBuilder.append(" (" + tableMap.get(dataListBean.getSelectedTable()) + "."
+						queryStringBuilder.append(tableMap.get(dataListBean.getSelectedTable()) + "."
 								+ dataListBean.getSelectedColumnName());
-						queryStringBuilder.append(" LIKE '" + "%" + dataListBean.getSelectedValue() + "%" + "') ");
+						queryStringBuilder.append(" LIKE '" + "%" + dataListBean.getSelectedValue() + "%" + "' ");
 					} else if (dataListBean.getSelectedOption().equalsIgnoreCase("STARTS WITH")) {
-						queryStringBuilder.append("(" + tableMap.get(dataListBean.getSelectedTable()) + "."
+						queryStringBuilder.append(tableMap.get(dataListBean.getSelectedTable()) + "."
 								+ dataListBean.getSelectedColumnName());
-						queryStringBuilder.append(" LIKE '" + "% " + dataListBean.getSelectedValue() + " %" + "') ");
+						queryStringBuilder.append(" LIKE '" + "% " + dataListBean.getSelectedValue() + " %" + "' ");
 					} else if (dataListBean.getSelectedOption().equalsIgnoreCase("EQUALS")) {
-						queryStringBuilder.append("(" + tableMap.get(dataListBean.getSelectedTable()) + "."
+						queryStringBuilder.append(tableMap.get(dataListBean.getSelectedTable()) + "."
 								+ dataListBean.getSelectedColumnName());
-						queryStringBuilder.append(" = '" + dataListBean.getSelectedValue() + "') ");
+						queryStringBuilder.append(" = '" + dataListBean.getSelectedValue() + "' ");
 					}
 				}
 
@@ -1413,13 +1401,24 @@ public class DataController {
 						}
 					}
 				}
+				
+				
 				if (dataListCount > 1 || !queryStringBuilder.toString().isEmpty()
-						|| queryStringBuilder.toString() != null) {
+						|| queryStringBuilder.toString() != null && groupBean.getRootGroup()) {
+					queryStringBuilder.append(")");
 //					queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
+				}
+				if (!queryStringBuilder.toString().isEmpty() && dataListCount == tableCount && !groupBean.getGroups().toString().isEmpty()) {
+					queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
 				}
 				dataListCount--;
 			}
+//			queryStringBuilder.append(")");
+			if (!(groupBean.getRootGroup() != null && !groupBean.getRootGroup().toString().isEmpty())){
+				queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
+			}
 			queryStringBuilder.append(groupByStrBuilder.toString());
+			
 		}
 		return queryStringBuilder.toString();
 	}
