@@ -1104,7 +1104,7 @@ public class DataController {
 		int alphaCode = 65;
 		tableMap = getTables(groupList, tableMap, alphaCode);
 		finalQueryStringBuilder.append("SELECT DISTINCT " + String.valueOf((char) alphaCode) + ".MSISDN FROM ");
-		strCountBuilder.append("SELECT COUNT(*) FROM ");
+		strCountBuilder.append("SELECT COUNT(DISTINCT A.MSISDN) FROM ");
 		String beforeCondition ="";
 //		HashMap<String, String> revTableMap = new HashMap<>();
 		Map<String, String> revTableMap = new HashMap<String, String>();
@@ -1126,7 +1126,7 @@ public class DataController {
 						+ (revTableMap.get(String.valueOf((char) alphaCode)) + " " + String.valueOf((char) alphaCode))
 						+ ")");
 				if(alphaCode>65) {
-					beforeCondition=	"AND(";
+					beforeCondition=	"AND";
 				}else {
 					beforeCondition="";
 				}
@@ -1194,12 +1194,13 @@ public class DataController {
 		StringBuilder queryStringBuilder = new StringBuilder();
 		StringBuilder groupByStrBuilder = new StringBuilder();
 		int dataListCount = 0;
+		int tableCount = tableMap.size();
 		for (Group groupBean : groupList) {
 			if (groupBean.getGroups() != null && !groupBean.getGroups().isEmpty() && groupBean.getGroups().size() > 0) {
 				queryStringBuilder.append(getQuery(groupBean.getGroups(), tableMap,
 						(groupByStrBuilder.toString() != null ? groupByStrBuilder.toString() : "")));
 			}
-			dataListCount = groupBean.getDataList().size();
+			dataListCount = tableCount;
 			int i = dataListCount;
 			for (DataList dataListBean : emptyIfNull(groupBean.getDataList())) {
 				// strCountBuilder.append("SELECT COUNT(*) FROM " +
@@ -1225,6 +1226,12 @@ public class DataController {
 					}else {
 						queryStringBuilder.append(" " + appendCondition );
 					}
+					if(!groupBean.getGroups().isEmpty() && groupBean.getRootGroup()==true && dataListCount==i) {
+					
+					queryStringBuilder.append("AND");
+					}else {
+					}
+					
 					if (dataListBean.getSelectedOption().equalsIgnoreCase("MATCHES") ) {
 						queryStringBuilder
 								.append(" (" + tableMap.get(dataListBean.getSelectedTable())

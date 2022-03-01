@@ -3375,7 +3375,7 @@ span.select2-selection.select2-selection--single {
 						</div>
 					</div>
 					<!-- Offer Message Display Starts -->
-					<div class="card">
+					<!-- <div class="card">
 						<div class="card-header" id="headingSeven">
 							<div id="advancedFilterAccordion" class="toggle-title collapsed"
 								data-toggle="collapse" data-target="#collapseSeven">
@@ -3473,7 +3473,7 @@ span.select2-selection.select2-selection--single {
 								</div>
 							</div>
 						</template>
-					</div>
+					</div> -->
 					<!-- Offer Message Display Ends -->
 
 					<br>
@@ -4356,7 +4356,7 @@ span.select2-selection.select2-selection--single {
             tempGroupData: {
                 groupId: uuidv4(),
                 rootGroup: false,
-                groupCondition: ' ',
+                groupCondition: 'AND',
                 groups: [],
                 dataList: []
             },
@@ -4364,7 +4364,7 @@ span.select2-selection.select2-selection--single {
             mainData: [{
                 groupId: uuidv4(),
                 rootGroup: true,
-                groupCondition: ' ',
+                groupCondition: 'AND',
                 groups: [],
                 dataList: [],
                 recordCounts : null
@@ -4384,7 +4384,7 @@ span.select2-selection.select2-selection--single {
                 var tempMainData = {
                     groupId: uuidv4(),
                     rootGroup: true,
-                    groupCondition: ' ',
+                    groupCondition: 'AND',
                     groups: [],
                     dataList: [],
                     recordCounts : null
@@ -4498,7 +4498,7 @@ span.select2-selection.select2-selection--single {
                             var tempGroupData = {
                                 groupId: uuidv4(),
                                 rootGroup: false,
-                                groupCondition: ' ',
+                                groupCondition: 'AND',
                                 groups: [],
                                 dataList: []
                             };
@@ -4524,7 +4524,7 @@ span.select2-selection.select2-selection--single {
             generateSQL() {
                 console.log(advanceFilter.mainData, 'dvanceFilter.mainData')
                 console.log(JSON.stringify(advanceFilter.mainData))
-                fetch(PROD_URLs + `getSQLQuery`, {
+                fetch(PROD_URL + `getSQLQuery`, {
                     method: 'POST',
                     mode: "cors",
                     headers: {
