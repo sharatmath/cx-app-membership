@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import com.dev.prepaid.domain.*;
@@ -1217,6 +1218,12 @@ public class DataController {
 					} else {
 						appendCondition = "";
 					}
+					
+					if (dataListCount == i) {
+
+					} else {
+						queryStringBuilder.append(" " + appendCondition+" ");
+					}
 
 
 
@@ -1402,19 +1409,14 @@ public class DataController {
 					}
 				}
 				
-				
-				if (dataListCount > 1 || !queryStringBuilder.toString().isEmpty()
-						|| queryStringBuilder.toString() != null && groupBean.getRootGroup()) {
-					queryStringBuilder.append(")");
+				if (dataListCount == i || !queryStringBuilder.toString().isEmpty()
+						|| queryStringBuilder.toString() != null) {
 //					queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
-				}
-				if (!queryStringBuilder.toString().isEmpty() && dataListCount == tableCount && !groupBean.getGroups().toString().isEmpty()) {
-					queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
 				}
 				dataListCount--;
 			}
-//			queryStringBuilder.append(")");
-			if (!(groupBean.getRootGroup() != null && !groupBean.getRootGroup().toString().isEmpty())){
+			queryStringBuilder.append(")");
+			if (groupBean.getRootGroup()==false){
 				queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
 			}
 			queryStringBuilder.append(groupByStrBuilder.toString());
