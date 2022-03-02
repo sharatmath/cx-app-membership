@@ -265,6 +265,7 @@ span.select2-selection.select2-selection--single {
 .modal-wrapper {
 	display: table-cell;
 	vertical-align: middle;
+	height: 90% !important;
 }
 
 .modal-container {
@@ -4650,7 +4651,7 @@ span.select2-selection.select2-selection--single {
 			offerSelectionPromoCode         : [],
 			// Offer Selection END
 			// offer message data
-			offerMessageMethod 				:null,
+			//offerMessageMethod 				:null,
 			// Check Duplicate Offer Name BEGIN
 			uniqueData                      : null,
 			uniqueMessage                   : null,
@@ -5150,20 +5151,6 @@ span.select2-selection.select2-selection--single {
 				})
 			},
 			
-			getOfferMessage() {
-				fetch(PROD_URL + `offerMessage?instanceId=${INSTANCE_ID}`)
-						.then(res => res.json())
-						.then(data => {
-							this.offerMessageData = data
-							if (!this.offerMessageMethod) {
-								this.offerMessageMethod = data.offerMessageMethod
-							}
-
-							
-						})
-						.catch(error => console.log(error))
-						.finally()
-			},
 
 			saveConfiguration() {
 				var message = { amsAction : "save", requestId : "save" };
@@ -5479,9 +5466,6 @@ span.select2-selection.select2-selection--single {
 					
 				}
 				
-				const offerMessage = {
-						"offerMessageMethod"          : this.offerMessageData.offerMessageMethod,
-					};
 
 				if(this.offerTypeDropdown !== 'MA'){
 					var request = { "amsAction" : "save", "requestId" : "save",
@@ -5530,7 +5514,6 @@ span.select2-selection.select2-selection--single {
 							offerMonitoring,
 							offerRedemption,
 							prepaidCxOfferAdvanceFilter,
-							offerMessage,
 						},
 						"notification": "true"
 					};
@@ -5569,7 +5552,6 @@ span.select2-selection.select2-selection--single {
 							offerMonitoring,
 							offerRedemption,
 							prepaidCxOfferAdvanceFilter,
-							offerMessage,
 						},
 						"notification": "true"
 					};
