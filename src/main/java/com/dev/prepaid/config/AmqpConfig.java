@@ -22,15 +22,15 @@ public class AmqpConfig {
 	@Value("${offer.monitoring.queue.concurrent:1}")
 	private Integer offerMonitoringQueueConcurrent;
 
-	@Value("${offer.event.condition.queue.prefetch:1}")
-	private Integer offerEventConditionQueuePrefetch;
-	@Value("${offer.event.condition.queue.concurrent:1}")
-	private Integer offerEventConditionQueueConcurrent;
-
-	@Value("${offer.eligibility.queue.prefetch:1}")
-	private Integer offerEligibilityQueuePrefetch;
-	@Value("${offer.monitoring.queue.concurrent:1}")
-	private Integer offerEligibilityQueueConcurrent;
+//	@Value("${offer.event.condition.queue.prefetch:1}")
+//	private Integer offerEventConditionQueuePrefetch;
+//	@Value("${offer.event.condition.queue.concurrent:1}")
+//	private Integer offerEventConditionQueueConcurrent;
+//
+//	@Value("${offer.eligibility.queue.prefetch:1}")
+//	private Integer offerEligibilityQueuePrefetch;
+//	@Value("${offer.monitoring.queue.concurrent:1}")
+//	private Integer offerEligibilityQueueConcurrent;
 	
 	@Value("${redemption.queue.prefetch:1}")
 	private Integer redemptionQueuePrefetch;
@@ -185,36 +185,36 @@ public class AmqpConfig {
 	}
 	//============================================================================= //
 	//Eligibility
-	@Bean
-	public Queue queueMembershipOfferEligibility() {
-		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("x-max-priority", 1);
-		args.put("x-dead-letter-exchange", "membership.offer.dlx");
-		args.put("x-dead-letter-routing-key", "membership.offer.rk");
-		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY, true, false, false, args);
-		return queue;
-	}
+//	@Bean
+//	public Queue queueMembershipOfferEligibility() {
+//		Map<String, Object> args = new HashMap<String, Object>();
+//		args.put("x-max-priority", 1);
+//		args.put("x-dead-letter-exchange", "membership.offer.dlx");
+//		args.put("x-dead-letter-routing-key", "membership.offer.rk");
+//		Queue queue = new Queue(Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY, true, false, false, args);
+//		return queue;
+//	}
 
-	@Bean
-	public Queue dlqMembershipOfferEigibility() {
-		return new Queue(Constant.QUEUE_NAME_DLQ_MEMBERSHIP_ELIGIBILITY);
-	}
+//	@Bean
+//	public Queue dlqMembershipOfferEigibility() {
+//		return new Queue(Constant.QUEUE_NAME_DLQ_MEMBERSHIP_ELIGIBILITY);
+//	}
 
-	@Bean
-	public DirectExchange dlxMembershipOfferEigibility() {
-		return new DirectExchange("membership.offer.dlx");
-	}
+//	@Bean
+//	public DirectExchange dlxMembershipOfferEigibility() {
+//		return new DirectExchange("membership.offer.dlx");
+//	}
 
-	@Bean
-	public Binding membershipOfferEigibilityDlqBinding() {
-		return BindingBuilder.bind(dlqMembershipOfferEigibility()).to(dlxMembershipOfferEigibility()).with("membership.offer.rk");
-	}
+//	@Bean
+//	public Binding membershipOfferEigibilityDlqBinding() {
+//		return BindingBuilder.bind(dlqMembershipOfferEigibility()).to(dlxMembershipOfferEigibility()).with("membership.offer.rk");
+//	}
 
-	@Bean
-	public Binding bindingMembershipOfferEligibility(Queue queueMembershipOfferEligibility, TopicExchange exchangeMembership) {
-		return BindingBuilder.bind(queueMembershipOfferEligibility).to(exchangeMembership)
-				.with(Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY);
-	}
+//	@Bean
+//	public Binding bindingMembershipOfferEligibility(Queue queueMembershipOfferEligibility, TopicExchange exchangeMembership) {
+//		return BindingBuilder.bind(queueMembershipOfferEligibility).to(exchangeMembership)
+//				.with(Constant.QUEUE_NAME_MEMBERSHIP_ELIGIBILITY);
+//	}
 
 	@Bean
 	public TopicExchange exchangeMembership() {
@@ -234,15 +234,15 @@ public class AmqpConfig {
 	}
 
 
-	@Bean
-	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
-	rabbitListenerContainerFactoryForOfferEligibility(ConnectionFactory rabbitConnectionFactory) {
-		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-		factory.setConnectionFactory(rabbitConnectionFactory);
-		factory.setPrefetchCount(offerEligibilityQueuePrefetch);
-		factory.setConcurrentConsumers(offerEligibilityQueueConcurrent);
-		factory.setMessageConverter(jackson2MessageConverter());
-		return factory;
-	}
+//	@Bean
+//	public RabbitListenerContainerFactory<SimpleMessageListenerContainer>
+//	rabbitListenerContainerFactoryForOfferEligibility(ConnectionFactory rabbitConnectionFactory) {
+//		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+//		factory.setConnectionFactory(rabbitConnectionFactory);
+//		factory.setPrefetchCount(offerEligibilityQueuePrefetch);
+//		factory.setConcurrentConsumers(offerEligibilityQueueConcurrent);
+//		factory.setMessageConverter(jackson2MessageConverter());
+//		return factory;
+//	}
 
 }

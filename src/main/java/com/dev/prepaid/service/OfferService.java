@@ -45,4 +45,5 @@ public interface OfferService {
 	public EventConditionName checkEventConditionName(String eventConditionName);
 
 	public List<PrepaidCxOfferAdvanceFilter> findAdvanceFilterByInstanceId(String instanceId);
+	public List<ListTypeDto> whitelistData();
 }
