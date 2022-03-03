@@ -3224,22 +3224,8 @@
                     <div class="row justify-content-between">
                         <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
                         <div>
-                        <div v-show="data.selectedTable !=null" ><b>Table:</b> {{data.selectedTable}}</div>
+                        <div><b>Table:</b> {{data.selectedTable}}</div>
                             <div><b>Column:</b> {{data.selectedColumnName}}</div>
-                            <div style = "display:flex; flex-direction:row;">
-							<div v-show="!data.selectedTable">
-								<div><v-select
-										placeholder='-----'
-										class="basic-dropdown"
-										style="margin:5px; padding:0px; position: absolute;"
-										:options="numberOption"
-										:clearable="false"
-										v-model="data.selectedOption"
-								></v-select>
-								</div>
-								<div><input v-model="data.selectedValue" class="form-control form-control-sm input-custom" placeholder="edit me" /></div>
-							</div>
-                        </div>
                         </div>
                         </div>
                         <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='NUMBER'">
@@ -3323,7 +3309,7 @@
 
 
                         </div>
-                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedColumn.column_type==='VARCHAR'">
+                        <div class="col-md-6" style="margin-left:0px !important;  margin-top: 5px" v-show="data.selectedValue && data.selectedValue !=null">
                             <div class="form-group row justify-content-start" style="margin-bottom: 0px">
                                         <div class=" col-sm-4 " style="padding:0px">
                                             <v-select
@@ -3420,7 +3406,7 @@
         data: function () {
             return {
                 groupId: null,
-                condition: [' ', 'AND', 'OR'],
+                condition: ['AND', 'OR'],
                 selectedCondition: ' '
             }
         },
