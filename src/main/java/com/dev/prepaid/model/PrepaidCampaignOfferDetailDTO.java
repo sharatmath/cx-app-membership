@@ -36,12 +36,18 @@ public class PrepaidCampaignOfferDetailDTO {
 	
 	@SerializedName("valueCap") private Long valueCap;
 	@SerializedName("valueValidityInDays") private Long valueValidityInDays;
+	@SerializedName("validity") private Long validity;
 
 
 	@SerializedName("offerBucketId") private String offerBucketId;
 	@SerializedName("offerCampaignId") private Long offerCampaignId;
 	@SerializedName("offerCampaignName") private String offerCampaignName;
 	@SerializedName("dayHourMinute") private String dayHourMinute;
+
+	// ma offer
+	@SerializedName("id") private String id;
+	@SerializedName("productName") private String productName;
+
 
 	// UI Version 4
 //	@SerializedName("smsCampaignName") private String smsCampaignName;

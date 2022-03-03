@@ -43,4 +43,6 @@ public interface OfferService {
 	public OverallOfferName checkOverallOfferName(String overallOfferName);
 	public String getProvisionType(String instanceId);
 	public EventConditionName checkEventConditionName(String eventConditionName);
+
+	public List<PrepaidCxOfferAdvanceFilter> findAdvanceFilterByInstanceId(String instanceId);
 }

@@ -30,4 +30,6 @@ public class PrepaidCxOfferEligibility extends Auditable {
     private Long offerLevelCapPeriodDays;
     @Column(name = "EXCLUDE_OVERALL_OFFER_NAME")
     private String excludeProgramId;
+
+    private Integer excludeLastDay;
 }

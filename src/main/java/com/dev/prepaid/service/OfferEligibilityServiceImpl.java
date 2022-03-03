@@ -99,10 +99,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         eligibleRows = evaluationSubscriberLevel(exclusionRows, invocation, instanceConfiguration);
         //3
         List<List<String>> advanceFilterRows = new ArrayList<>();
-        advanceFilterRows = evaluationAdvanceFilter(eligibleRows, invocation, instanceConfiguration);
+        //skip
+//        advanceFilterRows = evaluationAdvanceFilter(eligibleRows, invocation, instanceConfiguration);
+
         //4
         List<List<String>> offerLevelRows = new ArrayList<>();
-        offerLevelRows = evaluationOfferLevelCondition(advanceFilterRows, invocation, instanceConfiguration);
+        offerLevelRows = evaluationOfferLevelCondition(eligibleRows, invocation, instanceConfiguration);
         //5&6
         Optional<PrepaidOfferEligibilityTrx> opsFind = prepaidOfferEligibilityTrxRepository.findByInvocationIdAndBatchId(
                 invocation.getUuid(),
@@ -171,11 +173,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         for (List<String> row : rows) {
             if (getExcludeProgramId == null || getExcludeProgramId == "" || getExcludeProgramId == "null") {
                 log.info("process#1|3|EXCLUSION|{}|PASS", row.get(1));
-                resultRows.add(row);
+//                resultRows.add(row);
             } else {
                 excludeOverallOfferName = opsFind.get().getExcludeProgramId().split(",");
-                boolean checkIsExist = false;
+
                 for (String overallOfferName : excludeOverallOfferName) {
+                    boolean checkIsExist = false;
                     Optional<PrepaidCxOfferConfig> excludeConfig = prepaidCxOfferConfigRepository.findByOverallOfferName(overallOfferName);
                     if (excludeConfig.isPresent()) {
                         List<PrepaidOfferMembership> data = prepaidOfferMembershipRepository.findByMsisdnAndOfferConfigId(
@@ -187,21 +190,36 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                             checkIsExist = true;
                         }
                     } else {
-                        log.info("process#1|2|EXCLUSION|{}|PASS", row.get(1));
+                        log.info("process#1|2|EXCLUSION|{}|{}|PASS", overallOfferName, row.get(1));
+//                        resultRows.add(row);
+                    }
+
+                    if (!checkIsExist) {
+                        log.info("process#1|1|EXCLUSION|{}|{}|PASS", overallOfferName, row.get(1));
+
+                    } else {
+                        log.info("process#1|1|EXCLUSION|{}|{}|NOT_PASS", overallOfferName, row.get(1));
+                        excluseRows.add(row);
+                    }
+                }
+            }
+        }
+
+        if(excluseRows.size() == 0 ){
+            resultRows.addAll(rows);
+        }else {
+            for (List<String> row : rows) {
+
+                for (List<String> exist : excluseRows) {
+                    if (row.get(1).equals(exist.get(1))) {
+                    } else {
                         resultRows.add(row);
                     }
                 }
-
-                if (!checkIsExist) {
-                    log.info("process#1|1|EXCLUSION|{}|PASS", row.get(1));
-                    resultRows.add(row);
-                } else {
-                    log.info("process#1|1|EXCLUSION|{}|NOT_PASS", row.get(1));
-                    excluseRows.add(row);
-                }
-
             }
         }
+
+
         log.info("process#1|SUMMARY_IN|{}", rows.size());
         log.info("process#1|SUMMARY_OUT|{}|rows|{}", resultRows.size(), resultRows);
         log.info("process#1|SUMMARY_EXCLUSE|{}|rows|{}", excluseRows.size(), excluseRows);
@@ -262,6 +280,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     }else{
                         currentCap.put(row.get(1) + "countFrequencyPerMsisdn", 1);
                     }
+                    log.info("process#2|currentCap|{}|msisdn|{}",currentCap, row.get(1));
                 }
                 if(isFrequencyAndTime){
                     if(currentCap.get(row.get(1) + "currentFrequencyInRangeTime") != null){
@@ -270,6 +289,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                     }else{
                         currentCap.put(row.get(1) + "currentFrequencyInRangeTime",  1);
                     }
+                    log.info("process#2|currentCap|{}|msisdn|{}",currentCap, row.get(1));
 
                 }
                 eligibleRows.add(row);            
@@ -296,6 +316,8 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         log.info("process#3|DATA|{}", rows);
         // getConfigAdvanceFilterQuery with parameter offerConfigId
         Optional<PrepaidCxOfferAdvanceFilter> opsAdv = prepaidCxOfferAdvanceFilterRepository.findByOfferConfigId(instanceConfiguration.getId());
+
+
         if (!opsAdv.isPresent()) {
             log.info("process#3|SKIP|{}", rows);
             return rows;
@@ -369,7 +391,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             isOfferLevelCapAndPeriod = prepaidCxOfferEligibility.getIsOfferLevelCapAndPeriod();
         }
 
-        log.info("process#4|IS_OFFER_LEVEL_CAP_ONLY|{}|VALUE|{}",
+        log.info("process#4|IS_OFFER_LEVEL_CAP|{}|VALUE|{}",
                 isOfferLevelCapOnly,
                 isOfferLevelCapAndPeriod
         );
@@ -403,9 +425,15 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                         prepaidCxOfferEligibility.getOfferLevelCapPeriodDays()
                 );
                 if (currentCap >= prepaidCxOfferEligibility.getOfferLevelCapPeriodValue()) {
-                    offerMembershipRows = rows;
+                    offerMembershipExcluseRows = rows;
                 } else {
                     int capacityCap = prepaidCxOfferEligibility.getOfferLevelCapPeriodValue().intValue() - currentCap;
+                    int total_row = rows.size();
+                    if(total_row>capacityCap) {
+                       // do noting
+                    }else{
+                        capacityCap = total_row;
+                    }
                     offerMembershipRows = rows.subList(0, capacityCap);
                     offerMembershipExcluseRows = rows.subList(capacityCap, rows.size());
                 }
@@ -432,23 +460,19 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                 instanceConfiguration.getProvisionType(),
                 invocation.getUuid(),
                 rows.size());
+        List<List<String>> newRowOuput = new ArrayList<>();
 
-        DataSet dataSet = DataSet.builder()
-                .rows(rows)
-                .id(invocation.getDataSet().getId())
-                .size(Long.valueOf(rows.size()))
-                .build();
-
-        InvocationRequest newInvocationRequest = InvocationRequest.builder()
-                .uuid(invocation.getUuid())
-                .instanceContext(invocation.getInstanceContext())
-                .onCompletionCallbackEndpoint(invocation.getOnCompletionCallbackEndpoint())
-                .productExportEndpoint(invocation.getProductExportEndpoint())
-                .productImportEndpoint(invocation.getProductImportEndpoint())
-                .maxPushBatchSize(invocation.getMaxPushBatchSize())
-                .maxPullPageSize(invocation.getMaxPullPageSize())
-                .dataSet(dataSet)
-                .build();
+//
+//        InvocationRequest newInvocationRequest = InvocationRequest.builder()
+//                .uuid(invocation.getUuid())
+//                .instanceContext(invocation.getInstanceContext())
+//                .onCompletionCallbackEndpoint(invocation.getOnCompletionCallbackEndpoint())
+//                .productExportEndpoint(invocation.getProductExportEndpoint())
+//                .productImportEndpoint(invocation.getProductImportEndpoint())
+//                .maxPushBatchSize(invocation.getMaxPushBatchSize())
+//                .maxPullPageSize(invocation.getMaxPullPageSize())
+//                .dataSet(dataSet)
+//                .build();
 
 
         ResponseEntity response = null;
@@ -457,10 +481,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
         String url = invocation.getProductImportEndpoint().getUrl();
         List<List<String>> dataRows = invocation.getDataSet().getRows();
         log.info("process#7|dataRows|{}", dataRows);
-        int total_row = invocation.getDataSet().getRows().size();
+//        int total_row = invocation.getDataSet().getRows().size();
+        int total_row = rows.size();
         DataSet dataSetTemp = invocation.getDataSet();
         for (int i = 0; i < total_row; i++) {
-            List<String> row = dataSetTemp.getRows().get(i);
+//            List<String> row = dataSetTemp.getRows().get(i);
+            List<String> row = rows.get(i);
             log.info("process#7|productImportEndpoint|index|{}|row|{}", i, row);
             Map<String, Object> input = invocation.getInstanceContext().getRecordDefinition().translateInputRowToMap(row);
             log.info("process#7|productImportEndpoint|index|{}|input|{}", i, input);
@@ -479,19 +505,28 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 //                    "", //appcloud_row_errormessage
 //                    instanceConfiguration.getOverallOfferName(),
 //                    "success"); //STATUS
-            rows.add(listOutput);
+//            rows.add(listOutput);
+            newRowOuput.add(listOutput);
         }
+
+        DataSet dataSet = DataSet.builder()
+//                .rows(rows)
+                .rows(newRowOuput)
+                .id(invocation.getDataSet().getId())
+                .size(Long.valueOf(newRowOuput.size()))
+                .build();
 
         DataImportDTO data = DataImportDTO.builder()
                 .fieldDefinitions(InitData.recordDefinition.getOutputParameters())
                 .dataSet(dataSet)
                 .build();
         try {
+            log.debug("process#7|productImportPost data output : {}", data);
             response = RESTUtil.productImportPost(invocationOri, token, url, data, null, "application/json");
             log.debug("process#7|productImportPost response : {}", response.getStatusCode());
         } catch (Exception ex) {
             log.error("productImportPost FAILED and INIT RETRY IN 3 times", ex);
-            retryableService.callProductImportEndpoint(invocation);
+            retryableService.callProductImportEndpoint(rows, invocation);
         }
 
         log.info("process#7|productImportEndpoint|END|type|{}|id|{}|rows_in|{}",
@@ -501,6 +536,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     }
 
     private Boolean subscriberLevel(Map<String, Integer> mapCurrentCap, String msisdn, PrepaidCxOfferEligibility prepaidCxOfferEligibility, boolean isFrequencyOnly, boolean isFrequencyAndTime) {
+        log.info("process#2|mapCurrentCap|{}", mapCurrentCap);
         log.info("process#2|subscriberLevel|{}|VALUE|{}", msisdn, prepaidCxOfferEligibility);
         if (isFrequencyOnly) {
             int currentFrequency = countFrequencyPerMsisdn(msisdn, prepaidCxOfferEligibility.getOfferConfigId());
@@ -514,11 +550,13 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             } else {
                 if (isFrequencyAndTime) {
                     int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+                    log.info("process#2|currentFrequencyInRangeTime|Result|{}", currentFrequencyInRangeTime);
                     if(mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime") != null) {
                         currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
+                        log.info("process#2|currentFrequencyInRangeTime|Result|{}", currentFrequencyInRangeTime);
                     }
                     log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
-                    if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
+                    if (currentFrequencyInRangeTime >= prepaidCxOfferEligibility.getNumberOfFrequency()) {
                         log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
                         return false;
                     }
@@ -526,11 +564,14 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             }
         } else if (isFrequencyAndTime) {
             int currentFrequencyInRangeTime = countFrequencyInRangeTime(msisdn, prepaidCxOfferEligibility.getOfferConfigId(), prepaidCxOfferEligibility.getNumberOfDays());
+            log.info("process#2|currentFrequencyInRangeTime|Result|{}", currentFrequencyInRangeTime);
             if(mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime") != null) {
                 currentFrequencyInRangeTime = currentFrequencyInRangeTime + mapCurrentCap.get(msisdn + "currentFrequencyInRangeTime");
+                log.info("process#2|currentFrequencyInRangeTime|Result|{}", currentFrequencyInRangeTime);
+
             }
             log.info("process#2|isFrequencyAndTime|{}|VS|{}", currentFrequencyInRangeTime, prepaidCxOfferEligibility.getNumberOfFrequency() );
-            if (currentFrequencyInRangeTime > prepaidCxOfferEligibility.getNumberOfFrequency()) {
+            if (currentFrequencyInRangeTime >= prepaidCxOfferEligibility.getNumberOfFrequency()) {
                 log.info("process#2|isFrequencyAndTime|{}|Result|{}", msisdn, false);
                 return false;
             }
@@ -545,10 +586,12 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     private int countOfferCapPerOfferConfigIdAndRangePeriod(String offerConfigId, PrepaidCxOfferEligibility prepaidCxOfferEligibility) {
         Calendar now = Calendar.getInstance();
         Calendar start = Calendar.getInstance();
-        start.set(Calendar.HOUR, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
-        start.add(Calendar.DATE, -prepaidCxOfferEligibility.getOfferLevelCapPeriodDays().intValue());
+        //start.set(Calendar.HOUR, 0);
+        //start.set(Calendar.MINUTE, 0);
+        //start.set(Calendar.SECOND, 0);
+        start.add(Calendar.HOUR, -1 * 24 * prepaidCxOfferEligibility.getOfferLevelCapPeriodDays().intValue());
+        //start.add(Calendar.DATE, -prepaidCxOfferEligibility.getOfferLevelCapPeriodDays().intValue());
+        log.info("process#4|countOfferCapPerOfferConfigIdAndRangePeriod|configId|{}|startDate|{}|endDate|{}", offerConfigId, start.getTime(), now.getTime());
         return prepaidOfferMembershipRepository.countByOfferConfigIdAndCreatedDateBetween(offerConfigId, start.getTime(), now.getTime());
     }
 
@@ -564,20 +607,24 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
     private int countFrequencyInRangeTime(String msisdn, String offerConfigId, int rangeDays) {
         Calendar now = Calendar.getInstance();
         Calendar startDate = Calendar.getInstance();
-        startDate.set(Calendar.DATE, -rangeDays);
+        startDate.add(Calendar.HOUR, -1 * 24 * rangeDays);
+        log.info("process#2|countFrequencyInRangeTime|{}|to|{}", startDate.getTime(), now.getTime());
 
-        List<PrepaidOfferMembership> list = prepaidOfferMembershipRepository.findByMsisdnAndOfferConfigIdAndCreatedDateBetween(
-                Long.valueOf(msisdn),
-                offerConfigId,
-                now.getTime(),
-                startDate.getTime()
-        );
-
-        if (!list.isEmpty()) {
-            return list.size();
-        } else {
-            return 0;
-        }
+//        List<PrepaidOfferMembership> list = prepaidOfferMembershipRepository.findByMsisdnAndOfferConfigIdAndCreatedDateBetween(
+//                Long.valueOf(msisdn),
+//                offerConfigId,
+//                startDate.getTime(),
+//                now.getTime()
+//        );
+//
+//        if (!list.isEmpty()) {
+//            return list.size();
+//        } else {
+//            return 0;
+//        }
+        int count = prepaidOfferMembershipRepository.countByMsisdnOfferConfigIdAndCreatedDateBetween(Long.valueOf(msisdn),
+                offerConfigId, startDate.getTime(), now.getTime());
+        return  count;
     }
 
     private void saveToPrepaidOfferMembership(List<List<String>> membershipRows, String invId, Long offerEligibilityTxId, PrepaidCxOfferConfig prepaidCxOfferConfig) throws Exception {
@@ -694,6 +741,16 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
 //        prepaidOfferMembershipRepository.saveAll(memberships);
     }
 
+    private String parseTrnLogId(String appRowId){
+        if(appRowId.contains("|")){
+            String[] data  = appRowId.split("|");
+            if(data[2] != null){
+                return data[2];
+            }
+        }
+        return appRowId;
+    }
+
     @Async
     private void saveToPrepaidOfferMembershipExclus(List<List<String>> membershipExclusRows, String invId, Long offerEligibilityTxId, PrepaidCxOfferConfig prepaidCxOfferConfig, String evaluationType, String evaluationStatus) throws Exception {
         int totalObjects = membershipExclusRows.size();
@@ -709,6 +766,7 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
                                 .evaluationType(evaluationType)
                                 .evaluationStatus(evaluationStatus)
                                 .msisdn(Long.valueOf(dataRowDTO.get(1)))
+                                .offerConfigId(prepaidCxOfferConfig.getId())
                                 .build())
                 .collect(Collectors.toList());
         //optimize
@@ -751,19 +809,21 @@ public class OfferEligibilityServiceImpl extends BaseRabbitTemplate implements O
             String msisdn = m.get(1);
             msisdnList.add(msisdn);
         }
+        List<String> listLb = new ArrayList<>();
+        listLb.add("1");
 
         payload.put("responsysCustomEvent", responsysCustomEventUrl);
         payload.put("token", "null");
         payload.put("eventName", eventName);
-//        request.put("listName", lbsLocationRequest.getListName());
+        payload.put("listName", objectName);
         payload.put("folderName", folderName);
 //        request.put("correlationId", entry2.getKey());
 
         payload.put("customerId", msisdnList);
 //        request.put("status", "MULTIPLE RECIPIENTS FOUND");
 
-        payload.put("list", msisdnList);
-        payload.put("listLbsTargetedId", msisdnList);
+        payload.put("list", listLb);
+        payload.put("listLbsTargetedId", listLb);
 
         log.info("process#6|START|{}",Constant.QUEUE_NAME_SINGTEL_RESPONSYS_CUSTOM_EVENT);
         log.info("process#6|id|{}|payload|{}",

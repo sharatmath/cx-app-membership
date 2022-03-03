@@ -10,9 +10,11 @@ import java.util.Optional;
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
 import com.dev.prepaid.model.configuration.*;
+import com.dev.prepaid.model.tableRequest.Group;
 import com.dev.prepaid.repository.*;
 import com.dev.prepaid.type.OfferType;
 import com.dev.prepaid.util.DateUtil;
+import com.dev.prepaid.util.GsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -71,6 +73,8 @@ public class OfferServiceImpl implements OfferService {
 	private CountryRepository countryRepository;
 	@Autowired
 	private PromoCodeRepository promoCodeRepository;
+	@Autowired
+	private PrepaidCxOfferAdvanceFilterRepository prepaidCxOfferAdvanceFilterRepository;
 
 	@Override
 	public void evictAllCaches() {
@@ -194,28 +198,6 @@ public class OfferServiceImpl implements OfferService {
 		}
 	}
 
-	public List<OfferSelection> getOfferMa(String instanceId){
-		List<OfferSelection> listOfferOnly = new ArrayList<>();
-		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
-		if(offerConfig.isPresent()){
-			List<PrepaidCxOfferSelection> prepaidCxOfferSelection= prepaidCxOfferSelectionRepository.findByOfferConfigId(offerConfig.get().getId());
-			for(PrepaidCxOfferSelection p : prepaidCxOfferSelection){
-				if(p.getOfferBucketType().equals(OfferType.MA.toString())){
-					OfferSelection s = OfferSelection.builder()
-							.offerBucketType(p.getOfferBucketType())
-							.offerBucketId(p.getOfferBucketId())
-							.offerCampaignName(p.getSmsCampaignName())
-							.offerId(p.getOfferId())
-							.build();
-
-					listOfferOnly.add(s);
-				}
-			}
-			return  listOfferOnly;
-		}
-		return listOfferOnly;
-	}
-
 	public List<OfferSelection> getOfferSelection(String instanceId){
 		List<OfferSelection> listOfferOnly = new ArrayList<>();
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
@@ -319,6 +301,23 @@ public class OfferServiceImpl implements OfferService {
 		}
 	}
 
+	@Override
+	public List<PrepaidCxOfferAdvanceFilter> findAdvanceFilterByInstanceId(String instanceId) {
+		ArrayList<PrepaidCxOfferAdvanceFilter> data = new ArrayList<>();
+		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
+		if(offerConfig.isPresent()){
+			Optional<PrepaidCxOfferAdvanceFilter> opsFind= prepaidCxOfferAdvanceFilterRepository.findByOfferConfigId(offerConfig.get().getInstanceId());
+			if(opsFind.isPresent()){
+				PrepaidCxOfferAdvanceFilter adv = opsFind.get();
+				List<Group> payloadList = GsonUtils.serializeListOfObjectsFromJSON(adv.getPayload(),Group.class);
+				adv.setPayloadList(payloadList);
+
+				data.add(adv);
+			}
+		}
+		return data;
+	}
+
 	public PrepaidCxOfferEligibility getOfferEligibility(String instanceId){
 		Optional<PrepaidCxOfferConfig> offerConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if(offerConfig.isPresent()){
@@ -407,6 +406,22 @@ public class OfferServiceImpl implements OfferService {
 					offerFulfilment.setUsageOperator(prepaidCxOfferMonitoring.getUsageOp());
 					offerFulfilment.setUsageValue(prepaidCxOfferMonitoring.getUsageValue());
 					offerFulfilment.setUsageUnit(prepaidCxOfferMonitoring.getUsageUnit());
+					offerFulfilment.setTopUpCurBalanceOp(prepaidCxOfferMonitoring.getTopUpCurBalanceOp());
+					offerFulfilment.setTopUpCurBalanceValue(prepaidCxOfferMonitoring.getTopUpCurBalanceValue());
+
+					offerFulfilment.setTopUpDaBalanceOp(prepaidCxOfferMonitoring.getTopUpDaBalanceOp());
+					offerFulfilment.setTopUpDaBalanceValue(prepaidCxOfferMonitoring.getTopUpDaBalanceValue());
+
+					offerFulfilment.setTopUpAccBalanceBeforeOp(prepaidCxOfferMonitoring.getTopUpAccBalanceBeforeOp());
+					offerFulfilment.setTopUpAccBalanceBeforeValue(prepaidCxOfferMonitoring.getTopUpAccBalanceBeforeValue());
+
+					offerFulfilment.setTopUpTempServiceClass(prepaidCxOfferMonitoring.getTopUpTempServiceClass());
+					offerFulfilment.setImei(prepaidCxOfferMonitoring.getImei());
+					offerFulfilment.setDaChange(prepaidCxOfferMonitoring.getDaChange());
+					offerFulfilment.setChargedAmount(prepaidCxOfferMonitoring.getChargedAmount());
+					offerFulfilment.setRoamingFlag(prepaidCxOfferMonitoring.getRoamingFlag());
+					offerFulfilment.setRatePlanId(prepaidCxOfferMonitoring.getRatePlanId());
+					offerFulfilment.setAggregationPeriodDays(prepaidCxOfferMonitoring.getAggregationPeriodDays());
 					return  offerFulfilment;
 				}
 			}

@@ -51,7 +51,7 @@ public class PrepaidCxOfferEventCondition extends Auditable{
     private  Long chargedAmount;
     private  LocalDateTime daExpiryDate;
 
-    private Long eventTypeUsages;
+    private String eventTypeUsages;
     private String eventUsagesOp;
     private Long eventUsagesValue;
     private String eventUsagesUnit;
