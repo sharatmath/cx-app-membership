@@ -1466,5 +1466,34 @@ public class DataController {
 //			@RequestParam(value = "instanceId", required = false) String instanceId) {
 //		return prepaidCxOfferAdvanceFilterService.listCXOffer(instanceId);
 //	}
+	
+//	Saket(PREPAID_CX_OFFER_MESSAGE)
+
+	@RequestMapping(value = { "/doInsertCxOfferMessage" }, method = { RequestMethod.POST })
+	public HttpJsonResult<Hashtable<String, Object>> doInsertCxOfferMessage(
+			@RequestBody PrepaidCxOfferMessage prepaidCxOfferAdvanceFilter) {
+		Hashtable<String, Object> returnTable = new Hashtable<String, Object>();
+		HttpJsonResult<Hashtable<String, Object>> result = new HttpJsonResult<Hashtable<String, Object>>(returnTable);
+		try {
+			if (prepaidCxOfferAdvanceFilter != null) {
+				PrepaidCxOfferAdvanceFilter cxOfferAdvanceFilter = prepaidCxOfferAdvanceFilterService
+						.findByOfferConfigId(prepaidCxOfferAdvanceFilter.getInstanceId());
+				if (cxOfferAdvanceFilter != null && cxOfferAdvanceFilter.getInstanceId() != null) {
+					cxOfferAdvanceFilter.setCustomQuery(prepaidCxOfferAdvanceFilter.isCustomQuery());
+					cxOfferAdvanceFilter.setPayload(prepaidCxOfferAdvanceFilter.getPayload());
+					cxOfferAdvanceFilter.setPayloadList(prepaidCxOfferAdvanceFilter.getPayloadList());
+					prepaidCxOfferAdvanceFilterService.save(cxOfferAdvanceFilter);
+				} else {
+					prepaidCxOfferAdvanceFilterService.save(prepaidCxOfferAdvanceFilter);
+				}
+			}
+
+		} catch (Exception e) {
+			log.error("Error", e);
+			log.error("[Prepaid Membership][DataController][doInsertCxOfferMessage] failed!", e);
+		}
+		return result;
+	}
+	
 
 }
