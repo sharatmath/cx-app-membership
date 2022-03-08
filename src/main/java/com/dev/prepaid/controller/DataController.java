@@ -1433,15 +1433,15 @@ public class DataController {
 //							queryStringBuilder.append(date + dataListBean.getDaysBefore()+ "'");
 						}
 					}
-					if (dataListCount == i && !queryStringBuilder.toString().isEmpty()
+					if (dataListCount == i || !queryStringBuilder.toString().isEmpty()
 							&& queryStringBuilder.toString() != null) {
 						groupByStrBuilder
-						.append(" )GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
+						.append(") GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
 						groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
 								+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
 						groupByStrBuilder.append(" " + dataListBean.getNumberValue());
 					}
-					}
+				}
 
 				if (dataListCount == i || !queryStringBuilder.toString().isEmpty()
 						|| queryStringBuilder.toString() != null) {
