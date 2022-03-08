@@ -1431,16 +1431,21 @@ public class DataController {
 //									+ dataListBean.getSelectedDateType() + ")) ");
 //							queryStringBuilder.append(dataListBean.getSelectedOperand() + " '");
 //							queryStringBuilder.append(date + dataListBean.getDaysBefore()+ "'");
+							groupByStrBuilder
+							.append(") GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
+							groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
+									+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
+							groupByStrBuilder.append(" " + dataListBean.getNumberValue());
 						}
 					}
-					if (dataListCount == i || !queryStringBuilder.toString().isEmpty()
-							&& queryStringBuilder.toString() != null) {
-						groupByStrBuilder
-						.append(") GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
-						groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
-								+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
-						groupByStrBuilder.append(" " + dataListBean.getNumberValue());
-					}
+//					if (dataListCount == i && !queryStringBuilder.toString().isEmpty()
+//							&& queryStringBuilder.toString() != null) {
+//						groupByStrBuilder
+//						.append(") GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
+//						groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
+//								+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
+//						groupByStrBuilder.append(" " + dataListBean.getNumberValue());
+//					}
 				}
 
 				if (dataListCount == i || !queryStringBuilder.toString().isEmpty()
