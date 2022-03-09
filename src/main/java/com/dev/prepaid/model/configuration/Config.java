@@ -59,4 +59,7 @@ public class Config {
 
 	@SerializedName("advancedFilter")
 	private PrepaidCxOfferAdvanceFilter prepaidCxOfferAdvanceFilter;
+	
+	@SerializedName("prepaidCxOfferMessage")
+	private PrepaidCxOfferMessage prepaidCxOfferMessage;
 }

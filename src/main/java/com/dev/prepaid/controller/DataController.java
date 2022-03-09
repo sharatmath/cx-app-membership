@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import com.dev.prepaid.domain.*;
 import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
+import com.dev.prepaid.domain.PrepaidCxOfferMessage;
 import com.dev.prepaid.model.configuration.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import com.dev.prepaid.repository.PrepaidCxOfferAdvanceFilterRepository;
 import com.dev.prepaid.service.AdvFilterRecordCountServices;
 import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
 import com.dev.prepaid.service.OfferService;
+import com.dev.prepaid.service.PrepaidCxOfferMessageService;
 import com.dev.prepaid.util.AppUtil;
 import com.dev.prepaid.util.DateUtil;
 
@@ -58,6 +60,10 @@ public class DataController {
 
 	@Autowired
 	private PrepaidCxOfferAdvanceFilterRepository advanceFilterRepository;
+	
+	
+	@Autowired
+	private PrepaidCxOfferMessageService prepaidCxOfferMessageService;
 
 	@Autowired
 	RabbitTemplate rabbitTemplate;
@@ -1506,5 +1512,42 @@ public class DataController {
 //			@RequestParam(value = "instanceId", required = false) String instanceId) {
 //		return prepaidCxOfferAdvanceFilterService.listCXOffer(instanceId);
 //	}
+	
+//	Saket(PREPAID_CX_OFFER_MESSAGE)
 
+	@RequestMapping(value = { "/doInsertCxOfferMessage" }, method = { RequestMethod.POST })
+	public HttpJsonResult<Hashtable<String, Object>> doInsertCxOfferMessage(
+			@RequestBody PrepaidCxOfferMessage cxOfferMessage) {
+		Hashtable<String, Object> returnTable = new Hashtable<String, Object>();
+		HttpJsonResult<Hashtable<String, Object>> result = new HttpJsonResult<Hashtable<String, Object>>(returnTable);
+		try {
+			if (cxOfferMessage != null) {
+				PrepaidCxOfferMessage prepaidCxOfferMessage = prepaidCxOfferMessageService
+						.findByCxOfferMessageId(cxOfferMessage.getInstanceId());
+				if (prepaidCxOfferMessage != null && prepaidCxOfferMessage.getInstanceId() != null) {
+					prepaidCxOfferMessage.setDisplayHiApp(cxOfferMessage.isDisplayHiApp());
+					prepaidCxOfferMessage.setDisplayUssd(cxOfferMessage.isDisplayUssd());
+					prepaidCxOfferMessage.setDisplayUmtu(cxOfferMessage.isDisplayUmtu());
+					prepaidCxOfferMessageService.saveCxOfferMessage(prepaidCxOfferMessage);
+					log.error("[Prepaid Membership][DataController][doInsertCxOfferMessage] Record Updated!");
+				} else {
+					prepaidCxOfferMessageService.saveCxOfferMessage(prepaidCxOfferMessage);
+					log.error("[Prepaid Membership][DataController][doInsertCxOfferMessage] New Record added!");
+				}
+			}
+
+		} catch (Exception e) {
+			log.error("Error", e);
+			log.error("[Prepaid Membership][DataController][doInsertCxOfferMessage] failed!", e);
+		}
+		return result;
+	}
+//	 List of PREPAID_CX_OFFER_MESSAGE
+	@GetMapping(value = "cxOfferMessageList")
+	public ResponseEntity<PrepaidCxOfferMessage> cxOfferMessageList(
+			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+
+		PrepaidCxOfferMessage msgResult = prepaidCxOfferMessageService.findByCxOfferMessageId(instanceId);
+		return ResponseEntity.status(HttpStatus.OK).body(msgResult);
+	}
 }
