@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "STG_WHITELIST")
+@Table(name = "STG_DYNAMIC_WHITELIST")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
