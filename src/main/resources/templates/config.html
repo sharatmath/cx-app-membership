@@ -534,11 +534,12 @@
 			</div>
 
 			<div class="form-row">
-				<div class="col-sm-10"></div>
-				<div class="col-sm-2">
+				<div class="col-sm-11"></div>
+				<div class="col-sm-1">
 					<div class="custom-control custom-switch">
 						<input @click="changeStatus" type="checkbox" class="custom-control-input" id="configStatus" x-model="configStatusValue">
-						<label class="custom-control-label" for="configStatus">Active/Inactive</label>
+						<label x-show="configStatusValue == true" class="custom-control-label" for="configStatus">Active</label>
+						<label x-show="configStatusValue == false" class="custom-control-label" for="configStatus">Inctive</label>
 					</div>
 				</div>
 			</div>
@@ -1144,7 +1145,7 @@
 											<option value="OMS">OMS Offer</option>
 											<option value="MA">MA Offer</option>
 											<option value="PROMO">Unique Promo Code</option>
-											<option value="MREWARDS">mRewards</option>
+<!--											<option value="MREWARDS">mRewards</option>-->
 											<option value="NONE" x-show="offers.length == 0">No Offer</option>
 										</select>
 									</div>
@@ -1451,99 +1452,99 @@
 										</div>
 										<!--PROMO ACCORDION END-->
 									</div>
-									<div class="container">
-										<!--MREWARDS ACCORDION BEGIN-->
-										<div class="accordion" id="mrewardsID" x-show="offerTypeDropdown === 'MREWARDS' || offerSelectionSmsCampaignName != null">
-											<div class="offerSelectionTemplate">
-												<div class="card">
-													<div class="row">
-														<div class="col-sm-11">
-															<div class="card-header" id="mrewardsAccordion">
-																<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" data-target="#mrwds1"
-																   aria-expanded="true" aria-controls="faq1"><b>mREWARDS</b></a>
-															</div>
-															<div id="mrwds1" class="panel-collapse collapse" aria-labelledby="mrewardsAccordion" data-parent="#prom">
-																<div class="card-body">
-																	<div class="form-row">
-																		<b>Create mRewards Campaign Offer</b><br><br>
-																		<div class="form-group row">
-																			<label class="col-sm-2 col-form-label col-form-label">mRewards Offer Name</label>
-																			<div class="col-sm-4">
-																				<input type="text" class="form-control form-control-sm">
-																			</div>
-																		</div>
-																	</div>
-																	<div class="form-row">
-																		<div class="form-group row">
-																			<label class="col-sm-2 col-form-label col-form-label">Variable</label>
-																			<div class="col-sm-4">
-																				<input type="text" class="form-control form-control-sm">
-																			</div>
-																		</div>
-																	</div>
-																	<div class="form-row">
-																		<div class="form-group row">
-																			<label class="col-sm-2 col-form-label col-form-label">Bonus Offer Type</label>
-																			<div class="col-sm-4">
-																				<select id="rwdsBonusOfferType" class="custom-select">
-																					<option value="">Choose...</option>
-																					<option value="">Coins (Absolute Amount)</option>
-																					<option value="">% of Topup Amount in Coins</option>
-																					<option value="">% of Customer Age in Coins</option>
-																					<option value="">% of Tenure Months in Coins</option>
-																					<option value="">% of 3 Month ARPU in Coins</option>
-																					<option value="">% of 6 Month ARPU in Coins</option>
-																					<option value="">% of 12 Month ARPU in Coins</option>
-																				</select>
-																			</div>
-																		</div>
-																	</div>
-																	<div class="form-row">
-																		<div class="form-group row">
-																			<label class="col-sm-2 col-form-label col-form-label">Cap Value in Coins</label>
-																			<div class="col-sm-4">
-																				<input type="text" class="form-control form-control-sm">
-																			</div>
-																		</div>
-																	</div>
-																	<div class="form-row">
-																		<div class="form-group row">
-																			<label class="col-sm-2 col-form-label col-form-label">Start Date</label>
-																			<div class="col-sm-4">
-																				<div class="input-group date" data-provider="datepicker">
-																					<input type="datetime-local" class="form-control" id="mRewardsStarDate">
-																					<div class="input-group-addon">
-																						<span class="glyphicon glyphicon-th"></span>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
-																	</div>
-																	<div class="form-row">
-																		<div class="form-group row">
-																			<label class="col-sm-2 col-form-label col-form-label">End Date</label>
-																			<div class="col-sm-4">
-																				<div class="input-group date" data-provider="datepicker">
-																					<input type="datetime-local" class="form-control" id="mRewardsEndDate">
-																					<div class="input-group-addon">
-																						<span class="glyphicon glyphicon-th"></span>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<div class="col-sm-1">
-															<button type="submit" class="btn btn-danger my-1"><i class="fas fa-minus-circle"></i></button>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<!--MREWARDS ACCORDION END-->
-									</div>
+<!--									<div class="container">-->
+<!--										&lt;!&ndash;MREWARDS ACCORDION BEGIN&ndash;&gt;-->
+<!--										<div class="accordion" id="mrewardsID" x-show="offerTypeDropdown === 'MREWARDS' || offerSelectionSmsCampaignName != null">-->
+<!--											<div class="offerSelectionTemplate">-->
+<!--												<div class="card">-->
+<!--													<div class="row">-->
+<!--														<div class="col-sm-11">-->
+<!--															<div class="card-header" id="mrewardsAccordion">-->
+<!--																<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" data-target="#mrwds1"-->
+<!--																   aria-expanded="true" aria-controls="faq1"><b>mREWARDS</b></a>-->
+<!--															</div>-->
+<!--															<div id="mrwds1" class="panel-collapse collapse" aria-labelledby="mrewardsAccordion" data-parent="#prom">-->
+<!--																<div class="card-body">-->
+<!--																	<div class="form-row">-->
+<!--																		<b>Create mRewards Campaign Offer</b><br><br>-->
+<!--																		<div class="form-group row">-->
+<!--																			<label class="col-sm-2 col-form-label col-form-label">mRewards Offer Name</label>-->
+<!--																			<div class="col-sm-4">-->
+<!--																				<input type="text" class="form-control form-control-sm">-->
+<!--																			</div>-->
+<!--																		</div>-->
+<!--																	</div>-->
+<!--																	<div class="form-row">-->
+<!--																		<div class="form-group row">-->
+<!--																			<label class="col-sm-2 col-form-label col-form-label">Variable</label>-->
+<!--																			<div class="col-sm-4">-->
+<!--																				<input type="text" class="form-control form-control-sm">-->
+<!--																			</div>-->
+<!--																		</div>-->
+<!--																	</div>-->
+<!--																	<div class="form-row">-->
+<!--																		<div class="form-group row">-->
+<!--																			<label class="col-sm-2 col-form-label col-form-label">Bonus Offer Type</label>-->
+<!--																			<div class="col-sm-4">-->
+<!--																				<select id="rwdsBonusOfferType" class="custom-select">-->
+<!--																					<option value="">Choose...</option>-->
+<!--																					<option value="">Coins (Absolute Amount)</option>-->
+<!--																					<option value="">% of Topup Amount in Coins</option>-->
+<!--																					<option value="">% of Customer Age in Coins</option>-->
+<!--																					<option value="">% of Tenure Months in Coins</option>-->
+<!--																					<option value="">% of 3 Month ARPU in Coins</option>-->
+<!--																					<option value="">% of 6 Month ARPU in Coins</option>-->
+<!--																					<option value="">% of 12 Month ARPU in Coins</option>-->
+<!--																				</select>-->
+<!--																			</div>-->
+<!--																		</div>-->
+<!--																	</div>-->
+<!--																	<div class="form-row">-->
+<!--																		<div class="form-group row">-->
+<!--																			<label class="col-sm-2 col-form-label col-form-label">Cap Value in Coins</label>-->
+<!--																			<div class="col-sm-4">-->
+<!--																				<input type="text" class="form-control form-control-sm">-->
+<!--																			</div>-->
+<!--																		</div>-->
+<!--																	</div>-->
+<!--																	<div class="form-row">-->
+<!--																		<div class="form-group row">-->
+<!--																			<label class="col-sm-2 col-form-label col-form-label">Start Date</label>-->
+<!--																			<div class="col-sm-4">-->
+<!--																				<div class="input-group date" data-provider="datepicker">-->
+<!--																					<input type="datetime-local" class="form-control" id="mRewardsStarDate">-->
+<!--																					<div class="input-group-addon">-->
+<!--																						<span class="glyphicon glyphicon-th"></span>-->
+<!--																					</div>-->
+<!--																				</div>-->
+<!--																			</div>-->
+<!--																		</div>-->
+<!--																	</div>-->
+<!--																	<div class="form-row">-->
+<!--																		<div class="form-group row">-->
+<!--																			<label class="col-sm-2 col-form-label col-form-label">End Date</label>-->
+<!--																			<div class="col-sm-4">-->
+<!--																				<div class="input-group date" data-provider="datepicker">-->
+<!--																					<input type="datetime-local" class="form-control" id="mRewardsEndDate">-->
+<!--																					<div class="input-group-addon">-->
+<!--																						<span class="glyphicon glyphicon-th"></span>-->
+<!--																					</div>-->
+<!--																				</div>-->
+<!--																			</div>-->
+<!--																		</div>-->
+<!--																	</div>-->
+<!--																</div>-->
+<!--															</div>-->
+<!--														</div>-->
+<!--														<div class="col-sm-1">-->
+<!--															<button type="submit" class="btn btn-danger my-1"><i class="fas fa-minus-circle"></i></button>-->
+<!--														</div>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										&lt;!&ndash;MREWARDS ACCORDION END&ndash;&gt;-->
+<!--									</div>-->
 									<div class="container">
 										<div class="noneOfferSelection" x-show="offerTypeDropdown === 'NONE' || offerType === 'NONE'">
 											<div class="accordion" id="none">
@@ -2885,247 +2886,247 @@
 					</div>
 				</div>
 				<!-- Offer Message Display Starts -->
-				<div class="card">
-					<div class="card-header" id="headingSeven">
-						<div id="offerMessageAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseSeven"><h5><i class="fa fa-plus"></i> Offer Message - <label >Required</label></h5></div>
-					</div>
-					<div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#directProvisioning">
-						<div class="card-body">
-							<!-- Display Channel BEGIN -->
-							<div class="form-group row">
-								<div class="col-sm-3">
-									Display Channel
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="HiApp">
-									<label class="form-check-label" for="inlineCheckbox1">HiApp</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="USSD">
-									<label class="form-check-label" for="inlineCheckbox2">USSD</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="UMTU">
-									<label class="form-check-label" for="inlineCheckbox3">UMTU</label>
-								</div>
-							</div>
-							<!-- Display Channel END -->
+<!--				<div class="card">-->
+<!--					<div class="card-header" id="headingSeven">-->
+<!--						<div id="offerMessageAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseSeven"><h5><i class="fa fa-plus"></i> Offer Message - <label >Required</label></h5></div>-->
+<!--					</div>-->
+<!--					<div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#directProvisioning">-->
+<!--						<div class="card-body">-->
+<!--							&lt;!&ndash; Display Channel BEGIN &ndash;&gt;-->
+<!--							<div class="form-group row">-->
+<!--								<div class="col-sm-3">-->
+<!--									Display Channel-->
+<!--								</div>-->
+<!--								<div class="form-check form-check-inline">-->
+<!--									<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="HiApp">-->
+<!--									<label class="form-check-label" for="inlineCheckbox1">HiApp</label>-->
+<!--								</div>-->
+<!--								<div class="form-check form-check-inline">-->
+<!--									<input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="USSD">-->
+<!--									<label class="form-check-label" for="inlineCheckbox2">USSD</label>-->
+<!--								</div>-->
+<!--								<div class="form-check form-check-inline">-->
+<!--									<input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="UMTU">-->
+<!--									<label class="form-check-label" for="inlineCheckbox3">UMTU</label>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							&lt;!&ndash; Display Channel END &ndash;&gt;-->
 
-							<!-- CRM BEGIN -->
-							<b>Offer Message Display by Channels - CRM</b><br><br>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control form-control-sm">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Offer Display Description</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control form-control-sm">
-								</div>
-							</div>
-							<!-- CRM END -->
+<!--							&lt;!&ndash; CRM BEGIN &ndash;&gt;-->
+<!--							<b>Offer Message Display by Channels - CRM</b><br><br>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
+<!--								<div class="col-sm-4">-->
+<!--									<input type="text" class="form-control form-control-sm">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Description</label>-->
+<!--								<div class="col-sm-4">-->
+<!--									<input type="text" class="form-control form-control-sm">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							&lt;!&ndash; CRM END &ndash;&gt;-->
 
-							<!-- UMTU BEGIN -->
-							<b>Offer Message Display by Channels - UMTU</b><br><br>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control form-control-sm">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Offer Display Message</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control form-control-sm">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Top Up Code</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control form-control-sm">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Retailer Commission</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control form-control-sm">
-								</div>
-							</div>
-							<!-- UMTU END -->
+<!--							&lt;!&ndash; UMTU BEGIN &ndash;&gt;-->
+<!--							<b>Offer Message Display by Channels - UMTU</b><br><br>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
+<!--								<div class="col-sm-4">-->
+<!--									<input type="text" class="form-control form-control-sm">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Message</label>-->
+<!--								<div class="col-sm-4">-->
+<!--									<input type="text" class="form-control form-control-sm">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Top Up Code</label>-->
+<!--								<div class="col-sm-4">-->
+<!--									<input type="text" class="form-control form-control-sm">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Retailer Commission</label>-->
+<!--								<div class="col-sm-4">-->
+<!--									<input type="text" class="form-control form-control-sm">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							&lt;!&ndash; UMTU END &ndash;&gt;-->
 
-							<!-- USSD BEGIN -->
-							<b>Offer Message Display by Channels - USSD</b><br><br>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control form-control-sm">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Offer Display Description</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control form-control-sm">
-								</div>
-							</div>
-							<!-- USSD END -->
+<!--							&lt;!&ndash; USSD BEGIN &ndash;&gt;-->
+<!--							<b>Offer Message Display by Channels - USSD</b><br><br>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
+<!--								<div class="col-sm-4">-->
+<!--									<input type="text" class="form-control form-control-sm">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Description</label>-->
+<!--								<div class="col-sm-4">-->
+<!--									<input type="text" class="form-control form-control-sm">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							&lt;!&ndash; USSD END &ndash;&gt;-->
 
-							<!-- HiAPP BEGIN -->
-							<b>Offer Message Display by Channels - HiApp</b><br><br>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>
-								<div class="col-sm-10">
-									<form class="form-row">
-										<div class="form-group col-md-4">
-											<label for="english">English/Default</label>
-											<input id="english" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="indonesia">Bahasa Indonesia</label>
-											<input id="indonesia" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="indonesia">Tamil</label>
-											<input id="tamil" type="text" class="form-control form-control-sm">
-										</div>
-									</form>
-									<form class="form-row">
-										<div class="form-group col-md-4">
-											<label for="mandarin">Mandarin</label>
-											<input id="mandarin" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="bengali">Bengali</label>
-											<input id="bengali" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="burmese">Burmese</label>
-											<input id="burmese" type="text" class="form-control form-control-sm">
-										</div>
-									</form>
-								</div>
-							</div>
-							<div class="form-group row">
-								<div class="col-sm-2">
-									Display CTA Button?
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" id="displayCTA" value="CTA">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">CTA Button Display Text</label>
-								<div class="col-sm-10">
-									<form class="form-row">
-										<div class="form-group col-md-4">
-											<label for="englishCTA">English/Default</label>
-											<input id="englishCTA" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="indonesiaCTA">Bahasa Indonesia</label>
-											<input id="indonesiaCTA" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="tamilCTA">Tamil</label>
-											<input id="tamilCTA" type="text" class="form-control form-control-sm">
-										</div>
-									</form>
-									<form class="form-row">
-										<div class="form-group col-md-4">
-											<label for="mandarinCTA">Mandarin</label>
-											<input id="mandarinCTA" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="bengaliCTA">Bengali</label>
-											<input id="bengaliCTA" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="burmeseCTA">Burmese</label>
-											<input id="burmeseCTA" type="text" class="form-control form-control-sm">
-										</div>
-									</form>
-								</div>
-							</div>
+<!--							&lt;!&ndash; HiAPP BEGIN &ndash;&gt;-->
+<!--							<b>Offer Message Display by Channels - HiApp</b><br><br>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
+<!--								<div class="col-sm-10">-->
+<!--									<form class="form-row">-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="english">English/Default</label>-->
+<!--											<input id="english" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="indonesia">Bahasa Indonesia</label>-->
+<!--											<input id="indonesia" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="indonesia">Tamil</label>-->
+<!--											<input id="tamil" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--									</form>-->
+<!--									<form class="form-row">-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="mandarin">Mandarin</label>-->
+<!--											<input id="mandarin" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="bengali">Bengali</label>-->
+<!--											<input id="bengali" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="burmese">Burmese</label>-->
+<!--											<input id="burmese" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--									</form>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="form-group row">-->
+<!--								<div class="col-sm-2">-->
+<!--									Display CTA Button?-->
+<!--								</div>-->
+<!--								<div class="form-check">-->
+<!--									<input class="form-check-input" type="checkbox" id="displayCTA" value="CTA">-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">CTA Button Display Text</label>-->
+<!--								<div class="col-sm-10">-->
+<!--									<form class="form-row">-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="englishCTA">English/Default</label>-->
+<!--											<input id="englishCTA" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="indonesiaCTA">Bahasa Indonesia</label>-->
+<!--											<input id="indonesiaCTA" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="tamilCTA">Tamil</label>-->
+<!--											<input id="tamilCTA" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--									</form>-->
+<!--									<form class="form-row">-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="mandarinCTA">Mandarin</label>-->
+<!--											<input id="mandarinCTA" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="bengaliCTA">Bengali</label>-->
+<!--											<input id="bengaliCTA" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="burmeseCTA">Burmese</label>-->
+<!--											<input id="burmeseCTA" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--									</form>-->
+<!--								</div>-->
+<!--							</div>-->
 
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Successful Redemption Display Text</label>
-								<div class="col-sm-10">
-									<form class="form-row">
-										<div class="form-group col-md-4">
-											<label for="englishRedempt">English/Default</label>
-											<input id="englishRedempt" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="indonesiaRedempt">Bahasa Indonesia</label>
-											<input id="indonesiaRedempt" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="tamilRedempt">Tamil</label>
-											<input id="tamilRedempt" type="text" class="form-control form-control-sm">
-										</div>
-									</form>
-									<form class="form-row">
-										<div class="form-group col-md-4">
-											<label for="mandarinRedempt">Mandarin</label>
-											<input id="mandarinRedempt" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="bengaliRedempt">Bengali</label>
-											<input id="bengaliRedempt" type="text" class="form-control form-control-sm">
-										</div>
-										<div class="form-group col-md-4">
-											<label for="burmeseRedempt">Burmese</label>
-											<input id="burmeseRedempt" type="text" class="form-control form-control-sm">
-										</div>
-									</form>
-								</div>
-							</div>
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Successful Redemption Display Text</label>-->
+<!--								<div class="col-sm-10">-->
+<!--									<form class="form-row">-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="englishRedempt">English/Default</label>-->
+<!--											<input id="englishRedempt" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="indonesiaRedempt">Bahasa Indonesia</label>-->
+<!--											<input id="indonesiaRedempt" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="tamilRedempt">Tamil</label>-->
+<!--											<input id="tamilRedempt" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--									</form>-->
+<!--									<form class="form-row">-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="mandarinRedempt">Mandarin</label>-->
+<!--											<input id="mandarinRedempt" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="bengaliRedempt">Bengali</label>-->
+<!--											<input id="bengaliRedempt" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--										<div class="form-group col-md-4">-->
+<!--											<label for="burmeseRedempt">Burmese</label>-->
+<!--											<input id="burmeseRedempt" type="text" class="form-control form-control-sm">-->
+<!--										</div>-->
+<!--									</form>-->
+<!--								</div>-->
+<!--							</div>-->
 
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label">Offer Display Message</label>
-								<div class="col-sm-10">
-									<textarea id="open-source-plugins"></textarea>
-								</div>
-							</div>
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Message</label>-->
+<!--								<div class="col-sm-10">-->
+<!--									<textarea id="open-source-plugins"></textarea>-->
+<!--								</div>-->
+<!--							</div>-->
 
-							<div class="form-group row">
-								<label class="col-sm-2 col-form-label col-form-label"></label>
-								<div class="col-sm-8">
-									<div class="btn-group btn-group-toggle" data-toggle="buttons">
-										<label class="btn btn-secondary active">
-											<input type="radio" name="options" id="btn-indonesia" checked> Bahasa Indonesia
-										</label>
-										<label class="btn btn-secondary">
-											<input type="radio" name="options" id="btn-english"> English / Default
-										</label>
-										<label class="btn btn-secondary">
-											<input type="radio" name="options" id="btn-tamil"> Tamil
-										</label>
-										<label class="btn btn-secondary">
-											<input type="radio" name="options" id="btn-mandarin"> Mandarin
-										</label>
-										<label class="btn btn-secondary">
-											<input type="radio" name="options" id="btn-bengali"> Bengali
-										</label>
-										<label class="btn btn-secondary">
-											<input type="radio" name="options" id="btn-burmese"> Burmese
-										</label>
-									</div>
-								</div>
-								<div class="col-sm-2">
-									<input type="text" class="form-control form-control-sm" placeholder="Template Filename"><br>
-									<button class="btn btn-primary" type="submit">Save </button>
-									<button class="btn btn-info" type="button">Preview </button>
-								</div>
-							</div>
+<!--							<div class="form-group row">-->
+<!--								<label class="col-sm-2 col-form-label col-form-label"></label>-->
+<!--								<div class="col-sm-8">-->
+<!--									<div class="btn-group btn-group-toggle" data-toggle="buttons">-->
+<!--										<label class="btn btn-secondary active">-->
+<!--											<input type="radio" name="options" id="btn-indonesia" checked> Bahasa Indonesia-->
+<!--										</label>-->
+<!--										<label class="btn btn-secondary">-->
+<!--											<input type="radio" name="options" id="btn-english"> English / Default-->
+<!--										</label>-->
+<!--										<label class="btn btn-secondary">-->
+<!--											<input type="radio" name="options" id="btn-tamil"> Tamil-->
+<!--										</label>-->
+<!--										<label class="btn btn-secondary">-->
+<!--											<input type="radio" name="options" id="btn-mandarin"> Mandarin-->
+<!--										</label>-->
+<!--										<label class="btn btn-secondary">-->
+<!--											<input type="radio" name="options" id="btn-bengali"> Bengali-->
+<!--										</label>-->
+<!--										<label class="btn btn-secondary">-->
+<!--											<input type="radio" name="options" id="btn-burmese"> Burmese-->
+<!--										</label>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								<div class="col-sm-2">-->
+<!--									<input type="text" class="form-control form-control-sm" placeholder="Template Filename"><br>-->
+<!--									<button class="btn btn-primary" type="submit">Save </button>-->
+<!--									<button class="btn btn-info" type="button">Preview </button>-->
+<!--								</div>-->
+<!--							</div>-->
 
 
-							<!-- HiAPP END -->
+<!--							&lt;!&ndash; HiAPP END &ndash;&gt;-->
 
-						</div>
-					</div>
-				</div>
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
 				<!-- Offer Message Display Ends -->
 
 			<br>
@@ -3175,7 +3176,7 @@
 <script src="https://oracle.kakatoa.net/assets/js/select2.min.js"></script>
 <script src="https://oracle.kakatoa.net/assets/js/bootstrap-datepicker.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://oracle.kakatoa.net/assets/js/sweetalert.min.js"></script>
-<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js"></script>
+<!--<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js"></script>-->
 
 <script src="https://oracle.kakatoa.net/assets/js/sweetalert.min.js"></script>
 <!--jQUERY BEGIN-->
@@ -3183,67 +3184,67 @@
 	function jQuery() {
 
 		// TinyMCE WYSWYG BEGIN
-		var useDarkMode = window.matchMedia('(prefers-color-scheme: light)').matches;
-
-		tinymce.init({
-			selector: 'textarea#open-source-plugins',
-			plugins: 'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
-			imagetools_cors_hosts: ['picsum.photos'],
-			menubar: 'file edit view insert format tools table help',
-			toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
-			toolbar_sticky: true,
-			autosave_ask_before_unload: true,
-			autosave_interval: '30s',
-			autosave_prefix: '{path}{query}-{id}-',
-			autosave_restore_when_empty: false,
-			autosave_retention: '2m',
-			image_advtab: true,
-			link_list: [
-				{ title: 'My page 1', value: 'https://www.tiny.cloud' },
-				{ title: 'My page 2', value: 'http://www.moxiecode.com' }
-			],
-			image_list: [
-				{ title: 'My page 1', value: 'https://www.tiny.cloud' },
-				{ title: 'My page 2', value: 'http://www.moxiecode.com' }
-			],
-			image_class_list: [
-				{ title: 'None', value: '' },
-				{ title: 'Some class', value: 'class-name' }
-			],
-			importcss_append: true,
-			file_picker_callback: function (callback, value, meta) {
-				/* Provide file and text for the link dialog */
-				if (meta.filetype === 'file') {
-					callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
-				}
-
-				/* Provide image and alt text for the image dialog */
-				if (meta.filetype === 'image') {
-					callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
-				}
-
-				/* Provide alternative source and posted for the media dialog */
-				if (meta.filetype === 'media') {
-					callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
-				}
-			},
-			templates: [
-				{ title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
-				{ title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
-				{ title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
-			],
-			template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
-			template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
-			height: 600,
-			image_caption: true,
-			quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-			noneditable_noneditable_class: 'mceNonEditable',
-			toolbar_mode: 'sliding',
-			contextmenu: 'link image imagetools table',
-			skin: useDarkMode ? 'oxide-dark' : 'oxide',
-			content_css: useDarkMode ? 'dark' : 'default',
-			content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-		});
+		// var useDarkMode = window.matchMedia('(prefers-color-scheme: light)').matches;
+		//
+		// tinymce.init({
+		// 	selector: 'textarea#open-source-plugins',
+		// 	plugins: 'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+		// 	imagetools_cors_hosts: ['picsum.photos'],
+		// 	menubar: 'file edit view insert format tools table help',
+		// 	toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+		// 	toolbar_sticky: true,
+		// 	autosave_ask_before_unload: true,
+		// 	autosave_interval: '30s',
+		// 	autosave_prefix: '{path}{query}-{id}-',
+		// 	autosave_restore_when_empty: false,
+		// 	autosave_retention: '2m',
+		// 	image_advtab: true,
+		// 	link_list: [
+		// 		{ title: 'My page 1', value: 'https://www.tiny.cloud' },
+		// 		{ title: 'My page 2', value: 'http://www.moxiecode.com' }
+		// 	],
+		// 	image_list: [
+		// 		{ title: 'My page 1', value: 'https://www.tiny.cloud' },
+		// 		{ title: 'My page 2', value: 'http://www.moxiecode.com' }
+		// 	],
+		// 	image_class_list: [
+		// 		{ title: 'None', value: '' },
+		// 		{ title: 'Some class', value: 'class-name' }
+		// 	],
+		// 	importcss_append: true,
+		// 	file_picker_callback: function (callback, value, meta) {
+		// 		/* Provide file and text for the link dialog */
+		// 		if (meta.filetype === 'file') {
+		// 			callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+		// 		}
+		//
+		// 		/* Provide image and alt text for the image dialog */
+		// 		if (meta.filetype === 'image') {
+		// 			callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+		// 		}
+		//
+		// 		/* Provide alternative source and posted for the media dialog */
+		// 		if (meta.filetype === 'media') {
+		// 			callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
+		// 		}
+		// 	},
+		// 	templates: [
+		// 		{ title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+		// 		{ title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
+		// 		{ title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
+		// 	],
+		// 	template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+		// 	template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
+		// 	height: 600,
+		// 	image_caption: true,
+		// 	quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+		// 	noneditable_noneditable_class: 'mceNonEditable',
+		// 	toolbar_mode: 'sliding',
+		// 	contextmenu: 'link image imagetools table',
+		// 	skin: useDarkMode ? 'oxide-dark' : 'oxide',
+		// 	content_css: useDarkMode ? 'dark' : 'default',
+		// 	content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+		// });
 
 		// TinyMCE WYSWYG END
 
