@@ -17,13 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
-import com.dev.prepaid.domain.PrepaidCxOfferConfig;
-import com.dev.prepaid.domain.PrepaidCxOfferEligibility;
-import com.dev.prepaid.domain.PrepaidCxOfferEventCondition;
-import com.dev.prepaid.domain.PrepaidCxOfferMonitoring;
-import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
-import com.dev.prepaid.domain.PrepaidCxOfferSelection;
-import com.dev.prepaid.domain.PrepaidCxProvApplication;
+import com.dev.prepaid.domain.PrepaidCxOfferMessage;
 import com.dev.prepaid.model.configuration.OfferEligibility;
 import com.dev.prepaid.model.configuration.OfferPromoCode;
 import com.dev.prepaid.model.configuration.OfferSelection;
@@ -73,6 +67,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 	@Autowired
 	private PrepaidCxOfferAdvanceFilterRepository prepaidCxOfferAdvanceFilterRepository;
+
+	@Autowired
+	private PrepaidCxOfferMessageRepository prepaidCxOfferMessageRepository;
 
 	@Override
 	public void appInstallAddEntity(AppInstall appInstall) {
@@ -165,6 +162,11 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 						log.info("listPayload : {} ",
 								saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getPayloadList());
 						savePrepaidCxOfferAdvanceFilter(prepaidCxOfferConfig.getInstanceId(), saveConfigRequest); // PrepaidCxOfferAdvanceFilter
+					}
+					if (saveConfigRequest.getPayload().getPrepaidCxOfferMessage() != null) {
+						log.info("listPayload :[PrepaidCxOfferMessage] : {} ",
+								saveConfigRequest.getPayload().getPrepaidCxOfferMessage());
+						savePrepaidCxOfferMessage(prepaidCxOfferConfig.getInstanceId(), saveConfigRequest);// PrepaidCxOfferMessage
 					}
 
 				} catch (Exception ex) {
@@ -498,8 +500,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 
 			prepaidCxOfferMonitoring.setTopUpTempServiceClass(
 					saveConfigRequest.getPayload().getOfferMonitoring().getTopUpTempServiceClass());
-			//prepaidCxOfferMonitoring.setImei(saveConfigRequest.getPayload().getOfferMonitoring().getImei());
-			prepaidCxOfferMonitoring.setWhitelistType(saveConfigRequest.getPayload().getOfferMonitoring().getWhitelistType());
+			// prepaidCxOfferMonitoring.setImei(saveConfigRequest.getPayload().getOfferMonitoring().getImei());
+			prepaidCxOfferMonitoring
+					.setWhitelistType(saveConfigRequest.getPayload().getOfferMonitoring().getWhitelistType());
 			prepaidCxOfferMonitoring.setDaChange(saveConfigRequest.getPayload().getOfferMonitoring().getDaChange());
 			prepaidCxOfferMonitoring
 					.setChargedAmount(saveConfigRequest.getPayload().getOfferMonitoring().getChargedAmount());
@@ -793,8 +796,9 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 			prepaidCxOfferEventCondition
 					.setTempServiceClass(saveConfigRequest.getPayload().getOfferEventCondition().getTempServiceClass());
 
-			//prepaidCxOfferEventCondition.setImei(saveConfigRequest.getPayload().getOfferEventCondition().getImei());
-			prepaidCxOfferEventCondition.setWhitelistType(saveConfigRequest.getPayload().getOfferEventCondition().getWhitelistType());
+			// prepaidCxOfferEventCondition.setImei(saveConfigRequest.getPayload().getOfferEventCondition().getImei());
+			prepaidCxOfferEventCondition
+					.setWhitelistType(saveConfigRequest.getPayload().getOfferEventCondition().getWhitelistType());
 			prepaidCxOfferEventCondition
 					.setDaChange(saveConfigRequest.getPayload().getOfferEventCondition().getDaChange());
 			prepaidCxOfferEventCondition
@@ -840,8 +844,7 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 						.isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
 						.payload(payload)
 						.queryText(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().getQueryText())
-						.instanceId(saveConfigRequest.getPayload().getUuid())
-						.offerConfigId(offerConfigId)
+						.instanceId(saveConfigRequest.getPayload().getUuid()).offerConfigId(offerConfigId)
 						.isCustomQuery(saveConfigRequest.getPayload().getPrepaidCxOfferAdvanceFilter().isCustomQuery())
 						.build();
 			}
@@ -851,6 +854,105 @@ public class PrepaidCxServiceImpl implements PrepaidCxService {
 		} catch (Exception ex) {
 			log.error("", ex);
 			log.error("[Prepaid Membership][PrepaidCxServiceImpl][savePrepaidCxOfferAdvanceFilter] failed!", ex);
+		}
+	}
+
+//	PrepaidCxOfferMessage
+	private void savePrepaidCxOfferMessage(String offerConfigId, SaveConfigRequest saveConfigRequest) {
+		String payload = GsonUtils.deserializeObjectToJSON(saveConfigRequest.getPayload().getPrepaidCxOfferMessage());
+		log.info("convert to String [savePrepaidCxOfferMessage] {}", payload);
+		try {
+			PrepaidCxOfferMessage prepaidCxOfferMessage;
+
+			Optional<PrepaidCxOfferMessage> opsFind = prepaidCxOfferMessageRepository.findByInstanceId(offerConfigId);
+			if (opsFind.isPresent()) {
+				prepaidCxOfferMessage = opsFind.get();
+				prepaidCxOfferMessage.setPayload(payload);
+				prepaidCxOfferMessage
+						.setDisplayHiApp(saveConfigRequest.getPayload().getPrepaidCxOfferMessage().isDisplayHiApp());
+				prepaidCxOfferMessage
+						.setDisplayCta(saveConfigRequest.getPayload().getPrepaidCxOfferMessage().isDisplayCta());
+				prepaidCxOfferMessage
+						.setDisplayUmtu(saveConfigRequest.getPayload().getPrepaidCxOfferMessage().isDisplayUmtu());
+				prepaidCxOfferMessage
+						.setDisplayUssd(saveConfigRequest.getPayload().getPrepaidCxOfferMessage().isDisplayUssd());
+				prepaidCxOfferMessage.setCrmOfferDisplayName(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getCrmOfferDisplayName());
+				prepaidCxOfferMessage.setCrmOfferDisplayDesc(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getCrmOfferDisplayDesc());
+				prepaidCxOfferMessage.setUmtuOfferDisplayName(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getUmtuOfferDisplayName());
+				prepaidCxOfferMessage.setUmtuOfferDisplayMessage(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getUmtuOfferDisplayMessage());
+				prepaidCxOfferMessage
+						.setUmtuTopUpCode(saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getUmtuTopUpCode());
+				prepaidCxOfferMessage.setUmtuRetailerCommission(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getUmtuRetailerCommission());
+				prepaidCxOfferMessage.setUssdOfferDisplayName(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getUssdOfferDisplayName());
+				prepaidCxOfferMessage.setUssdOfferDisplayMessage(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getUssdOfferDisplayMessage());
+				prepaidCxOfferMessage.setHiAppOfferDisplayNameEnglish(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getHiAppOfferDisplayNameEnglish());
+				prepaidCxOfferMessage.setHiAppOfferDisplayNameTamil(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getHiAppOfferDisplayNameTamil());
+				prepaidCxOfferMessage.setHiAppOfferDisplayNameMandarin(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getHiAppOfferDisplayNameMandarin());
+				prepaidCxOfferMessage.setHiAppOfferDisplayNameBengali(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getHiAppOfferDisplayNameBengali());
+				prepaidCxOfferMessage.setHiAppOfferDisplayNameBurmese(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getHiAppOfferDisplayNameBurmese());
+				prepaidCxOfferMessage.setCtaDisplayTextEnglish(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getCtaDisplayTextEnglish());
+				prepaidCxOfferMessage.setCtaDisplayTextIndo(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getCtaDisplayTextIndo());
+				prepaidCxOfferMessage.setCtaDisplayTextTamil(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getCtaDisplayTextTamil());
+				prepaidCxOfferMessage.setCtaDisplayTextMandarin(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getCtaDisplayTextMandarin());
+				prepaidCxOfferMessage.setCtaDisplayTextBengali(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getCtaDisplayTextBengali());
+				prepaidCxOfferMessage.setCtaDisplayTextBurmese(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getCtaDisplayTextBurmese());
+				prepaidCxOfferMessage.setSuccessRedemptionDisplayEnglish(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getSuccessRedemptionDisplayEnglish());
+				prepaidCxOfferMessage.setSuccessRedemptionDisplayIndo(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getSuccessRedemptionDisplayIndo());
+				prepaidCxOfferMessage.setSuccessRedemptionDisplayTamil(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getSuccessRedemptionDisplayTamil());
+				prepaidCxOfferMessage.setSuccessRedemptionDisplayMandarin(saveConfigRequest.getPayload()
+						.getPrepaidCxOfferMessage().getSuccessRedemptionDisplayMandarin());
+				prepaidCxOfferMessage.setSuccessRedemptionDisplayBengali(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getSuccessRedemptionDisplayBengali());
+				prepaidCxOfferMessage.setSuccessRedemptionDisplayBurmese(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getSuccessRedemptionDisplayBurmese());
+				prepaidCxOfferMessage.setOfferDisplayMessageEnglish(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getOfferDisplayMessageEnglish());
+				prepaidCxOfferMessage.setOfferDisplayMessageIndo(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getOfferDisplayMessageIndo());
+				prepaidCxOfferMessage.setOfferDisplayMessageTamil(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getOfferDisplayMessageTamil());
+				prepaidCxOfferMessage.setOfferDisplayMessageMandarin(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getOfferDisplayMessageMandarin());
+				prepaidCxOfferMessage.setOfferDisplayMessageBengali(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getOfferDisplayMessageBengali());
+				prepaidCxOfferMessage.setOfferDisplayMessageBurmese(
+						saveConfigRequest.getPayload().getPrepaidCxOfferMessage().getOfferDisplayMessageBurmese());
+
+			} else {
+				prepaidCxOfferMessage = PrepaidCxOfferMessage.builder().payload(payload)
+						.displayHiApp(saveConfigRequest.getPayload().getPrepaidCxOfferMessage().isDisplayHiApp())
+						.displayCta(saveConfigRequest.getPayload().getPrepaidCxOfferMessage().isDisplayCta())
+						.displayUmtu(saveConfigRequest.getPayload().getPrepaidCxOfferMessage().isDisplayUmtu())
+						.displayUssd(saveConfigRequest.getPayload().getPrepaidCxOfferMessage().isDisplayUssd())
+						.instanceId(saveConfigRequest.getPayload().getUuid()).build();
+			}
+			log.info("saving data", prepaidCxOfferMessage);
+			prepaidCxOfferMessageRepository.save(prepaidCxOfferMessage);
+			log.info("saved {}", prepaidCxOfferMessage);
+		} catch (Exception ex) {
+			log.error("", ex);
+			log.error("[Prepaid Membership][PrepaidCxServiceImpl][savePrepaidCxOfferMessage] failed!", ex);
 		}
 	}
 
