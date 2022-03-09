@@ -1101,14 +1101,22 @@ public class DataController {
 		StringBuilder finalJoinStringBuilder = new StringBuilder();
 		StringBuilder strCountBuilder = new StringBuilder();
 		String tableOne = null;
+<<<<<<< Updated upstream
 
+=======
+		
+>>>>>>> Stashed changes
 		HashMap<String, String> tableMap = new HashMap<>();
 		int alphaCode = 65;
 		tableMap = getTables(groupList, tableMap, alphaCode);
 		finalQueryStringBuilder.append("SELECT DISTINCT " + String.valueOf((char) alphaCode) + ".MSISDN FROM ");
 		strCountBuilder.append("SELECT COUNT(DISTINCT A.MSISDN) FROM ");
 		String beforeCondition = "";
+<<<<<<< Updated upstream
 
+=======
+		
+>>>>>>> Stashed changes
 		Map<String, String> revTableMap = new HashMap<String, String>();
 		for (Map.Entry m : tableMap.entrySet()) {
 
@@ -1144,7 +1152,11 @@ public class DataController {
 		finalQueryStringBuilder.append(" WHERE ");
 		strCountBuilder.append(" WHERE ");
 		if (joinStringBuilder.toString() != null) {
+<<<<<<< Updated upstream
 			finalQueryStringBuilder.append(finalJoinStringBuilder.toString() + "(");
+=======
+			finalQueryStringBuilder.append(finalJoinStringBuilder.toString()+"(");
+>>>>>>> Stashed changes
 			strCountBuilder.append(finalJoinStringBuilder.toString());
 
 		}
@@ -1196,10 +1208,17 @@ public class DataController {
 		StringBuilder groupByStrBuilder = new StringBuilder();
 		int dataListCount = 0;
 		int tableCount = tableMap.size();
+<<<<<<< Updated upstream
 
 		for (Group groupBean : groupList) {
 			if (groupBean.getGroups() != null && !groupBean.getGroups().isEmpty() && groupBean.getGroups().size() > 0) {
 
+=======
+		
+		for (Group groupBean : groupList) {
+			if (groupBean.getGroups() != null && !groupBean.getGroups().isEmpty() && groupBean.getGroups().size() > 0) {
+				
+>>>>>>> Stashed changes
 				queryStringBuilder.append(getQuery(groupBean.getGroups(), tableMap,
 						(groupByStrBuilder.toString() != null ? groupByStrBuilder.toString() : "")));
 			}
@@ -1224,6 +1243,15 @@ public class DataController {
 					} else {
 						queryStringBuilder.append(" " + appendCondition + " ");
 					}
+
+					
+					if (dataListCount == i) {
+
+					} else {
+						queryStringBuilder.append(" " + appendCondition+" ");
+					}
+
+
 
 					if (dataListBean.getSelectedOption().equalsIgnoreCase("MATCHES")) {
 						queryStringBuilder.append(tableMap.get(dataListBean.getSelectedTable()) + "."
@@ -1329,6 +1357,7 @@ public class DataController {
 
 					} else {
 						queryStringBuilder.append(" " + appendCondition);
+<<<<<<< Updated upstream
 					}
 					if (dataListBean.getSelectedDateType().equalsIgnoreCase("daysBefore")) {
 						String date = "SYSDATE";
@@ -1362,6 +1391,8 @@ public class DataController {
 							queryStringBuilder.append(" = ");
 							queryStringBuilder.append(date);
 						}
+=======
+>>>>>>> Stashed changes
 					}
 //					groupByStrBuilder
 //							.append(" GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
@@ -1372,9 +1403,15 @@ public class DataController {
 					String date = "";
 					if (dataListBean.getSelectedDateType().equalsIgnoreCase("DAYS")) {
 						if (dataListCount == i) {
+<<<<<<< Updated upstream
 
 						} else {
 							queryStringBuilder.append(" " + appendCondition);
+=======
+							queryStringBuilder.append(" " + appendCondition);
+						} else {
+							queryStringBuilder.append(" ");
+>>>>>>> Stashed changes
 						}
 						date = "SYSDATE";
 						if (dataListBean.getSelectedOperand().equalsIgnoreCase("IS BEFORE")) {
@@ -1411,6 +1448,14 @@ public class DataController {
 						} else {
 							date = "";
 						}
+<<<<<<< Updated upstream
+=======
+						if (dataListCount == i) {
+							queryStringBuilder.append(" " + appendCondition);
+						} else {
+							queryStringBuilder.append(" ");
+						}
+>>>>>>> Stashed changes
 						if (dataListBean.getSelectedOperand().equalsIgnoreCase("IS BEFORE")) {
 							queryStringBuilder.append("(TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
 									+ dataListBean.getSelectedColumnName() + ")) ");
@@ -1427,6 +1472,7 @@ public class DataController {
 							queryStringBuilder.append(" = " + " '");
 							queryStringBuilder.append(date + "'");
 						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase(">")) {
+<<<<<<< Updated upstream
 //							queryStringBuilder.append("(TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
 //									+ dataListBean.getSelectedDateType() + ")) ");
 //							queryStringBuilder.append(dataListBean.getSelectedOperand() + " '");
@@ -1436,6 +1482,12 @@ public class DataController {
 							groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
 									+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
 							groupByStrBuilder.append(" " + dataListBean.getNumberValue());
+=======
+							queryStringBuilder.append("(TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
+									+ dataListBean.getSelectedDateType() + ")) ");
+							queryStringBuilder.append(dataListBean.getSelectedOperand() + " '");
+							queryStringBuilder.append(date + "'");
+>>>>>>> Stashed changes
 						}
 					}
 //					if (dataListCount == i && !queryStringBuilder.toString().isEmpty()
@@ -1448,7 +1500,10 @@ public class DataController {
 //					}
 				}
 				
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 				if (dataListCount == i || !queryStringBuilder.toString().isEmpty()
 						|| queryStringBuilder.toString() != null) {
 //					queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
@@ -1456,11 +1511,19 @@ public class DataController {
 				dataListCount--;
 			}
 			queryStringBuilder.append(")");
+<<<<<<< Updated upstream
 			if (groupBean.getRootGroup() == false) {
 				queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
 			}
 			queryStringBuilder.append(groupByStrBuilder.toString());
 
+=======
+			if (groupBean.getRootGroup()==false){
+				queryStringBuilder.append(" " + groupBean.getGroupCondition() + " ");
+			}
+			queryStringBuilder.append(groupByStrBuilder.toString());
+			
+>>>>>>> Stashed changes
 		}
 		return queryStringBuilder.toString();
 	}
@@ -1534,6 +1597,5 @@ public class DataController {
 		}
 		return result;
 	}
-	
 
 }
