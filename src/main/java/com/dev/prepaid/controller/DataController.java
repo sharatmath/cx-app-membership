@@ -1447,6 +1447,7 @@ public class DataController {
 //						groupByStrBuilder.append(" " + dataListBean.getNumberValue());
 //					}
 				}
+				
 
 				if (dataListCount == i || !queryStringBuilder.toString().isEmpty()
 						|| queryStringBuilder.toString() != null) {
