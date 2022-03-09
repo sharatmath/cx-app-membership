@@ -534,11 +534,12 @@
 			</div>
 
 			<div class="form-row">
-				<div class="col-sm-10"></div>
-				<div class="col-sm-2">
+				<div class="col-sm-11"></div>
+				<div class="col-sm-1">
 					<div class="custom-control custom-switch">
 						<input @click="changeStatus" type="checkbox" class="custom-control-input" id="configStatus" x-model="configStatusValue">
-						<label class="custom-control-label" for="configStatus">Active/Inactive</label>
+						<label x-show="configStatusValue == true" class="custom-control-label" for="configStatus">Active</label>
+						<label x-show="configStatusValue == false" class="custom-control-label" for="configStatus">Inctive</label>
 					</div>
 				</div>
 			</div>
