@@ -28,7 +28,7 @@ public class PrepaidMrewardsOffersDeleted implements Serializable {
 	private String offerName;
 	private Float value;
 	private String bonusOfferType;
-	private Double valueCap;
+	private Long valueCap;
 	private Date startDate;
 	private Date endDate;
 	private String createdBy;
