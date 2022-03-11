@@ -78,6 +78,8 @@ public class OfferServiceImpl implements OfferService {
 	private PrepaidCxOfferAdvanceFilterRepository prepaidCxOfferAdvanceFilterRepository;
 	@Autowired
 	private WhitelistRepository whitelistRepository;
+	@Autowired
+	private PrepaidMrewardsOffersRepository prepaidMrewardsOffersRepository;
 
 	@Override
 	public void evictAllCaches() {
@@ -505,5 +507,13 @@ public class OfferServiceImpl implements OfferService {
 		});
 		return listDto;
 	}
+	
+	public PrepaidMrewardsOffers getMrewardsById(Long id){
+		return prepaidMrewardsOffersRepository.findOneById(id);
+	}
 
+	public List<PrepaidMrewardsOffers> listMrewards(){
+		return (List<PrepaidMrewardsOffers>) prepaidMrewardsOffersRepository.findAll();
+	}
+	
 }

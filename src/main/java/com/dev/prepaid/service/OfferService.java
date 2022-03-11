@@ -46,4 +46,8 @@ public interface OfferService {
 
 	public List<PrepaidCxOfferAdvanceFilter> findAdvanceFilterByInstanceId(String instanceId);
 	public List<ListTypeDto> whitelistData();
+	
+	public PrepaidMrewardsOffers getMrewardsById(Long id);
+	public List<PrepaidMrewardsOffers> listMrewards();
+	
 }

@@ -35,6 +35,7 @@ import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
 import com.dev.prepaid.domain.PrepaidDaOfferBucket;
 import com.dev.prepaid.domain.PrepaidDaOfferCampaign;
 import com.dev.prepaid.domain.PrepaidMaCreditOffer;
+import com.dev.prepaid.domain.PrepaidMrewardsOffers;
 import com.dev.prepaid.domain.PrepaidOmsOfferBucket;
 import com.dev.prepaid.domain.PrepaidOmsOfferCampaign;
 import com.dev.prepaid.domain.PromoCode;
@@ -308,6 +309,11 @@ public class DataController {
 
 	private DataOffer mapMaCreditToOffer(PrepaidMaCreditOffer ma) {
 		return DataOffer.builder().id(ma.getId().toString()).text(ma.getProductName()).slug(ma.getProductName())
+				.build();
+	}
+
+	private DataOffer mapMrewardsToOffer(PrepaidMrewardsOffers mrewards) {
+		return DataOffer.builder().id(mrewards.getId().toString()).text(mrewards.getOfferName()).slug(mrewards.getOfferName())
 				.build();
 	}
 
@@ -601,6 +607,19 @@ public class DataController {
 	public List<ListTypeDto> checkWhitelistType() {
 		return offerService.whitelistData();
 	}
+	
+	@GetMapping(value = "mrewardsList")
+	public List<DataOffer> listMrewards(@RequestParam(value = "search", required = false) String query) {
+			return offerService.listMrewards().stream().map(this::mapMrewardsToOffer)
+					.collect(Collectors.toList());
+	}
+
+	@GetMapping(value = "mrewardsDetail")
+	public PrepaidMrewardsOffers getMrewards(@RequestParam(value = "id", required = true) Long id) throws ParseException {
+		return offerService.getMrewardsById(id);
+	}
+
+
 
 //	Saket
 

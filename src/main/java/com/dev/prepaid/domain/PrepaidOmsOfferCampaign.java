@@ -19,7 +19,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrepaidOmsOfferCampaign implements Serializable {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3098055184821304180L;
 	@Id
 	private Long id;
 	private String name;
