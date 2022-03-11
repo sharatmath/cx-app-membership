@@ -25,8 +25,8 @@ public class PrepaidMrewardsOffers implements Serializable {
 	private Long value;
 	private String bonusOfferType;
 	private Double valueCap;
-	private String startDate;
-	private String endDate;
+	private Date startDate;
+	private Date endDate;
 	private String createdBy;
 	private Date createdDate;
 	private String lastModifiedBy;
