@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="PREPAID_OMS_CAMPAIGN_OFFERS_DELETED")
+@Table(name="PREPAID_MREWARDS_OFFERS_DELETED")
 @Data
 @Builder
 @NoArgsConstructor
