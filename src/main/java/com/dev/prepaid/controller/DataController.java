@@ -1355,12 +1355,13 @@ public class DataController {
 
 						if (dataListBean.getSelectedOperand().equalsIgnoreCase("<")) {
 							queryStringBuilder.append(" (TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
-									+ dataListBean.getSelectedColumnName() + ")) ");
+									+ "TRANSACTION_TIMESTAMP" + ")) ");
 							queryStringBuilder.append(" < ");
-							queryStringBuilder.append("(" + date + " - " + dataListBean.getDaysBefore() + ")");
+							queryStringBuilder.append(" (" + date + " - " + dataListBean.getDaysBefore() + ")");
 //							queryStringBuilder.append(" AND ");
+							queryStringBuilder.append(" " + appendCondition);
 							queryStringBuilder.append(" (TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
-									+ dataListBean.getSelectedColumnName() + ")) ");
+									+ "TRANSACTION_TIMESTAMP" + ")) ");
 							queryStringBuilder.append(" > ");
 							queryStringBuilder.append(" (" + date + " - " + dataListBean.getDaysBefore() + " - "
 									+ dataListBean.getDuration() + ") ");
@@ -1453,30 +1454,17 @@ public class DataController {
 							queryStringBuilder.append(" = " + " '");
 							queryStringBuilder.append(date + "'");
 						} else if (dataListBean.getSelectedOperand().equalsIgnoreCase(">")) {
-//							queryStringBuilder.append("(TRUNC(" + tableMap.get(dataListBean.getSelectedTable()) + "."
-//									+ dataListBean.getSelectedDateType() + ")) ");
-//							queryStringBuilder.append(dataListBean.getSelectedOperand() + " '");
-//							queryStringBuilder.append(date + dataListBean.getDaysBefore()+ "'");
-//							groupByStrBuilder.append(
-//									") GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
 							groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
 									+ tableMap.get(dataListBean.getSelectedTable())+"."
 									+ dataListBean.getSelectedColumnName()+")" + dataListBean.getSelectedOperand());
 							groupByStrBuilder.append(" " + dataListBean.getNumberValue());
-//							groupByStrBuilder.append(tableMap.get(dataListBean.getSelectedTable()) + "."
-//									+ dataListBean.getSelectedColumnName());
-//							groupByStrBuilder.append(dataListBean.getSelectedValue());
-//							groupByStrBuilder.append(")");
+						}else if (dataListBean.getSelectedOperand().equalsIgnoreCase("<")) {
+							groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
+									+ tableMap.get(dataListBean.getSelectedTable())+"."
+									+ dataListBean.getSelectedColumnName()+")" + dataListBean.getSelectedOperand());
+							groupByStrBuilder.append(" " + dataListBean.getNumberValue());
 						}
 					}
-//					if (dataListCount == i && !queryStringBuilder.toString().isEmpty()
-//							&& queryStringBuilder.toString() != null) {
-//						groupByStrBuilder
-//						.append(") GROUP BY " + tableMap.get(dataListBean.getSelectedTable()) + ".MSISDN HAVING ");
-//						groupByStrBuilder.append(dataListBean.getSelectedOption() + " " + "("
-//								+ dataListBean.getSelectedColumnName() + ")" + dataListBean.getSelectedOperand());
-//						groupByStrBuilder.append(" " + dataListBean.getNumberValue());
-//					}
 				}
 				
 
