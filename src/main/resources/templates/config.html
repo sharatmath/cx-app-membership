@@ -399,9 +399,9 @@
 
 		.modal-footer {
 			/* border: none;
-				margin-top: 3%;
-				float: right;
-				padding: 0; */
+                margin-top: 3%;
+                float: right;
+                padding: 0; */
 			border: none;
 			position: fixed;
 			bottom: 3%;
@@ -615,7 +615,6 @@
 												<select class="form-control" id="eventConditionTypeData" x-model="eventConditionTypeData">
 													<option value="Top-Up">Top-Up</option>
 													<option value="Usage">Usage</option>
-													<!--													<option value="ARPU">ARPU</option>-->
 												</select>
 											</div>
 										</div>
@@ -694,6 +693,16 @@
 											</div>
 											<div class="col-sm-5">
 												<input type="text" class="form-control" id="eventConditionDataCurrentBalanceValue" x-model="eventConditionData.topUpCurBalanceValue">
+											</div>
+										</div>
+										<div class="mb-3 row">
+											<label for="eventCondIMEI" class="col-sm-2 col-form-label">Whitelist</label>
+											<div class="col-sm-10">
+												<select id="eventCondIMEItopup" multiple>
+													<template x-for="list in topupWhitelist">
+														<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
+													</template>
+												</select>
 											</div>
 										</div>
 										<div class="mb-3 row">
@@ -1063,58 +1072,6 @@
 										</div>
 									</div>
 								</div>
-								<!--								<div x-show="eventConditionTypeData === 'ARPU'">-->
-								<!--									<div class="eventConditionFulfillmentMonitoring" id="eventConditionDataARPUForm">-->
-								<!--										<div class="mb-3 row">-->
-								<!--											<label for="operators" class="col-sm-2 col-form-label">OPID</label>-->
-								<!--											<div class="col-sm-10">-->
-								<!--												<input type="text" class="form-control" id="eventConditionDataOperatorsARPU" x-model="eventConditionData.operatorId">-->
-								<!--											</div>-->
-								<!--										</div>-->
-								<!--										<div class="mb-3 row">-->
-								<!--											<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Type<sup><i class="fas fa-asterisk"></i></sup></label>-->
-								<!--											<div class="col-sm-5">-->
-								<!--												<select id="eventConditionDataTopUpValueARPUValue" class="form-control" x-model="eventConditionData.arpuType">-->
-								<!--													<option>Choose...</option>-->
-								<!--													<option value="allTopUp">ALL TOP UP</option>-->
-								<!--													<option value="paidTopUp">PAID TOP UP</option>-->
-								<!--													<option value="selfServe">SELF SERVE</option>-->
-								<!--													<option value="data">DATA</option>-->
-								<!--													<option value="others">OTHERS</option>-->
-								<!--												</select>-->
-								<!--											</div>-->
-								<!--											<template x-if="eventConditionData.arpuType === 'others'">-->
-								<!--												<div class="col-sm-5">-->
-								<!--													<input type="text" class="form-control" id="eventConditionArpuSelectedTopUpCode" x-model="eventConditionData.arpuSelectedTopUpCode">-->
-								<!--												</div>-->
-								<!--											</template>-->
-								<!--										</div>-->
-								<!--										<div class="mb-3 row">-->
-								<!--											<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Value<sup><i class="fas fa-asterisk"></i></sup></label>-->
-								<!--											<div class="col-sm-5">-->
-								<!--												<select id="eventConditionDataPaidARPUTopUpValueOperators" class="form-control" x-model="eventConditionData.arpuOp">-->
-								<!--													<option>Choose...</option>-->
-								<!--													<option value="lessThan">Less than</option>-->
-								<!--													<option value="moreThan">More than</option>-->
-								<!--													<option value="equalTo">Equal to</option>-->
-								<!--													<option value="lessOrEqual">Less than or Equal to</option>-->
-								<!--													<option value="moreOrEqualTo">More than or Equal to</option>-->
-								<!--												</select>-->
-								<!--											</div>-->
-								<!--											<div class="col-sm-5">-->
-								<!--												<input type="text" class="form-control" id="eventConditionDataPaidARPUValue" x-model="eventConditionData.arpuValue">-->
-								<!--											</div>-->
-								<!--										</div>-->
-								<!--										&lt;!&ndash;												<div class="mb-3 row">&ndash;&gt;-->
-								<!--										&lt;!&ndash;													<label for="topUpValue" class="col-sm-2 col-form-label">ARPU Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>&ndash;&gt;-->
-								<!--										&lt;!&ndash;													<span>Last</span>&ndash;&gt;-->
-								<!--										&lt;!&ndash;													<div class="col-sm-2">&ndash;&gt;-->
-								<!--										&lt;!&ndash;														<input type="number" class="form-control" x-model="eventConditionData.aggregationPeriodDays" min="0" max="180">&ndash;&gt;-->
-								<!--										&lt;!&ndash;													</div>&ndash;&gt;-->
-								<!--										&lt;!&ndash;													<span>Days</span>&ndash;&gt;-->
-								<!--										&lt;!&ndash;												</div>&ndash;&gt;-->
-								<!--									</div>-->
-								<!--								</div>-->
 							</div>
 						</div>
 					</div>
@@ -1146,7 +1103,7 @@
 											<option value="OMS">OMS Offer</option>
 											<option value="MA">MA Offer</option>
 											<option value="PROMO">Unique Promo Code</option>
-<!--											<option value="MREWARDS">mRewards</option>-->
+											<!--											<option value="MREWARDS">mRewards</option>-->
 											<option value="NONE" x-show="offers.length == 0">No Offer</option>
 										</select>
 									</div>
@@ -1453,99 +1410,99 @@
 										</div>
 										<!--PROMO ACCORDION END-->
 									</div>
-<!--									<div class="container">-->
-<!--										&lt;!&ndash;MREWARDS ACCORDION BEGIN&ndash;&gt;-->
-<!--										<div class="accordion" id="mrewardsID" x-show="offerTypeDropdown === 'MREWARDS' || offerSelectionSmsCampaignName != null">-->
-<!--											<div class="offerSelectionTemplate">-->
-<!--												<div class="card">-->
-<!--													<div class="row">-->
-<!--														<div class="col-sm-11">-->
-<!--															<div class="card-header" id="mrewardsAccordion">-->
-<!--																<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" data-target="#mrwds1"-->
-<!--																   aria-expanded="true" aria-controls="faq1"><b>mREWARDS</b></a>-->
-<!--															</div>-->
-<!--															<div id="mrwds1" class="panel-collapse collapse" aria-labelledby="mrewardsAccordion" data-parent="#prom">-->
-<!--																<div class="card-body">-->
-<!--																	<div class="form-row">-->
-<!--																		<b>Create mRewards Campaign Offer</b><br><br>-->
-<!--																		<div class="form-group row">-->
-<!--																			<label class="col-sm-2 col-form-label col-form-label">mRewards Offer Name</label>-->
-<!--																			<div class="col-sm-4">-->
-<!--																				<input type="text" class="form-control form-control-sm">-->
-<!--																			</div>-->
-<!--																		</div>-->
-<!--																	</div>-->
-<!--																	<div class="form-row">-->
-<!--																		<div class="form-group row">-->
-<!--																			<label class="col-sm-2 col-form-label col-form-label">Variable</label>-->
-<!--																			<div class="col-sm-4">-->
-<!--																				<input type="text" class="form-control form-control-sm">-->
-<!--																			</div>-->
-<!--																		</div>-->
-<!--																	</div>-->
-<!--																	<div class="form-row">-->
-<!--																		<div class="form-group row">-->
-<!--																			<label class="col-sm-2 col-form-label col-form-label">Bonus Offer Type</label>-->
-<!--																			<div class="col-sm-4">-->
-<!--																				<select id="rwdsBonusOfferType" class="custom-select">-->
-<!--																					<option value="">Choose...</option>-->
-<!--																					<option value="">Coins (Absolute Amount)</option>-->
-<!--																					<option value="">% of Topup Amount in Coins</option>-->
-<!--																					<option value="">% of Customer Age in Coins</option>-->
-<!--																					<option value="">% of Tenure Months in Coins</option>-->
-<!--																					<option value="">% of 3 Month ARPU in Coins</option>-->
-<!--																					<option value="">% of 6 Month ARPU in Coins</option>-->
-<!--																					<option value="">% of 12 Month ARPU in Coins</option>-->
-<!--																				</select>-->
-<!--																			</div>-->
-<!--																		</div>-->
-<!--																	</div>-->
-<!--																	<div class="form-row">-->
-<!--																		<div class="form-group row">-->
-<!--																			<label class="col-sm-2 col-form-label col-form-label">Cap Value in Coins</label>-->
-<!--																			<div class="col-sm-4">-->
-<!--																				<input type="text" class="form-control form-control-sm">-->
-<!--																			</div>-->
-<!--																		</div>-->
-<!--																	</div>-->
-<!--																	<div class="form-row">-->
-<!--																		<div class="form-group row">-->
-<!--																			<label class="col-sm-2 col-form-label col-form-label">Start Date</label>-->
-<!--																			<div class="col-sm-4">-->
-<!--																				<div class="input-group date" data-provider="datepicker">-->
-<!--																					<input type="datetime-local" class="form-control" id="mRewardsStarDate">-->
-<!--																					<div class="input-group-addon">-->
-<!--																						<span class="glyphicon glyphicon-th"></span>-->
-<!--																					</div>-->
-<!--																				</div>-->
-<!--																			</div>-->
-<!--																		</div>-->
-<!--																	</div>-->
-<!--																	<div class="form-row">-->
-<!--																		<div class="form-group row">-->
-<!--																			<label class="col-sm-2 col-form-label col-form-label">End Date</label>-->
-<!--																			<div class="col-sm-4">-->
-<!--																				<div class="input-group date" data-provider="datepicker">-->
-<!--																					<input type="datetime-local" class="form-control" id="mRewardsEndDate">-->
-<!--																					<div class="input-group-addon">-->
-<!--																						<span class="glyphicon glyphicon-th"></span>-->
-<!--																					</div>-->
-<!--																				</div>-->
-<!--																			</div>-->
-<!--																		</div>-->
-<!--																	</div>-->
-<!--																</div>-->
-<!--															</div>-->
-<!--														</div>-->
-<!--														<div class="col-sm-1">-->
-<!--															<button type="submit" class="btn btn-danger my-1"><i class="fas fa-minus-circle"></i></button>-->
-<!--														</div>-->
-<!--													</div>-->
-<!--												</div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--										&lt;!&ndash;MREWARDS ACCORDION END&ndash;&gt;-->
-<!--									</div>-->
+									<!--									<div class="container">-->
+									<!--										&lt;!&ndash;MREWARDS ACCORDION BEGIN&ndash;&gt;-->
+									<!--										<div class="accordion" id="mrewardsID" x-show="offerTypeDropdown === 'MREWARDS' || offerSelectionSmsCampaignName != null">-->
+									<!--											<div class="offerSelectionTemplate">-->
+									<!--												<div class="card">-->
+									<!--													<div class="row">-->
+									<!--														<div class="col-sm-11">-->
+									<!--															<div class="card-header" id="mrewardsAccordion">-->
+									<!--																<a href="#" class="btn btn-header-link collapsed accordion-toggle" data-toggle="collapse" data-target="#mrwds1"-->
+									<!--																   aria-expanded="true" aria-controls="faq1"><b>mREWARDS</b></a>-->
+									<!--															</div>-->
+									<!--															<div id="mrwds1" class="panel-collapse collapse" aria-labelledby="mrewardsAccordion" data-parent="#prom">-->
+									<!--																<div class="card-body">-->
+									<!--																	<div class="form-row">-->
+									<!--																		<b>Create mRewards Campaign Offer</b><br><br>-->
+									<!--																		<div class="form-group row">-->
+									<!--																			<label class="col-sm-2 col-form-label col-form-label">mRewards Offer Name</label>-->
+									<!--																			<div class="col-sm-4">-->
+									<!--																				<input type="text" class="form-control form-control-sm">-->
+									<!--																			</div>-->
+									<!--																		</div>-->
+									<!--																	</div>-->
+									<!--																	<div class="form-row">-->
+									<!--																		<div class="form-group row">-->
+									<!--																			<label class="col-sm-2 col-form-label col-form-label">Variable</label>-->
+									<!--																			<div class="col-sm-4">-->
+									<!--																				<input type="text" class="form-control form-control-sm">-->
+									<!--																			</div>-->
+									<!--																		</div>-->
+									<!--																	</div>-->
+									<!--																	<div class="form-row">-->
+									<!--																		<div class="form-group row">-->
+									<!--																			<label class="col-sm-2 col-form-label col-form-label">Bonus Offer Type</label>-->
+									<!--																			<div class="col-sm-4">-->
+									<!--																				<select id="rwdsBonusOfferType" class="custom-select">-->
+									<!--																					<option value="">Choose...</option>-->
+									<!--																					<option value="">Coins (Absolute Amount)</option>-->
+									<!--																					<option value="">% of Topup Amount in Coins</option>-->
+									<!--																					<option value="">% of Customer Age in Coins</option>-->
+									<!--																					<option value="">% of Tenure Months in Coins</option>-->
+									<!--																					<option value="">% of 3 Month ARPU in Coins</option>-->
+									<!--																					<option value="">% of 6 Month ARPU in Coins</option>-->
+									<!--																					<option value="">% of 12 Month ARPU in Coins</option>-->
+									<!--																				</select>-->
+									<!--																			</div>-->
+									<!--																		</div>-->
+									<!--																	</div>-->
+									<!--																	<div class="form-row">-->
+									<!--																		<div class="form-group row">-->
+									<!--																			<label class="col-sm-2 col-form-label col-form-label">Cap Value in Coins</label>-->
+									<!--																			<div class="col-sm-4">-->
+									<!--																				<input type="text" class="form-control form-control-sm">-->
+									<!--																			</div>-->
+									<!--																		</div>-->
+									<!--																	</div>-->
+									<!--																	<div class="form-row">-->
+									<!--																		<div class="form-group row">-->
+									<!--																			<label class="col-sm-2 col-form-label col-form-label">Start Date</label>-->
+									<!--																			<div class="col-sm-4">-->
+									<!--																				<div class="input-group date" data-provider="datepicker">-->
+									<!--																					<input type="datetime-local" class="form-control" id="mRewardsStarDate">-->
+									<!--																					<div class="input-group-addon">-->
+									<!--																						<span class="glyphicon glyphicon-th"></span>-->
+									<!--																					</div>-->
+									<!--																				</div>-->
+									<!--																			</div>-->
+									<!--																		</div>-->
+									<!--																	</div>-->
+									<!--																	<div class="form-row">-->
+									<!--																		<div class="form-group row">-->
+									<!--																			<label class="col-sm-2 col-form-label col-form-label">End Date</label>-->
+									<!--																			<div class="col-sm-4">-->
+									<!--																				<div class="input-group date" data-provider="datepicker">-->
+									<!--																					<input type="datetime-local" class="form-control" id="mRewardsEndDate">-->
+									<!--																					<div class="input-group-addon">-->
+									<!--																						<span class="glyphicon glyphicon-th"></span>-->
+									<!--																					</div>-->
+									<!--																				</div>-->
+									<!--																			</div>-->
+									<!--																		</div>-->
+									<!--																	</div>-->
+									<!--																</div>-->
+									<!--															</div>-->
+									<!--														</div>-->
+									<!--														<div class="col-sm-1">-->
+									<!--															<button type="submit" class="btn btn-danger my-1"><i class="fas fa-minus-circle"></i></button>-->
+									<!--														</div>-->
+									<!--													</div>-->
+									<!--												</div>-->
+									<!--											</div>-->
+									<!--										</div>-->
+									<!--										&lt;!&ndash;MREWARDS ACCORDION END&ndash;&gt;-->
+									<!--									</div>-->
 									<div class="container">
 										<div class="noneOfferSelection" x-show="offerTypeDropdown === 'NONE' || offerType === 'NONE'">
 											<div class="accordion" id="none">
@@ -1606,21 +1563,21 @@
 													 v-bind:getadddatagroupidfn="getAddDataGroupIdfn"
 													 v-bind:savedatafn="saveDatafn"
 													 v-bind:creategroupfn="createGroupfn"></query-component>
-													 
+
 									<button class="btn btn-singtel"
 											style="float: right; margin: 10px; margin-top: 5%;"
 											v-on:click="generateSQL"
 											v-bind:disabled="mainData[0].groups.length === 0 && mainData[0].dataList.length === 0">Generate
 										SQL</button>
-										<div style="float: left; margin-top: 23px; margin-left: 10px;">
-												<label>Count : </label></div>
-												<input  placeholder="Count" v-model="recordCounts"
-											  :readonly="true" style="width: 10%; float: left; margin-left: -53px; margin-top: 5%;"
-											  class="form-control form-control-sm input-custom"></input >
+									<div style="float: left; margin-top: 23px; margin-left: 10px;">
+										<label>Count : </label></div>
+									<input  placeholder="Count" v-model="recordCounts"
+											:readonly="true" style="width: 10%; float: left; margin-left: -53px; margin-top: 5%;"
+											class="form-control form-control-sm input-custom"></input >
 									<textarea placeholder="View SQL" v-model="generatedQuery"
 											  :readonly="true" :rows="4" style="width: 100%; resize: none;"
 											  class="form-control form-control-sm input-custom"></textarea>
-											  
+
 
 								</div>
 
@@ -1780,7 +1737,7 @@
 														<option value="Top-Up">Top-Up</option>
 														<option value="Usage">Usage</option>
 														<option value="ARPU">ARPU</option>
-														<option value="Consumption">Consumption</option>
+														<!--														<option value="Consumption">Consumption</option>-->
 													</select>
 												</div>
 											</div>
@@ -1909,6 +1866,16 @@
 															<span class="glyphicon glyphicon-th"></span>
 														</div>
 													</div>
+												</div>
+											</div>
+											<div class="mb-3 row">
+												<label for="offerIMEItopup" class="col-sm-2 col-form-label">Whitelist</label>
+												<div class="col-sm-10">
+													<select id="offerIMEItopup" multiple>
+														<template x-for="list in offerWhitelistTopup">
+															<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
+														</template>
+													</select>
 												</div>
 											</div>
 											<div class="mb-3 row">
@@ -2284,89 +2251,89 @@
 											</div>
 										</div>
 									</div>
-									<div x-show="eventTypeData === 'Consumption'">
-										<div class="eventTypeFulfillmentMonitoring" id="consumptionForm">
-											<div class="mb-3 row">
-												<label for="usageServiceTypeDropdown" class="col-sm-2 col-form-label">Consumption Type<sup><i class="fas fa-asterisk"></i></sup></label>
-												<div class="col-sm-10">
-													<select id="consumptionTypeDropdown" class="form-control">
-														<option>Choose...</option>
-														<option value="lowBalance">Low Balance</option>
-														<option value="spend">Spend</option>
-													</select>
-												</div>
-											</div>
-											<div class="mb-3 row">
-												<label for="usageTypeVoice" class="col-sm-2 col-form-label">Charge Type<sup><i class="fas fa-asterisk"></i></sup></label>
-												<div class="col-sm-10">
-													<select id="chargeType" class="form-control">
-														<option>Choose...</option>
-														<option value="MA">MA</option>
-														<option value="DA">DA</option>
-														<option value="PPU">PPU</option>
-													</select>
-												</div>
-											</div>
-											<div class="mb-3 row">
-												<label for="usageType" class="col-sm-2 col-form-label">Usage Type<sup><i class="fas fa-asterisk"></i></sup></label>
-												<div class="col-sm-10">
-													<select id="usageType" class="form-control">
-														<option>Choose...</option>
-														<option value="ALL">ALL</option>
-														<option value="VOICE">VOICE</option>
-														<option value="DATA">DATA</option>
-														<option value="IDD">IDD</option>
-														<option value="SMS">SMS</option>
-													</select>
-												</div>
-											</div>
-											<div class="mb-3 row">
-												<label class="col-sm-2 col-form-label">Charge Value <sup><i class="fas fa-asterisk"></i></sup></label>
-												<div class="col-sm-4">
-													<select id="chargeValueDropdown" class="form-control">
-														<option>Choose...</option>
-														<option value="lessThan">Less than</option>
-														<option value="moreThan">More than</option>
-														<option value="equalTo">Equal to</option>
-														<option value="lessOrEqual">Less than or Equal to</option>
-														<option value="moreOrEqualTo">More than or Equal to</option>
-													</select>
-												</div>
-												<div class="col-sm-4">
-													<input type="number" class="form-control" id="chargeValue">
-												</div>
-											</div>
-											<div class="mb-3 row">
-												<label class="col-sm-2 col-form-label">Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>
-												<span>Upcoming</span>
-												<div class="col-sm-2">
-													<input type="number" class="form-control" min="0" max="180">
-												</div>
-												<span>Days</span>
-											</div>
-											<div class="mb-3 row">
-												<label class="col-sm-2 col-form-label">DA Expiry Date</label>
-												<div class="col-sm-4">
-													<div class="input-group date" data-provider="datepicker">
-														<input type="datetime-local" class="form-control">
-														<div class="input-group-addon">
-															<span class="glyphicon glyphicon-th"></span>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="mb-3 row">
-												<label for="offerIMEI" class="col-sm-2 col-form-label">Whitelist</label>
-												<div class="col-sm-10">
-													<select id="consumptionWhitelist" multiple>
-														<template x-for="list in consmpWhitelist">
-															<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>
-														</template>
-													</select>
-												</div>
-											</div>
-										</div>
-									</div>
+									<!--									<div x-show="eventTypeData === 'Consumption'">-->
+									<!--										<div class="eventTypeFulfillmentMonitoring" id="consumptionForm">-->
+									<!--											<div class="mb-3 row">-->
+									<!--												<label for="usageServiceTypeDropdown" class="col-sm-2 col-form-label">Consumption Type<sup><i class="fas fa-asterisk"></i></sup></label>-->
+									<!--												<div class="col-sm-10">-->
+									<!--													<select id="consumptionTypeDropdown" class="form-control">-->
+									<!--														<option>Choose...</option>-->
+									<!--														<option value="lowBalance">Low Balance</option>-->
+									<!--														<option value="spend">Spend</option>-->
+									<!--													</select>-->
+									<!--												</div>-->
+									<!--											</div>-->
+									<!--											<div class="mb-3 row">-->
+									<!--												<label for="usageTypeVoice" class="col-sm-2 col-form-label">Charge Type<sup><i class="fas fa-asterisk"></i></sup></label>-->
+									<!--												<div class="col-sm-10">-->
+									<!--													<select id="chargeType" class="form-control">-->
+									<!--														<option>Choose...</option>-->
+									<!--														<option value="MA">MA</option>-->
+									<!--														<option value="DA">DA</option>-->
+									<!--														<option value="PPU">PPU</option>-->
+									<!--													</select>-->
+									<!--												</div>-->
+									<!--											</div>-->
+									<!--											<div class="mb-3 row">-->
+									<!--												<label for="usageType" class="col-sm-2 col-form-label">Usage Type<sup><i class="fas fa-asterisk"></i></sup></label>-->
+									<!--												<div class="col-sm-10">-->
+									<!--													<select id="usageType" class="form-control">-->
+									<!--														<option>Choose...</option>-->
+									<!--														<option value="ALL">ALL</option>-->
+									<!--														<option value="VOICE">VOICE</option>-->
+									<!--														<option value="DATA">DATA</option>-->
+									<!--														<option value="IDD">IDD</option>-->
+									<!--														<option value="SMS">SMS</option>-->
+									<!--													</select>-->
+									<!--												</div>-->
+									<!--											</div>-->
+									<!--											<div class="mb-3 row">-->
+									<!--												<label class="col-sm-2 col-form-label">Charge Value <sup><i class="fas fa-asterisk"></i></sup></label>-->
+									<!--												<div class="col-sm-4">-->
+									<!--													<select id="chargeValueDropdown" class="form-control">-->
+									<!--														<option>Choose...</option>-->
+									<!--														<option value="lessThan">Less than</option>-->
+									<!--														<option value="moreThan">More than</option>-->
+									<!--														<option value="equalTo">Equal to</option>-->
+									<!--														<option value="lessOrEqual">Less than or Equal to</option>-->
+									<!--														<option value="moreOrEqualTo">More than or Equal to</option>-->
+									<!--													</select>-->
+									<!--												</div>-->
+									<!--												<div class="col-sm-4">-->
+									<!--													<input type="number" class="form-control" id="chargeValue">-->
+									<!--												</div>-->
+									<!--											</div>-->
+									<!--											<div class="mb-3 row">-->
+									<!--												<label class="col-sm-2 col-form-label">Aggregation Period<sup><i class="fas fa-asterisk"></i></sup></label>-->
+									<!--												<span>Upcoming</span>-->
+									<!--												<div class="col-sm-2">-->
+									<!--													<input type="number" class="form-control" min="0" max="180">-->
+									<!--												</div>-->
+									<!--												<span>Days</span>-->
+									<!--											</div>-->
+									<!--											<div class="mb-3 row">-->
+									<!--												<label class="col-sm-2 col-form-label">DA Expiry Date</label>-->
+									<!--												<div class="col-sm-4">-->
+									<!--													<div class="input-group date" data-provider="datepicker">-->
+									<!--														<input type="datetime-local" class="form-control">-->
+									<!--														<div class="input-group-addon">-->
+									<!--															<span class="glyphicon glyphicon-th"></span>-->
+									<!--														</div>-->
+									<!--													</div>-->
+									<!--												</div>-->
+									<!--											</div>-->
+									<!--											<div class="mb-3 row">-->
+									<!--												<label for="consumptionWhitelist" class="col-sm-2 col-form-label">Whitelist</label>-->
+									<!--												<div class="col-sm-10">-->
+									<!--													<select id="consumptionWhitelist" multiple>-->
+									<!--														<template x-for="list in consmpWhitelist">-->
+									<!--															<option x-model="list.whitelistId"><span x-text="list.whitelistType"></span></option>-->
+									<!--														</template>-->
+									<!--													</select>-->
+									<!--												</div>-->
+									<!--											</div>-->
+									<!--										</div>-->
+									<!--									</div>-->
 									<div id="monitoringFulfillmentPeriod">
 										<b>Monitoring Fulfillment Period<sup><i class="fas fa-asterisk"></i></sup>:</b>
 										<br>
@@ -2889,254 +2856,257 @@
 				<!-- Offer Message Display Starts -->
 <!--				<div class="card">-->
 <!--					<div class="card-header" id="headingSeven">-->
-<!--						<div id="offerMessageAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseSeven"><h5><i class="fa fa-plus"></i> Offer Message - <label >Required</label></h5></div>-->
+<!--						<div id="offerMessageAccordion" class="toggle-title collapsed" data-toggle="collapse" data-target="#collapseSeven"><h5><i class="fa fa-plus"></i> Offer Message Display - <label >Required</label></h5></div>-->
 <!--					</div>-->
 <!--					<div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#directProvisioning">-->
 <!--						<div class="card-body">-->
-<!--							&lt;!&ndash; Display Channel BEGIN &ndash;&gt;-->
-<!--							<div class="form-group row">-->
-<!--								<div class="col-sm-3">-->
-<!--									Display Channel-->
-<!--								</div>-->
-<!--								<div class="form-check form-check-inline">-->
-<!--									<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="HiApp">-->
-<!--									<label class="form-check-label" for="inlineCheckbox1">HiApp</label>-->
-<!--								</div>-->
-<!--								<div class="form-check form-check-inline">-->
-<!--									<input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="USSD">-->
-<!--									<label class="form-check-label" for="inlineCheckbox2">USSD</label>-->
-<!--								</div>-->
-<!--								<div class="form-check form-check-inline">-->
-<!--									<input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="UMTU">-->
-<!--									<label class="form-check-label" for="inlineCheckbox3">UMTU</label>-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							&lt;!&ndash; Display Channel END &ndash;&gt;-->
+<!--							<template x-if="cxOffersMessageData">-->
 
-<!--							&lt;!&ndash; CRM BEGIN &ndash;&gt;-->
-<!--							<b>Offer Message Display by Channels - CRM</b><br><br>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
-<!--								<div class="col-sm-4">-->
-<!--									<input type="text" class="form-control form-control-sm">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Description</label>-->
-<!--								<div class="col-sm-4">-->
-<!--									<input type="text" class="form-control form-control-sm">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							&lt;!&ndash; CRM END &ndash;&gt;-->
-
-<!--							&lt;!&ndash; UMTU BEGIN &ndash;&gt;-->
-<!--							<b>Offer Message Display by Channels - UMTU</b><br><br>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
-<!--								<div class="col-sm-4">-->
-<!--									<input type="text" class="form-control form-control-sm">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Message</label>-->
-<!--								<div class="col-sm-4">-->
-<!--									<input type="text" class="form-control form-control-sm">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Top Up Code</label>-->
-<!--								<div class="col-sm-4">-->
-<!--									<input type="text" class="form-control form-control-sm">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Retailer Commission</label>-->
-<!--								<div class="col-sm-4">-->
-<!--									<input type="text" class="form-control form-control-sm">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							&lt;!&ndash; UMTU END &ndash;&gt;-->
-
-<!--							&lt;!&ndash; USSD BEGIN &ndash;&gt;-->
-<!--							<b>Offer Message Display by Channels - USSD</b><br><br>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
-<!--								<div class="col-sm-4">-->
-<!--									<input type="text" class="form-control form-control-sm">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Description</label>-->
-<!--								<div class="col-sm-4">-->
-<!--									<input type="text" class="form-control form-control-sm">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							&lt;!&ndash; USSD END &ndash;&gt;-->
-
-<!--							&lt;!&ndash; HiAPP BEGIN &ndash;&gt;-->
-<!--							<b>Offer Message Display by Channels - HiApp</b><br><br>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
-<!--								<div class="col-sm-10">-->
-<!--									<form class="form-row">-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="english">English/Default</label>-->
-<!--											<input id="english" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="indonesia">Bahasa Indonesia</label>-->
-<!--											<input id="indonesia" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="indonesia">Tamil</label>-->
-<!--											<input id="tamil" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--									</form>-->
-<!--									<form class="form-row">-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="mandarin">Mandarin</label>-->
-<!--											<input id="mandarin" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="bengali">Bengali</label>-->
-<!--											<input id="bengali" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="burmese">Burmese</label>-->
-<!--											<input id="burmese" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--									</form>-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							<div class="form-group row">-->
-<!--								<div class="col-sm-2">-->
-<!--									Display CTA Button?-->
-<!--								</div>-->
-<!--								<div class="form-check">-->
-<!--									<input class="form-check-input" type="checkbox" id="displayCTA" value="CTA">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">CTA Button Display Text</label>-->
-<!--								<div class="col-sm-10">-->
-<!--									<form class="form-row">-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="englishCTA">English/Default</label>-->
-<!--											<input id="englishCTA" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="indonesiaCTA">Bahasa Indonesia</label>-->
-<!--											<input id="indonesiaCTA" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="tamilCTA">Tamil</label>-->
-<!--											<input id="tamilCTA" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--									</form>-->
-<!--									<form class="form-row">-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="mandarinCTA">Mandarin</label>-->
-<!--											<input id="mandarinCTA" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="bengaliCTA">Bengali</label>-->
-<!--											<input id="bengaliCTA" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="burmeseCTA">Burmese</label>-->
-<!--											<input id="burmeseCTA" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--									</form>-->
-<!--								</div>-->
-<!--							</div>-->
-
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Successful Redemption Display Text</label>-->
-<!--								<div class="col-sm-10">-->
-<!--									<form class="form-row">-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="englishRedempt">English/Default</label>-->
-<!--											<input id="englishRedempt" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="indonesiaRedempt">Bahasa Indonesia</label>-->
-<!--											<input id="indonesiaRedempt" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="tamilRedempt">Tamil</label>-->
-<!--											<input id="tamilRedempt" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--									</form>-->
-<!--									<form class="form-row">-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="mandarinRedempt">Mandarin</label>-->
-<!--											<input id="mandarinRedempt" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="bengaliRedempt">Bengali</label>-->
-<!--											<input id="bengaliRedempt" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--										<div class="form-group col-md-4">-->
-<!--											<label for="burmeseRedempt">Burmese</label>-->
-<!--											<input id="burmeseRedempt" type="text" class="form-control form-control-sm">-->
-<!--										</div>-->
-<!--									</form>-->
-<!--								</div>-->
-<!--							</div>-->
-
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label">Offer Display Message</label>-->
-<!--								<div class="col-sm-10">-->
-<!--									<textarea id="open-source-plugins"></textarea>-->
-<!--								</div>-->
-<!--							</div>-->
-
-<!--							<div class="form-group row">-->
-<!--								<label class="col-sm-2 col-form-label col-form-label"></label>-->
-<!--								<div class="col-sm-8">-->
-<!--									<div class="btn-group btn-group-toggle" data-toggle="buttons">-->
-<!--										<label class="btn btn-secondary active">-->
-<!--											<input type="radio" name="options" id="btn-indonesia" checked> Bahasa Indonesia-->
-<!--										</label>-->
-<!--										<label class="btn btn-secondary">-->
-<!--											<input type="radio" name="options" id="btn-english"> English / Default-->
-<!--										</label>-->
-<!--										<label class="btn btn-secondary">-->
-<!--											<input type="radio" name="options" id="btn-tamil"> Tamil-->
-<!--										</label>-->
-<!--										<label class="btn btn-secondary">-->
-<!--											<input type="radio" name="options" id="btn-mandarin"> Mandarin-->
-<!--										</label>-->
-<!--										<label class="btn btn-secondary">-->
-<!--											<input type="radio" name="options" id="btn-bengali"> Bengali-->
-<!--										</label>-->
-<!--										<label class="btn btn-secondary">-->
-<!--											<input type="radio" name="options" id="btn-burmese"> Burmese-->
-<!--										</label>-->
+<!--								&lt;!&ndash; Display Channel BEGIN &ndash;&gt;-->
+<!--								<div class="form-group row">-->
+<!--									<div class="col-sm-3">-->
+<!--										Display Channel-->
+<!--									</div>-->
+<!--									<div class="form-check form-check-inline">-->
+<!--										<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="HiApp" x-model="cxOffersMessageData.displayHiApp">-->
+<!--										<label class="form-check-label" for="inlineCheckbox1">HiApp</label>-->
+<!--									</div>-->
+<!--									<div class="form-check form-check-inline">-->
+<!--										<input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="USSD">-->
+<!--										<label class="form-check-label" for="inlineCheckbox2">USSD</label>-->
+<!--									</div>-->
+<!--									<div class="form-check form-check-inline">-->
+<!--										<input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="UMTU">-->
+<!--										<label class="form-check-label" for="inlineCheckbox3">UMTU</label>-->
 <!--									</div>-->
 <!--								</div>-->
-<!--								<div class="col-sm-2">-->
-<!--									<input type="text" class="form-control form-control-sm" placeholder="Template Filename"><br>-->
-<!--									<button class="btn btn-primary" type="submit">Save </button>-->
-<!--									<button class="btn btn-info" type="button">Preview </button>-->
+<!--								&lt;!&ndash; Display Channel END &ndash;&gt;-->
+
+<!--								&lt;!&ndash; CRM BEGIN &ndash;&gt;-->
+<!--								<b>Offer Message Display by Channels - CRM</b><br><br>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
+<!--									<div class="col-sm-4">-->
+<!--										<input type="text" class="form-control form-control-sm">-->
+<!--									</div>-->
 <!--								</div>-->
-<!--							</div>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Offer Display Description</label>-->
+<!--									<div class="col-sm-4">-->
+<!--										<input type="text" class="form-control form-control-sm">-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								&lt;!&ndash; CRM END &ndash;&gt;-->
+
+<!--								&lt;!&ndash; UMTU BEGIN &ndash;&gt;-->
+<!--								<b>Offer Message Display by Channels - UMTU</b><br><br>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
+<!--									<div class="col-sm-4">-->
+<!--										<input type="text" class="form-control form-control-sm">-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Offer Display Message</label>-->
+<!--									<div class="col-sm-4">-->
+<!--										<input type="text" class="form-control form-control-sm">-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Top Up Code</label>-->
+<!--									<div class="col-sm-4">-->
+<!--										<input type="text" class="form-control form-control-sm">-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Retailer Commission</label>-->
+<!--									<div class="col-sm-4">-->
+<!--										<input type="text" class="form-control form-control-sm">-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								&lt;!&ndash; UMTU END &ndash;&gt;-->
+
+<!--								&lt;!&ndash; USSD BEGIN &ndash;&gt;-->
+<!--								<b>Offer Message Display by Channels - USSD</b><br><br>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
+<!--									<div class="col-sm-4">-->
+<!--										<input type="text" class="form-control form-control-sm">-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Offer Display Message</label>-->
+<!--									<div class="col-sm-4">-->
+<!--										<input type="text" class="form-control form-control-sm">-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								&lt;!&ndash; USSD END &ndash;&gt;-->
+
+<!--								&lt;!&ndash; HiAPP BEGIN &ndash;&gt;-->
+<!--								<b>Offer Message Display by Channels - HiApp</b><br><br>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Offer Display Name</label>-->
+<!--									<div class="col-sm-10">-->
+<!--										<form class="form-row">-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="english">English/Default</label>-->
+<!--												<input id="english" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="indonesia">Bahasa Indonesia</label>-->
+<!--												<input id="indonesia" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="indonesia">Tamil</label>-->
+<!--												<input id="tamil" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--										</form>-->
+<!--										<form class="form-row">-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="mandarin">Mandarin</label>-->
+<!--												<input id="mandarin" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="bengali">Bengali</label>-->
+<!--												<input id="bengali" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="burmese">Burmese</label>-->
+<!--												<input id="burmese" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--										</form>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								<div class="form-group row">-->
+<!--									<div class="col-sm-2">-->
+<!--										Display CTA Button?-->
+<!--									</div>-->
+<!--									<div class="form-check">-->
+<!--										<input class="form-check-input" type="checkbox" id="displayCTA" value="CTA">-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">CTA Button Display Text</label>-->
+<!--									<div class="col-sm-10">-->
+<!--										<form class="form-row">-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="englishCTA">English/Default</label>-->
+<!--												<input id="englishCTA" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="indonesiaCTA">Bahasa Indonesia</label>-->
+<!--												<input id="indonesiaCTA" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="tamilCTA">Tamil</label>-->
+<!--												<input id="tamilCTA" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--										</form>-->
+<!--										<form class="form-row">-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="mandarinCTA">Mandarin</label>-->
+<!--												<input id="mandarinCTA" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="bengaliCTA">Bengali</label>-->
+<!--												<input id="bengaliCTA" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="burmeseCTA">Burmese</label>-->
+<!--												<input id="burmeseCTA" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--										</form>-->
+<!--									</div>-->
+<!--								</div>-->
+
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Successful Redemption Display Text</label>-->
+<!--									<div class="col-sm-10">-->
+<!--										<form class="form-row">-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="englishRedempt">English/Default</label>-->
+<!--												<input id="englishRedempt" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="indonesiaRedempt">Bahasa Indonesia</label>-->
+<!--												<input id="indonesiaRedempt" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="tamilRedempt">Tamil</label>-->
+<!--												<input id="tamilRedempt" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--										</form>-->
+<!--										<form class="form-row">-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="mandarinRedempt">Mandarin</label>-->
+<!--												<input id="mandarinRedempt" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="bengaliRedempt">Bengali</label>-->
+<!--												<input id="bengaliRedempt" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--											<div class="form-group col-md-4">-->
+<!--												<label for="burmeseRedempt">Burmese</label>-->
+<!--												<input id="burmeseRedempt" type="text" class="form-control form-control-sm">-->
+<!--											</div>-->
+<!--										</form>-->
+<!--									</div>-->
+<!--								</div>-->
+
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label">Offer Display Message</label>-->
+<!--									<div class="col-sm-10">-->
+<!--										<textarea id="open-source-plugins"></textarea>-->
+<!--									</div>-->
+<!--								</div>-->
+
+<!--								<div class="form-group row">-->
+<!--									<label class="col-sm-2 col-form-label col-form-label"></label>-->
+<!--									<div class="col-sm-8">-->
+<!--										<div class="btn-group btn-group-toggle" data-toggle="buttons">-->
+<!--											<label class="btn btn-secondary active">-->
+<!--												<input type="radio" name="options" id="btn-indonesia" checked> Bahasa Indonesia-->
+<!--											</label>-->
+<!--											<label class="btn btn-secondary">-->
+<!--												<input type="radio" name="options" id="btn-english"> English / Default-->
+<!--											</label>-->
+<!--											<label class="btn btn-secondary">-->
+<!--												<input type="radio" name="options" id="btn-tamil"> Tamil-->
+<!--											</label>-->
+<!--											<label class="btn btn-secondary">-->
+<!--												<input type="radio" name="options" id="btn-mandarin"> Mandarin-->
+<!--											</label>-->
+<!--											<label class="btn btn-secondary">-->
+<!--												<input type="radio" name="options" id="btn-bengali"> Bengali-->
+<!--											</label>-->
+<!--											<label class="btn btn-secondary">-->
+<!--												<input type="radio" name="options" id="btn-burmese"> Burmese-->
+<!--											</label>-->
+<!--										</div>-->
+<!--									</div>-->
+<!--									<div class="col-sm-2">-->
+<!--										<input type="text" class="form-control form-control-sm" placeholder="Template Filename"><br>-->
+<!--										<button class="btn btn-primary" type="submit">Save </button>-->
+<!--										<button class="btn btn-info" type="button">Preview </button>-->
+<!--									</div>-->
+<!--								</div>-->
 
 
-<!--							&lt;!&ndash; HiAPP END &ndash;&gt;-->
+<!--								&lt;!&ndash; HiAPP END &ndash;&gt;-->
 
+<!--							</template>-->
 <!--						</div>-->
 <!--					</div>-->
 <!--				</div>-->
 				<!-- Offer Message Display Ends -->
 
-			<br>
-			<div class="form-group">
-				<button class="btn btn-block btn-singtel" id="saveConfiguration" @click="saveConfiguration()"><i class="fas fa-save"></i> Save</button>
-			</div>
+				<br>
+				<div class="form-group">
+					<button class="btn btn-block btn-singtel" id="saveConfiguration" @click="saveConfiguration()"><i class="fas fa-save"></i> Save</button>
+				</div>
 
-		</div>
-	</div><br><br>
+			</div>
+		</div><br><br>
 
 		<div class="form-group" style="visibility: hidden">
 			<label>Message : <span id="instanceId" th:text="${instanceId}" /></label>
@@ -3153,14 +3123,14 @@
 		</div>
 
 		<div class="modal hide" id="failedDialog" data-backdrop="static" data-keyboard="false">
-		<div class="modal-body">
-			<div id="ajax_loader_danger">
-				<div class="alert alert-danger" role="alert">
-					ERROR. Configuration not saved.
+			<div class="modal-body">
+				<div id="ajax_loader_danger">
+					<div class="alert alert-danger" role="alert">
+						ERROR. Configuration not saved.
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 	</div>
 </div>
 
@@ -3179,7 +3149,6 @@
 <script src="https://oracle.kakatoa.net/assets/js/sweetalert.min.js"></script>
 <!--<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/5-stable/tinymce.min.js"></script>-->
 
-<script src="https://oracle.kakatoa.net/assets/js/sweetalert.min.js"></script>
 <!--jQUERY BEGIN-->
 <script>
 	function jQuery() {
@@ -3272,7 +3241,13 @@
 			$('#eventCondIMEI').select2({
 				maximumSelectionLength: 5,
 			});
+			$('#eventCondIMEItopup').select2({
+				maximumSelectionLength: 5,
+			});
 			$('#offerIMEI').select2({
+				maximumSelectionLength: 5,
+			});
+			$('#offerIMEItopup').select2({
 				maximumSelectionLength: 5,
 			});
 			$('#consumptionWhitelist').select2({
@@ -3351,88 +3326,88 @@
 <!-- VueJS START -->
 <script>
 
-    const INSTANCE_ID = $("#instanceId").text();
-    // const INSTANCE_ID = 'c775b6bf-46e2-4418-9a7b-960f1ddc6cf0';
-    const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
-    const PROD_URLs = 'http://localhost:8090/data/';
-    const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
+	const INSTANCE_ID = $("#instanceId").text();
+	// const INSTANCE_ID = 'dd1590f6-1243-4194-9f3a-6aba497fedeb';
+	const PROD_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/cxdev2/data/';
+	const PROD_URLs = 'http://localhost:8090/data/';
+	const OFFERMGMT_URL = 'https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/';
 
 
-    // handle the state management of data
-    var store = {
-        debug: true,
-        state: {},
-    }
+	// handle the state management of data
+	var store = {
+		debug: true,
+		state: {},
+	}
 
 
-    const formatDate = date => date.toISOString().slice(0, 10);
-    var dateToday = formatDate(new Date());
+	const formatDate = date => date.toISOString().slice(0, 10);
+	var dateToday = formatDate(new Date());
 
-    function uuidv4() {
-        var a, b, c, d;
-        var time = Math.round(new Date().getTime() / 1000);
-        var version = window.navigator.appVersion;
-        var href = window.location.href;
+	function uuidv4() {
+		var a, b, c, d;
+		var time = Math.round(new Date().getTime() / 1000);
+		var version = window.navigator.appVersion;
+		var href = window.location.href;
 
-        // a - unix timestamp
-        a = time.toString(16).substring(0, 8);
+		// a - unix timestamp
+		a = time.toString(16).substring(0, 8);
 
-        // b - browser
-        var match = version.match(/\d+/g);
-        if (!match) {
-            throw 'Invalid browser version string';
-        }
-        var sum = 0;
-        for (var i = 0, ii = match.length; i < ii; ++i) {
-            sum += parseInt(match[i], 10);
-        }
-        b = (sum * sum * sum).toString(16).substring(0, 6);
+		// b - browser
+		var match = version.match(/\d+/g);
+		if (!match) {
+			throw 'Invalid browser version string';
+		}
+		var sum = 0;
+		for (var i = 0, ii = match.length; i < ii; ++i) {
+			sum += parseInt(match[i], 10);
+		}
+		b = (sum * sum * sum).toString(16).substring(0, 6);
 
-        // c - url
-        c = (href.length * href.length * href.length).toString(16).substring(0, 4);
+		// c - url
+		c = (href.length * href.length * href.length).toString(16).substring(0, 4);
 
-        // d - random
-        d = Math.random().toString().substring(2);
-        d = parseInt(d, 10);
-        d = d.toString(16).substring(0, 6);
+		// d - random
+		d = Math.random().toString().substring(2);
+		d = parseInt(d, 10);
+		d = d.toString(16).substring(0, 6);
 
-        return [a, b, c, d].join('-');
-    };
-
-
-    Vue.component('table-column-modal', {
-        props: ['modaltrigger', 'modaltriggerfn', 'groupid', 'savedatafn', 'fetchedtablelist'],
-        data: function () {
-            return {
-                dataId: null,
-                selectedTable: null,
-                selectedColumn: null,
-                selectedColumnName: null,
-                selectedColumnType: null,
-                tableColumnList: [],
-                numberOption: ['SUM', 'AVERAGE', 'MEAN', 'MEDIAN'],
-                numberOperand: ['>', '<', '>=', '<=', '=', '!='],
-                varCharOption: ['MATCHES', 'EQUALS', 'STARTS WITH'],
-                selectedNumberOption: 'SUM',
-                selectedOperand: '>',
-                numberValue: 0,
-                selectedDateType: 'exactDate',
-                exactDate: '',
-                daysBefore: 0,
-                duration: 0,
-                selectedVarCharOption: 'MATCHES',
-                selectedValue: '',
-                selectedOption: null,
-                value: null,
-
-                selectedFetchTable: null,
-                fetchedColumnList: [],
+		return [a, b, c, d].join('-');
+	};
 
 
-            }
-        },
-        template:
-            `<div  v-show="modaltrigger === true">
+	Vue.component('table-column-modal', {
+		props: ['modaltrigger', 'modaltriggerfn', 'groupid', 'savedatafn', 'fetchedtablelist'],
+		data: function () {
+			return {
+				dataId: null,
+				selectedTable: null,
+				selectedColumn: null,
+				selectedColumnName: null,
+				selectedColumnType: null,
+				tableColumnList: [],
+				numberOption: ['SUM', 'AVERAGE', 'MEAN', 'MEDIAN'],
+				numberOperand: ['>', '<', '>=', '<=', '=', '!='],
+				varCharOption: ['MATCHES', 'EQUALS', 'STARTS WITH'],
+				selectedNumberOption: 'SUM',
+				selectedOperand: '>',
+				numberValue: 0,
+				selectedDateType: 'exactDate',
+				exactDate: '',
+				daysBefore: 0,
+				duration: 0,
+				selectedVarCharOption: 'MATCHES',
+				selectedValue: '',
+				selectedOption: null,
+				value: null,
+
+				selectedFetchTable: null,
+				fetchedColumnList: [],
+
+
+			}
+		},
+		template:
+				`<div  v-show="modaltrigger === true">
                 <div name="modal">
                   <div class="modal-mask">
                     <div class="modal-wrapper">
@@ -3654,140 +3629,140 @@
                   </div>
                 </div>
             </div>`,
-        methods: {
-            setSelectedFetchTable() {
+		methods: {
+			setSelectedFetchTable() {
 
-                fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/${this.selectedFetchTable.af_tables_id}`)
-                    //fetch(OFFERMGMT_URL + `AdvFilters/${this.selectedFetchTable.af_tables_id}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        this.fetchedColumnList = data.items;
-                        return this.fetchedColumnList;
-                    })
-                    .catch(error => console.log(error))
-                    .finally()
+				fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/${this.selectedFetchTable.af_tables_id}`)
+						//fetch(OFFERMGMT_URL + `AdvFilters/${this.selectedFetchTable.af_tables_id}`)
+						.then(res => res.json())
+						.then(data => {
+							this.fetchedColumnList = data.items;
+							return this.fetchedColumnList;
+						})
+						.catch(error => console.log(error))
+						.finally()
 
-                // everytime table was changed, this will clear the previous data
-                this.selectedColumn = null;
-                this.selectedNumberOption = 'SUM';
-                this.selectedOperand = '>';
-                this.numberValue = 0;
-                this.selectedDateType = 'exactDate';
-                this.exactDate = '';
-                this.daysBefore = 0;
-                this.duration = 0;
-                this.selectedVarCharOption = 'MATCHES';
-                this.selectedValue = '';
+				// everytime table was changed, this will clear the previous data
+				this.selectedColumn = null;
+				this.selectedNumberOption = 'SUM';
+				this.selectedOperand = '>';
+				this.numberValue = 0;
+				this.selectedDateType = 'exactDate';
+				this.exactDate = '';
+				this.daysBefore = 0;
+				this.duration = 0;
+				this.selectedVarCharOption = 'MATCHES';
+				this.selectedValue = '';
 
-            },
+			},
 
-            updateExactDate() {
-                console.log(this.exactDate)
-            },
+			updateExactDate() {
+				console.log(this.exactDate)
+			},
 
-            removeNegative(e, type, value) {
+			removeNegative(e, type, value) {
 
-                value = Math.max(0, parseInt(e.target.value) || 0);
+				value = Math.max(0, parseInt(e.target.value) || 0);
 
-                if (type === 'numberValue') {
-                    this.numberValue = value;
-                } else if (type === 'daysBefore') {
-                    this.daysBefore = value;
-                } else if (type === 'duration') {
-                    this.duration = value;
-                }
-            },
-            clearDropdown() {
-                console.log(this.selectedColumn, 'data')
-                this.dataId = null;
-                this.selectedTable = null;
-                this.selectedColumn = null;
-                this.selectedColumnName = null;
-                this.selectedColumnType = null;
-                this.tableColumnList = [];
-                this.selectedNumberOption = 'SUM';
-                this.selectedOperand = '>';
-                this.numberValue = 0;
-                this.selectedDateType = 'exactDate';
-                this.exactDate = '';
-                this.daysBefore = 0;
-                this.duration = 0;
-                this.selectedVarCharOption = 'MATCHES';
-                this.selectedValue = '';
-                this.value = null;
+				if (type === 'numberValue') {
+					this.numberValue = value;
+				} else if (type === 'daysBefore') {
+					this.daysBefore = value;
+				} else if (type === 'duration') {
+					this.duration = value;
+				}
+			},
+			clearDropdown() {
+				console.log(this.selectedColumn, 'data')
+				this.dataId = null;
+				this.selectedTable = null;
+				this.selectedColumn = null;
+				this.selectedColumnName = null;
+				this.selectedColumnType = null;
+				this.tableColumnList = [];
+				this.selectedNumberOption = 'SUM';
+				this.selectedOperand = '>';
+				this.numberValue = 0;
+				this.selectedDateType = 'exactDate';
+				this.exactDate = '';
+				this.daysBefore = 0;
+				this.duration = 0;
+				this.selectedVarCharOption = 'MATCHES';
+				this.selectedValue = '';
+				this.value = null;
 
-                this.selectedFetchTable = null;
-            },
-            saveAndClearDropdown() {
-                console.log(this.selectedColumn, 'data')
-                this.mergeData();
-                this.dataId = null;
-                this.selectedTable = null;
-                this.selectedColumn = null;
-                this.selectedColumnName = null;
-                this.selectedColumnType = null;
-                this.tableColumnList = [];
-                this.selectedNumberOption = 'SUM';
-                this.selectedOperand = '>';
-                this.numberValue = 0;
-                this.selectedDateType = 'exactDate';
-                this.exactDate = '';
-                this.daysBefore = 0;
-                this.duration = 0;
-                this.selectedVarCharOption = 'MATCHES';
-                this.selectedValue = '';
-                this.value = null;
+				this.selectedFetchTable = null;
+			},
+			saveAndClearDropdown() {
+				console.log(this.selectedColumn, 'data')
+				this.mergeData();
+				this.dataId = null;
+				this.selectedTable = null;
+				this.selectedColumn = null;
+				this.selectedColumnName = null;
+				this.selectedColumnType = null;
+				this.tableColumnList = [];
+				this.selectedNumberOption = 'SUM';
+				this.selectedOperand = '>';
+				this.numberValue = 0;
+				this.selectedDateType = 'exactDate';
+				this.exactDate = '';
+				this.daysBefore = 0;
+				this.duration = 0;
+				this.selectedVarCharOption = 'MATCHES';
+				this.selectedValue = '';
+				this.value = null;
 
-                this.selectedFetchTable = null;
-            },
-            mergeData() {
-                var mergedData = {};
-                mergedData['dataId'] = uuidv4();
-                mergedData['selectedTable'] = this.selectedFetchTable.table_name;
-                mergedData['selectedColumn'] = this.selectedColumn;
-                mergedData['selectedColumnName'] = this.selectedColumn.column_name;
-                mergedData['selectedColumnType'] = this.selectedColumn.column_type;
-                mergedData['selectedDataType'] = this.selectedColumn.column_type;
-                mergedData['selectedNumberOption'] = this.selectedNumberOption;
-                mergedData['selectedOperand'] = this.selectedOperand;
-                mergedData['numberValue'] = this.numberValue;
-                mergedData['selectedDateType'] = this.selectedDateType;
-                mergedData['exactDate'] = this.exactDate;
-                mergedData['daysBefore'] = this.daysBefore;
-                mergedData['duration'] = this.duration;
-                mergedData['selectedVarCharOption'] = this.selectedVarCharOption;
-                mergedData['selectedValue'] = this.selectedValue;
-
-
-                if (this.selectedColumn.column_type === 'NUMBER') {
-                    mergedData ['selectedOption'] = this.selectedNumberOption;
-                    mergedData ['value'] = this.numberValue;
-                    // selectedOption
-                } else if (this.selectedColumn.column_type === 'VARCHAR') {
-                    mergedData ['selectedOption'] = this.selectedVarCharOption;
-                    mergedData ['value'] = this.selectedValue;
-                }
-                console.log(mergedData, 'merged data');
-
-                this.savedatafn(mergedData);
-            },
-
-        },
-    })
+				this.selectedFetchTable = null;
+			},
+			mergeData() {
+				var mergedData = {};
+				mergedData['dataId'] = uuidv4();
+				mergedData['selectedTable'] = this.selectedFetchTable.table_name;
+				mergedData['selectedColumn'] = this.selectedColumn;
+				mergedData['selectedColumnName'] = this.selectedColumn.column_name;
+				mergedData['selectedColumnType'] = this.selectedColumn.column_type;
+				mergedData['selectedDataType'] = this.selectedColumn.column_type;
+				mergedData['selectedNumberOption'] = this.selectedNumberOption;
+				mergedData['selectedOperand'] = this.selectedOperand;
+				mergedData['numberValue'] = this.numberValue;
+				mergedData['selectedDateType'] = this.selectedDateType;
+				mergedData['exactDate'] = this.exactDate;
+				mergedData['daysBefore'] = this.daysBefore;
+				mergedData['duration'] = this.duration;
+				mergedData['selectedVarCharOption'] = this.selectedVarCharOption;
+				mergedData['selectedValue'] = this.selectedValue;
 
 
-    Vue.component('data-component', {
-        props: ['data', 'deletedatafn', 'groupid'],
-        data: function () {
-            return {
-                numberOption: ['SUM', 'AVERAGE', 'MEAN', 'MEDIAN'],
-                numberOperand: ['>', '<', '>=', '<=', '=', '!='],
-                varCharOption: ['MATCHES', 'EQUALS', 'STARTS WITH'],
-                selectedDateType: 'exactDate',
-            }
-        },
-        template:
-            `  <div class="data-card wrapper" style="margin-left: 1% !important;">
+				if (this.selectedColumn.column_type === 'NUMBER') {
+					mergedData ['selectedOption'] = this.selectedNumberOption;
+					mergedData ['value'] = this.numberValue;
+					// selectedOption
+				} else if (this.selectedColumn.column_type === 'VARCHAR') {
+					mergedData ['selectedOption'] = this.selectedVarCharOption;
+					mergedData ['value'] = this.selectedValue;
+				}
+				console.log(mergedData, 'merged data');
+
+				this.savedatafn(mergedData);
+			},
+
+		},
+	})
+
+
+	Vue.component('data-component', {
+		props: ['data', 'deletedatafn', 'groupid'],
+		data: function () {
+			return {
+				numberOption: ['SUM', 'AVERAGE', 'MEAN', 'MEDIAN'],
+				numberOperand: ['>', '<', '>=', '<=', '=', '!='],
+				varCharOption: ['MATCHES', 'EQUALS', 'STARTS WITH'],
+				selectedDateType: 'exactDate',
+			}
+		},
+		template:
+				`  <div class="data-card wrapper" style="margin-left: 1% !important;">
                     <div class="row justify-content-between">
                         <div class="col-md-3" style="margin-left:20px !important; margin-top: 5px">
                         <div>
@@ -3948,37 +3923,37 @@
                         </div>
                     </div>
             </div>`
-        ,
-        methods: {
-            removeNegative(e, type, value) {
-                value = Math.max(0, parseInt(e.target.value) || 0);
+		,
+		methods: {
+			removeNegative(e, type, value) {
+				value = Math.max(0, parseInt(e.target.value) || 0);
 
-                if (type === 'numberValue') {
-                    this.data.numberValue = value;
-                } else if (type === 'daysBefore') {
-                    this.data.daysBefore = value;
-                } else if (type === 'duration') {
-                    this.data.duration = value;
-                }
-            },
-            updateExactDate() {
-                console.log(this.exactDate)
-            },
-        }
-    })
+				if (type === 'numberValue') {
+					this.data.numberValue = value;
+				} else if (type === 'daysBefore') {
+					this.data.daysBefore = value;
+				} else if (type === 'duration') {
+					this.data.duration = value;
+				}
+			},
+			updateExactDate() {
+				console.log(this.exactDate)
+			},
+		}
+	})
 
 
-    Vue.component('query-component', {
-        props: ['maindata', 'modaltriggerfn', 'deletegroupfn', 'deletedatafn', 'modaltrigger', 'getadddatagroupidfn', 'savedatafn', 'creategroupfn', 'fetchedtablelist'],
-        data: function () {
-            return {
-                groupId: null,
-                condition: ['AND', 'OR'],
-                selectedCondition:'AND'
-            }
-        },
-        template:
-            `<div>
+	Vue.component('query-component', {
+		props: ['maindata', 'modaltriggerfn', 'deletegroupfn', 'deletedatafn', 'modaltrigger', 'getadddatagroupidfn', 'savedatafn', 'creategroupfn', 'fetchedtablelist'],
+		data: function () {
+			return {
+				groupId: null,
+				condition: ['AND', 'OR'],
+				selectedCondition:'AND'
+			}
+		},
+		template:
+				`<div>
                 <div class="row component-card justify-content-between" v-for="y in maindata" :key="y">
                     <div class=" col-sm-4 ">
                             <div v-show="y.groups.length > 0 || y.dataList.length > 0">
@@ -4035,269 +4010,269 @@
                 </div>
             </div>`,
 
-        methods: {},
-        beforeCreate: function () {
-        },
-    })
+		methods: {},
+		beforeCreate: function () {
+		},
+	})
 
-    Vue.component('v-select', VueSelect.VueSelect)
+	Vue.component('v-select', VueSelect.VueSelect)
 
-	//var count =0; 
-    // Main Component for ADVANCE FILTER
-    var advanceFilter = new Vue({
-        el: '#advanceFilterComponent',
-        data: {
-            showModal: false,
-            tempGroupData: {
-                groupId: uuidv4(),
-                rootGroup: false,
-                groupCondition:'AND',
-                groups: [],
-                dataList: []
-            },
-            selectedGroupId: null,
-            mainData: [{
-                groupId: uuidv4(),
-                rootGroup: true,
-                groupCondition:'AND',
-                groups: [],
-                dataList: [],
-                recordCounts : null
-            }],
-            fetchedTableList: [],
-            generatedQuery: null,
-            customQuery: null,
-            fetchedData: null,
-            recordCounts : 0,
-            advanceFilterTab: 'customUI'
-        },
-        methods: {
+	//var count =0;
+	// Main Component for ADVANCE FILTER
+	var advanceFilter = new Vue({
+		el: '#advanceFilterComponent',
+		data: {
+			showModal: false,
+			tempGroupData: {
+				groupId: uuidv4(),
+				rootGroup: false,
+				groupCondition:'AND',
+				groups: [],
+				dataList: []
+			},
+			selectedGroupId: null,
+			mainData: [{
+				groupId: uuidv4(),
+				rootGroup: true,
+				groupCondition:'AND',
+				groups: [],
+				dataList: [],
+				recordCounts : null
+			}],
+			fetchedTableList: [],
+			generatedQuery: null,
+			customQuery: null,
+			fetchedData: null,
+			recordCounts : 0,
+			advanceFilterTab: 'customUI'
+		},
+		methods: {
 
-            clearMainDatafn() { // to be ready
-                advanceFilter.mainData = [];
+			clearMainDatafn() { // to be ready
+				advanceFilter.mainData = [];
 
-                var tempMainData = {
-                    groupId: uuidv4(),
-                    rootGroup: true,
-                    groupCondition:'AND',
-                    groups: [],
-                    dataList: [],
-                    recordCounts : null
-                };
+				var tempMainData = {
+					groupId: uuidv4(),
+					rootGroup: true,
+					groupCondition:'AND',
+					groups: [],
+					dataList: [],
+					recordCounts : null
+				};
 
-                advanceFilter.mainData.push(tempMainData);
-                console.log('advanceFilter.mainData ------ :'+advanceFilter.mainData);
-            },
+				advanceFilter.mainData.push(tempMainData);
+				console.log('advanceFilter.mainData ------ :'+advanceFilter.mainData);
+			},
 
-            showModalfn() {
-                advanceFilter.showModal = !advanceFilter.showModal;
-            },
+			showModalfn() {
+				advanceFilter.showModal = !advanceFilter.showModal;
+			},
 
-            deleteViaGroupId(selectedGroupId, data) {
+			deleteViaGroupId(selectedGroupId, data) {
 
-                if (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        if (selectedGroupId === data[i].groupId) {
+				if (data) {
+					for (var i = 0; i < data.length; i++) {
+						if (selectedGroupId === data[i].groupId) {
 
-                            data.splice(i, 1);  // delete the specified group
-                            break;
+							data.splice(i, 1);  // delete the specified group
+							break;
 
-                        } else {
-                            console.log('not found')
-                            this.deleteViaGroupId(selectedGroupId, data[i].groups)
-                        }
-                    }
-                }
-            },
+						} else {
+							console.log('not found')
+							this.deleteViaGroupId(selectedGroupId, data[i].groups)
+						}
+					}
+				}
+			},
 
-            deleteGroupfn(selectedGroupId) {
-                this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
-                this.generatedQuery = null;
-                this.recordCounts = 0;
-                this.generateSQL();
-            },
+			deleteGroupfn(selectedGroupId) {
+				this.deleteViaGroupId(selectedGroupId, advanceFilter.mainData)
+				this.generatedQuery = null;
+				this.recordCounts = 0;
+				this.generateSQL();
+			},
 
-            deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, data) {
+			deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, data) {
 
-                if (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        if (selectedGroupId === data[i].groupId) {
+				if (data) {
+					for (var i = 0; i < data.length; i++) {
+						if (selectedGroupId === data[i].groupId) {
 
-                            if (data[i].dataList) {
-                                for (var d = 0; d < data[i].dataList.length; d++) {
-                                    var obj = data[i].dataList[d];
+							if (data[i].dataList) {
+								for (var d = 0; d < data[i].dataList.length; d++) {
+									var obj = data[i].dataList[d];
 
-                                    if (obj.dataId === selectedDataId) {
-                                        // serarch for index under dataList
+									if (obj.dataId === selectedDataId) {
+										// serarch for index under dataList
 
-                                        var index = data[i].dataList.findIndex(function (o) {
-                                            return o.dataId === selectedDataId;
-                                        })
+										var index = data[i].dataList.findIndex(function (o) {
+											return o.dataId === selectedDataId;
+										})
 
-                                        if (index !== -1) {
-                                            data[i].dataList.splice(index, 1)
-                                            break;
-                                        }
-
-
-                                    }
-                                }
-                            }
-                        } else {
-                            console.log('id not found')
-                            this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, data[i].groups)
-                        }
-                    }
-                }
-            },
-            deleteDatafn(selectedGroupId, selectedDataId) {
-                this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, advanceFilter.mainData)
-                this.generatedQuery = null;
-                this.recordCounts = 0;
-                this.generateSQL();
-            },
-            addDataViaGroupId(selectedGroupId, data, savedData) {
-
-                if (data && savedData) {
-                    for (var i = 0; i < data.length; i++) {
-                        if (selectedGroupId === data[i].groupId) {
-                            data[i].dataList.push(savedData)
-                            break;
-
-                        } else {
-                            console.log('not found')
-                            this.addDataViaGroupId(selectedGroupId, data[i].groups, savedData)
-                        }
-                    }
-                }
-
-            },
-            getAddDataGroupIdfn(selectedGroupId) {
-                advanceFilter.selectedGroupId = selectedGroupId; // save when add data is clicked
-            },
-            saveDatafn(savedData) {
-                this.addDataViaGroupId(advanceFilter.selectedGroupId, advanceFilter.mainData, savedData)
-                advanceFilter.selectedGroupId = null;
-                this.generatedQuery = null;
-                this.recordCounts = 0;
-                this.generateSQL();
-                
-            },
-
-            addGroupViaGroupId(selectedGroupId, data) {
-
-                if (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        if (selectedGroupId === data[i].groupId) {
-
-                            var tempGroupData = {
-                                groupId: uuidv4(),
-                                rootGroup: false,
-                                groupCondition:'AND',
-                                groups: [],
-                                dataList: []
-                            };
+										if (index !== -1) {
+											data[i].dataList.splice(index, 1)
+											break;
+										}
 
 
-                            data[i].groups.push(tempGroupData)
-                            break;
+									}
+								}
+							}
+						} else {
+							console.log('id not found')
+							this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, data[i].groups)
+						}
+					}
+				}
+			},
+			deleteDatafn(selectedGroupId, selectedDataId) {
+				this.deleteViaGroupIdAndDataId(selectedGroupId, selectedDataId, advanceFilter.mainData)
+				this.generatedQuery = null;
+				this.recordCounts = 0;
+				this.generateSQL();
+			},
+			addDataViaGroupId(selectedGroupId, data, savedData) {
 
-                        } else {
-                            console.log('not found')
-                            this.addGroupViaGroupId(selectedGroupId, data[i].groups)
-                        }
-                    }
-                }
-            },
-            createGroupfn(selectedGroupId) {
-                this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
-                this.generatedQuery = null;
-                this.recordCounts = 0;
-                this.generateSQL();
-                
-            },
-            generateSQL() {
-                console.log(advanceFilter.mainData, 'dvanceFilter.mainData')
-                console.log(JSON.stringify(advanceFilter.mainData))
-                fetch(PROD_URL + `getSQLQuery`, {
-                    method: 'POST',
-                    mode: "cors",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "Access-Control-Allow-Origin": "*"
-                    },
-                    /* headers: {
+				if (data && savedData) {
+					for (var i = 0; i < data.length; i++) {
+						if (selectedGroupId === data[i].groupId) {
+							data[i].dataList.push(savedData)
+							break;
+
+						} else {
+							console.log('not found')
+							this.addDataViaGroupId(selectedGroupId, data[i].groups, savedData)
+						}
+					}
+				}
+
+			},
+			getAddDataGroupIdfn(selectedGroupId) {
+				advanceFilter.selectedGroupId = selectedGroupId; // save when add data is clicked
+			},
+			saveDatafn(savedData) {
+				this.addDataViaGroupId(advanceFilter.selectedGroupId, advanceFilter.mainData, savedData)
+				advanceFilter.selectedGroupId = null;
+				this.generatedQuery = null;
+				this.recordCounts = 0;
+				this.generateSQL();
+
+			},
+
+			addGroupViaGroupId(selectedGroupId, data) {
+
+				if (data) {
+					for (var i = 0; i < data.length; i++) {
+						if (selectedGroupId === data[i].groupId) {
+
+							var tempGroupData = {
+								groupId: uuidv4(),
+								rootGroup: false,
+								groupCondition:'AND',
+								groups: [],
+								dataList: []
+							};
+
+
+							data[i].groups.push(tempGroupData)
+							break;
+
+						} else {
+							console.log('not found')
+							this.addGroupViaGroupId(selectedGroupId, data[i].groups)
+						}
+					}
+				}
+			},
+			createGroupfn(selectedGroupId) {
+				this.addGroupViaGroupId(selectedGroupId, advanceFilter.mainData)
+				this.generatedQuery = null;
+				this.recordCounts = 0;
+				this.generateSQL();
+
+			},
+			generateSQL() {
+				console.log(advanceFilter.mainData, 'dvanceFilter.mainData')
+				console.log(JSON.stringify(advanceFilter.mainData))
+				fetch(PROD_URL + `getSQLQuery`, {
+					method: 'POST',
+					mode: "cors",
+					headers: {
+						"Content-Type": "application/json",
+						"Accept": "application/json",
+						"Access-Control-Allow-Origin": "*"
+					},
+					/* headers: {
                        "Content-Type": "application/json",
                        "Accept": "application/json",
                        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
                        "Access-Control-Allow-Origin":"*",
                        "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
                     }, */
-                    body: JSON.stringify(advanceFilter.mainData)
-                })
+					body: JSON.stringify(advanceFilter.mainData)
+				})
 
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log("queryText " + data.queryText);
-                        console.log("recordCounts " + data.resultCount);
-                        console.log("countQuery " + data.countQuery);
+						.then(res => res.json())
+						.then(data => {
+							console.log("queryText " + data.queryText);
+							console.log("recordCounts " + data.resultCount);
+							console.log("countQuery " + data.countQuery);
 
-                        if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
-                            this.generatedQuery = null;
-                            this.recordCounts = 0;
-                            
-                        } else this.generatedQuery = data.queryText;
-                        this.recordCounts = data.resultCount;
-                        return this.generatedQuery;
-                        		this.recordCounts;
-                    })
-                    .catch(error => console.log(error))
-                    .finally()
-            }
+							if (advanceFilter.mainData[0].groups.length === 0 && advanceFilter.mainData[0].dataList.length === 0) {
+								this.generatedQuery = null;
+								this.recordCounts = 0;
 
-        },
+							} else this.generatedQuery = data.queryText;
+							this.recordCounts = data.resultCount;
+							return this.generatedQuery;
+							this.recordCounts;
+						})
+						.catch(error => console.log(error))
+						.finally()
+			}
 
-        mounted: function () {
-            //  this call the table list
-            //fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
-            fetch(OFFERMGMT_URL + `AdvFilters/`)
-                .then(res => res.json())
-                .then(data => {
-                    this.fetchedTableList = data.items;
-                    return this.fetchedTableList;
-                })
-                .catch(error => console.log(error))
-                .finally()
+		},
+
+		mounted: function () {
+			//  this call the table list
+			//fetch(`https://jihefwrkoypnlto6hgcr6lvvxi.apigateway.eu-frankfurt-1.oci.customer-oci.com/offerMgmt/AdvFilters/`)
+			fetch(OFFERMGMT_URL + `AdvFilters/`)
+					.then(res => res.json())
+					.then(data => {
+						this.fetchedTableList = data.items;
+						return this.fetchedTableList;
+					})
+					.catch(error => console.log(error))
+					.finally()
 
 
-            const INSTANCE_ID_SAMPLE = 'b78fd36a-35c6-4bde-a7c3-d44c086abe99';
-            fetch(PROD_URL + `listCXOffer?instanceId=${INSTANCE_ID}`)
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data, 'listCXOffers')
+			const INSTANCE_ID_SAMPLE = 'b78fd36a-35c6-4bde-a7c3-d44c086abe99';
+			fetch(PROD_URL + `listCXOffer?instanceId=${INSTANCE_ID}`)
+					.then(res => res.json())
+					.then(data => {
+						console.log(data, 'listCXOffers')
 
-                    if(!data.payload){
-                    	
-                    }else{
-                    this.mainData = JSON.parse(data.payload);
-                     this.generatedQuery = data.queryText;
-                     this.recordCounts = data.resultCount;
-                    this.customQuery = data.customQuery;
-                    }
-                    return
-                })
+						if(!data.payload){
 
-                .catch(error => console.log(error))
-                .finally()
+						}else{
+							this.mainData = JSON.parse(data.payload);
+							this.generatedQuery = data.queryText;
+							this.recordCounts = data.resultCount;
+							this.customQuery = data.customQuery;
+						}
+						return
+					})
 
-            /* var dummy = [{"groupId":"61d4030e-36657f-3d0b-202323","rootGroup":true,"groupCondition":"AND","groups":[{"groupId":"61d40331-36657f-3d0b-209606","rootGroup":false,"groupCondition":"AND","groups":[],"dataList":[{"dataId":"61d40338-36657f-3d0b-259d8b","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}],"dataList":[{"dataId":"61d4031c-36657f-3d0b-5b393f","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}]
+					.catch(error => console.log(error))
+					.finally()
+
+			/* var dummy = [{"groupId":"61d4030e-36657f-3d0b-202323","rootGroup":true,"groupCondition":"AND","groups":[{"groupId":"61d40331-36657f-3d0b-209606","rootGroup":false,"groupCondition":"AND","groups":[],"dataList":[{"dataId":"61d40338-36657f-3d0b-259d8b","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}],"dataList":[{"dataId":"61d4031c-36657f-3d0b-5b393f","selectedTable":"F_TBL_CDR_DA_DT_A","selectedColumn":{"af_column_id":2,"af_tables_id":1,"column_name":"TRANSACTION_DATE_KEY","column_type":"NUMBER","created_date":"2021-11-22T00:00:00Z","last_modified_date":null},"selectedColumnName":"TRANSACTION_DATE_KEY","selectedColumnType":"NUMBER","selectedDataType":"NUMBER","selectedNumberOption":"SUM","selectedOperand":">","numberValue":11,"selectedDateType":"exactDate","exactDate":"2022-01-04","daysBefore":0,"duration":2,"selectedVarCharOption":"MATCHES","varCharValue":"","selectedOption":"SUM","value":11}]}]
                 this.mainData = dummy;
                 console.log('dummy') */
-        }
+		}
 
-    })
-    console.log(advanceFilter.mainData, 'xxxx')
+	})
+	console.log(advanceFilter.mainData, 'xxxx')
 </script>
 <!--VueJS END-->
 
@@ -4313,7 +4288,9 @@
 			countryList                     : [],
 			promoList                       : [],
 			eventWhitelist					: [],
+			topupWhitelist					: [],
 			offerWhitelist					: [],
+			offerWhitelistTopup				: [],
 			consmpWhitelist					: [],
 			excludeSubscriber               : [],
 			selectedCity                    : [],
@@ -4327,6 +4304,7 @@
 			monitoringData                  : {},
 			redemptionData                  : {},
 			eventConditionData              : {},
+			cxOffersMessageData				: {},
 			redemptionMethod                : null,
 			type                            : null,
 			eventTypeData                   : 'Top-Up',
@@ -4366,7 +4344,9 @@
 
 			init() {
 				this.eventCondWhitelist(),
+						this.eventCondTopupWhitelist(),
 						this.offerMonWhitelist(),
+						this.offerMonTopupWhitelist(),
 						this.eventTypeDropdown(),
 						this.offerBucketDropdown(),
 						this.campaignOfferDropdown(),
@@ -4705,6 +4685,10 @@
 								$('#offerIMEI').val(data.whitelistType.split(',')).trigger('change');
 							}
 
+							if (data.whitelistType != null) {
+								$('#offerIMEItopup').val(data.whitelistType.split(',')).trigger('change');
+							}
+
 							// for Da Expiry Date
 							this.daExpiryDateMonitor = data.daExpiryDateMonitor != null ? data.daExpiryDateMonitor : null;
 
@@ -4740,6 +4724,10 @@
 							// for multiple dropdown WHITELIST
 							if (data.whitelistType != null) {
 								$('#eventCondIMEI').val(data.whitelistType.split(',')).trigger('change');
+							}
+
+							if (data.whitelistType != null) {
+								$('#eventCondIMEItopup').val(data.whitelistType.split(',')).trigger('change');
 							}
 
 							// For Start Date
@@ -4860,9 +4848,25 @@
 				})
 			},
 
+			eventCondTopupWhitelist() {
+				return new Promise((resolve, reject) => {
+					fetch(PROD_URL + `whitelist/listType?type=Top-Up`)
+							.then(res => res.json())
+							.then(data => {
+								this.topupWhitelist = data
+								resolve('topupWhitelist')
+							})
+							.catch(error => {
+								console.log(error)
+								reject(error)
+							})
+							.finally()
+				})
+			},
+
 			eventCondWhitelist() {
 				return new Promise((resolve, reject) => {
-					fetch(PROD_URL + `whitelist/listType`)
+					fetch(PROD_URL + `whitelist/listType?type=Usage`)
 							.then(res => res.json())
 							.then(data => {
 								this.eventWhitelist = data
@@ -4878,7 +4882,7 @@
 
 			offerMonWhitelist() {
 				return new Promise((resolve, reject) => {
-					fetch(PROD_URL + `whitelist/listType`)
+					fetch(PROD_URL + `whitelist/listType?type=Usage`)
 							.then(res => res.json())
 							.then(data => {
 								this.offerWhitelist = data
@@ -4892,11 +4896,27 @@
 				})
 			},
 
+			offerMonTopupWhitelist() {
+				return new Promise((resolve, reject) => {
+					fetch(PROD_URL + `whitelist/listType?type=Top-Up`)
+							.then(res => res.json())
+							.then(data => {
+								this.offerWhitelistTopup = data
+								resolve('offerWhitelistTopup')
+							})
+							.catch(error => {
+								console.log(error)
+								reject(error)
+							})
+							.finally()
+				})
+			},
+
 			getConfigStatus() {
 				fetch(PROD_URL + `config/status?instanceId=${INSTANCE_ID}`)
 						.then(res => res.json())
 						.then(data => {
-							if (data.offerStatus == "ACTIVE") {
+							if (data.offerStatus === "ACTIVE") {
 								this.configStatusValue = true
 							} else {
 								this.configStatusValue = false
@@ -4930,14 +4950,25 @@
 							}
 					)
 				})
-				.then(res => res.json())
-				.then(data => {
-					console.log("configStatus" + data);
-				})
-				.catch(error => {
-					console.log(error)
-				})
-				.finally()
+						.then(res => res.json())
+						.then(data => {
+							console.log("configStatus" + data);
+						})
+						.catch(error => {
+							console.log(error)
+						})
+						.finally()
+			},
+
+			cxOfferMessageList() {
+				fetch(PROD_URL + `cxOfferMessageList?instanceId=${INSTANCE_ID}`)
+						.then(res => res.json())
+						.then(data => {
+							// console.log(data)
+							this.cxOffersMessageData = data
+						})
+						.catch(error => console.log(error))
+						.finally()
 			},
 
 			saveConfiguration() {
@@ -4967,6 +4998,7 @@
 					offerEventCondition.topUpTempServiceClass       = this.eventConditionData.topUpTempServiceClass;
 					offerEventCondition.daExpiryDate                = this.daExpiryDate;
 					offerEventCondition.permanentServiceClass       = this.eventConditionData.permanentServiceClass;
+					offerEventCondition.whitelistType               = $('#eventCondIMEItopup').select2("val").toString();
 				} else if (this.eventConditionTypeData === 'Usage') {
 					offerEventCondition.usageServiceType            = this.eventConditionData.usageServiceType;
 					if (this.eventConditionData.usageServiceType != 'all') {
@@ -5042,6 +5074,7 @@
 					offerMonitoring.topUpDaBalanceValue         = this.monitoringData.topUpDaBalanceValue;
 					offerMonitoring.topUpTempServiceClass       = this.monitoringData.topUpTempServiceClass;
 					offerMonitoring.daExpiryDateMonitor         = this.daExpiryDateMonitor;
+					offerMonitoring.whitelistType               = $('#offerIMEItopup').select2("val").toString()
 					offerMonitoring.permanentServiceClass       = this.monitoringData.permanentServiceClass;
 				} else if (this.eventTypeData === 'Usage') {
 					offerMonitoring.usageServiceType            = this.monitoringData.usageServiceType;
@@ -5242,7 +5275,7 @@
 				}
 
 				const prepaidCxOfferAdvanceFilter = {
-						"instanceId":INSTANCE_ID,
+					"instanceId":INSTANCE_ID,
 					//"instanceId":INSTANCE_ID,
 					//"instanceId":instanceId,
 					"payloadList": advanceFilter.mainData,
@@ -5251,7 +5284,7 @@
 					"resultCount": advanceFilter.recordCounts,
 					"customQuery": false,
 					"id": null,
-					
+
 				}
 
 				if(this.offerTypeDropdown !== 'MA'){
@@ -5345,7 +5378,7 @@
 				}
 
 				//alert(this.offers.length + " | " + this.offerType);
-				console.log(this.offers.length);
+				// console.log(this.offers.length);
 				if(this.offers.length > 0 || this.offerType != null){
 					window.parent.postMessage(request,'*');
 				} else if (!this.overallOfferName && this.type != 'eventCondition') {
