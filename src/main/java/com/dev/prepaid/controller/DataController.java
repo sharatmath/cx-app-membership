@@ -30,6 +30,7 @@ import com.dev.prepaid.domain.OverallOfferName;
 import com.dev.prepaid.domain.PrepaidCxOfferAdvanceFilter;
 import com.dev.prepaid.domain.PrepaidCxOfferEligibility;
 import com.dev.prepaid.domain.PrepaidCxOfferEventCondition;
+import com.dev.prepaid.domain.PrepaidCxOfferMesgLanguage;
 import com.dev.prepaid.domain.PrepaidCxOfferMessage;
 import com.dev.prepaid.domain.PrepaidCxOfferRedemption;
 import com.dev.prepaid.domain.PrepaidDaOfferBucket;
@@ -55,6 +56,7 @@ import com.dev.prepaid.repository.PrepaidCxOfferAdvanceFilterRepository;
 import com.dev.prepaid.service.AdvFilterRecordCountServices;
 import com.dev.prepaid.service.IPrepaidCxOfferAdvanceFilterService;
 import com.dev.prepaid.service.OfferService;
+import com.dev.prepaid.service.PrepaidCxOfferMesgLanguageService;
 import com.dev.prepaid.service.PrepaidCxOfferMessageService;
 import com.dev.prepaid.util.AppUtil;
 import com.dev.prepaid.util.DateUtil;
@@ -84,6 +86,9 @@ public class DataController {
 
 	@Autowired
 	AdvFilterRecordCountServices advFilterRecordCountServices;
+	
+	@Autowired
+	PrepaidCxOfferMesgLanguageService prepaidCxOfferMesgLanguageService;
 
 	@GetMapping(value = "offerDetail")
 	public PrepaidCampaignOfferDetailDTO offerDetail(
@@ -1563,4 +1568,44 @@ public class DataController {
 		PrepaidCxOfferMessage msgResult = prepaidCxOfferMessageService.findByCxOfferMessageId(instanceId);
 		return ResponseEntity.status(HttpStatus.OK).body(msgResult);
 	}
+	
+//	Saket(PREPAID_CX_OFFER_MESSAGE_LANGUAGE)
+
+	@RequestMapping(value = { "/doInsertCxOfferMessageLanguage" }, method = { RequestMethod.POST })
+	public HttpJsonResult<Hashtable<String, Object>> doInsertCxOfferMessageLanguage(
+			@RequestBody PrepaidCxOfferMesgLanguage cxOfferMesgLanguage) {
+		Hashtable<String, Object> returnTable = new Hashtable<String, Object>();
+		HttpJsonResult<Hashtable<String, Object>> result = new HttpJsonResult<Hashtable<String, Object>>(returnTable);
+		try {
+			if (cxOfferMesgLanguage != null) {
+				PrepaidCxOfferMesgLanguage offerMesgLanguage = prepaidCxOfferMesgLanguageService
+						.findByCxOfferMessageLanguageId(cxOfferMesgLanguage.getInstanceId());
+				if (offerMesgLanguage != null && offerMesgLanguage.getInstanceId() != null
+						&& !offerMesgLanguage.getLanguage().isEmpty() && offerMesgLanguage.getLanguage() != null) {
+					offerMesgLanguage.setContent(cxOfferMesgLanguage.getContent());
+					prepaidCxOfferMesgLanguageService.saveCxOfferMessageLanguage(offerMesgLanguage);
+					log.error("[Prepaid Membership][DataController][doInsertCxOfferMessageLanguage] Record Updated!");
+				} else {
+					prepaidCxOfferMesgLanguageService.saveCxOfferMessageLanguage(cxOfferMesgLanguage);
+					log.error("[Prepaid Membership][DataController][doInsertCxOfferMessageLanguage] New Record added!");
+				}
+			}
+
+		} catch (Exception e) {
+			log.error("Error", e);
+			log.error("[Prepaid Membership][DataController][doInsertCxOfferMessageLanguage] failed!", e);
+		}
+		return result;
+	}
+
+//	 List of PREPAID_CX_OFFER_MESSAGE_LANGUAGE
+	@GetMapping(value = "cxOfferMessageLanguageList")
+	public ResponseEntity<PrepaidCxOfferMesgLanguage> cxOfferMessageLanguageList(
+			@RequestParam(value = "instanceId", required = false) String instanceId) throws Exception {
+
+		PrepaidCxOfferMesgLanguage msgResult = prepaidCxOfferMesgLanguageService
+				.findByCxOfferMessageLanguageId(instanceId);
+		return ResponseEntity.status(HttpStatus.OK).body(msgResult);
+	}
+
 }

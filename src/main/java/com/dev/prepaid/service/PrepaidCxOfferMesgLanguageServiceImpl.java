@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dev.prepaid.domain.PrepaidCxOfferConfig;
-import com.dev.prepaid.domain.PrepaidCxOfferMessage;
+import com.dev.prepaid.domain.PrepaidCxOfferMesgLanguage;
 import com.dev.prepaid.repository.PrepaidCxOfferConfigRepository;
-import com.dev.prepaid.repository.PrepaidCxOfferMessageRepository;
+import com.dev.prepaid.repository.PrepaidCxOfferMesgLanguageRepository;
 
 /**
  * @author Saket
@@ -21,20 +21,22 @@ import com.dev.prepaid.repository.PrepaidCxOfferMessageRepository;
  */
 
 @Service
-public class PrepaidCxOfferMessageServiceImpl implements PrepaidCxOfferMessageService {
-
+public class PrepaidCxOfferMesgLanguageServiceImpl implements PrepaidCxOfferMesgLanguageService{
+	
 	@Autowired
-	PrepaidCxOfferMessageRepository cxOfferMessageRepository;
+	PrepaidCxOfferMesgLanguageRepository cxOfferMesgLanguageRepository;
 
 	@Autowired
 	PrepaidCxOfferConfigRepository prepaidCxOfferConfigRepository;
 
+	
+//	get the List
 	@Override
-	public List<PrepaidCxOfferMessage> getCxOfferMessageList(String instanceId) {
+	public List<PrepaidCxOfferMesgLanguage> getCxOfferMessageLanguageList(String instanceId) {
 		Optional<PrepaidCxOfferConfig> findCXConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
-		List<PrepaidCxOfferMessage> arrayList = new ArrayList<>();
+		List<PrepaidCxOfferMesgLanguage> arrayList = new ArrayList<>();
 		if (findCXConfig.isPresent()) {
-			Optional<PrepaidCxOfferMessage> offerMsg = cxOfferMessageRepository
+			Optional<PrepaidCxOfferMesgLanguage> offerMsg = cxOfferMesgLanguageRepository
 					.findByInstanceId(findCXConfig.get().getInstanceId());
 			if (offerMsg.isPresent()) {
 				arrayList.add(offerMsg.get());
@@ -45,34 +47,35 @@ public class PrepaidCxOfferMessageServiceImpl implements PrepaidCxOfferMessageSe
 
 		return arrayList;
 	}
+	
 
 	@Override
-	public PrepaidCxOfferMessage listCXOffer(String instanceId) {
+	public PrepaidCxOfferMesgLanguage listCxOfferMessageLanguage(String instanceId) {
 		Optional<PrepaidCxOfferConfig> findCXConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if (findCXConfig.isPresent()) {
-			Optional<PrepaidCxOfferMessage> offerMsg = cxOfferMessageRepository.findByInstanceId(instanceId);
+			Optional<PrepaidCxOfferMesgLanguage> offerMsg = cxOfferMesgLanguageRepository.findByInstanceId(instanceId);
 			if (offerMsg.isPresent())
 				return offerMsg.get();
 		}
-		return new PrepaidCxOfferMessage();
+		return new PrepaidCxOfferMesgLanguage();
 	}
 
 	@Override
-	public PrepaidCxOfferMessage saveCxOfferMessage(PrepaidCxOfferMessage prepaidCxOfferMessage) {
-		return this.cxOfferMessageRepository.save(prepaidCxOfferMessage);
+	public PrepaidCxOfferMesgLanguage saveCxOfferMessageLanguage(PrepaidCxOfferMesgLanguage offerMesgLanguage) {
+		return this.cxOfferMesgLanguageRepository.save(offerMesgLanguage);
 	}
 
 	@Override
-	public PrepaidCxOfferMessage findByCxOfferMessageId(String instanceId) {
+	public PrepaidCxOfferMesgLanguage findByCxOfferMessageLanguageId(String instanceId) {
 		Optional<PrepaidCxOfferConfig> findCXConfig = prepaidCxOfferConfigRepository.findByInstanceId(instanceId);
 		if (findCXConfig.isPresent()) {
-			Optional<PrepaidCxOfferMessage> offerMsg = cxOfferMessageRepository
+			Optional<PrepaidCxOfferMesgLanguage> offerMsg = cxOfferMesgLanguageRepository
 					.findByInstanceId(findCXConfig.get().getInstanceId());
 			if (offerMsg.isPresent())
 				return offerMsg.get();
 		}
 
-		return new PrepaidCxOfferMessage();
+		return new PrepaidCxOfferMesgLanguage();
 	}
-
+	
 }

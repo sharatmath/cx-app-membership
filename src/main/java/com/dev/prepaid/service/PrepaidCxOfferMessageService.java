@@ -15,7 +15,7 @@ public interface PrepaidCxOfferMessageService {
 	
 	List<PrepaidCxOfferMessage> getCxOfferMessageList(String instanceId);
 	public PrepaidCxOfferMessage listCXOffer(String instanceId);
-    PrepaidCxOfferMessage saveCxOfferMessage(PrepaidCxOfferMessage prepaidCxOfferAdvanceFilter);
+    PrepaidCxOfferMessage saveCxOfferMessage(PrepaidCxOfferMessage prepaidCxOfferMessage);
 	PrepaidCxOfferMessage findByCxOfferMessageId(String instanceId);
 	
 	
